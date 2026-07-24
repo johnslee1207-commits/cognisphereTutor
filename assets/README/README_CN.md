@@ -321,6 +321,12 @@ cognispheretutor cognisphere plan-path --learner-id offline-learner
 cognispheretutor cognisphere interview --run-flow
 ```
 
+Guided Learning（学习空间 / 精通之路）可通过以下 API 将域包导入为 `csphere-{domain}` 精通路径：
+
+- `GET /api/v1/learning/cognisphere/status`
+- `POST /api/v1/learning/cognisphere/import-and-seed`
+- `POST /api/v1/learning/cognisphere/tutor/start` / `suggest-focus` / `plan-path`
+
 集成代码位于 `cognispheretutor/integrations/cognisphere/`（发现 / 协商 / 校验 / Bundle 导入到 Assessment·Plan·Mastery / trusted-context 离线导入 / 运行时回调 + 离线 runtime bridge / 跨域组合）。在线 trusted-context 需配置 `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`。适配器模块路径由 `manifests/runtime_adapters.json` 数据驱动。
 
 </details>
