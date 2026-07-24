@@ -12,6 +12,8 @@ import {
   CircleDot,
   Circle,
   MessageSquare,
+  Package,
+  Sparkles,
 } from "lucide-react";
 
 import {
@@ -23,16 +25,21 @@ import {
   type MasteryMapResult,
   type ObjectiveStatus,
 } from "@/lib/learning-api";
+import {
+  fetchCognisphereLearningStatus,
+  importAndSeedCognisphere,
+  isCognispherePathId,
+  startCognisphereTutor,
+  suggestCognisphereFocus,
+  type CognisphereLearningStatus,
+} from "@/lib/cognisphere-learning-api";
 
 /**
  * Mastery Path dashboard — the persistent "screen" of the mastery experience.
  *
  * The tutoring itself runs on the chat agent loop (pick "Mastery Path" mode in
- * Chat); this page is the map of where the learner stands. It reads the
- * gate-accurate snapshot from ``/progress/{id}/map`` (per-type status computed
- * by ``cognispheretutor.learning.policy``) so the colours here agree with the gate the
- * tutor enforces. A path is keyed by its chat session, so "Continue" reopens
- * that session in mastery mode.
+ * Chat); this page is the map of where the learner stands. Cognisphere Learning
+ * Plugins can seed a ``csphere-{domain}`` path via import-and-seed.
  */
 export default function MasteryPathPage() {
   const { i18n } = useTranslation();
@@ -45,6 +52,12 @@ export default function MasteryPathPage() {
   const [detail, setDetail] = useState<MasteryMapResult | null>(null);
   const [loadingList, setLoadingList] = useState(true);
   const [loadingDetail, setLoadingDetail] = useState(false);
+  const [csphere, setCsphere] = useState<CognisphereLearningStatus | null>(null);
+  const [csphereBusy, setCsphereBusy] = useState(false);
+  const [csphereError, setCsphereError] = useState<string | null>(null);
+  const [csphereNote, setCsphereNote] = useState<string | null>(null);
+  const [focusHint, setFocusHint] = useState<string | null>(null);
+  const [tutorBusy, setTutorBusy] = useState(false);
 
   const loadList = useCallback(async () => {
     setLoadingList(true);
@@ -62,13 +75,30 @@ export default function MasteryPathPage() {
     }
   }, []);
 
+  const loadCsphere = useCallback(async () => {
+    try {
+      const status = await fetchCognisphereLearningStatus();
+      setCsphere(status);
+      setCsphereError(null);
+    } catch (err) {
+      setCsphere(null);
+      setCsphereError(
+        err instanceof Error
+          ? err.message
+          : tr("无法连接 Cognisphere 插件", "Cognisphere plugins unavailable"),
+      );
+    }
+  }, [tr]);
+
   useEffect(() => {
     loadList();
-  }, [loadList]);
+    loadCsphere();
+  }, [loadList, loadCsphere]);
 
   useEffect(() => {
     if (!selected) {
       setDetail(null);
+      setFocusHint(null);
       return;
     }
     let cancelled = false;
@@ -83,6 +113,35 @@ export default function MasteryPathPage() {
       .finally(() => {
         if (!cancelled) setLoadingDetail(false);
       });
+
+    if (isCognispherePathId(selected)) {
+      suggestCognisphereFocus()
+        .then((focus) => {
+          if (cancelled) return;
+          const suggestion = focus?.suggestion?.suggestion || focus?.suggestion;
+          const slug = focus?.suggestion?.problem_slug;
+          const hint = focus?.suggestion?.hint_level;
+          if (suggestion || slug) {
+            setFocusHint(
+              [
+                slug ? `slug: ${slug}` : null,
+                suggestion ? `focus: ${suggestion}` : null,
+                hint != null ? `hint ${hint}` : null,
+              ]
+                .filter(Boolean)
+                .join(" · "),
+            );
+          } else {
+            setFocusHint(null);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) setFocusHint(null);
+        });
+    } else {
+      setFocusHint(null);
+    }
+
     return () => {
       cancelled = true;
     };
@@ -121,9 +180,63 @@ export default function MasteryPathPage() {
     [tr],
   );
 
+  const handleImportDomain = useCallback(
+    async (domain: string) => {
+      setCsphereBusy(true);
+      setCsphereError(null);
+      setCsphereNote(null);
+      try {
+        const result = await importAndSeedCognisphere(domain);
+        const pathId = result.mastery_path?.path_id;
+        if (result.mastery_path?.note) {
+          setCsphereNote(result.mastery_path.note);
+        }
+        await loadList();
+        if (pathId) setSelected(pathId);
+      } catch (err) {
+        setCsphereError(
+          err instanceof Error ? err.message : tr("导入失败", "Import failed"),
+        );
+      } finally {
+        setCsphereBusy(false);
+      }
+    },
+    [loadList, tr],
+  );
+
+  const handleSocraticPractice = useCallback(async () => {
+    if (!selected || !isCognispherePathId(selected)) return;
+    setTutorBusy(true);
+    try {
+      const slug =
+        detail?.next?.knowledge_point_name
+          ?.toLowerCase()
+          .replace(/\s+/g, "-") || "two-sum";
+      const problemKp = detail?.map.modules
+        .flatMap((m) => m.knowledge_points)
+        .find((kp) => kp.id.startsWith("prob-") || kp.type === "procedure");
+      const practiceSlug = problemKp?.id.startsWith("prob-")
+        ? problemKp.id.replace(/^prob-/, "")
+        : slug;
+      await startCognisphereTutor({
+        slug: practiceSlug,
+        hintLevel: 1,
+        pathId: selected,
+      });
+      router.push(`/home/${encodeURIComponent(selected)}`);
+    } catch (err) {
+      setCsphereError(
+        err instanceof Error
+          ? err.message
+          : tr("无法启动苏格拉底辅导", "Could not start Socratic tutor"),
+      );
+    } finally {
+      setTutorBusy(false);
+    }
+  }, [selected, detail, router, tr]);
+
   return (
     <div className="flex h-full">
-      {/* Path list */}
       <aside className="w-64 shrink-0 border-r border-[var(--border)] flex flex-col">
         <header className="px-4 py-3 border-b border-[var(--border)]">
           <div className="flex items-center gap-2 text-[var(--foreground)]">
@@ -147,8 +260,8 @@ export default function MasteryPathPage() {
           ) : paths.length === 0 ? (
             <p className="px-2 py-3 text-xs text-[var(--muted-foreground)] leading-relaxed">
               {tr(
-                "还没有精通之路。去「对话」选择 Mastery Path 模式，让导师根据你的材料建一条。",
-                "No paths yet. Open Chat, pick Mastery Path mode, and ask the tutor to build one from your materials.",
+                "还没有精通之路。可从下方 Cognisphere 导入，或去「对话」选择 Mastery Path 模式。",
+                "No paths yet. Import from Cognisphere below, or open Chat in Mastery Path mode.",
               )}
             </p>
           ) : (
@@ -166,6 +279,9 @@ export default function MasteryPathPage() {
                   {path.name}
                 </div>
                 <div className="mt-0.5 text-xs text-[var(--muted-foreground)]">
+                  {isCognispherePathId(path.book_id) && (
+                    <span className="mr-1 text-[var(--primary)]">CS · </span>
+                  )}
                   {path.kp_count} {tr("个知识点", "objectives")} ·{" "}
                   {path.avg_mastery_pct}%
                 </div>
@@ -173,6 +289,58 @@ export default function MasteryPathPage() {
             ))
           )}
         </div>
+
+        <div className="border-t border-[var(--border)] p-2 space-y-2">
+          <div className="flex items-center gap-1.5 px-1 text-xs font-medium text-[var(--foreground)]">
+            <Package className="w-3.5 h-3.5" />
+            {tr("Cognisphere 插件", "Cognisphere plugins")}
+          </div>
+          {csphereError && (
+            <p className="px-1 text-[10px] leading-relaxed text-red-500/90">
+              {csphereError}
+            </p>
+          )}
+          {csphereNote && (
+            <p className="px-1 text-[10px] leading-relaxed text-yellow-600">
+              {csphereNote}
+            </p>
+          )}
+          {csphere && !csphere.ok && (
+            <p className="px-1 text-[10px] leading-relaxed text-[var(--muted-foreground)]">
+              {tr(
+                "未找到插件根目录。请设置 COGNISPHERE_LEARNING_PLUGINS_ROOT。",
+                "Plugins root missing. Set COGNISPHERE_LEARNING_PLUGINS_ROOT.",
+              )}
+            </p>
+          )}
+          <div className="space-y-1">
+            {(csphere?.plugins || []).map((plugin) => (
+              <button
+                key={plugin.domain}
+                disabled={csphereBusy || !plugin.valid}
+                onClick={() => handleImportDomain(plugin.domain)}
+                className="w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-md text-xs border border-[var(--border)] hover:border-[var(--primary)]/40 hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
+              >
+                <span className="truncate text-[var(--foreground)]">
+                  {plugin.domain}
+                </span>
+                {csphereBusy ? (
+                  <Loader2 className="w-3 h-3 animate-spin shrink-0" />
+                ) : (
+                  <span className="text-[var(--muted-foreground)] shrink-0">
+                    {tr("导入", "Import")}
+                  </span>
+                )}
+              </button>
+            ))}
+            {!csphere?.plugins?.length && !csphereError && (
+              <p className="px-1 text-[10px] text-[var(--muted-foreground)]">
+                {tr("暂无可用域", "No domains available")}
+              </p>
+            )}
+          </div>
+        </div>
+
         <footer className="p-2 border-t border-[var(--border)]">
           <button
             onClick={() => router.push("/home")}
@@ -184,7 +352,6 @@ export default function MasteryPathPage() {
         </footer>
       </aside>
 
-      {/* Selected path map */}
       <section className="flex-1 overflow-y-auto">
         {loadingDetail ? (
           <div className="flex items-center justify-center h-full text-[var(--muted-foreground)]">
@@ -195,8 +362,8 @@ export default function MasteryPathPage() {
             <GraduationCap className="w-10 h-10 mb-3 opacity-40" />
             <p className="text-sm max-w-sm leading-relaxed">
               {tr(
-                "选择一条精通之路查看进度地图，或在「对话」里用 Mastery Path 模式开始。",
-                "Select a path to see its progress map, or start one in Chat with Mastery Path mode.",
+                "选择一条精通之路查看进度地图，从左侧导入 Cognisphere 插件，或在「对话」里用 Mastery Path 模式开始。",
+                "Select a path to see its progress map, import a Cognisphere pack on the left, or start one in Chat with Mastery Path mode.",
               )}
             </p>
           </div>
@@ -205,9 +372,13 @@ export default function MasteryPathPage() {
             result={detail}
             zh={!!zh}
             tr={tr}
+            cognisphere={selected ? isCognispherePathId(selected) : false}
+            focusHint={focusHint}
+            tutorBusy={tutorBusy}
             onContinue={() =>
               selected && router.push(`/home/${encodeURIComponent(selected)}`)
             }
+            onSocratic={handleSocraticPractice}
             onRedo={() => selected && handleRedo(selected)}
             onDelete={() => selected && handleDelete(selected)}
           />
@@ -253,14 +424,22 @@ function MapView({
   result,
   zh,
   tr,
+  cognisphere,
+  focusHint,
+  tutorBusy,
   onContinue,
+  onSocratic,
   onRedo,
   onDelete,
 }: {
   result: MasteryMapResult;
   zh: boolean;
   tr: (cn: string, en: string) => string;
+  cognisphere: boolean;
+  focusHint: string | null;
+  tutorBusy: boolean;
   onContinue: () => void;
+  onSocratic: () => void;
   onRedo: () => void;
   onDelete: () => void;
 }) {
@@ -275,7 +454,6 @@ function MapView({
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-5">
-      {/* Header: progress + next + actions */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
@@ -287,6 +465,9 @@ function MapView({
               <span className="text-yellow-600">
                 · {map.due_reviews} {tr("项待复习", "due for review")}
               </span>
+            )}
+            {cognisphere && (
+              <span className="text-[var(--primary)]">· Cognisphere</span>
             )}
           </div>
           <div className="mt-1.5 h-1.5 w-full rounded-full bg-[var(--accent)] overflow-hidden">
@@ -314,7 +495,6 @@ function MapView({
         </div>
       </div>
 
-      {/* Next step */}
       <button
         onClick={onContinue}
         className="mt-4 w-full text-left rounded-lg border border-[var(--border)] hover:border-[var(--primary)]/40 hover:bg-[var(--accent)] p-3 transition-colors cursor-pointer"
@@ -332,7 +512,35 @@ function MapView({
         </div>
       </button>
 
-      {/* Module / objective map */}
+      {cognisphere && (
+        <div className="mt-3 rounded-lg border border-[var(--border)] p-3 space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-medium text-[var(--foreground)]">
+            <Sparkles className="w-3.5 h-3.5" />
+            {tr("Cognisphere 苏格拉底练习", "Cognisphere Socratic practice")}
+          </div>
+          {focusHint && (
+            <p className="text-[11px] text-[var(--muted-foreground)]">
+              {tr("推荐焦点", "Suggested focus")}: {focusHint}
+            </p>
+          )}
+          <button
+            onClick={onSocratic}
+            disabled={tutorBusy}
+            className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-sm rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50 cursor-pointer"
+          >
+            {tutorBusy ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Sparkles className="w-3.5 h-3.5" />
+            )}
+            {tr(
+              "启动离线苏格拉底会话并进入对话",
+              "Start offline Socratic session & open Chat",
+            )}
+          </button>
+        </div>
+      )}
+
       <div className="mt-5 space-y-4">
         {map.modules.map((module) => (
           <div key={module.id}>

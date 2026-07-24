@@ -312,6 +312,7 @@ from cognispheretutor.api.routers import (
     capabilities_settings,
     chat,
     co_writer,
+    cognisphere_learning,
     dashboard,
     imports,
     knowledge,
@@ -373,6 +374,12 @@ app.include_router(
     mastery_path.router,
     prefix="/api/v1/learning",
     tags=["mastery-path"],
+    dependencies=_auth,
+)
+app.include_router(
+    cognisphere_learning.router,
+    prefix="/api/v1/learning/cognisphere",
+    tags=["cognisphere-learning"],
     dependencies=_auth,
 )
 app.include_router(

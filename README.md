@@ -459,6 +459,12 @@ cognispheretutor cognisphere plan-path --learner-id offline-learner
 cognispheretutor cognisphere interview --run-flow
 ```
 
+Guided Learning (Learning Space / Mastery Path) can import a domain pack into a `csphere-{domain}` mastery path via:
+
+- `GET /api/v1/learning/cognisphere/status`
+- `POST /api/v1/learning/cognisphere/import-and-seed`
+- `POST /api/v1/learning/cognisphere/tutor/start` / `suggest-focus` / `plan-path`
+
 Integration code lives under `cognispheretutor/integrations/cognisphere/` (registry, negotiate, validate, bundle import → Assessment/Plan/Mastery mapping, trusted-context offline import, runtime callbacks + **runtime bridge** to plugin P2–P5 offline runtimes, cross-domain compose). Live trusted-context kit fetch requires `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`. Runtime adapter module paths are data-driven via `manifests/runtime_adapters.json`.
 
 </details>

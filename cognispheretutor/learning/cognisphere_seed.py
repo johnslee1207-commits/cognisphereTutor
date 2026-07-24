@@ -1,0 +1,155 @@
+"""Seed Guided Learning (mastery_path) modules from Cognisphere import knowledge."""
+
+from __future__ import annotations
+
+import re
+from typing import Any
+
+from cognispheretutor.learning.models import KnowledgePoint, KnowledgeType, LearningModule
+
+_PATH_PREFIX = "csphere-"
+
+
+def mastery_path_id_for_domain(domain: str) -> str:
+    """Stable LearningStore book_id for a Cognisphere domain pack."""
+    safe = re.sub(r"[^a-zA-Z0-9_-]+", "-", str(domain or "").strip()).strip("-").lower()
+    if not safe:
+        safe = "unknown"
+    return f"{_PATH_PREFIX}{safe}"
+
+
+def is_cognisphere_path_id(book_id: str) -> bool:
+    return str(book_id or "").startswith(_PATH_PREFIX)
+
+
+def _item_id(prefix: str, raw: Any, index: int) -> str:
+    if isinstance(raw, dict):
+        for key in ("id", "skill_id", "pattern_id", "slug", "concept_id"):
+            value = raw.get(key)
+            if value:
+                text = re.sub(r"[^a-zA-Z0-9_-]+", "-", str(value)).strip("-")
+                if text:
+                    return f"{prefix}-{text}"[:120]
+    return f"{prefix}-{index}"
+
+
+def _item_name(raw: Any, fallback: str) -> str:
+    if isinstance(raw, dict):
+        for key in ("name", "title", "slug", "label"):
+            value = raw.get(key)
+            if value:
+                return str(value).strip()[:200]
+    if isinstance(raw, str) and raw.strip():
+        return raw.strip()[:200]
+    return fallback
+
+
+def _as_list(knowledge: dict[str, Any], *keys: str) -> list[Any]:
+    for key in keys:
+        value = knowledge.get(key)
+        if isinstance(value, list) and value:
+            return value
+        if isinstance(value, dict) and value:
+            # catalog-style: {"items": [...]} or id→obj map
+            if isinstance(value.get("items"), list):
+                return list(value["items"])
+            return list(value.values())
+    return []
+
+
+def modules_from_knowledge(
+    knowledge: dict[str, Any] | None,
+    *,
+    domain: str,
+    path_id: str | None = None,
+) -> list[LearningModule]:
+    """Map Cognisphere bundle.knowledge → LearningModule list for Mastery Path."""
+    data = knowledge if isinstance(knowledge, dict) else {}
+    bid = path_id or mastery_path_id_for_domain(domain)
+    modules: list[LearningModule] = []
+    order = 0
+
+    def _add_module(
+        module_key: str,
+        title: str,
+        items: list[Any],
+        kp_type: KnowledgeType,
+        *,
+        id_prefix: str,
+    ) -> None:
+        nonlocal order
+        if not items:
+            return
+        module_id = f"{bid}-{module_key}"
+        kps: list[KnowledgePoint] = []
+        for i, item in enumerate(items):
+            kps.append(
+                KnowledgePoint(
+                    id=_item_id(id_prefix, item, i),
+                    name=_item_name(item, f"{title} {i + 1}"),
+                    type=kp_type,
+                    module_id=module_id,
+                )
+            )
+        modules.append(
+            LearningModule(
+                id=module_id,
+                name=title,
+                order=order,
+                pass_threshold=0.7,
+                knowledge_points=kps,
+            )
+        )
+        order += 1
+
+    # Display name for the Learning Space sidebar comes from the first module.
+    patterns = _as_list(data, "patterns")
+    skills = _as_list(data, "skills")
+    problems = _as_list(data, "problems")
+    concepts = _as_list(data, "concepts", "catalog")
+
+    overview_items: list[dict[str, Any]] = [
+        {
+            "id": "overview",
+            "name": f"Cognisphere · {domain}",
+        }
+    ]
+    _add_module("overview", f"Cognisphere · {domain}", overview_items, KnowledgeType.CONCEPT, id_prefix="ov")
+
+    _add_module("patterns", "Patterns", patterns, KnowledgeType.CONCEPT, id_prefix="pat")
+    _add_module("skills", "Skills", skills, KnowledgeType.PROCEDURE, id_prefix="sk")
+    _add_module("concepts", "Concepts", concepts, KnowledgeType.CONCEPT, id_prefix="con")
+    _add_module("problems", "Practice problems", problems, KnowledgeType.PROCEDURE, id_prefix="prob")
+
+    # If the pack was empty, keep a single overview module so the path is visible.
+    if len(modules) == 1:
+        return modules
+    return modules
+
+
+def seed_payload_from_import_receipt(receipt: dict[str, Any]) -> dict[str, Any]:
+    """Extract domain + knowledge dict from an export_and_import receipt."""
+    domain = str(receipt.get("domain") or (receipt.get("receipt") or {}).get("domain") or "leetcode")
+    knowledge: dict[str, Any] = {}
+    # Prefer full bundle knowledge when present on the receipt envelope.
+    for key in ("knowledge", "bundle_knowledge"):
+        if isinstance(receipt.get(key), dict):
+            knowledge = dict(receipt[key])
+            break
+    if not knowledge:
+        # Surfaces hold sliced views; merge assessment/plan/mastery knowledge blobs.
+        for surface in ("assessment", "plan", "mastery"):
+            block = (receipt.get("surfaces") or {}).get(surface) or {}
+            kn = block.get("knowledge") if isinstance(block, dict) else None
+            if isinstance(kn, dict):
+                for k, v in kn.items():
+                    if k not in knowledge:
+                        knowledge[k] = v
+    summary = receipt.get("knowledge_summary") if isinstance(receipt.get("knowledge_summary"), dict) else {}
+    if not knowledge and isinstance(summary.get("surfaces"), dict):
+        for kn in (summary.get("surfaces") or {}).values():
+            if isinstance(kn, dict):
+                for k, v in kn.items():
+                    if k not in knowledge:
+                        knowledge[k] = v
+    return {"domain": domain, "knowledge": knowledge, "summary": summary}
