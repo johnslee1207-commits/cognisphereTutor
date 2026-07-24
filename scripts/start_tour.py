@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-"""DeepTutor settings tour.
+"""cognisphereTutor settings tour.
 
 This script configures the runtime files under ``data/user/settings`` only.
 It does not install Python packages, install Node dependencies, or start the
 Web app. For day-to-day use prefer:
 
-    deeptutor init
-    deeptutor start
+    cognispheretutor init
+    cognispheretutor start
 """
 
 from __future__ import annotations
@@ -19,12 +19,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from deeptutor_cli.init_cmd import run_init  # noqa: E402
+from cognispheretutor_cli.init_cmd import run_init  # noqa: E402
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Create or update DeepTutor settings under data/user/settings.",
+        description="Create or update cognisphereTutor settings under data/user/settings.",
     )
     parser.add_argument(
         "--cli",
@@ -42,13 +42,13 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> None:
     args = build_parser().parse_args(argv)
-    print("DeepTutor settings tour")
+    print("cognisphereTutor settings tour")
     print("Writing configuration to data/user/settings; no dependencies will be installed.")
     run_init(cli_only=args.cli, home=args.home)
     if args.cli:
-        print("\nNext: deeptutor chat")
+        print("\nNext: cognispheretutor chat")
     else:
-        print("\nNext: deeptutor start")
+        print("\nNext: cognispheretutor start")
 
 
 if __name__ == "__main__":

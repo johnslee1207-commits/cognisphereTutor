@@ -7,7 +7,7 @@ import time
 
 import pytest
 
-from deeptutor.services.cron.service import (
+from cognispheretutor.services.cron.service import (
     CronOwner,
     CronSchedule,
     CronService,

@@ -2,8 +2,8 @@ import logging
 
 import pytest
 
-from deeptutor.logging import bind_log_context, capture_process_logs
-from deeptutor.logging.loguru_bridge import install_loguru_bridge
+from cognispheretutor.logging import bind_log_context, capture_process_logs
+from cognispheretutor.logging.loguru_bridge import install_loguru_bridge
 
 
 def test_loguru_bridge_forwards_to_stdlib_process_capture():

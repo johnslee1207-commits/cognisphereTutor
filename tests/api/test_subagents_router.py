@@ -25,7 +25,7 @@ pytestmark = pytest.mark.skipif(
 )
 
 if FastAPI is not None and TestClient is not None:
-    subagents_module = importlib.import_module("deeptutor.api.routers.subagents")
+    subagents_module = importlib.import_module("cognispheretutor.api.routers.subagents")
 else:  # pragma: no cover
     subagents_module = None
 
@@ -72,12 +72,12 @@ def client(monkeypatch, tmp_path):
     # Isolate settings persistence to a temp file — the PUT path otherwise
     # writes the developer's real data/user/settings/subagent.json.
     monkeypatch.setattr(
-        "deeptutor.services.subagent.config._settings_path",
+        "cognispheretutor.services.subagent.config._settings_path",
         lambda: tmp_path / "subagent.json",
     )
 
     async def fake_detect():
-        from deeptutor.services.subagent.types import DetectResult
+        from cognispheretutor.services.subagent.types import DetectResult
 
         return [
             DetectResult("claude_code", "Claude Code", available=True, version="2.x"),
@@ -137,7 +137,7 @@ class _FakePartnerManagerForConnect:
 
 
 def _patch_partner_existence(monkeypatch, known: set[str]) -> None:
-    import deeptutor.services.partners as partners_pkg
+    import cognispheretutor.services.partners as partners_pkg
 
     monkeypatch.setattr(
         partners_pkg, "get_partner_manager", lambda: _FakePartnerManagerForConnect(known)
@@ -217,8 +217,8 @@ def test_disconnect_unknown_is_404(client):
 
 
 def test_backend_options_endpoint_shape(client, monkeypatch):
-    from deeptutor.services.subagent import models as models_mod
-    from deeptutor.services.subagent.models import BackendOptions, ModelOption
+    from cognispheretutor.services.subagent import models as models_mod
+    from cognispheretutor.services.subagent.models import BackendOptions, ModelOption
 
     async def fake_options():
         return [
@@ -255,8 +255,8 @@ def test_message_connection_streams_and_persists(client, monkeypatch, tmp_path):
         json={"name": "MyClaude", "agent_kind": "claude_code"},
     )
 
-    from deeptutor.services.subagent import sessions as sess
-    from deeptutor.services.subagent.types import ConsultResult, SubagentEvent
+    from cognispheretutor.services.subagent import sessions as sess
+    from cognispheretutor.services.subagent.types import ConsultResult, SubagentEvent
 
     monkeypatch.setattr(sess, "_path", lambda: tmp_path / "sessions.json")
 
@@ -269,7 +269,7 @@ def test_message_connection_streams_and_persists(client, monkeypatch, tmp_path):
             await on_event(SubagentEvent(kind="text", text="hi", meta={"merge_id": "txt:m:0"}))
             return ConsultResult(final_text="hi", session_id="sess-9", success=True, event_count=1)
 
-    monkeypatch.setattr("deeptutor.services.subagent.get_backend", lambda kind: _FakeBackend())
+    monkeypatch.setattr("cognispheretutor.services.subagent.get_backend", lambda kind: _FakeBackend())
 
     res = client.post(
         "/api/v1/subagents/connections/MyClaude/message",
@@ -298,8 +298,8 @@ def test_message_connection_unknown_is_404(client):
 
 
 def test_backend_sync_endpoint(client, monkeypatch):
-    from deeptutor.services.subagent import models as models_mod
-    from deeptutor.services.subagent.models import BackendOptions, ModelOption
+    from cognispheretutor.services.subagent import models as models_mod
+    from cognispheretutor.services.subagent.models import BackendOptions, ModelOption
 
     async def fake_sync(kind):
         return BackendOptions(

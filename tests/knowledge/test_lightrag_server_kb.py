@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.knowledge.kb_types import CONNECTED_KB_TYPES, LIGHTRAG_SERVER_KB_TYPE
-from deeptutor.knowledge.manager import KnowledgeBaseManager
+from cognispheretutor.knowledge.kb_types import CONNECTED_KB_TYPES, LIGHTRAG_SERVER_KB_TYPE
+from cognispheretutor.knowledge.manager import KnowledgeBaseManager
 
 
 def test_lightrag_server_is_a_connected_type() -> None:

@@ -12,7 +12,7 @@ drive runtime composition.
 
 from __future__ import annotations
 
-from deeptutor.agents.research.request_config import (
+from cognispheretutor.agents.research.request_config import (
     build_research_execution_policy,
     build_research_runtime_config,
     validate_research_request_config,

@@ -4,10 +4,10 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.services.parsing import base, signature
-import deeptutor.services.parsing.service as svc_mod
-from deeptutor.services.parsing.service import ParseService
-from deeptutor.services.parsing.types import ParserError
+from cognispheretutor.services.parsing import base, signature
+import cognispheretutor.services.parsing.service as svc_mod
+from cognispheretutor.services.parsing.service import ParseService
+from cognispheretutor.services.parsing.types import ParserError
 
 
 class _FakeParser:

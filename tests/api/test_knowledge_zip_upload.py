@@ -17,14 +17,14 @@ import pytest
 pytest.importorskip("fastapi")
 from fastapi import HTTPException, UploadFile
 
-from deeptutor.api.routers.knowledge import _save_uploaded_files
+from cognispheretutor.api.routers.knowledge import _save_uploaded_files
 
 ALLOWED = {".txt", ".md", ".pdf", ".zip"}
 
 
 @pytest.fixture(autouse=True)
 def _disable_pocketbase(monkeypatch):
-    monkeypatch.setattr("deeptutor.services.pocketbase_client.is_pocketbase_enabled", lambda: False)
+    monkeypatch.setattr("cognispheretutor.services.pocketbase_client.is_pocketbase_enabled", lambda: False)
 
 
 def _zip_upload(filename: str, entries: list[tuple[str, bytes]]) -> UploadFile:

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.api.routers import settings as settings_router
-from deeptutor.api.routers import tools as tools_router
-from deeptutor.tools.builtin import (
+from cognispheretutor.api.routers import settings as settings_router
+from cognispheretutor.api.routers import tools as tools_router
+from cognispheretutor.tools.builtin import (
     BUILTIN_TOOL_NAMES,
     COMING_SOON_TOOL_NAMES,
     USER_TOGGLEABLE_TOOL_NAMES,

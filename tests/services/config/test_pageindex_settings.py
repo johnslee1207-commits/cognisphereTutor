@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from deeptutor.services.config.runtime_settings import RuntimeSettingsService
+from cognispheretutor.services.config.runtime_settings import RuntimeSettingsService
 
 
 def test_pageindex_settings_roundtrip(tmp_path: Path) -> None:

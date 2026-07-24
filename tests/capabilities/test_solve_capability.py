@@ -6,14 +6,14 @@ import json
 
 import pytest
 
-from deeptutor.capabilities.solve import SOLVE_TOOL_NAMES, SolveLoopCapability
-from deeptutor.capabilities.solve.session import SolveSession, get_session
-from deeptutor.capabilities.solve.tools import (
+from cognispheretutor.capabilities.solve import SOLVE_TOOL_NAMES, SolveLoopCapability
+from cognispheretutor.capabilities.solve.session import SolveSession, get_session
+from cognispheretutor.capabilities.solve.tools import (
     SolveFinishStepTool,
     SolvePlanTool,
     SolveReplanTool,
 )
-from deeptutor.core.context import UnifiedContext
+from cognispheretutor.core.context import UnifiedContext
 
 
 def _solve_context(session_id: str = "t1") -> UnifiedContext:

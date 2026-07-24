@@ -1,4 +1,4 @@
-"""Tests for deeptutor.utils.document_extractor."""
+"""Tests for cognispheretutor.utils.document_extractor."""
 
 from __future__ import annotations
 
@@ -11,8 +11,8 @@ from pptx import Presentation
 from pptx.util import Inches
 import pytest
 
-from deeptutor.utils import document_extractor as document_extractor_module
-from deeptutor.utils.document_extractor import (
+from cognispheretutor.utils import document_extractor as document_extractor_module
+from cognispheretutor.utils.document_extractor import (
     MAX_DOC_BYTES,
     MAX_EXTRACTED_CHARS_PER_DOC,
     CorruptDocumentError,
@@ -377,7 +377,7 @@ class TestExtractDocumentsFromRecords:
 
     def test_limits_come_from_settings_layer(self, monkeypatch) -> None:
         """extract_documents_from_records honors the configured policy."""
-        from deeptutor.services.config import runtime_settings as rs
+        from cognispheretutor.services.config import runtime_settings as rs
 
         # Tiny caps prove the configured values flow through (defaults would
         # accept everything here).
@@ -420,7 +420,7 @@ class TestExtractDocumentsFromRecords:
         assert "quota exceeded" in doc_texts[1]
 
     def test_char_budget_comes_from_settings_layer(self, monkeypatch) -> None:
-        from deeptutor.services.config import runtime_settings as rs
+        from cognispheretutor.services.config import runtime_settings as rs
 
         monkeypatch.setattr(
             rs,

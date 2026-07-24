@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from deeptutor.book.engine import BookEngine
-from deeptutor.book.models import Block, BlockStatus, BlockType, Page, PageStatus
+from cognispheretutor.book.engine import BookEngine
+from cognispheretutor.book.models import Block, BlockStatus, BlockType, Page, PageStatus
 
 
 def test_force_compile_reset_preserves_user_notes() -> None:

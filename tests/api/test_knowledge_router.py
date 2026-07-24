@@ -19,7 +19,7 @@ pytestmark = pytest.mark.skipif(
 )
 
 if FastAPI is not None and TestClient is not None:
-    knowledge_router_module = importlib.import_module("deeptutor.api.routers.knowledge")
+    knowledge_router_module = importlib.import_module("cognispheretutor.api.routers.knowledge")
     router = knowledge_router_module.router
 else:  # pragma: no cover - optional dependency in lightweight envs
     knowledge_router_module = None
@@ -262,7 +262,7 @@ def test_create_preserves_known_nondefault_provider(monkeypatch, tmp_path: Path)
     monkeypatch.setattr(knowledge_router_module, "KnowledgeBaseInitializer", _FakeInitializer)
     monkeypatch.setattr(knowledge_router_module, "_kb_base_dir", tmp_path / "knowledge_bases")
 
-    pageindex_config = importlib.import_module("deeptutor.services.rag.pipelines.pageindex.config")
+    pageindex_config = importlib.import_module("cognispheretutor.services.rag.pipelines.pageindex.config")
     monkeypatch.setattr(pageindex_config, "is_pageindex_configured", lambda: True)
 
     async def _noop_init_task(*_args, **_kwargs):
@@ -439,7 +439,7 @@ def test_upload_task_marks_provider_failures_as_error(monkeypatch, tmp_path: Pat
             raise RuntimeError("parse failed loudly")
 
     monkeypatch.setattr(
-        "deeptutor.knowledge.add_documents.RAGService",
+        "cognispheretutor.knowledge.add_documents.RAGService",
         _FailingRagService,
     )
 
@@ -710,8 +710,8 @@ def test_reindex_accepts_default_alias(monkeypatch, tmp_path: Path) -> None:
         def hash(self) -> str:
             return "sig"
 
-    embedding_signature = importlib.import_module("deeptutor.services.rag.embedding_signature")
-    index_versioning = importlib.import_module("deeptutor.services.rag.index_versioning")
+    embedding_signature = importlib.import_module("cognispheretutor.services.rag.embedding_signature")
+    index_versioning = importlib.import_module("cognispheretutor.services.rag.index_versioning")
     monkeypatch.setattr(
         embedding_signature, "signature_from_embedding_config", lambda: _Signature()
     )
@@ -746,8 +746,8 @@ def test_reindex_error_status_bypasses_existing_match_noop(monkeypatch, tmp_path
         def hash(self) -> str:
             return "sig"
 
-    embedding_signature = importlib.import_module("deeptutor.services.rag.embedding_signature")
-    index_versioning = importlib.import_module("deeptutor.services.rag.index_versioning")
+    embedding_signature = importlib.import_module("cognispheretutor.services.rag.embedding_signature")
+    index_versioning = importlib.import_module("cognispheretutor.services.rag.index_versioning")
     monkeypatch.setattr(
         embedding_signature, "signature_from_embedding_config", lambda: _Signature()
     )
@@ -786,8 +786,8 @@ def test_retry_error_status_queues_reindex(monkeypatch, tmp_path: Path) -> None:
         def hash(self) -> str:
             return "sig"
 
-    embedding_signature = importlib.import_module("deeptutor.services.rag.embedding_signature")
-    index_versioning = importlib.import_module("deeptutor.services.rag.index_versioning")
+    embedding_signature = importlib.import_module("cognispheretutor.services.rag.embedding_signature")
+    index_versioning = importlib.import_module("cognispheretutor.services.rag.index_versioning")
     monkeypatch.setattr(
         embedding_signature, "signature_from_embedding_config", lambda: _Signature()
     )
@@ -857,7 +857,7 @@ def test_reindex_bypasses_existing_match_when_vectors_are_invalid(
         encoding="utf-8",
     )
 
-    embedding_signature = importlib.import_module("deeptutor.services.rag.embedding_signature")
+    embedding_signature = importlib.import_module("cognispheretutor.services.rag.embedding_signature")
     monkeypatch.setattr(
         embedding_signature, "signature_from_embedding_config", lambda: _Signature()
     )
@@ -893,7 +893,7 @@ def test_update_config_coerces_legacy_provider_to_llamaindex() -> None:
 
     fake_service = _FakeConfigService()
 
-    config_module = importlib.import_module("deeptutor.services.config")
+    config_module = importlib.import_module("cognispheretutor.services.config")
     app = _build_app()
 
     with pytest.MonkeyPatch.context() as monkeypatch:
@@ -922,7 +922,7 @@ def test_update_config_preserves_known_provider() -> None:
 
     fake_service = _FakeConfigService()
 
-    config_module = importlib.import_module("deeptutor.services.config")
+    config_module = importlib.import_module("cognispheretutor.services.config")
     app = _build_app()
 
     with pytest.MonkeyPatch.context() as monkeypatch:
@@ -954,7 +954,7 @@ def test_update_config_rejects_provider_change_for_ready_index(monkeypatch, tmp_
             return dict(self.config)
 
     fake_service = _FakeConfigService()
-    config_module = importlib.import_module("deeptutor.services.config")
+    config_module = importlib.import_module("cognispheretutor.services.config")
 
     monkeypatch.setattr(config_module, "get_kb_config_service", lambda: fake_service)
     monkeypatch.setattr(knowledge_router_module, "_current_kb_base_dir", lambda: tmp_path)
@@ -1019,7 +1019,7 @@ def test_probe_folder_endpoint_rejects_pageindex(tmp_path: Path) -> None:
 
 def _patch_server_probe(monkeypatch, *, ok: bool, error: str | None = None) -> None:
     """Stub the LightRAG server probe so router tests need no live server."""
-    from deeptutor.services.rag.pipelines.lightrag_server import probe as probe_module
+    from cognispheretutor.services.rag.pipelines.lightrag_server import probe as probe_module
 
     async def _fake_probe(server_url: str, api_key: str = "", **_kwargs):
         result = probe_module.ServerProbe(base_url=server_url.rstrip("/"))

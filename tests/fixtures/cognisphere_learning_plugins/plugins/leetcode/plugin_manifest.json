@@ -1,0 +1,21 @@
+{
+  "plugin_id": "cognisphere.domain.leetcode.plugin.v1",
+  "domain": "leetcode",
+  "version": "1.0.0-fixture",
+  "display_name": "LeetCode Fixture",
+  "cognisphere_entrypoint": "fixture_plugins.leetcode.cognisphere_entrypoint",
+  "deeptutor_entrypoint": "fixture_plugins.leetcode.deeptutor_entrypoint",
+  "capabilities": [
+    "ontology",
+    "patterns",
+    "socratic_tutor",
+    "mistake_memory",
+    "deeptutor_export"
+  ],
+  "forbidden_in_plugin": [
+    "ui",
+    "user_management",
+    "pageindex_core",
+    "tenant_security_core"
+  ]
+}

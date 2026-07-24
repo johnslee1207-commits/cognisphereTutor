@@ -8,7 +8,7 @@ from types import ModuleType
 from typing import Any
 from unittest.mock import Mock
 
-from deeptutor.partners.channels import wecom
+from cognispheretutor.partners.channels import wecom
 
 
 class CapturingWSClient:
@@ -49,7 +49,7 @@ class CapturingWSClient:
 
 def test_wecom_channel_uses_the_pinned_sdk_startup_contract(monkeypatch: Any) -> None:
     """Use the positional constructor, connect(), and zero-argument lifecycle events."""
-    # Regression for https://github.com/HKUDS/DeepTutor/issues/616
+    # Regression for https://github.com/HKUDS/cognisphereTutor/issues/616
     sdk = ModuleType("wecom_aibot_sdk")
     sdk.WSClient = CapturingWSClient
     sdk.generate_req_id = lambda prefix: f"{prefix}-request"

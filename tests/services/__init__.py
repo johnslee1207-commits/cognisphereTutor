@@ -1,1 +1,1 @@
-# Tests for deeptutor/services module
+# Tests for cognispheretutor/services module

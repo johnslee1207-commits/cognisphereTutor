@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from deeptutor.services.memory.document import Document, Entry, parse
-from deeptutor.services.memory.ops import AddOp, ApplyReport, DeleteOp, EditOp, apply
+from cognispheretutor.services.memory.document import Document, Entry, parse
+from cognispheretutor.services.memory.ops import AddOp, ApplyReport, DeleteOp, EditOp, apply
 
 _BASE_MD = """\
 # Chat memory

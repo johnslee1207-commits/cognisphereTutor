@@ -13,10 +13,10 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.services.rag import embedding_signature as emb_sig
-from deeptutor.services.rag.index_versioning import EmbeddingSignature
-from deeptutor.services.rag.kb_paths import resolve_kb_dir
-from deeptutor.services.rag.linked_kb import (
+from cognispheretutor.services.rag import embedding_signature as emb_sig
+from cognispheretutor.services.rag.index_versioning import EmbeddingSignature
+from cognispheretutor.services.rag.kb_paths import resolve_kb_dir
+from cognispheretutor.services.rag.linked_kb import (
     assert_path_allowed,
     probe_linked_folder,
     provider_is_linkable,
@@ -153,7 +153,7 @@ def test_assert_path_allowed_enforces_allowlist(tmp_path: Path, monkeypatch) -> 
     allowed.mkdir()
     outside = tmp_path / "outside"
     outside.mkdir()
-    monkeypatch.setenv("DEEPTUTOR_LINKED_FOLDER_ROOTS", str(allowed))
+    monkeypatch.setenv("COGNISPHERETUTOR_LINKED_FOLDER_ROOTS", str(allowed))
 
     inside = allowed / "kb"
     inside.mkdir()

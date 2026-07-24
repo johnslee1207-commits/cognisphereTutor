@@ -16,9 +16,9 @@ import re
 
 import pytest
 
-from deeptutor.multi_user.context import reset_current_user, set_current_user
-from deeptutor.multi_user.models import CurrentUser, UserScope
-from deeptutor.services.session.pocketbase_store import PocketBaseSessionStore
+from cognispheretutor.multi_user.context import reset_current_user, set_current_user
+from cognispheretutor.multi_user.models import CurrentUser, UserScope
+from cognispheretutor.services.session.pocketbase_store import PocketBaseSessionStore
 
 pytestmark = pytest.mark.asyncio
 
@@ -97,7 +97,7 @@ class _FakeClient:
 def fake_pb(monkeypatch):
     client = _FakeClient()
     monkeypatch.setattr(
-        "deeptutor.services.pocketbase_client.get_pb_client", lambda: client, raising=True
+        "cognispheretutor.services.pocketbase_client.get_pb_client", lambda: client, raising=True
     )
     return client
 

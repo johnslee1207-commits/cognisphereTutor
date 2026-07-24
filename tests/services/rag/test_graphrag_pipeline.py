@@ -15,16 +15,16 @@ import sys
 
 import pytest
 
-from deeptutor.services.rag.factory import (
+from cognispheretutor.services.rag.factory import (
     GRAPHRAG_PROVIDER,
     get_pipeline,
     list_pipelines,
     normalize_provider_name,
 )
-from deeptutor.services.rag.index_versioning import resolve_storage_dir_for_read
-from deeptutor.services.rag.pipelines.graphrag import config as gr_config
-from deeptutor.services.rag.pipelines.graphrag import engine, ingestion, storage
-from deeptutor.services.rag.pipelines.graphrag.pipeline import GraphRagPipeline, _context_to_sources
+from cognispheretutor.services.rag.index_versioning import resolve_storage_dir_for_read
+from cognispheretutor.services.rag.pipelines.graphrag import config as gr_config
+from cognispheretutor.services.rag.pipelines.graphrag import engine, ingestion, storage
+from cognispheretutor.services.rag.pipelines.graphrag.pipeline import GraphRagPipeline, _context_to_sources
 
 # --------------------------------------------------------------------------- #
 # factory routing
@@ -51,7 +51,7 @@ def test_normalize_provider_keeps_graphrag() -> None:
 
 
 def test_ragservice_routes_graphrag_from_metadata(tmp_path) -> None:
-    from deeptutor.services.rag.service import RAGService
+    from cognispheretutor.services.rag.service import RAGService
 
     kb = tmp_path / "kbg"
     kb.mkdir()
@@ -201,7 +201,7 @@ def test_ingestion_writes_text_and_skips_noise(tmp_path) -> None:
 
 
 def test_ingestion_uses_active_parse_service_for_parser_files(tmp_path, monkeypatch) -> None:
-    from deeptutor.services import parsing
+    from cognispheretutor.services import parsing
 
     root = tmp_path / "root"
     pdf = tmp_path / "paper.pdf"
@@ -267,11 +267,11 @@ def _stub_build(monkeypatch) -> list[dict]:
     # settings.yaml write succeeds. The build_settings <-> catalog bridge itself
     # is covered by the test_build_settings_* tests above.
     monkeypatch.setattr(
-        "deeptutor.services.config.resolve_llm_runtime_config",
+        "cognispheretutor.services.config.resolve_llm_runtime_config",
         lambda: _Cfg("gpt-4o-mini", "https://llm.test/v1", "sk-llm"),
     )
     monkeypatch.setattr(
-        "deeptutor.services.embedding.get_embedding_config",
+        "cognispheretutor.services.embedding.get_embedding_config",
         lambda: _Cfg("emb-model", "https://emb.test/v1", "sk-emb"),
     )
     return calls
@@ -434,7 +434,7 @@ def test_context_to_sources_prefers_concrete_records() -> None:
 def test_router_blocks_graphrag_when_unavailable(monkeypatch) -> None:
     from fastapi import HTTPException
 
-    from deeptutor.api.routers import knowledge
+    from cognispheretutor.api.routers import knowledge
 
     monkeypatch.setattr(gr_config, "is_graphrag_available", lambda: False)
     with pytest.raises(HTTPException) as exc:

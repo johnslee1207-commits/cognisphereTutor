@@ -10,8 +10,8 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 import pytest
 
-from deeptutor.api.routers import voice as voice_router
-from deeptutor.services.voice import VoiceProviderError
+from cognispheretutor.api.routers import voice as voice_router
+from cognispheretutor.services.voice import VoiceProviderError
 
 
 @pytest.fixture()

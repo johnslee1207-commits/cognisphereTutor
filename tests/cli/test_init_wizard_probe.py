@@ -21,7 +21,7 @@ class _FakeClient:
 
 
 def test_probe_llm_uses_max_completion_tokens_for_gpt5(monkeypatch) -> None:
-    from deeptutor_cli import init_wizard
+    from cognispheretutor_cli import init_wizard
 
     _FakeClient.captured = []
     monkeypatch.setattr(init_wizard.httpx, "Client", _FakeClient)
@@ -41,7 +41,7 @@ def test_probe_llm_uses_max_completion_tokens_for_gpt5(monkeypatch) -> None:
 
 
 def test_probe_llm_keeps_max_tokens_for_legacy_chat_models(monkeypatch) -> None:
-    from deeptutor_cli import init_wizard
+    from cognispheretutor_cli import init_wizard
 
     _FakeClient.captured = []
     monkeypatch.setattr(init_wizard.httpx, "Client", _FakeClient)
@@ -59,7 +59,7 @@ def test_probe_llm_keeps_max_tokens_for_legacy_chat_models(monkeypatch) -> None:
 
 
 def test_probe_llm_keeps_anthropic_native_max_tokens(monkeypatch) -> None:
-    from deeptutor_cli import init_wizard
+    from cognispheretutor_cli import init_wizard
 
     _FakeClient.captured = []
     monkeypatch.setattr(init_wizard.httpx, "Client", _FakeClient)

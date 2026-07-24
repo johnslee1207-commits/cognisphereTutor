@@ -12,7 +12,7 @@ import zipfile
 import httpx
 import pytest
 
-from deeptutor.services.skill.hub import (
+from cognispheretutor.services.skill.hub import (
     ClawHubProvider,
     CommandProvider,
     FetchedSkill,
@@ -24,7 +24,7 @@ from deeptutor.services.skill.hub import (
     install_from_hub,
     parse_hub_ref,
 )
-from deeptutor.services.skill.service import (
+from cognispheretutor.services.skill.service import (
     SkillExistsError,
     SkillImportError,
     SkillService,
@@ -290,10 +290,10 @@ def _browse_client() -> httpx.Client:
                             "summary": "Teach by asking.",
                             "version": "1.0.0",
                             "stats": {"downloads": 8, "stars": 2},
-                            "ownerHandle": "deeptutor",
+                            "ownerHandle": "cognispheretutor",
                             "owner": {
-                                "displayName": "DeepTutor",
-                                "htmlUrl": "https://deeptutor.info",
+                                "displayName": "cognisphereTutor",
+                                "htmlUrl": "https://cognispheretutor.info",
                             },
                         },
                         {"slug": "", "displayName": "blank"},  # dropped: no slug
@@ -320,7 +320,7 @@ def _browse_client() -> httpx.Client:
                         "keywords": ["tutor", "socratic"],
                         "stats": {"downloads": 8, "stars": 2},
                     },
-                    "owner": {"displayName": "DeepTutor", "htmlUrl": "https://deeptutor.info"},
+                    "owner": {"displayName": "cognisphereTutor", "htmlUrl": "https://cognispheretutor.info"},
                     "distTags": {"latest": "1.0.0"},
                 },
             )
@@ -335,8 +335,8 @@ def test_clawhub_catalog_normalises_rows() -> None:
     row = rows[0]
     assert (row["slug"], row["name"]) == ("socratic-tutor", "Socratic Tutor")
     assert (row["downloads"], row["stars"]) == (8, 2)
-    assert row["owner"] == "DeepTutor"
-    assert row["owner_url"] == "https://deeptutor.info"
+    assert row["owner"] == "cognisphereTutor"
+    assert row["owner_url"] == "https://cognispheretutor.info"
 
 
 def test_clawhub_catalog_uses_search_when_queried() -> None:
@@ -350,12 +350,12 @@ def test_clawhub_detail_includes_body_version_and_tags() -> None:
     # topical labels come from `keywords`, not EduHub's dist-tags `tags` map
     assert detail["tags"] == ["tutor", "socratic"]
     assert "# Body" in detail["content"]
-    assert detail["owner"] == "DeepTutor"  # lifted from the envelope top level
+    assert detail["owner"] == "cognisphereTutor"  # lifted from the envelope top level
 
 
 def test_clawhub_web_origin_strips_api_suffix() -> None:
-    provider = ClawHubProvider("eduhub", base_url="https://eduhub.deeptutor.info/api/v1")
-    assert provider.web_origin == "https://eduhub.deeptutor.info"
+    provider = ClawHubProvider("eduhub", base_url="https://eduhub.cognispheretutor.info/api/v1")
+    assert provider.web_origin == "https://eduhub.cognispheretutor.info"
 
 
 # ── orchestration ────────────────────────────────────────────────────────

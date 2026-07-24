@@ -13,13 +13,13 @@ from fastapi import HTTPException
 from pydantic import ValidationError
 import pytest
 
-from deeptutor.api.routers import imports as imports_router
-from deeptutor.api.routers.imports import (
+from cognispheretutor.api.routers import imports as imports_router
+from cognispheretutor.api.routers.imports import (
     ChatHistoryImportRequest,
     import_chat_history,
     list_imported_chat_history,
 )
-from deeptutor.services.session.sqlite_store import SQLiteSessionStore
+from cognispheretutor.services.session.sqlite_store import SQLiteSessionStore
 
 
 @pytest.fixture

@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from deeptutor.knowledge.manager import KnowledgeBaseManager
+from cognispheretutor.knowledge.manager import KnowledgeBaseManager
 
 
 def test_register_partner_connection_round_trips_partner_id(tmp_path: Path) -> None:

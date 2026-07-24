@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from deeptutor.book.context import build_book_context, normalize_book_references
-from deeptutor.book.models import (
+from cognispheretutor.book.context import build_book_context, normalize_book_references
+from cognispheretutor.book.models import (
     Block,
     BlockStatus,
     BlockType,

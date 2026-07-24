@@ -9,9 +9,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from deeptutor.core.capability_protocol import BaseCapability, CapabilityManifest
-from deeptutor.core.context import Attachment, UnifiedContext
-from deeptutor.core.stream_bus import StreamBus
+from cognispheretutor.core.capability_protocol import BaseCapability, CapabilityManifest
+from cognispheretutor.core.context import Attachment, UnifiedContext
+from cognispheretutor.core.stream_bus import StreamBus
 
 # ---------------------------------------------------------------------------
 # Multi-user legacy migration guard
@@ -28,10 +28,10 @@ def _guard_legacy_multi_user_migration(monkeypatch):
     legacy root at a path that cannot exist and reset the once-flag;
     migration tests opt back in by patching the constants themselves.
     """
-    from deeptutor.multi_user import paths
+    from cognispheretutor.multi_user import paths
 
     monkeypatch.setattr(
-        paths, "LEGACY_MULTI_USER_ROOT", Path("/nonexistent/deeptutor-legacy-multi-user")
+        paths, "LEGACY_MULTI_USER_ROOT", Path("/nonexistent/cognispheretutor-legacy-multi-user")
     )
     monkeypatch.setattr(paths, "_legacy_migration_done", False)
     yield
@@ -97,7 +97,7 @@ def tmp_db_path(tmp_path: Path) -> Path:
 @pytest.fixture
 def sqlite_store(tmp_db_path: Path):
     """SQLiteSessionStore backed by a temp file."""
-    from deeptutor.services.session.sqlite_store import SQLiteSessionStore
+    from cognispheretutor.services.session.sqlite_store import SQLiteSessionStore
 
     return SQLiteSessionStore(db_path=tmp_db_path)
 

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.services.embedding.adapters.openai_compatible import (
+from cognispheretutor.services.embedding.adapters.openai_compatible import (
     OpenAICompatibleEmbeddingAdapter,
 )
 

@@ -170,7 +170,7 @@ export interface SubagentStreamLine {
 
 /**
  * Send a message straight to a connected subagent and stream its run as
- * newline-delimited JSON. Resumes the same live session DeepTutor consults
+ * newline-delimited JSON. Resumes the same live session cognisphereTutor consults
  * (shared via the cross-turn registry), so the agent keeps context.
  */
 export async function* streamSubagentMessage(

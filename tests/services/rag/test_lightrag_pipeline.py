@@ -17,16 +17,16 @@ import types
 
 import pytest
 
-from deeptutor.services.rag.factory import (
+from cognispheretutor.services.rag.factory import (
     LIGHTRAG_PROVIDER,
     get_pipeline,
     list_pipelines,
     normalize_provider_name,
 )
-from deeptutor.services.rag.index_versioning import resolve_storage_dir_for_read
-from deeptutor.services.rag.pipelines.lightrag import config as lr_config
-from deeptutor.services.rag.pipelines.lightrag import engine, storage
-from deeptutor.services.rag.pipelines.lightrag.pipeline import LightRagPipeline
+from cognispheretutor.services.rag.index_versioning import resolve_storage_dir_for_read
+from cognispheretutor.services.rag.pipelines.lightrag import config as lr_config
+from cognispheretutor.services.rag.pipelines.lightrag import engine, storage
+from cognispheretutor.services.rag.pipelines.lightrag.pipeline import LightRagPipeline
 
 # --------------------------------------------------------------------------- #
 # factory routing + config
@@ -155,8 +155,8 @@ def test_embedding_func_returns_numpy_array(monkeypatch) -> None:
 
             return embed
 
-    monkeypatch.setattr("deeptutor.services.embedding.get_embedding_config", lambda: _Config())
-    monkeypatch.setattr("deeptutor.services.embedding.get_embedding_client", lambda: _Client())
+    monkeypatch.setattr("cognispheretutor.services.embedding.get_embedding_config", lambda: _Config())
+    monkeypatch.setattr("cognispheretutor.services.embedding.get_embedding_client", lambda: _Client())
 
     embedding = lr_config.build_embedding_func()
     vectors = asyncio.run(embedding.func(["a", "b"]))
@@ -180,7 +180,7 @@ def test_lightrag_llm_adapter_preserves_messages_and_drops_extra_kwargs(
 
             return model_func
 
-    monkeypatch.setattr("deeptutor.services.llm.get_llm_client", lambda: _Client())
+    monkeypatch.setattr("cognispheretutor.services.llm.get_llm_client", lambda: _Client())
 
     func = lr_config.build_llm_model_func()
     result = asyncio.run(
@@ -216,7 +216,7 @@ def test_lightrag_vision_adapter_preserves_messages(monkeypatch) -> None:
 
             return model_func
 
-    monkeypatch.setattr("deeptutor.services.llm.get_llm_client", lambda: _Client())
+    monkeypatch.setattr("cognispheretutor.services.llm.get_llm_client", lambda: _Client())
 
     func = lr_config.build_vision_model_func()
     result = asyncio.run(
@@ -237,7 +237,7 @@ def test_build_rag_skips_raganything_parser_install_check(monkeypatch) -> None:
     """Regression for issue #594.
 
     RAG-Anything validates its *default* parser (``mineru``) at LightRAG-init
-    time, even though DeepTutor only ever inserts a pre-parsed ``content_list``
+    time, even though cognisphereTutor only ever inserts a pre-parsed ``content_list``
     and never uses RAG-Anything's parser. ``build_rag`` must pre-satisfy that
     check so indexing with a different parse engine (e.g. pymupdf4llm) doesn't
     hard-fail when MinerU is absent.
@@ -356,7 +356,7 @@ def _stub_engine(monkeypatch, answer: str = "ANSWER") -> list[dict]:
 
 
 def _stub_parse(monkeypatch, *, blocks=None, markdown: str = "# md") -> None:
-    from deeptutor.services.parsing.types import ParsedDocument
+    from cognispheretutor.services.parsing.types import ParsedDocument
 
     class _Service:
         def parse(self, path, **_):
@@ -367,7 +367,7 @@ def _stub_parse(monkeypatch, *, blocks=None, markdown: str = "# md") -> None:
                 engine="fake",
             )
 
-    monkeypatch.setattr("deeptutor.services.parsing.get_parse_service", lambda: _Service())
+    monkeypatch.setattr("cognispheretutor.services.parsing.get_parse_service", lambda: _Service())
 
 
 def test_initialize_requires_lightrag(tmp_path, monkeypatch) -> None:

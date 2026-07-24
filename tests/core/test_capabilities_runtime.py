@@ -10,16 +10,16 @@ from typing import Any
 
 import pytest
 
-from deeptutor.agents.chat.capability import ChatCapability
-from deeptutor.agents.question.capability import DeepQuestionCapability
-from deeptutor.agents.research.capability import DeepResearchCapability
-from deeptutor.agents.visualize.capability import VisualizeCapability
-import deeptutor.agents.visualize.pipeline as visualize_pipeline
-from deeptutor.capabilities.solve.capability import DeepSolveCapability
-from deeptutor.core.context import Attachment, UnifiedContext
-from deeptutor.core.stream import StreamEvent, StreamEventType
-from deeptutor.core.stream_bus import StreamBus
-from deeptutor.runtime.bootstrap.builtin_capabilities import BUILTIN_CAPABILITY_CLASSES
+from cognispheretutor.agents.chat.capability import ChatCapability
+from cognispheretutor.agents.question.capability import DeepQuestionCapability
+from cognispheretutor.agents.research.capability import DeepResearchCapability
+from cognispheretutor.agents.visualize.capability import VisualizeCapability
+import cognispheretutor.agents.visualize.pipeline as visualize_pipeline
+from cognispheretutor.capabilities.solve.capability import DeepSolveCapability
+from cognispheretutor.core.context import Attachment, UnifiedContext
+from cognispheretutor.core.stream import StreamEvent, StreamEventType
+from cognispheretutor.core.stream_bus import StreamBus
+from cognispheretutor.runtime.bootstrap.builtin_capabilities import BUILTIN_CAPABILITY_CLASSES
 
 
 def _install_module(
@@ -109,7 +109,7 @@ async def test_chat_capability_streams_content_and_geogebra_context(
             )
             await stream.content("assistant output", source="chat", stage="responding")
 
-    monkeypatch.setattr("deeptutor.agents.chat.capability.AgenticChatPipeline", FakePipeline)
+    monkeypatch.setattr("cognispheretutor.agents.chat.capability.AgenticChatPipeline", FakePipeline)
 
     context = UnifiedContext(
         user_message="analyze triangle",
@@ -150,7 +150,7 @@ async def test_deep_solve_capability_runs_chat_loop_in_solve_mode(
             captured["attachments"] = list(context.attachments or [])
             await stream.content("final solution", source="chat", stage="responding")
 
-    monkeypatch.setattr("deeptutor.capabilities.solve.capability.AgenticChatPipeline", FakePipeline)
+    monkeypatch.setattr("cognispheretutor.capabilities.solve.capability.AgenticChatPipeline", FakePipeline)
 
     context = UnifiedContext(
         user_message="solve x^2=4",
@@ -222,17 +222,17 @@ async def test_deep_question_capability_uses_single_call_followup_agent(
 
     _install_module(
         monkeypatch,
-        "deeptutor.agents.question.coordinator",
+        "cognispheretutor.agents.question.coordinator",
         AgentCoordinator=FakeCoordinator,
     )
     _install_module(
         monkeypatch,
-        "deeptutor.agents.question.agents.followup_agent",
+        "cognispheretutor.agents.question.agents.followup_agent",
         FollowupAgent=FakeFollowupAgent,
     )
     _install_module(
         monkeypatch,
-        "deeptutor.services.llm.config",
+        "cognispheretutor.services.llm.config",
         get_llm_config=lambda: SimpleNamespace(api_key="k", base_url="u", api_version="v1"),
     )
 
@@ -280,8 +280,8 @@ async def test_deep_research_capability_delegates_to_pipeline(
     in the capability module so we can assert what it was called with
     without spinning up real LLM I/O.
     """
-    import deeptutor.agents.research.capability as deep_research_mod
-    import deeptutor.agents.research.request_config  # noqa: F401
+    import cognispheretutor.agents.research.capability as deep_research_mod
+    import cognispheretutor.agents.research.request_config  # noqa: F401
 
     captured: dict[str, Any] = {}
 
@@ -406,7 +406,7 @@ async def test_visualize_capability_passes_attachments_to_analysis_agent(
     )
     _install_module(
         monkeypatch,
-        "deeptutor.services.llm.config",
+        "cognispheretutor.services.llm.config",
         get_llm_config=lambda: SimpleNamespace(api_key="k", base_url="u", api_version="v1"),
     )
 

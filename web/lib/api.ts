@@ -13,7 +13,7 @@
  *
  * Pass-through: returns the path unchanged. The actual backend URL is
  * determined at request time by `web/proxy.ts`, which reads
- * `DEEPTUTOR_API_BASE_URL` (exported by the container entrypoint from
+ * `COGNISPHERETUTOR_API_BASE_URL` (exported by the container entrypoint from
  * `data/user/settings/system.json`).
  *
  * @param path - API path (e.g., '/api/v1/knowledge/list')
@@ -38,7 +38,7 @@ export function wsUrl(path: string): string {
 }
 
 /**
- * Parse a "DEEPTUTOR_AUTH_ENABLED"-style flag at runtime.
+ * Parse a "COGNISPHERETUTOR_AUTH_ENABLED"-style flag at runtime.
  *
  * Used by both `apiFetch` (frontend) and `web/proxy.ts` (auth redirect) to
  * decide whether to gate requests. Evaluated with a runtime regex so the
@@ -50,7 +50,7 @@ export function parseAuthEnabled(raw: string | undefined): boolean {
 }
 
 // Whether auth is enabled, learned at runtime — NOT from a build-time env var.
-// The browser bundle never sees `DEEPTUTOR_AUTH_ENABLED` (it isn't a
+// The browser bundle never sees `COGNISPHERETUTOR_AUTH_ENABLED` (it isn't a
 // `NEXT_PUBLIC_` var, so Next.js does not inline it), and auth is a runtime
 // setting that must not be baked at build time anyway. `fetchAuthStatus()` in
 // `web/lib/auth.ts` calls `setRuntimeAuthEnabled()` once the backend reports the

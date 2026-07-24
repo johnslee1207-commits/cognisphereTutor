@@ -3,8 +3,8 @@
 import asyncio
 from collections.abc import AsyncGenerator
 
-from deeptutor.services.llm.config import LLMConfig
-from deeptutor.services.llm.providers.routing import RoutingProvider
+from cognispheretutor.services.llm.config import LLMConfig
+from cognispheretutor.services.llm.providers.routing import RoutingProvider
 
 
 async def _collect_stream(provider: RoutingProvider) -> list[object]:
@@ -21,7 +21,7 @@ def test_routing_provider_local_complete(monkeypatch) -> None:
         return "local"
 
     monkeypatch.setattr(
-        "deeptutor.services.llm.local_provider.complete",
+        "cognispheretutor.services.llm.local_provider.complete",
         _fake_local_complete,
     )
 
@@ -40,7 +40,7 @@ def test_routing_provider_cloud_complete(monkeypatch) -> None:
         return "cloud"
 
     monkeypatch.setattr(
-        "deeptutor.services.llm.cloud_provider.complete",
+        "cognispheretutor.services.llm.cloud_provider.complete",
         _fake_cloud_complete,
     )
 
@@ -59,7 +59,7 @@ def test_routing_provider_stream(monkeypatch) -> None:
         yield "A"
         yield "B"
 
-    monkeypatch.setattr("deeptutor.services.llm.local_provider.stream", _fake_stream)
+    monkeypatch.setattr("cognispheretutor.services.llm.local_provider.stream", _fake_stream)
 
     config = LLMConfig(model="test", api_key="", base_url="http://localhost:1234")
     provider = RoutingProvider(config)

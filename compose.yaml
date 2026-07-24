@@ -1,5 +1,5 @@
 # ============================================
-# DeepTutor — Podman Compose (rootless, read-only rootfs)
+# cognisphereTutor — Podman Compose (rootless, read-only rootfs)
 # ============================================
 # Requires:
 #   * podman 4.1+ (rootless)
@@ -14,7 +14,7 @@
 #   cp .env.example .env       # then edit
 #   podman compose -f compose.yaml up -d
 #   podman compose -f compose.yaml ps
-#   podman compose -f compose.yaml logs -f deeptutor
+#   podman compose -f compose.yaml logs -f cognispheretutor
 #
 #   Tip: alias it for the session —  alias dc='podman compose -f compose.yaml'
 #   or export COMPOSE_FILE=compose.yaml so the default `podman compose`
@@ -33,36 +33,36 @@
 #     Files you create on the host are visible as your own user inside.
 #   * Host-side port bindings are LOOPBACK ONLY (127.0.0.1:). Drop the
 #     `127.0.0.1:` prefix to expose on all interfaces.
-#   * Two services: `deeptutor` (backend+frontend in one GHCR image, run
+#   * Two services: `cognispheretutor` (backend+frontend in one GHCR image, run
 #     under supervisord) and `pocketbase` (optional auth/storage sidecar).
 #     The sandbox-runner sidecar from docker-compose.yml is intentionally
 #     NOT included: the main app falls back to bwrap (Linux, if installed
 #     in the image) or the restricted subprocess backend controlled by
 #     the `sandbox_allow_subprocess` setting in system.json. See
-#     deeptutor/services/sandbox/config.py:build_backend().
-#   * The backend and frontend run as a non-root `deeptutor` user (UID
+#     cognispheretutor/services/sandbox/config.py:build_backend().
+#   * The backend and frontend run as a non-root `cognispheretutor` user (UID
 #     1000). supervisord runs as root (PID 1), the entrypoint chowns
-#     `/app/data`, and each program is dropped to `deeptutor` via its
+#     `/app/data`, and each program is dropped to `cognispheretutor` via its
 #     per-program `user=` directive, so the app processes are UID 1000
 #     inside the container. Under `userns_mode: keep-id` that maps to the
 #     host user.
 #   * URL knowledge lives in `data/user/settings/system.json` (in-network
 #     `next_public_api_base` for the typical case, or
 #     `next_public_api_base_external` for cloud/external). The entrypoint
-#     reads the JSON on every start and exports `DEEPTUTOR_API_BASE_URL`,
+#     reads the JSON on every start and exports `COGNISPHERETUTOR_API_BASE_URL`,
 #     which `web/proxy.ts` reads to rewrite `/api/*` and `/ws/*` to the
 #     configured backend at request time. There is no build-time
 #     placeholder, no runtime `sed -i` on the bundle, and no compose env
 #     var for the API base.
 #   * Runtime settings (ports, auth, model catalog, integrations) live in
-#     data/user/settings/*.json INSIDE the deeptutor-data volume. The
+#     data/user/settings/*.json INSIDE the cognispheretutor-data volume. The
 #     entrypoint unsets BACKEND_PORT, FRONTEND_PORT, NEXT_PUBLIC_API_BASE,
 #     NEXT_PUBLIC_API_BASE_EXTERNAL, AUTH_ENABLED, POCKETBASE_URL, etc.
 #     and re-exports them from the JSONs on every start. So: edit JSONs
-#     + `podman compose restart deeptutor`, NOT compose env vars.
+#     + `podman compose restart cognispheretutor`, NOT compose env vars.
 # ============================================
 
-name: deeptutor
+name: cognispheretutor
 
 services:
   # ----------------------------------------------------------
@@ -73,7 +73,7 @@ services:
   # Leave blank to run with the SQLite fallback (single-user / invite-only).
   pocketbase:
     image: ghcr.io/muchobien/pocketbase:latest
-    container_name: deeptutor-pocketbase
+    container_name: cognispheretutor-pocketbase
     pull_policy: always
     restart: unless-stopped
     userns_mode: keep-id
@@ -95,7 +95,7 @@ services:
       - ./data/pocketbase/public:/pb_public:U
       - ./data/pocketbase/hooks:/pb_hooks:U
     networks:
-      - deeptutor
+      - cognispheretutor
     healthcheck:
       test:
         - CMD
@@ -110,16 +110,16 @@ services:
       start_period: 10s
 
   # ----------------------------------------------------------
-  # DeepTutor — backend (FastAPI :8001) + frontend (Next.js :3782)
+  # cognisphereTutor — backend (FastAPI :8001) + frontend (Next.js :3782)
   # ----------------------------------------------------------
   # Both run inside the same image, supervised by supervisord under the
-  # unprivileged `deeptutor` user (UID 1000). The image's entrypoint loads
+  # unprivileged `cognispheretutor` user (UID 1000). The image's entrypoint loads
   # runtime settings from data/user/settings/*.json and exports them into
   # the supervisord children's environment, so changing ports/auth/providers
   # means editing JSONs + `podman compose restart`.
-  deeptutor:
-    image: ghcr.io/hkuds/deeptutor:latest
-    container_name: deeptutor
+  cognispheretutor:
+    image: ghcr.io/hkuds/cognispheretutor:latest
+    container_name: cognispheretutor
     pull_policy: always
     restart: unless-stopped
     userns_mode: keep-id
@@ -179,7 +179,7 @@ services:
       pocketbase:
         condition: service_healthy
     networks:
-      - deeptutor
+      - cognispheretutor
     # Optional hardening — uncomment to taste. supervisord runs as root
     # (PID 1) and setuids each program down to UID 1000, which needs
     # CAP_SETUID/CAP_SETGID — so do NOT `cap_drop: ALL` here, it would stop
@@ -188,7 +188,7 @@ services:
     # security_opt:
     #   - no-new-privileges:true
     # # cap_drop: ALL is unsafe — supervisord needs CAP_SETUID/CAP_SETGID to
-    # # drop its children to the deeptutor user.
+    # # drop its children to the cognispheretutor user.
     # Resource limits. Honored on cgroup v2 hosts; podman warns and skips
     # on cgroup v1 or no-cgroup environments.
     # pids_limit: 1024
@@ -196,7 +196,7 @@ services:
     # cpus: 4.0
 
 networks:
-  deeptutor:
+  cognispheretutor:
     driver: bridge
 
 # Named volumes intentionally not used: with userns_mode: keep-id the

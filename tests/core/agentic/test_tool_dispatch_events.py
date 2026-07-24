@@ -15,12 +15,12 @@ from typing import Any
 
 import pytest
 
-from deeptutor.core.agentic.tool_dispatch import dispatch_tool_calls
-from deeptutor.core.context import UnifiedContext
-from deeptutor.core.stream import StreamEvent, StreamEventType
-from deeptutor.core.stream_bus import StreamBus
-from deeptutor.core.tool_protocol import ToolResult
-from deeptutor.services.sandbox import Mount
+from cognispheretutor.core.agentic.tool_dispatch import dispatch_tool_calls
+from cognispheretutor.core.context import UnifiedContext
+from cognispheretutor.core.stream import StreamEvent, StreamEventType
+from cognispheretutor.core.stream_bus import StreamBus
+from cognispheretutor.core.tool_protocol import ToolResult
+from cognispheretutor.services.sandbox import Mount
 
 
 class _Registry:

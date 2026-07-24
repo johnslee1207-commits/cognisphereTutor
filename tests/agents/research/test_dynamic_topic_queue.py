@@ -12,7 +12,7 @@ The new agentic-loop refactor relies on three additions to
 
 from __future__ import annotations
 
-from deeptutor.agents.research.data_structures import (
+from cognispheretutor.agents.research.data_structures import (
     DEFAULT_TOPIC_SIMILARITY_THRESHOLD,
     DynamicTopicQueue,
     TopicStatus,

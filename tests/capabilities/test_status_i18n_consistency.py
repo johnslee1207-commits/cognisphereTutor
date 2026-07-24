@@ -21,8 +21,8 @@ import re
 import yaml
 
 _REPO = Path(__file__).resolve().parents[2]
-_PROMPTS = _REPO / "deeptutor" / "agents" / "visualize" / "prompts"
-_CODE = _REPO / "deeptutor" / "agents" / "visualize" / "capability.py"
+_PROMPTS = _REPO / "cognispheretutor" / "agents" / "visualize" / "prompts"
+_CODE = _REPO / "cognispheretutor" / "agents" / "visualize" / "capability.py"
 
 
 def _status_keys(lang: str) -> set[str]:

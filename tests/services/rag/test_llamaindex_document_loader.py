@@ -22,7 +22,7 @@ def _install_stub_parse_service(monkeypatch, results: dict[str, "object"]) -> No
     ``results`` maps a file name to either a ``ParsedDocument`` to return or an
     exception instance to raise (e.g. ``ParserError``).
     """
-    import deeptutor.services.parsing as parsing
+    import cognispheretutor.services.parsing as parsing
 
     class _StubService:
         def parse(self, source_path, **_kwargs):
@@ -38,8 +38,8 @@ def test_loader_routes_parser_files_through_active_parse_engine(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     pytest.importorskip("llama_index.core")
-    from deeptutor.services.parsing.types import ParsedDocument
-    from deeptutor.services.rag.pipelines.llamaindex.document_loader import (
+    from cognispheretutor.services.parsing.types import ParsedDocument
+    from cognispheretutor.services.rag.pipelines.llamaindex.document_loader import (
         LlamaIndexDocumentLoader,
     )
 
@@ -72,8 +72,8 @@ def test_loader_skips_document_when_active_engine_cannot_parse(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
 ) -> None:
     pytest.importorskip("llama_index.core")
-    from deeptutor.services.parsing.types import ParserError
-    from deeptutor.services.rag.pipelines.llamaindex.document_loader import (
+    from cognispheretutor.services.parsing.types import ParserError
+    from cognispheretutor.services.rag.pipelines.llamaindex.document_loader import (
         LlamaIndexDocumentLoader,
     )
 
@@ -99,8 +99,8 @@ def test_loader_indexes_images_extracted_from_parsed_document(
     pytest.importorskip("llama_index.core")
     from llama_index.core.schema import ImageNode
 
-    from deeptutor.services.parsing.types import ParsedDocument
-    from deeptutor.services.rag.pipelines.llamaindex import document_loader as loader_module
+    from cognispheretutor.services.parsing.types import ParsedDocument
+    from cognispheretutor.services.rag.pipelines.llamaindex import document_loader as loader_module
 
     pdf_path = tmp_path / "paper.pdf"
     pdf_path.write_bytes(b"stub")
@@ -157,7 +157,7 @@ def test_loader_skips_images_when_embedding_provider_is_text_only(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     pytest.importorskip("llama_index.core")
-    from deeptutor.services.rag.pipelines.llamaindex import document_loader as loader_module
+    from cognispheretutor.services.rag.pipelines.llamaindex import document_loader as loader_module
 
     image_path = tmp_path / "photo.png"
     image_path.write_bytes(b"\x89PNG\r\n")
@@ -181,7 +181,7 @@ def test_loader_embeds_images_when_embedding_provider_is_multimodal(
     pytest.importorskip("llama_index.core")
     from llama_index.core.schema import ImageNode
 
-    from deeptutor.services.rag.pipelines.llamaindex import document_loader as loader_module
+    from cognispheretutor.services.rag.pipelines.llamaindex import document_loader as loader_module
 
     image_path = tmp_path / "photo.png"
     image_path.write_bytes(b"\x89PNG\r\n")
@@ -227,7 +227,7 @@ def test_loader_skips_images_when_llm_is_text_only(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     pytest.importorskip("llama_index.core")
-    from deeptutor.services.rag.pipelines.llamaindex import document_loader as loader_module
+    from cognispheretutor.services.rag.pipelines.llamaindex import document_loader as loader_module
 
     image_path = tmp_path / "photo.png"
     image_path.write_bytes(b"\x89PNG\r\n")
@@ -256,7 +256,7 @@ def test_loader_logs_all_missing_multimodal_image_requirements(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
 ) -> None:
     pytest.importorskip("llama_index.core")
-    from deeptutor.services.rag.pipelines.llamaindex import document_loader as loader_module
+    from cognispheretutor.services.rag.pipelines.llamaindex import document_loader as loader_module
 
     image_path = tmp_path / "photo.png"
     image_path.write_bytes(b"\x89PNG\r\n")

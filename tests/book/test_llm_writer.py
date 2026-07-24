@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.book.blocks import _llm_writer
+from cognispheretutor.book.blocks import _llm_writer
 
 
 @pytest.mark.asyncio

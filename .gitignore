@@ -9,8 +9,9 @@
 data/
 /multi-user/
 run_code_workspace/
-deeptutor/agents/question/reference_papers/
-deeptutor/services/rag/eg_only_for_analysis/
+runtime/
+cognispheretutor/agents/question/reference_papers/
+cognispheretutor/services/rag/eg_only_for_analysis/
 /docs/
 /site/
 .claude
@@ -224,7 +225,7 @@ $RECYCLE.BIN/
 *.swo
 
 # Local scripts
-启动 DeepTutor.bat
+启动 cognisphereTutor.bat
 
 # ============================================
 # Testing and Coverage

@@ -1,0 +1,18 @@
+{
+  "plugin_id": "cognisphere.domain.aws_certification.plugin.v1",
+  "domain": "aws_certification",
+  "version": "1.0.0-fixture",
+  "display_name": "AWS Certification Fixture",
+  "cognisphere_entrypoint": "fixture_plugins.aws_certification.cognisphere_entrypoint",
+  "deeptutor_entrypoint": "fixture_plugins.aws_certification.deeptutor_entrypoint",
+  "capabilities": [
+    "ontology",
+    "deeptutor_export"
+  ],
+  "forbidden_in_plugin": [
+    "ui",
+    "user_management",
+    "pageindex_core",
+    "tenant_security_core"
+  ]
+}

@@ -37,8 +37,8 @@ def _events(text: str) -> list[tuple[str, dict[str, Any]]]:
 
 
 def _client_with_fake_partner(monkeypatch):
-    from deeptutor.core.stream import StreamEvent, StreamEventType
-    from deeptutor.services.partners.manager import PartnerConfig
+    from cognispheretutor.core.stream import StreamEvent, StreamEventType
+    from cognispheretutor.services.partners.manager import PartnerConfig
 
     class FakeInstance:
         running = True
@@ -64,8 +64,8 @@ def _client_with_fake_partner(monkeypatch):
             return "streamed answer"
 
     mgr = FakeMgr()
-    partners_router_mod = importlib.import_module("deeptutor.api.routers.partners")
-    plugins_router_mod = importlib.import_module("deeptutor.api.routers.plugins_api")
+    partners_router_mod = importlib.import_module("cognispheretutor.api.routers.partners")
+    plugins_router_mod = importlib.import_module("cognispheretutor.api.routers.plugins_api")
     monkeypatch.setattr(partners_router_mod, "get_partner_manager", lambda: mgr)
     partners_router_mod._start_locks.clear()
 

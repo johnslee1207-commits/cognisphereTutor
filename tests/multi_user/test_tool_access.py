@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.multi_user.grants import load_grant, normalize_grant, save_grant
-from deeptutor.multi_user.tool_access import (
+from cognispheretutor.multi_user.grants import load_grant, normalize_grant, save_grant
+from cognispheretutor.multi_user.tool_access import (
     allowed_mcp_tools,
     allowed_optional_tools,
     combine_whitelists,
@@ -16,7 +16,7 @@ from deeptutor.multi_user.tool_access import (
 @pytest.fixture
 def grantable_alice(mu_isolated_root, monkeypatch):
     """Make ``save_grant`` accept u_alice without a real identity record."""
-    from deeptutor.multi_user import grants
+    from cognispheretutor.multi_user import grants
 
     monkeypatch.setattr(
         grants,
@@ -112,7 +112,7 @@ def test_combine_whitelists():
 
 
 def test_enabled_optional_tools_filtered_by_grant(as_user, grantable_alice, monkeypatch):
-    from deeptutor.api.routers import settings as settings_router
+    from cognispheretutor.api.routers import settings as settings_router
 
     monkeypatch.setattr(
         settings_router,

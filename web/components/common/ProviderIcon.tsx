@@ -2,7 +2,7 @@ import { Bot } from "lucide-react";
 
 /**
  * Vendor logos for LLM/embedding providers, keyed by binding name
- * (see deeptutor/services/provider_registry.py). SVGs are vendored from
+ * (see cognispheretutor/services/provider_registry.py). SVGs are vendored from
  * @lobehub/icons-static-svg (MIT) into /public/provider-icons.
  *
  * `mono` icons are solid-fill brand marks that render black as <img>;

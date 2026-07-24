@@ -4,9 +4,9 @@ import asyncio
 
 import pytest
 
-from deeptutor.agents.math_animator.models import GeneratedCode, RenderResult, VisualReviewResult
-from deeptutor.agents.math_animator.renderer import ManimRenderError
-from deeptutor.agents.math_animator.retry_manager import CodeRetryManager
+from cognispheretutor.agents.math_animator.models import GeneratedCode, RenderResult, VisualReviewResult
+from cognispheretutor.agents.math_animator.renderer import ManimRenderError
+from cognispheretutor.agents.math_animator.retry_manager import CodeRetryManager
 
 
 class _FakeRenderer:

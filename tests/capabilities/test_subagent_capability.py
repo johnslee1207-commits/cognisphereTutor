@@ -11,25 +11,25 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.agents._shared.tool_composition import ToolMountFlags, compose_enabled_tools
-from deeptutor.capabilities import any_exclusive_capability_active
-from deeptutor.capabilities.subagent import (
+from cognispheretutor.agents._shared.tool_composition import ToolMountFlags, compose_enabled_tools
+from cognispheretutor.capabilities import any_exclusive_capability_active
+from cognispheretutor.capabilities.subagent import (
     SUBAGENT_TOOL_NAMES,
     ConsultSubagentTool,
     SubagentCapability,
     connection_for_turn,
 )
-from deeptutor.capabilities.subagent import binding as subagent_binding
-from deeptutor.core.context import UnifiedContext
-from deeptutor.runtime.registry.tool_registry import get_tool_registry
-from deeptutor.services.subagent.config import BackendConfig
-from deeptutor.services.subagent.types import ConsultResult, SubagentEvent
+from cognispheretutor.capabilities.subagent import binding as subagent_binding
+from cognispheretutor.core.context import UnifiedContext
+from cognispheretutor.runtime.registry.tool_registry import get_tool_registry
+from cognispheretutor.services.subagent.config import BackendConfig
+from cognispheretutor.services.subagent.types import ConsultResult, SubagentEvent
 
 
 def _bind(monkeypatch, *, kind: str = "claude_code", cwd: str = "", name: str = "myagent") -> None:
     """Make ``resolve_kb_metadata`` report ``name`` as a connected subagent."""
     monkeypatch.setattr(
-        "deeptutor.multi_user.knowledge_access.resolve_kb_metadata",
+        "cognispheretutor.multi_user.knowledge_access.resolve_kb_metadata",
         lambda ref: (
             {"name": ref, "type": "subagent", "agent_kind": kind, "cwd": cwd}
             if ref == name
@@ -103,7 +103,7 @@ def test_binding_cached(monkeypatch) -> None:
         calls["n"] += 1
         return {"name": ref, "type": "subagent", "agent_kind": "claude_code", "cwd": ""}
 
-    monkeypatch.setattr("deeptutor.multi_user.knowledge_access.resolve_kb_metadata", fake)
+    monkeypatch.setattr("cognispheretutor.multi_user.knowledge_access.resolve_kb_metadata", fake)
     ctx = UnifiedContext(user_message="hi", knowledge_bases=["a"])
     subagent_binding.connection_for_turn(ctx)
     subagent_binding.connection_for_turn(ctx)
@@ -172,7 +172,7 @@ def _spec(state: dict, *, budget: int = 2) -> dict:
 @pytest.mark.asyncio
 async def test_consult_streams_events_and_threads_session(monkeypatch) -> None:
     backend = _FakeBackend()
-    monkeypatch.setattr("deeptutor.services.subagent.get_backend", lambda kind: backend)
+    monkeypatch.setattr("cognispheretutor.services.subagent.get_backend", lambda kind: backend)
     tool = ConsultSubagentTool()
     state: dict = {"count": 0, "session_id": None, "name": "myagent"}
     streamed: list[tuple[str, str, str]] = []
@@ -198,7 +198,7 @@ async def test_consult_streams_events_and_threads_session(monkeypatch) -> None:
 @pytest.mark.asyncio
 async def test_consult_budget_is_authoritative(monkeypatch) -> None:
     backend = _FakeBackend()
-    monkeypatch.setattr("deeptutor.services.subagent.get_backend", lambda kind: backend)
+    monkeypatch.setattr("cognispheretutor.services.subagent.get_backend", lambda kind: backend)
     tool = ConsultSubagentTool()
     state: dict = {"count": 0, "session_id": None, "name": "myagent"}
 
@@ -223,13 +223,13 @@ async def test_consult_without_spec_is_graceful() -> None:
 async def test_session_id_persists_across_turns(monkeypatch, tmp_path) -> None:
     # A backend session id captured in one turn is remembered (keyed by chat
     # session + connection) and resumed by the next turn's augment_kwargs — so
-    # the local agent keeps context across DeepTutor's separate messages.
-    from deeptutor.services.subagent import sessions as sess
+    # the local agent keeps context across cognisphereTutor's separate messages.
+    from cognispheretutor.services.subagent import sessions as sess
 
     monkeypatch.setattr(sess, "_path", lambda: tmp_path / "subagent_sessions.json")
     _bind(monkeypatch)  # "myagent" → claude_code
     backend = _FakeBackend()
-    monkeypatch.setattr("deeptutor.services.subagent.get_backend", lambda kind: backend)
+    monkeypatch.setattr("cognispheretutor.services.subagent.get_backend", lambda kind: backend)
 
     cap = SubagentCapability()
     tool = ConsultSubagentTool()

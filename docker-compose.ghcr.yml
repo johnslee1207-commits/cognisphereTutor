@@ -1,14 +1,14 @@
 # ============================================
-# DeepTutor Docker Compose — Pre-built GHCR Image
+# cognisphereTutor Docker Compose — Pre-built GHCR Image
 # ============================================
-# Run DeepTutor using the official pre-built image from GitHub Container Registry.
+# Run cognisphereTutor using the official pre-built image from GitHub Container Registry.
 # No local build required — the image is pulled automatically.
 #
 # Usage:
 #   python scripts/docker_compose.py -f docker-compose.ghcr.yml up -d
 #
 # To pin a specific version:
-#   Edit the image tag below, e.g. ghcr.io/hkuds/deeptutor:1.0.0
+#   Edit the image tag below, e.g. ghcr.io/hkuds/cognispheretutor:1.0.0
 #
 # Prerequisites:
 #   1. Configure providers in data/user/settings/model_catalog.json or the UI
@@ -37,14 +37,14 @@
 # ============================================
 
 services:
-  deeptutor:
-    image: ghcr.io/hkuds/deeptutor:latest
+  cognispheretutor:
+    image: ghcr.io/hkuds/cognispheretutor:latest
     pull_policy: always
-    container_name: deeptutor
+    container_name: cognispheretutor
     restart: unless-stopped
     ports:
-      - "${DEEPTUTOR_DOCKER_BACKEND_PORT:-8001}:${DEEPTUTOR_DOCKER_BACKEND_PORT:-8001}"
-      - "${DEEPTUTOR_DOCKER_FRONTEND_PORT:-3782}:${DEEPTUTOR_DOCKER_FRONTEND_PORT:-3782}"
+      - "${COGNISPHERETUTOR_DOCKER_BACKEND_PORT:-8001}:${COGNISPHERETUTOR_DOCKER_BACKEND_PORT:-8001}"
+      - "${COGNISPHERETUTOR_DOCKER_FRONTEND_PORT:-3782}:${COGNISPHERETUTOR_DOCKER_FRONTEND_PORT:-3782}"
 
     volumes:
       # Persistent data (created automatically on first start)
@@ -53,15 +53,15 @@ services:
       - ./data/knowledge_bases:/app/data/knowledge_bases
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${DEEPTUTOR_DOCKER_BACKEND_PORT:-8001}/"]
+      test: ["CMD", "curl", "-f", "http://localhost:${COGNISPHERETUTOR_DOCKER_BACKEND_PORT:-8001}/"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 60s
 
     networks:
-      - deeptutor-network
+      - cognispheretutor-network
 
 networks:
-  deeptutor-network:
+  cognispheretutor-network:
     driver: bridge

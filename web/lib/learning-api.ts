@@ -56,7 +56,7 @@ export async function initModules(bookId: string, modules: ModuleInit[]) {
 }
 
 // ── Mastery map (the dashboard view) ──────────────────────────────────────
-// Mirrors deeptutor/learning/policy.py map_summary + next_objective.
+// Mirrors cognispheretutor/learning/policy.py map_summary + next_objective.
 
 export type ObjectiveStatus = "new" | "learning" | "mastered";
 

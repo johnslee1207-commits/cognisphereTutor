@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.core.stream import StreamEvent, StreamEventType
-from deeptutor.services.session.turn_runtime import (
+from cognispheretutor.core.stream import StreamEvent, StreamEventType
+from cognispheretutor.services.session.turn_runtime import (
     _artifact_attachments,
     _clip_text,
     _extract_followup_question_context,

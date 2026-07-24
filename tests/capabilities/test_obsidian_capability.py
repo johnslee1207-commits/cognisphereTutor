@@ -7,19 +7,19 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.agents._shared.tool_composition import ToolMountFlags, compose_enabled_tools
-from deeptutor.capabilities import any_exclusive_capability_active
-from deeptutor.capabilities.obsidian import OBSIDIAN_TOOL_NAMES, ObsidianCapability
-from deeptutor.capabilities.obsidian import binding as obsidian_binding
-from deeptutor.capabilities.obsidian import vault as V
-from deeptutor.capabilities.obsidian.tools import (
+from cognispheretutor.agents._shared.tool_composition import ToolMountFlags, compose_enabled_tools
+from cognispheretutor.capabilities import any_exclusive_capability_active
+from cognispheretutor.capabilities.obsidian import OBSIDIAN_TOOL_NAMES, ObsidianCapability
+from cognispheretutor.capabilities.obsidian import binding as obsidian_binding
+from cognispheretutor.capabilities.obsidian import vault as V
+from cognispheretutor.capabilities.obsidian.tools import (
     ObsidianAppendTool,
     ObsidianBacklinksTool,
     ObsidianReadTool,
     ObsidianSearchTool,
 )
-from deeptutor.core.context import UnifiedContext
-from deeptutor.runtime.registry.tool_registry import get_tool_registry
+from cognispheretutor.core.context import UnifiedContext
+from cognispheretutor.runtime.registry.tool_registry import get_tool_registry
 
 
 def _seed_vault(root: Path) -> None:
@@ -90,7 +90,7 @@ def test_vault_refuses_path_traversal(tmp_path: Path) -> None:
 def _bind(monkeypatch, vault_path: str, name: str = "myvault") -> None:
     """Make ``resolve_kb_metadata`` report ``name`` as an Obsidian vault."""
     monkeypatch.setattr(
-        "deeptutor.multi_user.knowledge_access.resolve_kb_metadata",
+        "cognispheretutor.multi_user.knowledge_access.resolve_kb_metadata",
         lambda ref: (
             {"name": ref, "type": "obsidian", "vault_path": vault_path}
             if ref == name
@@ -131,7 +131,7 @@ def test_binding_resolved_once_and_cached(monkeypatch, tmp_path: Path) -> None:
         calls["n"] += 1
         return {"name": ref, "type": "obsidian", "vault_path": str(tmp_path)}
 
-    monkeypatch.setattr("deeptutor.multi_user.knowledge_access.resolve_kb_metadata", fake)
+    monkeypatch.setattr("cognispheretutor.multi_user.knowledge_access.resolve_kb_metadata", fake)
     ctx = UnifiedContext(user_message="hi", knowledge_bases=["v"])
     obsidian_binding.vault_for_turn(ctx)
     obsidian_binding.vault_for_turn(ctx)

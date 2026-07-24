@@ -9,9 +9,9 @@ from typing import Any, Dict
 
 import pytest
 
-import deeptutor.services.rag.service as rag_service_module
-from deeptutor.services.rag.service import RAGService
-from deeptutor.services.rag.smart_retriever import SmartRetriever
+import cognispheretutor.services.rag.service as rag_service_module
+from cognispheretutor.services.rag.service import RAGService
+from cognispheretutor.services.rag.smart_retriever import SmartRetriever
 
 
 class _FakePipeline:
@@ -244,7 +244,7 @@ async def test_search_filters_noisy_vector_and_embedding_logs(
         logging.getLogger("nano-vectordb").info(
             "Init {'embedding_dim': 4096, 'metric': 'cosine'} 13 data"
         )
-        logging.getLogger("deeptutor.services.embedding.adapters.openai_compatible").info(
+        logging.getLogger("cognispheretutor.services.embedding.adapters.openai_compatible").info(
             "Successfully generated 1 embeddings (model: Qwen/Qwen3-Embedding-8B, dimensions: 4096)"
         )
         logging.getLogger("lightrag").info(

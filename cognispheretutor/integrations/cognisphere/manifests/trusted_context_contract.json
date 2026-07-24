@@ -1,0 +1,31 @@
+{
+  "contract_id": "deeptutor.cognisphere.trusted_context_contract.v1",
+  "phase": "DT-P3",
+  "required_package_keys": [
+    "project_id",
+    "payload_kind",
+    "exported_at",
+    "knowledge",
+    "safety"
+  ],
+  "required_safety_keys": [
+    "source_of_truth",
+    "no_answer_keys"
+  ],
+  "allowed_source_of_truth": [
+    "cognisphere",
+    "cognisphere_plugin_pack",
+    "cognisphere_trusted_context"
+  ],
+  "kit_base_url_env": "COGNISPHERE_TRUSTED_CONTEXT_BASE_URL",
+  "api_key_env": "COGNISPHERE_AGENT_API_KEY",
+  "require_write_api_key_env": "COGNISPHERE_REQUIRE_WRITE_API_KEY",
+  "production_candidate_env": "COGNISPHERE_PRODUCTION_CANDIDATE",
+  "production_candidate_ready_value": "1",
+  "cache_relative_workspace_path": "cognisphere_trusted_context",
+  "blocker": {
+    "code": "trusted_context_kit_unavailable",
+    "meaning": "Cognisphere client-integration-kit HTTP endpoints are not configured in this workspace",
+    "handling": "Fail-closed on live fetch; accept offline validated packages via import_trusted_context_into_workspace"
+  }
+}

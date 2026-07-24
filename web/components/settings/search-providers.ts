@@ -1,12 +1,12 @@
 // Which connection fields a web-search provider actually uses.
 //
 // This mirrors the backend resolver in
-// `deeptutor/services/config/provider_runtime.py`
+// `cognispheretutor/services/config/provider_runtime.py`
 // (`resolve_search_runtime_config`): brave/tavily/jina/perplexity/serper
 // authenticate with an API key, searxng is configured by its instance Base
 // URL, and duckduckgo/none need no connection details at all. Every search
 // provider ships an empty `base_url` from the settings API
-// (`_provider_choices` in `deeptutor/api/routers/settings.py`), so the Base
+// (`_provider_choices` in `cognispheretutor/api/routers/settings.py`), so the Base
 // URL only ever carries a value for searxng.
 //
 // Keep this table in sync with SUPPORTED_SEARCH_PROVIDERS on the backend.

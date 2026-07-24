@@ -1,7 +1,7 @@
 # ============================================
-# DeepTutor Docker Compose Configuration
+# cognisphereTutor Docker Compose Configuration
 # ============================================
-# This file provides orchestration for DeepTutor services
+# This file provides orchestration for cognisphereTutor services
 #
 # Usage:
 #   Production:  python scripts/docker_compose.py up -d
@@ -29,7 +29,7 @@ services:
     container_name: pocketbase
     restart: unless-stopped
     ports:
-      - "${DEEPTUTOR_DOCKER_POCKETBASE_PORT:-8090}:8090"
+      - "${COGNISPHERETUTOR_DOCKER_POCKETBASE_PORT:-8090}:8090"
     volumes:
       # The upstream pocketbase image's entrypoint uses absolute paths
       # (no /pb/ prefix): --dir=/pb_data --publicDir=/pb_public
@@ -40,7 +40,7 @@ services:
       - ./data/pocketbase/public:/pb_public
       - ./data/pocketbase/hooks:/pb_hooks
     networks:
-      - deeptutor-network
+      - cognispheretutor-network
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8090/api/health"]
       interval: 10s
@@ -49,21 +49,21 @@ services:
       start_period: 10s
 
   # ============================================
-  # All-in-One DeepTutor Service
+  # All-in-One cognisphereTutor Service
   # ============================================
-  deeptutor:
+  cognispheretutor:
     build:
       context: .
       dockerfile: Dockerfile
       target: production
-    container_name: deeptutor
+    container_name: cognispheretutor
     restart: unless-stopped
     ports:
-      - "${DEEPTUTOR_DOCKER_BACKEND_PORT:-8001}:${DEEPTUTOR_DOCKER_BACKEND_PORT:-8001}"
-      - "${DEEPTUTOR_DOCKER_FRONTEND_PORT:-3782}:${DEEPTUTOR_DOCKER_FRONTEND_PORT:-3782}"
+      - "${COGNISPHERETUTOR_DOCKER_BACKEND_PORT:-8001}:${COGNISPHERETUTOR_DOCKER_BACKEND_PORT:-8001}"
+      - "${COGNISPHERETUTOR_DOCKER_FRONTEND_PORT:-3782}:${COGNISPHERETUTOR_DOCKER_FRONTEND_PORT:-3782}"
 
     volumes:
-      # Everything DeepTutor persists lives under ./data — one tree to mount
+      # Everything cognisphereTutor persists lives under ./data — one tree to mount
       # and back up: admin workspace + runtime settings (data/user), per-user
       # workspaces (data/users), partners (data/partners), accounts/grants/
       # audit (data/system), knowledge bases, memory.
@@ -75,14 +75,14 @@ services:
     environment:
       # Route untrusted shell exec to the runner sidecar (SYSTEM isolation).
       # When this is set, the main app NEVER runs untrusted code in its own
-      # process — see deeptutor/services/sandbox/config.py:build_backend().
+      # process — see cognispheretutor/services/sandbox/config.py:build_backend().
       # On bare-metal / macOS deployments where the runner is not started, leave
       # this unset: the app degrades to bwrap (Linux, if installed) or, only when
-      # DEEPTUTOR_SANDBOX_ALLOW_SUBPROCESS=1, a restricted subprocess.
-      - DEEPTUTOR_SANDBOX_RUNNER_URL=http://sandbox-runner:8900
+      # COGNISPHERETUTOR_SANDBOX_ALLOW_SUBPROCESS=1, a restricted subprocess.
+      - COGNISPHERETUTOR_SANDBOX_RUNNER_URL=http://sandbox-runner:8900
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${DEEPTUTOR_DOCKER_BACKEND_PORT:-8001}/"]
+      test: ["CMD", "curl", "-f", "http://localhost:${COGNISPHERETUTOR_DOCKER_BACKEND_PORT:-8001}/"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -95,24 +95,24 @@ services:
         condition: service_healthy
 
     networks:
-      - deeptutor-network
+      - cognispheretutor-network
 
   # ============================================
   # Sandbox Runner Sidecar
   # ============================================
   # Executes untrusted shell commands in an isolated, least-privileged
   # container so the main app never has to. Rationale for the sidecar shape:
-  #   * the main `deeptutor` container keeps minimal privileges and does NOT
+  #   * the main `cognispheretutor` container keeps minimal privileges and does NOT
   #     mount the docker socket or run untrusted code in its own process;
   #   * a sandbox escape here lands in a stripped, unprivileged container with
   #     no app secrets, not in the main app.
   # Not exposed to the host: it is reachable only on the internal
-  # deeptutor-network at http://sandbox-runner:8900.
+  # cognispheretutor-network at http://sandbox-runner:8900.
   sandbox-runner:
     build:
       context: .
       dockerfile: Dockerfile.runner
-    container_name: deeptutor-sandbox-runner
+    container_name: cognispheretutor-sandbox-runner
     restart: unless-stopped
 
     # Share the task workspaces at the SAME paths as the main app so the mount
@@ -158,11 +158,11 @@ services:
       start_period: 5s
 
     networks:
-      - deeptutor-network
+      - cognispheretutor-network
 
 # ============================================
 # Networks
 # ============================================
 networks:
-  deeptutor-network:
+  cognispheretutor-network:
     driver: bridge

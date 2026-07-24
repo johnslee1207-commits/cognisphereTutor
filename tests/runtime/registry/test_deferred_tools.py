@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.core.tool_protocol import BaseTool, ToolDefinition, ToolResult
-from deeptutor.runtime.registry.deferred_tools import (
+from cognispheretutor.core.tool_protocol import BaseTool, ToolDefinition, ToolResult
+from cognispheretutor.runtime.registry.deferred_tools import (
     DeferredToolLoader,
     render_deferred_tools_manifest,
 )
-from deeptutor.runtime.registry.tool_registry import ToolRegistry
+from cognispheretutor.runtime.registry.tool_registry import ToolRegistry
 
 
 class _FakeDeferredTool(BaseTool):
@@ -35,7 +35,7 @@ class _FakeDeferredTool(BaseTool):
 def _no_persist(monkeypatch):
     """Stop DeferredToolLoader persistence from touching disk."""
     monkeypatch.setattr(
-        "deeptutor.services.mcp.session_state.record_loaded_tools",
+        "cognispheretutor.services.mcp.session_state.record_loaded_tools",
         lambda session_id, names: None,
     )
 

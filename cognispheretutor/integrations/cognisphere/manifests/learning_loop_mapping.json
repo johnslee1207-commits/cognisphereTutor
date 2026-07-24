@@ -1,0 +1,96 @@
+{
+  "contract_id": "deeptutor.cognisphere.learning_loop_mapping.v1",
+  "default_learning_loop": [
+    "Assessment",
+    "Knowledge Gap",
+    "Learning Plan",
+    "Practice",
+    "Mistake Memory",
+    "Mastery Update"
+  ],
+  "stage_map": {
+    "Assessment": {
+      "pipeline_id": "assessment",
+      "surface": "assessment",
+      "mastery_stage": "diagnostic",
+      "description": "Diagnose learner readiness from imported problems/assessments"
+    },
+    "Knowledge Gap": {
+      "pipeline_id": "knowledge_gap",
+      "surface": "assessment",
+      "mastery_stage": "diagnostic",
+      "description": "Derive gaps from assessment outcomes and skill coverage"
+    },
+    "Learning Plan": {
+      "pipeline_id": "learning_plan",
+      "surface": "plan",
+      "mastery_stage": "explain",
+      "description": "Sequence patterns/skills into a Guided Learning plan"
+    },
+    "Practice": {
+      "pipeline_id": "practice",
+      "surface": "plan",
+      "mastery_stage": "practice",
+      "description": "Practice items without spoilers (asks-not-spoils)"
+    },
+    "Mistake Memory": {
+      "pipeline_id": "mistake_memory",
+      "surface": "mastery",
+      "mastery_stage": "error_diagnosis",
+      "description": "Persist failure evidence for tutor focus (DT-P5 sync)"
+    },
+    "Mastery Update": {
+      "pipeline_id": "mastery_update",
+      "surface": "mastery",
+      "mastery_stage": "review",
+      "description": "Apply skill-graph evidence into mastery progress"
+    }
+  },
+  "alias_stage_map": {
+    "plan": "Learning Plan",
+    "teach": "Practice",
+    "assess": "Assessment",
+    "memory": "Mistake Memory",
+    "assessment": "Assessment",
+    "knowledge_gap": "Knowledge Gap",
+    "learning_plan": "Learning Plan",
+    "practice": "Practice",
+    "mistake_memory": "Mistake Memory",
+    "mastery_update": "Mastery Update"
+  },
+  "surface_knowledge_keys": {
+    "assessment": [
+      "problems",
+      "assessments",
+      "concepts",
+      "theorems",
+      "problem_patterns",
+      "ontology_classes"
+    ],
+    "plan": [
+      "patterns",
+      "skills",
+      "data_structures",
+      "course_framework",
+      "learning_loop",
+      "domains"
+    ],
+    "mastery": [
+      "skills",
+      "skill_graph",
+      "patterns",
+      "concepts"
+    ]
+  },
+  "domain_expected_knowledge_keys": {
+    "leetcode": ["problems", "patterns", "skills"],
+    "ap_calculus": ["concepts", "skills", "theorems", "problem_patterns"],
+    "aws_certification": ["domains", "skills"]
+  },
+  "import_cache": {
+    "relative_workspace_path": "cognisphere_imports",
+    "env_override": "COGNISPHERE_IMPORT_CACHE_DIR",
+    "receipt_filename": "import_receipt.json",
+    "bundle_filename": "bundle.json"
+  }
+}

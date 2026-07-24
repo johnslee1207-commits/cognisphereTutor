@@ -8,9 +8,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from pydantic import ValidationError
 import pytest
 
-from deeptutor.partners.bus.events import OutboundMessage
-from deeptutor.partners.bus.queue import MessageBus
-from deeptutor.partners.channels.napcat import NapcatChannel, NapcatConfig
+from cognispheretutor.partners.bus.events import OutboundMessage
+from cognispheretutor.partners.bus.queue import MessageBus
+from cognispheretutor.partners.channels.napcat import NapcatChannel, NapcatConfig
 
 
 def _make_channel(**overrides) -> NapcatChannel:
@@ -621,7 +621,7 @@ class TestDispatchFrame:
 
 class TestChannelSchema:
     def test_napcat_in_all_channel_schemas(self):
-        from deeptutor.api.routers._partners_channel_schema import all_channel_schemas
+        from cognispheretutor.api.routers._partners_channel_schema import all_channel_schemas
 
         schemas = all_channel_schemas()
         assert "napcat" in schemas
@@ -632,7 +632,7 @@ class TestChannelSchema:
         assert payload["default_config"]["ws_url"] == "ws://127.0.0.1:3001"
 
     def test_coexists_with_official_qq_channel(self):
-        from deeptutor.api.routers._partners_channel_schema import all_channel_schemas
+        from cognispheretutor.api.routers._partners_channel_schema import all_channel_schemas
 
         schemas = all_channel_schemas()
         assert "qq" in schemas

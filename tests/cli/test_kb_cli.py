@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from deeptutor_cli.kb import _collect_documents
+from cognispheretutor_cli.kb import _collect_documents
 
 
 def test_collect_documents_from_directory_matches_uppercase_extensions(tmp_path: Path) -> None:

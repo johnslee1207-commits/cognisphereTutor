@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.core.agentic.client import (
+from cognispheretutor.core.agentic.client import (
     _NATIVE_ADAPTER_BUILDERS,
     _NATIVE_TOOL_BACKENDS,
     LLMClientConfig,
@@ -11,7 +11,7 @@ from deeptutor.core.agentic.client import (
     build_openai_client,
     can_use_native_tool_calling,
 )
-from deeptutor.services.llm.provider_core.base import LLMResponse, ToolCallRequest
+from cognispheretutor.services.llm.provider_core.base import LLMResponse, ToolCallRequest
 
 
 def test_agentic_kwargs_disable_deepseek_flash_thinking_by_default() -> None:
@@ -102,7 +102,7 @@ def test_build_openai_client_routes_anthropic_backend_through_adapter(monkeypatc
             captured.update(kwargs)
 
     monkeypatch.setattr(
-        "deeptutor.services.llm.provider_core.AnthropicProvider",
+        "cognispheretutor.services.llm.provider_core.AnthropicProvider",
         FakeProvider,
     )
 
@@ -131,7 +131,7 @@ def test_build_openai_client_routes_oauth_backend_through_adapter(monkeypatch) -
             captured.update(kwargs)
 
     monkeypatch.setattr(
-        "deeptutor.services.llm.provider_core.OpenAICodexProvider",
+        "cognispheretutor.services.llm.provider_core.OpenAICodexProvider",
         FakeProvider,
     )
 
@@ -156,7 +156,7 @@ def test_build_openai_client_routes_github_copilot_backend_through_adapter(monke
             captured.update(kwargs)
 
     monkeypatch.setattr(
-        "deeptutor.services.llm.provider_core.GitHubCopilotProvider",
+        "cognispheretutor.services.llm.provider_core.GitHubCopilotProvider",
         FakeProvider,
     )
 

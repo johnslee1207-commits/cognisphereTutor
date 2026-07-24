@@ -6,8 +6,8 @@ on:
       - main
       - dev
     paths:
-      - "deeptutor/**"
-      - "deeptutor_cli/**"
+      - "cognispheretutor/**"
+      - "cognispheretutor_cli/**"
       - "tests/**"
       - "requirements/**"
       - "requirements.txt"
@@ -19,8 +19,8 @@ on:
       - main
       - dev
     paths:
-      - "deeptutor/**"
-      - "deeptutor_cli/**"
+      - "cognispheretutor/**"
+      - "cognispheretutor_cli/**"
       - "tests/**"
       - "requirements/**"
       - "requirements.txt"
@@ -114,13 +114,13 @@ jobs:
       - name: Check module imports
         run: |
           echo "🐍 Testing with Python ${{ matrix.python-version }}"
-          python -c "from deeptutor.runtime.orchestrator import ChatOrchestrator; print('✅ Orchestrator imports OK')"
-          python -c "from deeptutor.runtime.registry.tool_registry import get_tool_registry; print('✅ Tool registry imports OK')"
-          python -c "from deeptutor.runtime.registry.capability_registry import get_capability_registry; print('✅ Capability registry imports OK')"
-          python -c "from deeptutor.services.config.runtime_settings import RuntimeSettingsService; print('✅ RuntimeSettingsService imports OK')"
-          python -c "from deeptutor.api.routers.unified_ws import unified_websocket; print('✅ Unified WS imports OK')"
-          python -c "from deeptutor.services.prompt.manager import PromptManager; print('✅ Prompt manager imports OK')"
-          python -c "from deeptutor.logging import configure_logging, bind_log_context, capture_process_logs, ProcessLogEvent; print('✅ Logging imports OK')"
+          python -c "from cognispheretutor.runtime.orchestrator import ChatOrchestrator; print('✅ Orchestrator imports OK')"
+          python -c "from cognispheretutor.runtime.registry.tool_registry import get_tool_registry; print('✅ Tool registry imports OK')"
+          python -c "from cognispheretutor.runtime.registry.capability_registry import get_capability_registry; print('✅ Capability registry imports OK')"
+          python -c "from cognispheretutor.services.config.runtime_settings import RuntimeSettingsService; print('✅ RuntimeSettingsService imports OK')"
+          python -c "from cognispheretutor.api.routers.unified_ws import unified_websocket; print('✅ Unified WS imports OK')"
+          python -c "from cognispheretutor.services.prompt.manager import PromptManager; print('✅ Prompt manager imports OK')"
+          python -c "from cognispheretutor.logging import configure_logging, bind_log_context, capture_process_logs, ProcessLogEvent; print('✅ Logging imports OK')"
         env:
           PYTHONPATH: ${{ github.workspace }}
 
@@ -175,7 +175,7 @@ jobs:
       - name: Run Python tests
         run: |
           echo "🧪 Running Python tests on Python ${{ matrix.python-version }}"
-          pytest -q tests deeptutor/learning/tests
+          pytest -q tests cognispheretutor/learning/tests
         env:
           PYTHONPATH: ${{ github.workspace }}
 

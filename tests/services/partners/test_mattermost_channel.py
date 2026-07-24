@@ -7,10 +7,10 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from deeptutor.partners.bus.events import OutboundMessage
-from deeptutor.partners.bus.queue import MessageBus
-from deeptutor.partners.channels import mattermost as mm_module
-from deeptutor.partners.channels.mattermost import MattermostChannel, MattermostConfig
+from cognispheretutor.partners.bus.events import OutboundMessage
+from cognispheretutor.partners.bus.queue import MessageBus
+from cognispheretutor.partners.channels import mattermost as mm_module
+from cognispheretutor.partners.channels.mattermost import MattermostChannel, MattermostConfig
 
 
 def _make_channel(**overrides) -> MattermostChannel:

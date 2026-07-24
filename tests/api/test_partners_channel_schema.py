@@ -14,7 +14,7 @@ from __future__ import annotations
 from fastapi.testclient import TestClient
 import pytest
 
-from deeptutor.api.routers._partners_channel_schema import (
+from cognispheretutor.api.routers._partners_channel_schema import (
     all_channel_schemas,
     channel_schema_payload,
     collect_secret_fields,
@@ -25,17 +25,17 @@ from deeptutor.api.routers._partners_channel_schema import (
 
 class TestResolveConfigModel:
     def test_telegram_pairs_with_telegram_config(self) -> None:
-        from deeptutor.partners.channels.telegram import TelegramChannel, TelegramConfig
+        from cognispheretutor.partners.channels.telegram import TelegramChannel, TelegramConfig
 
         assert resolve_config_model(TelegramChannel) is TelegramConfig
 
     def test_slack_pairs_with_slack_config(self) -> None:
-        from deeptutor.partners.channels.slack import SlackChannel, SlackConfig
+        from cognispheretutor.partners.channels.slack import SlackChannel, SlackConfig
 
         assert resolve_config_model(SlackChannel) is SlackConfig
 
     def test_discord_pairs_with_discord_config(self) -> None:
-        from deeptutor.partners.channels.discord import DiscordChannel, DiscordConfig
+        from cognispheretutor.partners.channels.discord import DiscordChannel, DiscordConfig
 
         assert resolve_config_model(DiscordChannel) is DiscordConfig
 
@@ -116,7 +116,7 @@ class TestCollectSecretFields:
 
 class TestChannelSchemaPayload:
     def test_telegram_payload_shape(self) -> None:
-        from deeptutor.partners.channels.telegram import TelegramChannel
+        from cognispheretutor.partners.channels.telegram import TelegramChannel
 
         payload = channel_schema_payload(TelegramChannel)
         assert payload is not None
@@ -129,7 +129,7 @@ class TestChannelSchemaPayload:
         assert payload["default_config"]["enabled"] is False
 
     def test_slack_dm_subtree_inlined(self) -> None:
-        from deeptutor.partners.channels.slack import SlackChannel
+        from cognispheretutor.partners.channels.slack import SlackChannel
 
         payload = channel_schema_payload(SlackChannel)
         assert payload is not None
@@ -149,7 +149,7 @@ class TestEndpoint:
         # fixturing of ``get_partner_manager`` is needed.
         from fastapi import FastAPI
 
-        from deeptutor.api.routers import partners as partners_router
+        from cognispheretutor.api.routers import partners as partners_router
 
         app = FastAPI()
         app.include_router(partners_router.router, prefix="/api/v1/partners")

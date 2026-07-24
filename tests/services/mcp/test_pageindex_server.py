@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from deeptutor.services.mcp import pageindex_server
-from deeptutor.services.mcp.config import MCPConfig, MCPServerConfig
-from deeptutor.services.mcp.manager import wrapped_tool_name
-from deeptutor.services.rag.pipelines.pageindex.config import (
+from cognispheretutor.services.mcp import pageindex_server
+from cognispheretutor.services.mcp.config import MCPConfig, MCPServerConfig
+from cognispheretutor.services.mcp.manager import wrapped_tool_name
+from cognispheretutor.services.rag.pipelines.pageindex.config import (
     PageIndexConfig,
     PageIndexNotConfiguredError,
 )
@@ -13,7 +13,7 @@ from deeptutor.services.rag.pipelines.pageindex.config import (
 
 def _configured(monkeypatch, key: str = "sk-test") -> None:
     monkeypatch.setattr(
-        "deeptutor.services.rag.pipelines.pageindex.config.get_pageindex_config",
+        "cognispheretutor.services.rag.pipelines.pageindex.config.get_pageindex_config",
         lambda **_: PageIndexConfig(api_key=key, api_base_url="https://api.pageindex.ai"),
     )
 
@@ -23,7 +23,7 @@ def _unconfigured(monkeypatch) -> None:
         raise PageIndexNotConfiguredError("no key")
 
     monkeypatch.setattr(
-        "deeptutor.services.rag.pipelines.pageindex.config.get_pageindex_config", _raise
+        "cognispheretutor.services.rag.pipelines.pageindex.config.get_pageindex_config", _raise
     )
 
 

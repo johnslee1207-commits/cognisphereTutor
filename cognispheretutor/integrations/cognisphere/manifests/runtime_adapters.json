@@ -1,0 +1,56 @@
+{
+  "contract_id": "deeptutor.cognisphere.runtime_adapters.v1",
+  "phase": "DT-P4/P5/P6",
+  "description": "Maps domain capabilities to offline plugin runtime modules (product binding).",
+  "default_domain": "leetcode",
+  "adapters": {
+    "socratic_tutor": {
+      "capability": "socratic_tutor",
+      "module": "cognisphere_plugins.leetcode.socratic_tutor_runtime",
+      "start": "start_dialogue_session",
+      "advance": "advance_dialogue",
+      "apply_sandbox": "apply_sandbox_feedback",
+      "plan": "plan_socratic_dialogue",
+      "status": "build_p2_status",
+      "hint_level_min": 0,
+      "hint_level_max": 4
+    },
+    "code_verification": {
+      "capability": "code_verification",
+      "module": "cognisphere_plugins.leetcode.sandbox_verification_runtime",
+      "verify": "run_categorized_verification",
+      "analyze": "analyze_outcome",
+      "to_socratic": "to_socratic_feedback",
+      "status": "build_p3_status",
+      "require_authorized_or_offline": true
+    },
+    "mistake_memory": {
+      "capability": "mistake_memory",
+      "module": "cognisphere_plugins.leetcode.mistake_memory",
+      "record": "record_mistake",
+      "record_from_sandbox": "record_mistake_from_sandbox",
+      "list": "list_mistakes",
+      "suggest": "suggest_tutor_focus",
+      "status": "build_lc006_status"
+    },
+    "skill_graph": {
+      "capability": "skill_graph",
+      "module": "cognisphere_plugins.leetcode.skill_graph_runtime",
+      "plan_path": "plan_learning_path",
+      "recommend": "recommend_problems",
+      "update_mastery": "update_skill_mastery",
+      "to_socratic_focus": "to_socratic_focus",
+      "query": "query_skill_graph",
+      "status": "build_p4_status"
+    },
+    "benchmark": {
+      "capability": "benchmark",
+      "module": "cognisphere_plugins.leetcode.expert_benchmark_runtime",
+      "start_interview": "start_interview_session",
+      "run_flow": "run_interview_flow",
+      "list_cases": "list_benchmark_cases",
+      "query": "query_interview_runtime",
+      "status": "build_p5_status"
+    }
+  }
+}

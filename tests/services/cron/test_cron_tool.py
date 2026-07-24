@@ -6,14 +6,14 @@ import time
 
 import pytest
 
-from deeptutor.services.cron.service import CronService
-from deeptutor.tools.cron_tool import run_cron_action
+from cognispheretutor.services.cron.service import CronService
+from cognispheretutor.tools.cron_tool import run_cron_action
 
 
 @pytest.fixture
 def cron_service(tmp_path, monkeypatch):
-    import deeptutor.services.cron.service as service_mod
-    import deeptutor.tools.cron_tool as tool_mod
+    import cognispheretutor.services.cron.service as service_mod
+    import cognispheretutor.tools.cron_tool as tool_mod
 
     service = CronService(store_path=tmp_path / "jobs.json")
     monkeypatch.setattr(service_mod, "_service", service)
@@ -154,14 +154,14 @@ class TestCronTool:
 
 class TestRegistryIntegration:
     def test_cron_tool_is_builtin_and_automounted(self):
-        from deeptutor.agents._shared.tool_composition import AUTO_MOUNTED_TOOLS
-        from deeptutor.tools.builtin import BUILTIN_TOOL_NAMES
+        from cognispheretutor.agents._shared.tool_composition import AUTO_MOUNTED_TOOLS
+        from cognispheretutor.tools.builtin import BUILTIN_TOOL_NAMES
 
         assert "cron" in BUILTIN_TOOL_NAMES
         assert "cron" in AUTO_MOUNTED_TOOLS
 
     def test_schema_has_action_enum(self):
-        from deeptutor.tools.builtin import CronTool
+        from cognispheretutor.tools.builtin import CronTool
 
         schema = CronTool().get_definition().to_openai_schema()
         action = schema["function"]["parameters"]["properties"]["action"]
@@ -171,8 +171,8 @@ class TestRegistryIntegration:
 class TestExecutorRouting:
     @pytest.mark.asyncio
     async def test_partner_job_runs_and_publishes_outbound(self, monkeypatch):
-        from deeptutor.services.cron import executor
-        from deeptutor.services.cron.service import CronJob, CronOwner, CronSchedule
+        from cognispheretutor.services.cron import executor
+        from cognispheretutor.services.cron.service import CronJob, CronOwner, CronSchedule
 
         processed = []
         published = []
@@ -198,7 +198,7 @@ class TestExecutorRouting:
             def get_partner(self, partner_id):
                 return FakeInstance() if partner_id == "ada" else None
 
-        import deeptutor.services.partners as partners_mod
+        import cognispheretutor.services.partners as partners_mod
 
         monkeypatch.setattr(partners_mod, "get_partner_manager", lambda: FakeMgr())
         monkeypatch.setattr(executor, "_maybe_send_desktop_notification", _noop_notify)
@@ -237,14 +237,14 @@ class TestExecutorRouting:
 
     @pytest.mark.asyncio
     async def test_partner_job_skipped_when_not_running(self, monkeypatch):
-        from deeptutor.services.cron import executor
-        from deeptutor.services.cron.service import CronJob, CronOwner, CronSchedule
+        from cognispheretutor.services.cron import executor
+        from cognispheretutor.services.cron.service import CronJob, CronOwner, CronSchedule
 
         class FakeMgr:
             def get_partner(self, partner_id):
                 return None
 
-        import deeptutor.services.partners as partners_mod
+        import cognispheretutor.services.partners as partners_mod
 
         monkeypatch.setattr(partners_mod, "get_partner_manager", lambda: FakeMgr())
         monkeypatch.setattr(executor, "_maybe_send_desktop_notification", _noop_notify)

@@ -1,15 +1,15 @@
-# 🚀 DeepTutor v1.0.0-beta1 Release Notes
+# 🚀 cognisphereTutor v1.0.0-beta1 Release Notes
 
 **Release Date:** 2026.04.04
 
-We're thrilled to announce **DeepTutor v1.0.0-beta1** — the first beta of the **DeepTutor 2.0** architecture. This is a ground-up rewrite that transforms DeepTutor from a monolithic RAG tutor into an **agent-native learning platform** with a two-layer plugin model (Tools + Capabilities), three unified entry points (CLI / WebSocket / Python SDK), and a completely rebuilt web application shell.
+We're thrilled to announce **cognisphereTutor v1.0.0-beta1** — the first beta of the **cognisphereTutor 2.0** architecture. This is a ground-up rewrite that transforms cognisphereTutor from a monolithic RAG tutor into an **agent-native learning platform** with a two-layer plugin model (Tools + Capabilities), three unified entry points (CLI / WebSocket / Python SDK), and a completely rebuilt web application shell.
 
-> ⚠️ **Beta Notice:** This is **beta 1** of v1.0.0. The core architecture is stable, but some **UI interactions and edge-case workflows may still contain bugs**. We appreciate your patience and welcome bug reports via [Issues](https://github.com/HKUDS/DeepTutor/issues).
+> ⚠️ **Beta Notice:** This is **beta 1** of v1.0.0. The core architecture is stable, but some **UI interactions and edge-case workflows may still contain bugs**. We appreciate your patience and welcome bug reports via [Issues](https://github.com/HKUDS/cognisphereTutor/issues).
 
 > 📌 **Knowledge Base Note:** In this release, the RAG pipeline has been **simplified to LlamaIndex only**. LightRAG and RAG-Anything pipelines along with their related knowledge base content have been **temporarily removed** to focus on stability. They will be re-introduced in upcoming releases.
 
 > [!TIP]
-> **Call for Feedback:** If you encounter any bugs or have feature requests, please [open an issue](https://github.com/HKUDS/DeepTutor/issues)! PRs are welcome — see our [Contributing Guide](https://github.com/HKUDS/DeepTutor/blob/main/CONTRIBUTING.md).
+> **Call for Feedback:** If you encounter any bugs or have feature requests, please [open an issue](https://github.com/HKUDS/cognisphereTutor/issues)! PRs are welcome — see our [Contributing Guide](https://github.com/HKUDS/cognisphereTutor/blob/main/CONTRIBUTING.md).
 
 **Diff Scope:** `main...dev` (903 files changed, 92,701 insertions, 73,749 deletions)
 
@@ -17,8 +17,8 @@ We're thrilled to announce **DeepTutor v1.0.0-beta1** — the first beta of the 
 
 ## Quick Summary
 
-- **Architecture** — Complete rewrite from `src/` to `deeptutor/` + `deeptutor_cli/` with agent-native runtime (Tools + Capabilities).
-- **Entry Points** — Three unified entry points: standalone CLI (`deeptutor`), WebSocket API (`/api/v1/ws`), and Python SDK facade.
+- **Architecture** — Complete rewrite from `src/` to `cognispheretutor/` + `cognispheretutor_cli/` with agent-native runtime (Tools + Capabilities).
+- **Entry Points** — Three unified entry points: standalone CLI (`cognispheretutor`), WebSocket API (`/api/v1/ws`), and Python SDK facade.
 - **Capabilities** — Five built-in capabilities: `chat`, `deep_solve`, `deep_question`, `deep_research`, `math_animator`.
 - **Tools** — Seven LLM-callable tools: `rag`, `web_search`, `code_execution`, `reason`, `brainstorm`, `paper_search`, `geogebra_analysis`.
 - **Web App** — Rebuilt Next.js app with workspace/utility route groups, new Playground, Co-Writer, Agents, and Guide pages.
@@ -44,9 +44,9 @@ Three entry points share a single `ChatOrchestrator` runtime:
 
 | Entry Point | Description |
 |:---|:---|
-| **CLI** (`deeptutor`) | Typer-based CLI with sub-commands: `run`, `chat`, `bot`, `kb`, `memory`, `session`, `notebook`, `plugin`, `config`, `provider`, `serve` |
+| **CLI** (`cognispheretutor`) | Typer-based CLI with sub-commands: `run`, `chat`, `bot`, `kb`, `memory`, `session`, `notebook`, `plugin`, `config`, `provider`, `serve` |
 | **WebSocket** (`/api/v1/ws`) | Unified endpoint with turn lifecycle: `start_turn`, `subscribe_turn`, `subscribe_session`, `resume_from`, `cancel_turn` |
-| **Python SDK** (`deeptutor.app.facade`) | Programmatic facade for SDK-style integrations |
+| **Python SDK** (`cognispheretutor.app.facade`) | Programmatic facade for SDK-style integrations |
 
 ### 🧠 Capability Layer
 
@@ -75,7 +75,7 @@ Seven unified LLM-callable tools with bilingual prompt hints (en/zh):
 
 ### 🤖 TutorBot — Multi-Channel Bot Agent
 
-New autonomous bot system (`deeptutor/tutorbot/`) that brings DeepTutor to messaging platforms:
+New autonomous bot system (`cognispheretutor/tutorbot/`) that brings cognisphereTutor to messaging platforms:
 
 - **12 Channels:** Telegram, Discord, Slack, WeChat Work (WeCom), Feishu, DingTalk, WhatsApp, Matrix, QQ, Email, MoChat
 - **Agent Loop:** Tool-augmented LLM loop with memory, subagent spawning, and team collaboration
@@ -109,7 +109,7 @@ Complete rebuild of the Next.js frontend with new route groups:
 Refactored services into clearer domains:
 
 ```
-deeptutor/services/
+cognispheretutor/services/
 ├── config/       # Environment store, model catalog, provider runtime
 ├── llm/          # Multi-provider LLM: factory, registry, traffic control, telemetry
 ├── embedding/    # Adapter-based: OpenAI-compatible, Cohere, Jina, Ollama
@@ -139,8 +139,8 @@ deeptutor/services/
 
 ## ⚠️ Breaking Changes
 
-- **Package layout:** `src/` → `deeptutor/` + `deeptutor_cli/`. Old `src/` directory fully removed (140 files).
-- **Package renamed:** `ai-tutor` → `deeptutor`, version `1.0.0`.
+- **Package layout:** `src/` → `cognispheretutor/` + `cognispheretutor_cli/`. Old `src/` directory fully removed (140 files).
+- **Package renamed:** `ai-tutor` → `cognispheretutor`, version `1.0.0`.
 - **Runtime model:** Capability-native orchestration. `chat` is the default; deep modes selected explicitly via `run` command or WebSocket.
 - **Web routes:** All pages reorganized under `(workspace)/` and `(utility)/`. Legacy pages (`/solver`, `/question`, `/research`, `/ideagen`, `/notebook`, `/history`) removed.
 - **RAG pipeline:** Only LlamaIndex available. LightRAG and RAG-Anything temporarily removed.
@@ -151,9 +151,9 @@ deeptutor/services/
 
 ## 📦 What's Changed
 
-- Complete codebase rewrite with agent-native architecture (DeepTutor 2.0).
+- Complete codebase rewrite with agent-native architecture (cognisphereTutor 2.0).
 - Two-layer plugin model (Tools + Capabilities) with `ChatOrchestrator` coordinator.
-- Standalone CLI package (`deeptutor_cli/`) with 11 sub-commands via Typer.
+- Standalone CLI package (`cognispheretutor_cli/`) with 11 sub-commands via Typer.
 - Unified WebSocket endpoint with turn lifecycle and session streaming.
 - 5 built-in capabilities and 7 LLM-callable tools with bilingual prompt hints.
 - TutorBot multi-channel bot agent with 12 platform integrations.
@@ -163,4 +163,4 @@ deeptutor/services/
 - 53+ test files across runtime, services, agents, API, CLI, and tools.
 - Updated Docker configuration and layered dependency management.
 
-**Full Changelog**: https://github.com/HKUDS/DeepTutor/compare/v0.6.0...v1.0.0-beta1
+**Full Changelog**: https://github.com/HKUDS/cognisphereTutor/compare/v0.6.0...v1.0.0-beta1

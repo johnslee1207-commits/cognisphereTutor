@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from deeptutor.multi_user import identity, paths
-from deeptutor.multi_user.context import reset_current_user, set_current_user
-from deeptutor.multi_user.models import CurrentUser, UserScope
-from deeptutor.services.path_service import get_path_service
+from cognispheretutor.multi_user import identity, paths
+from cognispheretutor.multi_user.context import reset_current_user, set_current_user
+from cognispheretutor.multi_user.models import CurrentUser, UserScope
+from cognispheretutor.services.path_service import get_path_service
 
 
 def test_identity_migrates_legacy_users_with_stable_uid(tmp_path, monkeypatch):

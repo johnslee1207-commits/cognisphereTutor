@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from deeptutor.agents.base_agent import BaseAgent
-from deeptutor.services.llm.config import LLMConfig
+from cognispheretutor.agents.base_agent import BaseAgent
+from cognispheretutor.services.llm.config import LLMConfig
 
 
 class _DummyAgent(BaseAgent):
@@ -21,7 +21,7 @@ def test_base_agent_defaults_to_resolved_binding(monkeypatch) -> None:
         provider_name="openrouter",
         provider_mode="gateway",
     )
-    monkeypatch.setattr("deeptutor.agents.base_agent.get_llm_config", lambda: resolved)
+    monkeypatch.setattr("cognispheretutor.agents.base_agent.get_llm_config", lambda: resolved)
 
     agent = _DummyAgent(
         module_name="question",

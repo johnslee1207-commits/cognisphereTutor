@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.services.config.provider_runtime import ResolvedSearchConfig
-from deeptutor.services.search import web_search
-from deeptutor.services.search.types import WebSearchResponse
+from cognispheretutor.services.config.provider_runtime import ResolvedSearchConfig
+from cognispheretutor.services.search import web_search
+from cognispheretutor.services.search.types import WebSearchResponse
 
 
 class _FakeProvider:
@@ -26,11 +26,11 @@ class _FakeProvider:
 
 def test_web_search_rejects_deprecated_provider(monkeypatch) -> None:
     monkeypatch.setattr(
-        "deeptutor.services.search._get_web_search_config",
+        "cognispheretutor.services.search._get_web_search_config",
         lambda: {"enabled": True},
     )
     monkeypatch.setattr(
-        "deeptutor.services.search.resolve_search_runtime_config",
+        "cognispheretutor.services.search.resolve_search_runtime_config",
         lambda: ResolvedSearchConfig(
             provider="exa",
             requested_provider="exa",
@@ -44,11 +44,11 @@ def test_web_search_rejects_deprecated_provider(monkeypatch) -> None:
 
 def test_web_search_perplexity_missing_key_hard_fails(monkeypatch) -> None:
     monkeypatch.setattr(
-        "deeptutor.services.search._get_web_search_config",
+        "cognispheretutor.services.search._get_web_search_config",
         lambda: {"enabled": True},
     )
     monkeypatch.setattr(
-        "deeptutor.services.search.resolve_search_runtime_config",
+        "cognispheretutor.services.search.resolve_search_runtime_config",
         lambda: ResolvedSearchConfig(
             provider="perplexity",
             requested_provider="perplexity",
@@ -57,7 +57,7 @@ def test_web_search_perplexity_missing_key_hard_fails(monkeypatch) -> None:
             missing_credentials=True,
         ),
     )
-    monkeypatch.setattr("deeptutor.services.search._resolve_provider_key", lambda _p, _k: "")
+    monkeypatch.setattr("cognispheretutor.services.search._resolve_provider_key", lambda _p, _k: "")
     with pytest.raises(ValueError, match="perplexity requires api_key"):
         web_search("hello")
 
@@ -71,11 +71,11 @@ def test_web_search_missing_key_falls_back_to_duckduckgo(monkeypatch) -> None:
         return _FakeProvider(name)
 
     monkeypatch.setattr(
-        "deeptutor.services.search._get_web_search_config",
+        "cognispheretutor.services.search._get_web_search_config",
         lambda: {"enabled": True},
     )
     monkeypatch.setattr(
-        "deeptutor.services.search.resolve_search_runtime_config",
+        "cognispheretutor.services.search.resolve_search_runtime_config",
         lambda: ResolvedSearchConfig(
             provider="brave",
             requested_provider="brave",
@@ -85,8 +85,8 @@ def test_web_search_missing_key_falls_back_to_duckduckgo(monkeypatch) -> None:
             proxy="http://127.0.0.1:7890",
         ),
     )
-    monkeypatch.setattr("deeptutor.services.search._resolve_provider_key", lambda _p, _k: "")
-    monkeypatch.setattr("deeptutor.services.search.get_provider", _fake_get_provider)
+    monkeypatch.setattr("cognispheretutor.services.search._resolve_provider_key", lambda _p, _k: "")
+    monkeypatch.setattr("cognispheretutor.services.search.get_provider", _fake_get_provider)
     result = web_search("hello")
     assert captured["provider"] == "duckduckgo"
     assert result["provider"] == "duckduckgo"
@@ -104,11 +104,11 @@ def test_web_search_searxng_uses_base_url(monkeypatch) -> None:
         return _FakeProvider(name)
 
     monkeypatch.setattr(
-        "deeptutor.services.search._get_web_search_config",
+        "cognispheretutor.services.search._get_web_search_config",
         lambda: {"enabled": True},
     )
     monkeypatch.setattr(
-        "deeptutor.services.search.resolve_search_runtime_config",
+        "cognispheretutor.services.search.resolve_search_runtime_config",
         lambda: ResolvedSearchConfig(
             provider="searxng",
             requested_provider="searxng",
@@ -116,7 +116,7 @@ def test_web_search_searxng_uses_base_url(monkeypatch) -> None:
             max_results=4,
         ),
     )
-    monkeypatch.setattr("deeptutor.services.search.get_provider", _fake_get_provider)
+    monkeypatch.setattr("cognispheretutor.services.search.get_provider", _fake_get_provider)
     result = web_search("hello")
     assert captured["provider"] == "searxng"
     assert captured["kwargs"]["base_url"] == "https://searx.example.com"

@@ -1,17 +1,17 @@
 <div align="center">
 
-<p align="center"><img src="../../assets/figs/logo/logo.png" alt="DeepTutor logo" height="56" style="vertical-align: middle;">&nbsp;<img src="../../assets/figs/logo/banner.png" alt="DeepTutor" height="48" style="vertical-align: middle;"></p>
+<p align="center"><img src="../../assets/figs/logo/logo.png" alt="cognisphereTutor logo" height="56" style="vertical-align: middle;">&nbsp;<img src="../../assets/figs/logo/banner.png" alt="cognisphereTutor" height="48" style="vertical-align: middle;"></p>
 
-# DeepTutor: Tutoría Personalizada de Por Vida
+# cognisphereTutor: Tutoría Personalizada de Por Vida
 
 <p align="center">
-  <a href="https://deeptutor.info" target="_blank"><img alt="Docs — deeptutor.info" src="https://img.shields.io/badge/Docs-deeptutor.info%20%E2%86%97-0A0A0A?style=for-the-badge&labelColor=F5F5F4" height="36"></a>
+  <a href="https://cognispheretutor.info" target="_blank"><img alt="Docs — cognispheretutor.info" src="https://img.shields.io/badge/Docs-cognispheretutor.info%20%E2%86%97-0A0A0A?style=for-the-badge&labelColor=F5F5F4" height="36"></a>
 </p>
 
 <p align="center">
-  <a href="https://trendshift.io/repositories/17099?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-17099" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/17099" alt="HKUDS%2FDeepTutor | Trendshift" width="250" height="55"/></a>&nbsp;
-  <a href="https://trendshift.io/repositories/17099?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-17099" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/17099/daily" alt="HKUDS%2FDeepTutor | Trendshift" width="250" height="55"/></a>&nbsp;
-  <a href="https://trendshift.io/repositories/17099?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-17099" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/17099/weekly?language=Python" alt="HKUDS%2FDeepTutor | Trendshift" width="250" height="55"/></a>
+  <a href="https://trendshift.io/repositories/17099?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-17099" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/17099" alt="HKUDS%2FcognisphereTutor | Trendshift" width="250" height="55"/></a>&nbsp;
+  <a href="https://trendshift.io/repositories/17099?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-17099" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/17099/daily" alt="HKUDS%2FcognisphereTutor | Trendshift" width="250" height="55"/></a>&nbsp;
+  <a href="https://trendshift.io/repositories/17099?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-17099" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/17099/weekly?language=Python" alt="HKUDS%2FcognisphereTutor | Trendshift" width="250" height="55"/></a>
 </p>
 
 <p align="center">
@@ -31,33 +31,33 @@
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square)](../../LICENSE)
-[![GitHub release](https://img.shields.io/github/v/release/HKUDS/DeepTutor?style=flat-square&color=brightgreen)](https://github.com/HKUDS/DeepTutor/releases)
+[![GitHub release](https://img.shields.io/github/v/release/HKUDS/cognisphereTutor?style=flat-square&color=brightgreen)](https://github.com/HKUDS/cognisphereTutor/releases)
 [![arXiv](https://img.shields.io/badge/arXiv-2604.26962-b31b1b?style=flat-square&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2604.26962)
 
 [![Discord](https://img.shields.io/badge/Discord-Community-5865F2?style=flat-square&logo=discord&logoColor=white)](https://discord.gg/eRsjPgMU4t)
 [![Feishu](https://img.shields.io/badge/Feishu-Group-00D4AA?style=flat-square&logo=feishu&logoColor=white)](../../Communication.md)
-[![WeChat](https://img.shields.io/badge/WeChat-Group-07C160?style=flat-square&logo=wechat&logoColor=white)](https://github.com/HKUDS/DeepTutor/issues/78)
+[![WeChat](https://img.shields.io/badge/WeChat-Group-07C160?style=flat-square&logo=wechat&logoColor=white)](https://github.com/HKUDS/cognisphereTutor/issues/78)
 
-[Características](#-características-principales) · [Comenzar](#-comenzar) · [Explorar](#-explorar-deeptutor) · [CLI](#️-deeptutor-cli--interfaz-nativa-de-agentes) · [Ecosistema](#-ecosistema--eduhub-y-la-comunidad-de-skills) · [Comunidad](#-comunidad)
+[Características](#-características-principales) · [Comenzar](#-comenzar) · [Explorar](#-explorar-cognispheretutor) · [CLI](#️-cognispheretutor-cli--interfaz-nativa-de-agentes) · [Ecosistema](#-ecosistema--eduhub-y-la-comunidad-de-skills) · [Comunidad](#-comunidad)
 
 </div>
 
 ---
 
-> 🤝 **¡Damos la bienvenida a cualquier tipo de contribución!** Vota en los elementos del roadmap o propone nuevos en [`Roadmap`](https://github.com/HKUDS/DeepTutor/issues/498), y consulta nuestra [Guía de Contribución](../../CONTRIBUTING.md) para la estrategia de ramas, estándares de código y cómo comenzar.
+> 🤝 **¡Damos la bienvenida a cualquier tipo de contribución!** Vota en los elementos del roadmap o propone nuevos en [`Roadmap`](https://github.com/HKUDS/cognisphereTutor/issues/498), y consulta nuestra [Guía de Contribución](../../CONTRIBUTING.md) para la estrategia de ramas, estándares de código y cómo comenzar.
 
 ### 📰 Noticias
 
-- **2026-05-22** 🌐 Sitio de documentación oficial disponible en [**deeptutor.info**](https://deeptutor.info/) — guías, referencias y tours de capacidades, todo en un solo lugar.
+- **2026-05-22** 🌐 Sitio de documentación oficial disponible en [**cognispheretutor.info**](https://cognispheretutor.info/) — guías, referencias y tours de capacidades, todo en un solo lugar.
 - **2026-04-19** 🎉 ¡20k estrellas en 111 días! Gracias por el apoyo hacia una tutoría verdaderamente personalizada e inteligente.
-- **2026-04-10** 📄 Nuestro artículo ya está en arXiv — lee el [preprint](https://arxiv.org/abs/2604.26962) para conocer el diseño y las ideas detrás de DeepTutor.
+- **2026-04-10** 📄 Nuestro artículo ya está en arXiv — lee el [preprint](https://arxiv.org/abs/2604.26962) para conocer el diseño y las ideas detrás de cognisphereTutor.
 - **2026-02-06** 🚀 ¡10k estrellas en solo 39 días! Un enorme agradecimiento a nuestra increíble comunidad.
-- **2026-01-01** 🎊 ¡Feliz Año Nuevo! Únete a nuestro [Discord](https://discord.gg/eRsjPgMU4t), [WeChat](https://github.com/HKUDS/DeepTutor/issues/78) o [Discussions](https://github.com/HKUDS/DeepTutor/discussions) — juntos demos forma al futuro de DeepTutor.
-- **2025-12-29** 🎓 ¡DeepTutor está oficialmente lanzado!
+- **2026-01-01** 🎊 ¡Feliz Año Nuevo! Únete a nuestro [Discord](https://discord.gg/eRsjPgMU4t), [WeChat](https://github.com/HKUDS/cognisphereTutor/issues/78) o [Discussions](https://github.com/HKUDS/cognisphereTutor/discussions) — juntos demos forma al futuro de cognisphereTutor.
+- **2025-12-29** 🎓 ¡cognisphereTutor está oficialmente lanzado!
 
 ## ✨ Características Principales
 
-DeepTutor es un espacio de trabajo de aprendizaje nativo de agentes que conecta tutoría, resolución de problemas, generación de cuestionarios, investigación, visualización y práctica de dominio en un sistema extensible.
+cognisphereTutor es un espacio de trabajo de aprendizaje nativo de agentes que conecta tutoría, resolución de problemas, generación de cuestionarios, investigación, visualización y práctica de dominio en un sistema extensible.
 
 - **Un runtime para todos los modos** — Chat, Quiz, Research, Visualize, Solve y Mastery Path corren en el mismo bucle de agente, de modo que cambias el objetivo, no el motor, y el contexto acompaña al estudiante.
 - **Contexto de aprendizaje conectado** — Bases de conocimiento, libros, borradores de Co-Writer, cuadernos, bancos de preguntas, personas y Memory están disponibles en todos los flujos de trabajo en lugar de vivir en herramientas aisladas.
@@ -70,23 +70,23 @@ DeepTutor es un espacio de trabajo de aprendizaje nativo de agentes que conecta 
 
 ## 🚀 Comenzar
 
-DeepTutor incluye cuatro rutas de instalación. Todas comparten un diseño de espacio de trabajo: la configuración vive en `data/user/settings/` bajo el directorio desde el que se inicia (o bajo `DEEPTUTOR_HOME` / `deeptutor start --home` si se establece explícitamente). Para la aplicación completa, el flujo recomendado es **elegir un directorio de espacio de trabajo → instalar → `deeptutor init` → `deeptutor start`**.
+cognisphereTutor incluye cuatro rutas de instalación. Todas comparten un diseño de espacio de trabajo: la configuración vive en `data/user/settings/` bajo el directorio desde el que se inicia (o bajo `COGNISPHERETUTOR_HOME` / `cognispheretutor start --home` si se establece explícitamente). Para la aplicación completa, el flujo recomendado es **elegir un directorio de espacio de trabajo → instalar → `cognispheretutor init` → `cognispheretutor start`**.
 
 <details>
 <summary><b>Opción 1 — Instalar desde PyPI</b> · aplicación web local completa + CLI, sin necesidad de clonar</summary>
 
-Aplicación web local completa + CLI, sin necesidad de clonar. Requiere **Python 3.11+** y un runtime **Node.js 20+** en PATH (el servidor standalone Next.js empaquetado es iniciado por `deeptutor start`).
+Aplicación web local completa + CLI, sin necesidad de clonar. Requiere **Python 3.11+** y un runtime **Node.js 20+** en PATH (el servidor standalone Next.js empaquetado es iniciado por `cognispheretutor start`).
 
 ```bash
-mkdir -p my-deeptutor && cd my-deeptutor
-pip install -U deeptutor
-deeptutor init     # solicita puertos + proveedor LLM + embedding opcional
-deeptutor start    # inicia backend + frontend; mantener la terminal abierta
+mkdir -p my-cognispheretutor && cd my-cognispheretutor
+pip install -U cognispheretutor
+cognispheretutor init     # solicita puertos + proveedor LLM + embedding opcional
+cognispheretutor start    # inicia backend + frontend; mantener la terminal abierta
 ```
 
-`deeptutor init` solicita el puerto de backend (predeterminado `8001`), el puerto de frontend (predeterminado `3782`), proveedor LLM / URL base / clave API / modelo y un proveedor de embeddings opcional para Base de Conocimiento / RAG.
+`cognispheretutor init` solicita el puerto de backend (predeterminado `8001`), el puerto de frontend (predeterminado `3782`), proveedor LLM / URL base / clave API / modelo y un proveedor de embeddings opcional para Base de Conocimiento / RAG.
 
-Después de `deeptutor start`, abre la URL del frontend impresa en la terminal — por defecto [http://127.0.0.1:3782](http://127.0.0.1:3782). Presiona `Ctrl+C` en esa terminal para detener tanto el backend como el frontend. Omitir `deeptutor init` está bien para una prueba rápida; la aplicación arranca con puertos predeterminados y configuración de modelo vacía, configúralos luego en **Settings → Models**.
+Después de `cognispheretutor start`, abre la URL del frontend impresa en la terminal — por defecto [http://127.0.0.1:3782](http://127.0.0.1:3782). Presiona `Ctrl+C` en esa terminal para detener tanto el backend como el frontend. Omitir `cognispheretutor init` está bien para una prueba rápida; la aplicación arranca con puertos predeterminados y configuración de modelo vacía, configúralos luego en **Settings → Models**.
 
 </details>
 
@@ -96,8 +96,8 @@ Después de `deeptutor start`, abre la URL del frontend impresa en la terminal �
 Para desarrollo en un checkout. Usa **Python 3.11+** y **Node.js 22 LTS** para coincidir con CI y Docker.
 
 ```bash
-git clone https://github.com/HKUDS/DeepTutor.git
-cd DeepTutor
+git clone https://github.com/HKUDS/cognisphereTutor.git
+cd cognisphereTutor
 
 # Crear un venv (macOS/Linux). Windows PowerShell:
 #   py -3.11 -m venv .venv ; .\.venv\Scripts\Activate.ps1
@@ -108,8 +108,8 @@ python -m pip install --upgrade pip
 python -m pip install -e .
 ( cd web && npm ci --legacy-peer-deps )
 
-deeptutor init
-deeptutor start
+cognispheretutor init
+cognispheretutor start
 ```
 
 Las instalaciones desde fuente ejecutan Next.js en modo de desarrollo contra el directorio `web/` local; todo lo demás (diseño de configuración, puertos, detener con `Ctrl+C`) coincide con la Opción 1.
@@ -118,8 +118,8 @@ Las instalaciones desde fuente ejecutan Next.js en modo de desarrollo contra el 
 <summary><b>Entorno Conda</b> (en lugar de <code>venv</code>)</summary>
 
 ```bash
-conda create -n deeptutor python=3.11
-conda activate deeptutor
+conda create -n cognispheretutor python=3.11
+conda activate cognispheretutor
 python -m pip install --upgrade pip
 ```
 
@@ -143,11 +143,11 @@ pip install -e ".[math-animator]"   # complemento Manim; requiere LaTeX/ffmpeg/l
 
 **Cambiar dependencias del frontend:** ejecuta `npm install --legacy-peer-deps` para actualizar `web/package-lock.json`, luego confirma tanto `web/package.json` como `web/package-lock.json`.
 
-**Servidor de desarrollo atascado:** si `deeptutor start` informa de un frontend existente que no responde, detén el PID que imprime. Si no hay ningún proceso Next.js en ejecución, los archivos de bloqueo están obsoletos — elimínalos y vuelve a intentarlo:
+**Servidor de desarrollo atascado:** si `cognispheretutor start` informa de un frontend existente que no responde, detén el PID que imprime. Si no hay ningún proceso Next.js en ejecución, los archivos de bloqueo están obsoletos — elimínalos y vuelve a intentarlo:
 
 ```bash
 rm -f web/.next/dev/lock web/.next/lock
-deeptutor start
+cognispheretutor start
 ```
 
 </details>
@@ -159,24 +159,24 @@ deeptutor start
 
 Un contenedor para la aplicación web completa. Imágenes en GitHub Container Registry:
 
-- `ghcr.io/hkuds/deeptutor:latest` — versión estable
-- `ghcr.io/hkuds/deeptutor:pre` — versión preliminar, cuando esté disponible
+- `ghcr.io/hkuds/cognispheretutor:latest` — versión estable
+- `ghcr.io/hkuds/cognispheretutor:pre` — versión preliminar, cuando esté disponible
 
 > Consulta [CONTAINERIZATION.md](../../CONTAINERIZATION.md) para despliegues con podman/rootless/sistema de archivos raíz de solo lectura y la guía completa por instalación.
 
 ```bash
-docker run --rm --name deeptutor \
+docker run --rm --name cognispheretutor \
   -p 127.0.0.1:3782:3782 \
-  -v deeptutor-data:/app/data \
-  ghcr.io/hkuds/deeptutor:latest
+  -v cognispheretutor-data:/app/data \
+  ghcr.io/hkuds/cognispheretutor:latest
 ```
 
 > **Solo se necesita publicar `3782`.** El navegador habla exclusivamente con el origen del frontend; el middleware de Next.js (`web/proxy.ts`) reenvía `/api/*` y `/ws/*` al backend FastAPI **dentro del contenedor**. Publicar `8001` (`-p 127.0.0.1:8001:8001`) es opcional — útil solo para acceder a la API directamente con curl o scripts.
 
-Abre [http://127.0.0.1:3782](http://127.0.0.1:3782). El contenedor crea `/app/data/user/settings/*.json` en el primer arranque; configura los proveedores de modelos desde la página de Settings web. La configuración, las claves API, los registros, los archivos del espacio de trabajo, la memoria y las bases de conocimiento persisten en el volumen `deeptutor-data`.
+Abre [http://127.0.0.1:3782](http://127.0.0.1:3782). El contenedor crea `/app/data/user/settings/*.json` en el primer arranque; configura los proveedores de modelos desde la página de Settings web. La configuración, las claves API, los registros, los archivos del espacio de trabajo, la memoria y las bases de conocimiento persisten en el volumen `cognispheretutor-data`.
 
 - **Puertos de host diferentes:** cambia el lado izquierdo de cada mapeo `-p host:container` (ej. `-p 127.0.0.1:8088:3782`). Si cambias los puertos del lado del contenedor en `/app/data/user/settings/system.json`, reinicia y actualiza el lado derecho de cada mapeo para que coincida.
-- **Desconectado:** agrega `-d`, luego `docker logs -f deeptutor` para seguir, `docker stop deeptutor` para detener, `docker rm deeptutor` antes de reutilizar el nombre. El volumen `deeptutor-data` mantiene tu configuración y espacio de trabajo entre reinicios.
+- **Desconectado:** agrega `-d`, luego `docker logs -f cognispheretutor` para seguir, `docker stop cognispheretutor` para detener, `docker rm cognispheretutor` antes de reutilizar el nombre. El volumen `cognispheretutor-data` mantiene tu configuración y espacio de trabajo entre reinicios.
 
 **Docker remoto / proxy inverso:** el navegador solo habla con el origen del frontend (`:3782`); el middleware de Next.js dentro del contenedor reenvía `/api/*` y `/ws/*` al servidor backend del lado del servidor. Para el caso común de contenedor único no necesitas configurar ninguna base de API — simplemente apunta tu proxy inverso / terminador TLS a `:3782`. Solo necesitas una base de API para un **despliegue dividido** (backend en un contenedor/host separado): establece `next_public_api_base` en `data/user/settings/system.json` con la dirección en red que el servidor frontend usa para llegar al backend (se lee del lado del servidor, nunca se envía al navegador).
 
@@ -186,11 +186,11 @@ Abre [http://127.0.0.1:3782](http://127.0.0.1:3782). El contenedor crea `/app/da
 }
 ```
 
-`next_public_api_base_external` (y su alias `public_api_base`) se aceptan como alternativas de menor precedencia. CORS usa **orígenes** de frontend, no URLs de API. Con la autenticación deshabilitada, DeepTutor permite los orígenes normales de navegador HTTP/HTTPS por defecto. Con la autenticación habilitada, agrega los orígenes exactos del frontend:
+`next_public_api_base_external` (y su alias `public_api_base`) se aceptan como alternativas de menor precedencia. CORS usa **orígenes** de frontend, no URLs de API. Con la autenticación deshabilitada, cognisphereTutor permite los orígenes normales de navegador HTTP/HTTPS por defecto. Con la autenticación habilitada, agrega los orígenes exactos del frontend:
 
 ```json
 {
-  "cors_origins": ["https://deeptutor.example.com"]
+  "cors_origins": ["https://cognispheretutor.example.com"]
 }
 ```
 
@@ -200,11 +200,11 @@ Abre [http://127.0.0.1:3782](http://127.0.0.1:3782). El contenedor crea `/app/da
 Dentro de Docker, `localhost` es el propio contenedor, no tu máquina host. Para llegar a un servicio de modelo que se ejecuta en el host, usa la puerta de enlace del host (recomendado):
 
 ```bash
-docker run --rm --name deeptutor \
+docker run --rm --name cognispheretutor \
   -p 127.0.0.1:3782:3782 -p 127.0.0.1:8001:8001 \
   --add-host=host.docker.internal:host-gateway \
-  -v deeptutor-data:/app/data \
-  ghcr.io/hkuds/deeptutor:latest
+  -v cognispheretutor-data:/app/data \
+  ghcr.io/hkuds/cognispheretutor:latest
 ```
 
 Luego en **Settings → Models**, apunta la URL Base del proveedor a `host.docker.internal`:
@@ -229,37 +229,37 @@ Docker Desktop (macOS/Windows) generalmente resuelve `host.docker.internal` sin 
 Cuando no necesitas la UI web. El paquete de solo CLI se instala desde un checkout de fuente, no desde PyPI.
 
 ```bash
-git clone https://github.com/HKUDS/DeepTutor.git
-cd DeepTutor
+git clone https://github.com/HKUDS/cognisphereTutor.git
+cd cognisphereTutor
 
 # Crear un venv (macOS/Linux). Windows PowerShell:
 #   py -3.11 -m venv .venv-cli ; .\.venv-cli\Scripts\Activate.ps1
 python3 -m venv .venv-cli && source .venv-cli/bin/activate
 python -m pip install --upgrade pip
 
-python -m pip install -e ./packaging/deeptutor-cli
-deeptutor init --cli
-deeptutor chat
+python -m pip install -e ./packaging/cognispheretutor-cli
+cognispheretutor init --cli
+cognispheretutor chat
 ```
 
-`deeptutor init --cli` comparte el mismo diseño `data/user/settings/` que la aplicación completa pero omite las solicitudes de puertos de backend/frontend y establece embeddings en **desactivado** (elige `Yes` si planeas usar `deeptutor kb …` o herramientas RAG). Aún escribe un diseño de runtime completo (`system.json`, `auth.json`, `integrations.json`, `model_catalog.json`, `main.yaml`, `agents.yaml`) y aún solicita el proveedor LLM y modelo activos.
+`cognispheretutor init --cli` comparte el mismo diseño `data/user/settings/` que la aplicación completa pero omite las solicitudes de puertos de backend/frontend y establece embeddings en **desactivado** (elige `Yes` si planeas usar `cognispheretutor kb …` o herramientas RAG). Aún escribe un diseño de runtime completo (`system.json`, `auth.json`, `integrations.json`, `model_catalog.json`, `main.yaml`, `agents.yaml`) y aún solicita el proveedor LLM y modelo activos.
 
 <details>
 <summary><b>Comandos comunes</b></summary>
 
 ```bash
-deeptutor chat                                          # REPL interactivo
-deeptutor chat --capability deep_solve --tool rag --kb my-kb
-deeptutor run chat "Explain Fourier transform"
-deeptutor run deep_solve "Solve x^2 = 4" --tool rag --kb my-kb
-deeptutor kb create my-kb --doc textbook.pdf
-deeptutor memory show
-deeptutor config show
+cognispheretutor chat                                          # REPL interactivo
+cognispheretutor chat --capability deep_solve --tool rag --kb my-kb
+cognispheretutor run chat "Explain Fourier transform"
+cognispheretutor run deep_solve "Solve x^2 = 4" --tool rag --kb my-kb
+cognispheretutor kb create my-kb --doc textbook.pdf
+cognispheretutor memory show
+cognispheretutor config show
 ```
 
 </details>
 
-La instalación local de `deeptutor-cli` no incluye activos web ni dependencias de servidor. Mantén el checkout de fuente cerca — la instalación editable apunta a él. Para agregar la aplicación web más tarde, instala el paquete PyPI (Opción 1) y ejecuta `deeptutor init` + `deeptutor start` desde el mismo espacio de trabajo.
+La instalación local de `cognispheretutor-cli` no incluye activos web ni dependencias de servidor. Mantén el checkout de fuente cerca — la instalación editable apunta a él. Para agregar la aplicación web más tarde, instala el paquete PyPI (Opción 1) y ejecuta `cognispheretutor init` + `cognispheretutor start` desde el mismo espacio de trabajo.
 
 </details>
 
@@ -276,13 +276,13 @@ en cada forma de despliegue:
   ejecuta el código del modelo (localmente en el host, o dentro del contenedor bajo Docker — el contenedor
   siendo su propio límite de aislamiento).
 - **docker-compose:** enrutado en su lugar a un **sidecar runner** endurecido y con privilegios mínimos
-  (`Dockerfile.runner`) a través de `DEEPTUTOR_SANDBOX_RUNNER_URL` — la postura más sólida, y preferida
+  (`Dockerfile.runner`) a través de `COGNISPHERETUTOR_SANDBOX_RUNNER_URL` — la postura más sólida, y preferida
   automáticamente cuando está presente.
 
 El sandbox de subproceso está controlado por la configuración `sandbox_allow_subprocess` en
 `data/user/settings/system.json` (predeterminado `true`). Ejecutar código generado por el modelo en tu
 host es una decisión real de confianza — establécelo en `false` (o exporta
-`DEEPTUTOR_SANDBOX_ALLOW_SUBPROCESS=0`) para deshabilitar la ejecución del lado del host, a costa de
+`COGNISPHERETUTOR_SANDBOX_ALLOW_SUBPROCESS=0`) para deshabilitar la ejecución del lado del host, a costa de
 que las skills de oficina ya no puedan producir archivos.
 
 </details>
@@ -306,19 +306,19 @@ El `.env` de la raíz del proyecto **no** se lee como archivo de configuración 
 
 </details>
 
-## 📖 Explorar DeepTutor
+## 📖 Explorar cognisphereTutor
 
 Comienza con las superficies principales que usarás día a día: Chat, Partners, Mis Agentes, Co-Writer, Book, Centro de Conocimiento, Espacio de Aprendizaje, Memory y Settings. El tour luego cubre los despliegues Multi-Usuario para espacios de trabajo compartidos y aislados.
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/OVERVIEW.png" alt="Inicio de DeepTutor — el espacio de trabajo Chat con todas las superficies en la barra lateral" width="900">
+<img src="../../assets/figs/web-1.4.6+/OVERVIEW.png" alt="Inicio de cognisphereTutor — el espacio de trabajo Chat con todas las superficies en la barra lateral" width="900">
 </div>
 
 <details>
 <summary><b>🏗️ Arquitectura del sistema</b></summary>
 
 <div align="center">
-<img src="../../assets/figs/system/system%20architecture.png" alt="Arquitectura del sistema DeepTutor" width="900">
+<img src="../../assets/figs/system/system%20architecture.png" alt="Arquitectura del sistema cognisphereTutor" width="900">
 </div>
 
 </details>
@@ -329,13 +329,13 @@ Comienza con las superficies principales que usarás día a día: Chat, Partners
 Chat es la capacidad predeterminada y el lugar donde comienza la mayor parte del trabajo. Un único hilo puede conversar normalmente, llamar herramientas, fundamentarse en bases de conocimiento seleccionadas, leer adjuntos, generar imágenes, consultar subagentes, escribir registros de notebook y continuar con el mismo contexto entre turnos.
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/home/00-overview.png" alt="Espacio de trabajo de chat DeepTutor" width="900">
+<img src="../../assets/figs/web-1.4.6+/home/00-overview.png" alt="Espacio de trabajo de chat cognisphereTutor" width="900">
 </div>
 
 El bucle es deliberadamente simple: el modelo piensa en rondas, llama herramientas cuando es útil, observa los resultados y termina con un mensaje sin herramientas. `ask_user` es especial — en lugar de adivinar, el agente puede pausar el turno, hacer una pregunta de aclaración estructurada y reanudar una vez que respondes.
 
 <div align="center">
-<img src="../../assets/figs/system/chat-agent-loop.png" alt="Bucle de agente de chat DeepTutor" width="900">
+<img src="../../assets/figs/system/chat-agent-loop.png" alt="Bucle de agente de chat cognisphereTutor" width="900">
 </div>
 
 Las herramientas activables por el usuario son `brainstorm`, `web_search`, `paper_search`, `reason` y `geogebra_analysis` — más `imagegen` y `videogen` una vez que configures el modelo de generación correspondiente. Las herramientas contextuales como `rag`, `read_source`, `read_memory`, `write_memory`, `read_skill`, `load_tools`, `exec`, `web_fetch`, `ask_user`, `list_notebook`, `write_note`, `github` y `consult_subagent` se montan automáticamente cuando el turno tiene el contexto adecuado.
@@ -350,13 +350,13 @@ Chat es también el punto de lanzamiento para capacidades más profundas: **Quiz
 <summary><b>🤝 Partner — Compañeros Persistentes con el Mismo Cerebro</b></summary>
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/partners/00-partners%20overview.png" alt="Espacio de trabajo de partners DeepTutor" width="900">
+<img src="../../assets/figs/web-1.4.6+/partners/00-partners%20overview.png" alt="Espacio de trabajo de partners cognisphereTutor" width="900">
 </div>
 
 Los Partners son compañeros persistentes con su propio alma, política de modelo, biblioteca, memoria y canales. No son un motor de bot separado: cada mensaje web o IM entrante se convierte en un turno normal de `ChatOrchestrator` dentro de un espacio de trabajo con alcance de partner. Un partner es "un chat que tiene personalidad y número de teléfono."
 
 <div align="center">
-<img src="../../assets/figs/system/partners-architecture.png" alt="Arquitectura de partners DeepTutor" width="900">
+<img src="../../assets/figs/system/partners-architecture.png" alt="Arquitectura de partners cognisphereTutor" width="900">
 </div>
 
 Cada partner tiene un `SOUL.md`, selección de modelo, canales, política de herramientas y biblioteca asignada. Las bases de conocimiento, skills y notebooks se copian en `data/partners/<id>/workspace/`, por lo que las mismas herramientas de RAG, skill, notebook y memoria funcionan sin casos especiales. Un partner lee la memoria de su propietario pero solo escribe en la suya propia.
@@ -373,16 +373,16 @@ La capa de canales está impulsada por esquema y puede conectarse a plataformas 
 <summary><b>🧑‍🚀 Mis Agentes — Consultar e Importar Otros Agentes</b></summary>
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/myagents/00-overview.png" alt="Espacio de trabajo de Mis Agentes DeepTutor" width="900">
+<img src="../../assets/figs/web-1.4.6+/myagents/00-overview.png" alt="Espacio de trabajo de Mis Agentes cognisphereTutor" width="900">
 </div>
 
-Mis Agentes convierte a otros agentes en contexto para DeepTutor y hace dos cosas distintas. **Conectar un agente en vivo** — un Claude Code o Codex CLI en tu máquina, o uno de tus Partners — y consultarlo desde dentro de un turno de chat: DeepTutor realmente *ejecuta* el otro agente y transmite su trabajo al panel de Activity a través de la herramienta `consult_subagent`. Selecciónalo con el chip de Agente (o escribe `@`), y establece cuántas rondas puede tomar la consulta.
+Mis Agentes convierte a otros agentes en contexto para cognisphereTutor y hace dos cosas distintas. **Conectar un agente en vivo** — un Claude Code o Codex CLI en tu máquina, o uno de tus Partners — y consultarlo desde dentro de un turno de chat: cognisphereTutor realmente *ejecuta* el otro agente y transmite su trabajo al panel de Activity a través de la herramienta `consult_subagent`. Selecciónalo con el chip de Agente (o escribe `@`), y establece cuántas rondas puede tomar la consulta.
 
 <div align="center">
 <img src="../../assets/figs/web-1.4.6+/home/08-subagent%20demo%20with%20claude%20code.png" alt="Consultando un subagente Claude Code en vivo" width="900">
 </div>
 
-**Importar conversaciones pasadas** — trae tu historial existente de Claude Code y Codex como agentes nombrados, buscables y reanudables. Elige qué días importar; actualizar los vuelve a sincronizar. Referencia una conversación importada desde cualquier turno de chat a través de `+` → Mis Agentes, y DeepTutor la lee como un transcript de terceros — sigue siendo *su* conversación, no la voz propia de DeepTutor.
+**Importar conversaciones pasadas** — trae tu historial existente de Claude Code y Codex como agentes nombrados, buscables y reanudables. Elige qué días importar; actualizar los vuelve a sincronizar. Referencia una conversación importada desde cualquier turno de chat a través de `+` → Mis Agentes, y cognisphereTutor la lee como un transcript de terceros — sigue siendo *su* conversación, no la voz propia de cognisphereTutor.
 
 </details>
 
@@ -390,7 +390,7 @@ Mis Agentes convierte a otros agentes en contexto para DeepTutor y hace dos cosa
 <summary><b>✍️ Co-Writer — Redacción Markdown con Conciencia de Selección</b></summary>
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/co-writer/00-overview.png" alt="Espacio de trabajo Co-Writer DeepTutor" width="900">
+<img src="../../assets/figs/web-1.4.6+/co-writer/00-overview.png" alt="Espacio de trabajo Co-Writer cognisphereTutor" width="900">
 </div>
 
 Co-Writer es un espacio de trabajo Markdown de vista dividida para informes, tutoriales, notas y artefactos de aprendizaje de formato largo. Los documentos se guardan automáticamente y renderizan una vista previa en vivo (matemáticas KaTeX, cercas de diagramas), y se pueden guardar de vuelta en cuadernos cuando un borrador se convierte en contexto reutilizable.
@@ -399,7 +399,7 @@ Co-Writer es un espacio de trabajo Markdown de vista dividida para informes, tut
 <img src="../../assets/figs/web-1.4.6+/co-writer/01-edit%20panel.png" alt="Editor Co-Writer con vista previa en vivo" width="900">
 </div>
 
-Su idea definitoria es la **edición quirúrgica**: selecciona un fragmento y pide a DeepTutor que lo reescriba, expanda o acorte. El agente de edición puede fundamentar el cambio en una base de conocimiento o evidencia web, mantiene un rastro de sus llamadas a herramientas y muestra cada cambio como un diff de aceptar/rechazar — de modo que nada se aplica hasta que lo apruebes.
+Su idea definitoria es la **edición quirúrgica**: selecciona un fragmento y pide a cognisphereTutor que lo reescriba, expanda o acorte. El agente de edición puede fundamentar el cambio en una base de conocimiento o evidencia web, mantiene un rastro de sus llamadas a herramientas y muestra cada cambio como un diff de aceptar/rechazar — de modo que nada se aplica hasta que lo apruebes.
 
 </details>
 
@@ -407,7 +407,7 @@ Su idea definitoria es la **edición quirúrgica**: selecciona un fragmento y pi
 <summary><b>📖 Book — Libros Vivos de tus Materiales</b></summary>
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/book/00-book_overview.png" alt="Biblioteca de libros DeepTutor" width="900">
+<img src="../../assets/figs/web-1.4.6+/book/00-book_overview.png" alt="Biblioteca de libros cognisphereTutor" width="900">
 </div>
 
 Book convierte las fuentes seleccionadas en un **libro vivo** interactivo — no un PDF estático, sino un entorno de lectura construido a partir de bloques tipados. Un libro puede comenzar desde bases de conocimiento, cuadernos, bancos de preguntas o historial de chat; el flujo de creación propone un esquema de capítulos antes de que se genere el contenido, así revisas la estructura en lugar de aceptar una salida de un solo intento sin verla antes.
@@ -420,7 +420,7 @@ Book convierte las fuentes seleccionadas en un **libro vivo** interactivo — no
 <img src="../../assets/figs/web-1.4.6+/book/03-book-demo%20interactive%20module.png" alt="Bloque de widget interactivo en Book" width="31%">
 </p>
 
-Cada capítulo se compila en bloques tipados — texto, callouts, quizzes, tarjetas flash, líneas de tiempo, código, figuras, HTML interactivo, animaciones, gráficos de conceptos, profundizaciones y notas de usuario — y cada página tiene su propio Page Chat. Los bloques son editables: inserta, mueve, regenera o cambia el tipo de un bloque sin reescribir el capítulo. Los comandos de mantenimiento como `deeptutor book health` y `deeptutor book refresh-fingerprints` ayudan a detectar cuándo el conocimiento fuente ha divergido de las páginas compiladas.
+Cada capítulo se compila en bloques tipados — texto, callouts, quizzes, tarjetas flash, líneas de tiempo, código, figuras, HTML interactivo, animaciones, gráficos de conceptos, profundizaciones y notas de usuario — y cada página tiene su propio Page Chat. Los bloques son editables: inserta, mueve, regenera o cambia el tipo de un bloque sin reescribir el capítulo. Los comandos de mantenimiento como `cognispheretutor book health` y `cognispheretutor book refresh-fingerprints` ayudan a detectar cuándo el conocimiento fuente ha divergido de las páginas compiladas.
 
 </details>
 
@@ -428,7 +428,7 @@ Cada capítulo se compila en bloques tipados — texto, callouts, quizzes, tarje
 <summary><b>📚 Centro de Conocimiento — Bibliotecas RAG Multi-Motor</b></summary>
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/knowledge/00-overview.png" alt="Centro de Conocimiento DeepTutor" width="900">
+<img src="../../assets/figs/web-1.4.6+/knowledge/00-overview.png" alt="Centro de Conocimiento cognisphereTutor" width="900">
 </div>
 
 Las bases de conocimiento son las colecciones de documentos detrás del RAG — fundamentan los turnos de Chat, las ediciones de Co-Writer, la generación de Book y las conversaciones de Partner. Lo que las distingue es la **elección de motores de recuperación**: **LlamaIndex** (el predeterminado, vector local + BM25), **PageIndex** (hospedado, recuperación por razonamiento con citas a nivel de página), **GraphRAG** y **LightRAG** (recuperación por grafo de conocimiento), **LightRAG Server** (recuperación delegada a una instancia externa de LightRAG a la que te conectas por HTTP), o un vault **Obsidian** vinculado que el tutor lee y escribe en el lugar. Cada KB está vinculada a un motor.
@@ -437,7 +437,7 @@ Las bases de conocimiento son las colecciones de documentos detrás del RAG — 
 <img src="../../assets/figs/web-1.4.6+/knowledge/01-create%20knowledge%20base.png" alt="Crear una base de conocimiento" width="900">
 </div>
 
-Al crear una KB, puedes **crear nueva** (subir documentos y construir un índice nuevo) o **vincular existente** (reutilizar un índice construido en otro lugar, leer en el lugar sin re-indexar). La re-indexación escribe un nuevo directorio `version-N` plano y conserva los anteriores, de modo que un índice funcional nunca se destruye a mitad de la reconstrucción. Un solo documento puede eliminarse incluso de una base en estado de **error** — descartando un archivo que no se pudo analizar sin necesidad de borrar y reconstruir todo. El análisis de documentos — Text-only, MinerU, Docling, markitdown o PyMuPDF4LLM — se elige en **Settings → Knowledge Base**, con descargas de modelos locales desactivadas por defecto. La CLI refleja el ciclo de vida con `deeptutor kb list`, `info`, `create`, `add`, `search`, `set-default` y `delete`.
+Al crear una KB, puedes **crear nueva** (subir documentos y construir un índice nuevo) o **vincular existente** (reutilizar un índice construido en otro lugar, leer en el lugar sin re-indexar). La re-indexación escribe un nuevo directorio `version-N` plano y conserva los anteriores, de modo que un índice funcional nunca se destruye a mitad de la reconstrucción. Un solo documento puede eliminarse incluso de una base en estado de **error** — descartando un archivo que no se pudo analizar sin necesidad de borrar y reconstruir todo. El análisis de documentos — Text-only, MinerU, Docling, markitdown o PyMuPDF4LLM — se elige en **Settings → Knowledge Base**, con descargas de modelos locales desactivadas por defecto. La CLI refleja el ciclo de vida con `cognispheretutor kb list`, `info`, `create`, `add`, `search`, `set-default` y `delete`.
 
 </details>
 
@@ -445,7 +445,7 @@ Al crear una KB, puedes **crear nueva** (subir documentos y construir un índice
 <summary><b>🌐 Espacio de Aprendizaje — Skills, Personas y Contexto Reutilizable</b></summary>
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/learning-space/00-overview.png" alt="Hub del Espacio de Aprendizaje DeepTutor" width="900">
+<img src="../../assets/figs/web-1.4.6+/learning-space/00-overview.png" alt="Hub del Espacio de Aprendizaje cognisphereTutor" width="900">
 </div>
 
 El Espacio de Aprendizaje es la capa de biblioteca y personalización — donde viven las cosas que persisten. **Conversaciones y Materiales** guarda tu historial de chat, cuadernos y un banco de preguntas (cada pregunta guardada conserva tu respuesta, la respuesta de referencia y una explicación). **Personalización** guarda rutas de dominio, personas (preajustes de comportamiento como *compañero*, *asistente de investigación*, *profesor*) y skills (guías `SKILL.md` que el modelo lee bajo demanda). Todo aquí se puede reutilizar desde Chat, Partners, Co-Writer y Book.
@@ -462,13 +462,13 @@ No tienes que escribir cada skill tú mismo — **Importar desde EduHub** navega
 <summary><b>🧠 Memory — Personalización Inspectable</b></summary>
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/memory/00-overview.png" alt="Vista general de Memory DeepTutor" width="900">
+<img src="../../assets/figs/web-1.4.6+/memory/00-overview.png" alt="Vista general de Memory cognisphereTutor" width="900">
 </div>
 
 Memory es un sistema de tres capas respaldado por archivos que puedes leer, curar y auditar — deliberadamente *no* un almacén de vectores oculto. **L1** es el espejo del espacio de trabajo más un rastro de eventos de solo adición (`trace/<surface>/<date>.jsonl`); **L2** son hechos curados por superficie (`L2/<surface>.md`); **L3** es síntesis entre superficies (`L3/<profile|recent|scope|preferences>.md`). Como L2 cita a L1 y L3 cita a L2, nada en tu perfil queda sin rendir cuentas.
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/memory/01-3%20layer%20memory%20graph.png" alt="Gráfico de memoria DeepTutor" width="900">
+<img src="../../assets/figs/web-1.4.6+/memory/01-3%20layer%20memory%20graph.png" alt="Gráfico de memoria cognisphereTutor" width="900">
 </div>
 
 El Memory Graph muestra toda la pirámide — síntesis L3 en el centro, L2 en el anillo intermedio, trazas L1 en el exterior — de modo que puedes rastrear cualquier afirmación sintetizada hasta el evento bruto exacto detrás de ella. La memoria se rastrea en las superficies `chat`, `notebook`, `quiz`, `kb`, `book`, partner y `cowriter`; los presupuestos de Actualización / Auditoría / Deduplicación del consolidador se ajustan en **Settings → Memory**.
@@ -479,23 +479,23 @@ El Memory Graph muestra toda la pirámide — síntesis L3 en el centro, L2 en e
 <summary><b>⚙️ Settings — Un Panel de Control</b></summary>
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/settings/00-setting%20overview.png" alt="Hub de configuración DeepTutor" width="900">
+<img src="../../assets/figs/web-1.4.6+/settings/00-setting%20overview.png" alt="Hub de configuración cognisphereTutor" width="900">
 </div>
 
 Settings es el panel de control operativo, con una tira de estado en vivo (Backend, LLM, Embedding, Search) y una tarjeta por área: **Apariencia** (tema + idioma de UI), **Red** (base de API, puertos, CORS), **Modelos** (LLM, Embedding, Search, Text-to-Speech, Speech-to-Text, Image Generation, Video Generation), **Knowledge Base** (motor de análisis de documentos), **Chat** (herramientas, servidores MCP, parámetros por capacidad, límites de adjuntos), **Partners & Agents** (los subagentes que puedes consultar desde un turno), y **Memory** (los presupuestos del consolidador).
 
 <div align="center">
-<img src="../../assets/figs/web-1.4.6+/settings/01-appearance%20settings.png" alt="Configuración de apariencia de DeepTutor y temas" width="900">
+<img src="../../assets/figs/web-1.4.6+/settings/01-appearance%20settings.png" alt="Configuración de apariencia de cognisphereTutor y temas" width="900">
 </div>
 
-La mayoría de las secciones usan un flujo de borrador y aplicación, de modo que puedes probar un proveedor antes de confirmarlo. Cuatro temas se incluyen por defecto — Default, Cream, Dark y Glass. Los archivos `.env` de la raíz del proyecto se ignoran intencionalmente; la configuración de runtime vive bajo `data/user/settings/*.json` a menos que `DEEPTUTOR_HOME` o `deeptutor start --home` apunten la app en otro lugar.
+La mayoría de las secciones usan un flujo de borrador y aplicación, de modo que puedes probar un proveedor antes de confirmarlo. Cuatro temas se incluyen por defecto — Default, Cream, Dark y Glass. Los archivos `.env` de la raíz del proyecto se ignoran intencionalmente; la configuración de runtime vive bajo `data/user/settings/*.json` a menos que `COGNISPHERETUTOR_HOME` o `cognispheretutor start --home` apunten la app en otro lugar.
 
 </details>
 
 <details>
 <summary><b>👥 Multi-Usuario — Despliegues Compartidos</b> · autenticación opcional, espacios de trabajo aislados por usuario</summary>
 
-La autenticación está **desactivada por defecto** — DeepTutor corre en modo monousuario. Actívala y un árbol `data/` aloja un espacio de trabajo de administrador, espacios de trabajo aislados por usuario y espacios de trabajo de partner en paralelo:
+La autenticación está **desactivada por defecto** — cognisphereTutor corre en modo monousuario. Actívala y un árbol `data/` aloja un espacio de trabajo de administrador, espacios de trabajo aislados por usuario y espacios de trabajo de partner en paralelo:
 
 ```text
 data/
@@ -507,26 +507,26 @@ data/
 
 El **primer usuario registrado se convierte en administrador** y es dueño de catálogos de modelos, credenciales de proveedor, bases de conocimiento compartidas, skills y permisos por usuario. Todos los demás obtienen un espacio de trabajo aislado y una página de Settings redactada — los modelos, KBs y skills asignados por el administrador aparecen como opciones con alcance de solo lectura, nunca como claves API en bruto.
 
-**Activarlo:** activa la autenticación en `data/user/settings/auth.json`, reinicia `deeptutor start`, registra al primer administrador en `/register`, luego agrega usuarios desde `/admin/users` y asigna modelos, KBs, skills, Partners, política de herramientas/MCP y acceso de ejecución de código a través de permisos.
+**Activarlo:** activa la autenticación en `data/user/settings/auth.json`, reinicia `cognispheretutor start`, registra al primer administrador en `/register`, luego agrega usuarios desde `/admin/users` y asigna modelos, KBs, skills, Partners, política de herramientas/MCP y acceso de ejecución de código a través de permisos.
 
 > PocketBase sigue siendo una integración monousuario — mantén `integrations.pocketbase_url` en blanco para despliegues multi-usuario a menos que hayas conectado un almacén de usuarios externo.
 
 </details>
 
-## ⌨️ DeepTutor CLI — Interfaz Nativa de Agentes
+## ⌨️ cognisphereTutor CLI — Interfaz Nativa de Agentes
 
-Un binario `deeptutor`, dos formas de entrar: un **REPL** interactivo para quienes viven en la terminal, y **JSON** estructurado para otros agentes que manejan DeepTutor como herramienta. Las mismas capacidades, herramientas y bases de conocimiento de cualquier manera.
+Un binario `cognispheretutor`, dos formas de entrar: un **REPL** interactivo para quienes viven en la terminal, y **JSON** estructurado para otros agentes que manejan cognisphereTutor como herramienta. Las mismas capacidades, herramientas y bases de conocimiento de cualquier manera.
 
 <details>
 <summary><b>Manejarlo tú mismo</b></summary>
 
-`deeptutor chat` abre un REPL interactivo; `deeptutor run <capability> "<message>"` ejecuta un único turno y sale. Ambos comparten los mismos flags `--capability`, `--tool`, `--kb` y `--config`.
+`cognispheretutor chat` abre un REPL interactivo; `cognispheretutor run <capability> "<message>"` ejecuta un único turno y sale. Ambos comparten los mismos flags `--capability`, `--tool`, `--kb` y `--config`.
 
 ```bash
-deeptutor chat                                              # REPL interactivo
-deeptutor chat --capability deep_solve --kb my-kb --tool rag
-deeptutor run chat "Explain the Fourier transform" --tool rag --kb textbook
-deeptutor run deep_research "Survey 2026 papers on RAG" \
+cognispheretutor chat                                              # REPL interactivo
+cognispheretutor chat --capability deep_solve --kb my-kb --tool rag
+cognispheretutor run chat "Explain the Fourier transform" --tool rag --kb textbook
+cognispheretutor run deep_research "Survey 2026 papers on RAG" \
   --config mode=report --config depth=standard
 ```
 
@@ -537,20 +537,20 @@ Todo lo que hace la aplicación Web también está aquí — bases de conocimien
 <details>
 <summary><b>Dejar que un agente lo maneje</b></summary>
 
-DeepTutor está construido para ser *operado por otro agente*. Agrega `--format json` a cualquier `run` y cada turno transmite **NDJSON — un evento por línea** (`content`, `tool_call`, `tool_result`, `done`, …), cada línea etiquetada con su `session_id`. Las ejecuciones son seguras sin TTY: una pausa `ask_user` sin TTY se resuelve automáticamente con una respuesta vacía en lugar de bloquearse.
+cognisphereTutor está construido para ser *operado por otro agente*. Agrega `--format json` a cualquier `run` y cada turno transmite **NDJSON — un evento por línea** (`content`, `tool_call`, `tool_result`, `done`, …), cada línea etiquetada con su `session_id`. Las ejecuciones son seguras sin TTY: una pausa `ask_user` sin TTY se resuelve automáticamente con una respuesta vacía en lugar de bloquearse.
 
 ```bash
 # Disparo único, legible por máquina
-deeptutor run deep_solve "Find d/dx[sin(x^2)]" --tool reason --format json
+cognispheretutor run deep_solve "Find d/dx[sin(x^2)]" --tool reason --format json
 
 # Encadenar turnos en una sesión con estado — captura el id, reutilízalo
-SID=$(deeptutor run deep_research "Survey 2026 papers on RAG" \
+SID=$(cognispheretutor run deep_research "Survey 2026 papers on RAG" \
   --config mode=report --config depth=standard --format json \
   | jq -r 'select(.type=="done").session_id')
-deeptutor run deep_question "Quiz me on that survey" --session "$SID" --format json
+cognispheretutor run deep_question "Quiz me on that survey" --session "$SID" --format json
 ```
 
-El repo incluye un [`SKILL.md`](../../SKILL.md) raíz — un documento de traspaso de ~150 líneas que enseña a cualquier LLM que use herramientas toda la superficie en una lectura. Entrégaselo a Claude Code, Codex u OpenCode (los recogen automáticamente), o envuelve `deeptutor run` como herramienta en un bucle LangChain / AutoGen. Recetas completas: [Agent Handoff](https://deeptutor.info/docs/cli/agent-handoff/).
+El repo incluye un [`SKILL.md`](../../SKILL.md) raíz — un documento de traspaso de ~150 líneas que enseña a cualquier LLM que use herramientas toda la superficie en una lectura. Entrégaselo a Claude Code, Codex u OpenCode (los recogen automáticamente), o envuelve `cognispheretutor run` como herramienta en un bucle LangChain / AutoGen. Recetas completas: [Agent Handoff](https://cognispheretutor.info/docs/cli/agent-handoff/).
 
 </details>
 
@@ -559,31 +559,31 @@ El repo incluye un [`SKILL.md`](../../SKILL.md) raíz — un documento de traspa
 
 | Comando | Descripción |
 |:---|:---|
-| `deeptutor init` | Crear o actualizar `data/user/settings` para el espacio de trabajo actual |
-| `deeptutor start [--home PATH]` | Lanzar backend + frontend juntos |
-| `deeptutor serve [--port PORT]` | Iniciar solo el backend FastAPI |
-| `deeptutor run <capability> <message>` | Ejecutar un turno de capacidad único (`chat`, `deep_solve`, `deep_question`, `deep_research`, `visualize`, `math_animator`, `mastery_path`); agrega `--format json` para salida NDJSON |
-| `deeptutor chat` | REPL interactivo con controles de capacidad, herramienta, KB, notebook e historial |
-| `deeptutor partner list/create/start/stop` | Gestionar partners conectados por IM |
-| `deeptutor kb list/info/create/add/search/set-default/delete` | Gestionar bases de conocimiento LlamaIndex |
-| `deeptutor skill search/install/list/remove/login/logout/publish/update` | Gestionar skills, instalar desde hubs y publicar las propias (`eduhub:<slug>` por defecto, consulta Ecosistema) |
-| `deeptutor memory show/clear` | Inspeccionar documentos de memoria L2/L3 o borrar memoria L1/toda |
-| `deeptutor session list/show/open/rename/delete` | Gestionar sesiones compartidas |
-| `deeptutor notebook list/create/show/add-md/replace-md/remove-record` | Gestionar cuadernos desde archivos Markdown |
-| `deeptutor book list/health/refresh-fingerprints` | Inspeccionar libros y actualizar huellas dactilares de fuentes |
-| `deeptutor plugin list/info` | Inspeccionar herramientas y capacidades registradas |
-| `deeptutor config show` | Imprimir resumen de configuración |
-| `deeptutor provider login <provider>` | Autenticación del proveedor (`openai-codex` OAuth login; `github-copilot` valida una sesión de autenticación Copilot existente) |
+| `cognispheretutor init` | Crear o actualizar `data/user/settings` para el espacio de trabajo actual |
+| `cognispheretutor start [--home PATH]` | Lanzar backend + frontend juntos |
+| `cognispheretutor serve [--port PORT]` | Iniciar solo el backend FastAPI |
+| `cognispheretutor run <capability> <message>` | Ejecutar un turno de capacidad único (`chat`, `deep_solve`, `deep_question`, `deep_research`, `visualize`, `math_animator`, `mastery_path`); agrega `--format json` para salida NDJSON |
+| `cognispheretutor chat` | REPL interactivo con controles de capacidad, herramienta, KB, notebook e historial |
+| `cognispheretutor partner list/create/start/stop` | Gestionar partners conectados por IM |
+| `cognispheretutor kb list/info/create/add/search/set-default/delete` | Gestionar bases de conocimiento LlamaIndex |
+| `cognispheretutor skill search/install/list/remove/login/logout/publish/update` | Gestionar skills, instalar desde hubs y publicar las propias (`eduhub:<slug>` por defecto, consulta Ecosistema) |
+| `cognispheretutor memory show/clear` | Inspeccionar documentos de memoria L2/L3 o borrar memoria L1/toda |
+| `cognispheretutor session list/show/open/rename/delete` | Gestionar sesiones compartidas |
+| `cognispheretutor notebook list/create/show/add-md/replace-md/remove-record` | Gestionar cuadernos desde archivos Markdown |
+| `cognispheretutor book list/health/refresh-fingerprints` | Inspeccionar libros y actualizar huellas dactilares de fuentes |
+| `cognispheretutor plugin list/info` | Inspeccionar herramientas y capacidades registradas |
+| `cognispheretutor config show` | Imprimir resumen de configuración |
+| `cognispheretutor provider login <provider>` | Autenticación del proveedor (`openai-codex` OAuth login; `github-copilot` valida una sesión de autenticación Copilot existente) |
 
 </details>
 
 <details>
 <summary><b>Distribución de solo CLI</b></summary>
 
-El paquete de solo CLI vive en `packaging/deeptutor-cli`. En este checkout, instálalo desde fuente:
+El paquete de solo CLI vive en `packaging/cognispheretutor-cli`. En este checkout, instálalo desde fuente:
 
 ```bash
-python -m pip install -e ./packaging/deeptutor-cli
+python -m pip install -e ./packaging/cognispheretutor-cli
 ```
 
 Aún no está publicado en PyPI, así que la sección principal de [Comenzar](#-comenzar) mantiene la ruta de instalación desde fuente.
@@ -592,31 +592,31 @@ Aún no está publicado en PyPI, así que la sección principal de [Comenzar](#-
 
 ## 🧩 Ecosistema — EduHub y la Comunidad de Skills
 
-Las skills de DeepTutor usan el formato abierto **Agent-Skills** — una carpeta con una guía `SKILL.md` (frontmatter YAML + Markdown) y archivos de referencia opcionales. No hay nada específico de DeepTutor en ello, así que cualquier registro que hable el formato se convierte en una fuente para tu biblioteca. DeepTutor incluye **[EduHub](https://eduhub.deeptutor.info/)** — nuestro propio registro de skills enfocado en educación — conectado como hub predeterminado.
+Las skills de cognisphereTutor usan el formato abierto **Agent-Skills** — una carpeta con una guía `SKILL.md` (frontmatter YAML + Markdown) y archivos de referencia opcionales. No hay nada específico de cognisphereTutor en ello, así que cualquier registro que hable el formato se convierte en una fuente para tu biblioteca. cognisphereTutor incluye **[EduHub](https://eduhub.cognispheretutor.info/)** — nuestro propio registro de skills enfocado en educación — conectado como hub predeterminado.
 
 <details>
-<summary><b>EduHub — el ecosistema de skills de DeepTutor</b></summary>
+<summary><b>EduHub — el ecosistema de skills de cognisphereTutor</b></summary>
 
-[**EduHub**](https://eduhub.deeptutor.info/) es el hub comunitario que DeepTutor lanzó para compartir skills de agentes orientadas a la enseñanza — tutores socráticos, constructores de tarjetas flash, retroalimentación de ensayos, planos de examen, explicadores de conceptos y más. Está integrado en DeepTutor, así que no hay nada que configurar: un slug simple o un prefijo `eduhub:` se resuelve a él.
+[**EduHub**](https://eduhub.cognispheretutor.info/) es el hub comunitario que cognisphereTutor lanzó para compartir skills de agentes orientadas a la enseñanza — tutores socráticos, constructores de tarjetas flash, retroalimentación de ensayos, planos de examen, explicadores de conceptos y más. Está integrado en cognisphereTutor, así que no hay nada que configurar: un slug simple o un prefijo `eduhub:` se resuelve a él.
 
 **Encontrar e instalar** — en el navegador, abre **Learning Space → Skills → Import from EduHub** para navegar el catálogo y descargar una skill directamente en tu biblioteca. Desde la terminal:
 
 ```bash
-deeptutor skill search "socratic tutor"               # buscar en EduHub (el hub predeterminado)
-deeptutor skill install socratic-tutor                # fetch → verificar → registrar
-deeptutor skill install eduhub:socratic-tutor@1.2.0   # fijar un hub y una versión
-deeptutor skill list                                  # skills locales con su proveniencia del hub
+cognispheretutor skill search "socratic tutor"               # buscar en EduHub (el hub predeterminado)
+cognispheretutor skill install socratic-tutor                # fetch → verificar → registrar
+cognispheretutor skill install eduhub:socratic-tutor@1.2.0   # fijar un hub y una versión
+cognispheretutor skill list                                  # skills locales con su proveniencia del hub
 ```
 
 **Publicar la tuya propia** — empaqueta un `SKILL.md` y compártelo con la comunidad:
 
 ```bash
-deeptutor skill login                                 # inicio de sesión en EduHub desde el navegador
-deeptutor skill publish ./my-skill                    # interactivo: elige una pista + etiquetas, luego sube
-deeptutor skill update                                # revertir o lanzar una nueva versión
+cognispheretutor skill login                                 # inicio de sesión en EduHub desde el navegador
+cognispheretutor skill publish ./my-skill                    # interactivo: elige una pista + etiquetas, luego sube
+cognispheretutor skill update                                # revertir o lanzar una nueva versión
 ```
 
-EduHub también es un registro independiente compatible con ClawHub, así que los agentes que no son DeepTutor (Claude Code, Codex, …) pueden usarlo directamente a través del CLI `eduhub` — `npx eduhub install socratic-tutor`.
+EduHub también es un registro independiente compatible con ClawHub, así que los agentes que no son cognisphereTutor (Claude Code, Codex, …) pueden usarlo directamente a través del CLI `eduhub` — `npx eduhub install socratic-tutor`.
 
 </details>
 
@@ -627,7 +627,7 @@ Sea cual sea la fuente, cada importación pasa la **misma puerta de seguridad** 
 
 - el **veredicto de seguridad** del registro se verifica primero — los paquetes marcados se rechazan a menos que pases `--allow-unverified`;
 - los archivos se extraen defensivamente (guardas contra zip-slip / zip-bomb) detrás de una **lista blanca de sufijos** de texto/script, de modo que los binarios nunca aterrizan en el espacio de trabajo;
-- el frontmatter se normaliza al esquema de DeepTutor y `always:` se **elimina**, de modo que una skill descargada nunca puede forzarse en cada prompt del sistema;
+- el frontmatter se normaliza al esquema de cognisphereTutor y `always:` se **elimina**, de modo que una skill descargada nunca puede forzarse en cada prompt del sistema;
 - la proveniencia — hub, versión, veredicto y tiempo de instalación — se escribe en `.hub-lock.json` para auditorías y actualizaciones.
 
 En despliegues multi-usuario, la instalación es solo para administradores: una nueva skill aterriza en el catálogo del administrador y permanece invisible para otros usuarios hasta que un permiso la asigne, de modo que un administrador puede verificarla antes de distribuirla.
@@ -637,11 +637,11 @@ En despliegues multi-usuario, la instalación es solo para administradores: una 
 <details>
 <summary><b>También compatible con ClawHub</b></summary>
 
-Como DeepTutor habla el formato abierto Agent-Skills, **[ClawHub](https://clawhub.ai/)** también funciona como fuente de primera clase — está integrado junto con EduHub. Selecciónalo con el prefijo del hub:
+Como cognisphereTutor habla el formato abierto Agent-Skills, **[ClawHub](https://clawhub.ai/)** también funciona como fuente de primera clase — está integrado junto con EduHub. Selecciónalo con el prefijo del hub:
 
 ```bash
-deeptutor skill search "git release notes" --hub clawhub
-deeptutor skill install clawhub:git-release-notes@1.0.1
+cognispheretutor skill search "git release notes" --hub clawhub
+cognispheretutor skill install clawhub:git-release-notes@1.0.1
 ```
 
 Agrega más registros en `settings/skill_hubs.json`: una entrada `type: "clawhub"` apunta a cualquier API HTTP compatible (EduHub y ClawHub ambas lo hablan), `type: "command"` envuelve cualquier CLI de fetch que envíe un registro, y `"default"` elige el hub usado para slugs simples. Todos ellos alimentan la misma puerta de importación.
@@ -652,13 +652,13 @@ Agrega más registros en `settings/skill_hubs.json`: una entrada `type: "clawhub
 
 ### 📮 Contacto
 
-DeepTutor es un proyecto de código abierto liderado por [Bingxi Zhao](https://github.com/pancacake) dentro del grupo [HKUDS](https://github.com/HKUDS), y se itera en **forma completamente de código abierto**, construido junto con la comunidad. Hasta ahora, **NO** tenemos productos en línea de pago de ningún tipo. No dudes en contactarnos en **bingxizhao39@gmail.com** para discusiones, ideas o colaboración.
+cognisphereTutor es un proyecto de código abierto liderado por [Bingxi Zhao](https://github.com/pancacake) dentro del grupo [HKUDS](https://github.com/HKUDS), y se itera en **forma completamente de código abierto**, construido junto con la comunidad. Hasta ahora, **NO** tenemos productos en línea de pago de ningún tipo. No dudes en contactarnos en **bingxizhao39@gmail.com** para discusiones, ideas o colaboración.
 
 ### 🙏 Agradecimientos
 
-Un agradecimiento de corazón a [**Chao Huang**](https://sites.google.com/view/chaoh), director del Data Intelligence Lab @ HKU, y a nuestros compañeros de HKUDS por su cálido apoyo — especialmente [**Jiahao Zhang**](https://github.com/zzhtx258), [**Zirui Guo**](https://github.com/LarFii) y [**Xubin Ren**](https://github.com/Re-bin). También estamos profundamente agradecidos a la **comunidad de código abierto**: tus estrellas, issues, pull requests y discusiones dan forma a DeepTutor todos los días.
+Un agradecimiento de corazón a [**Chao Huang**](https://sites.google.com/view/chaoh), director del Data Intelligence Lab @ HKU, y a nuestros compañeros de HKUDS por su cálido apoyo — especialmente [**Jiahao Zhang**](https://github.com/zzhtx258), [**Zirui Guo**](https://github.com/LarFii) y [**Xubin Ren**](https://github.com/Re-bin). También estamos profundamente agradecidos a la **comunidad de código abierto**: tus estrellas, issues, pull requests y discusiones dan forma a cognisphereTutor todos los días.
 
-DeepTutor también se apoya en los hombros de destacados proyectos de código abierto que nos dieron herramientas e inspiración:
+cognisphereTutor también se apoya en los hombros de destacados proyectos de código abierto que nos dieron herramientas e inspiración:
 
 | Proyecto | Rol / Inspiración |
 |:---|:---|
@@ -669,41 +669,41 @@ DeepTutor también se apoya en los hombros de destacados proyectos de código ab
 | [**AI-Researcher**](https://github.com/HKUDS/AI-Researcher) | Pipeline de investigación automatizada *(HKUDS)* |
 | [**OpenClaw**](https://github.com/openclaw/openclaw) | Pasarela de agentes abierta y ecosistema de skills detrás de ClawHub |
 | [**Codex**](https://github.com/openai/codex) | CLI de codificación nativo de agentes que inspiró nuestro flujo de trabajo CLI |
-| [**Claude Code**](https://github.com/anthropics/claude-code) | CLI de codificación agéntica que inspiró el bucle de agentes de DeepTutor |
+| [**Claude Code**](https://github.com/anthropics/claude-code) | CLI de codificación agéntica que inspiró el bucle de agentes de cognisphereTutor |
 | [**ManimCat**](https://github.com/Wing900/ManimCat) | Generación de animaciones matemáticas impulsada por IA para Math Animator |
 
 ### 🗺️ Roadmap y Contribuir
 
-Queremos que DeepTutor siga iterando y mejorando — y en última instancia se convierta en un regalo que devolvamos a la comunidad de código abierto. Nuestro [**roadmap**](https://github.com/HKUDS/DeepTutor/issues/498) se actualiza continuamente; vota en los elementos allí o propone nuevos. Si deseas contribuir, consulta la [**Guía de Contribución**](../../CONTRIBUTING.md) para la estrategia de ramas, estándares de código y cómo comenzar.
+Queremos que cognisphereTutor siga iterando y mejorando — y en última instancia se convierta en un regalo que devolvamos a la comunidad de código abierto. Nuestro [**roadmap**](https://github.com/HKUDS/cognisphereTutor/issues/498) se actualiza continuamente; vota en los elementos allí o propone nuevos. Si deseas contribuir, consulta la [**Guía de Contribución**](../../CONTRIBUTING.md) para la estrategia de ramas, estándares de código y cómo comenzar.
 
 <div align="center">
 
-Esperamos que DeepTutor se convierta en un regalo para la comunidad. 🎁
+Esperamos que cognisphereTutor se convierta en un regalo para la comunidad. 🎁
 
-<a href="https://github.com/HKUDS/DeepTutor/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=HKUDS/DeepTutor&max=999" alt="Contribuidores" />
+<a href="https://github.com/HKUDS/cognisphereTutor/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=HKUDS/cognisphereTutor&max=999" alt="Contribuidores" />
 </a>
 
 </div>
 
 <div align="center">
 
-<a href="https://www.star-history.com/#HKUDS/DeepTutor&type=timeline&legend=top-left">
+<a href="https://www.star-history.com/#HKUDS/cognisphereTutor&type=timeline&legend=top-left">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HKUDS/DeepTutor&type=timeline&theme=dark&legend=top-left" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HKUDS/DeepTutor&type=timeline&legend=top-left" />
-    <img alt="Gráfico de historial de estrellas" src="https://api.star-history.com/svg?repos=HKUDS/DeepTutor&type=timeline&legend=top-left" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=HKUDS/cognisphereTutor&type=timeline&theme=dark&legend=top-left" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=HKUDS/cognisphereTutor&type=timeline&legend=top-left" />
+    <img alt="Gráfico de historial de estrellas" src="https://api.star-history.com/svg?repos=HKUDS/cognisphereTutor&type=timeline&legend=top-left" />
   </picture>
 </a>
 
 </div>
 
 <p align="center">
- <a href="https://www.star-history.com/hkuds/deeptutor">
+ <a href="https://www.star-history.com/hkuds/cognispheretutor">
   <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=HKUDS/DeepTutor&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=HKUDS/DeepTutor" />
-   <img alt="Clasificación del historial de estrellas" src="https://api.star-history.com/badge?repo=HKUDS/DeepTutor" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=HKUDS/cognisphereTutor&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=HKUDS/cognisphereTutor" />
+   <img alt="Clasificación del historial de estrellas" src="https://api.star-history.com/badge?repo=HKUDS/cognisphereTutor" />
   </picture>
  </a>
 </p>
@@ -713,7 +713,7 @@ Esperamos que DeepTutor se convierta en un regalo para la comunidad. 🎁
 Licenciado bajo [Apache License 2.0](../../LICENSE).
 
 <p>
-  <img src="https://visitor-badge.laobi.icu/badge?page_id=HKUDS.DeepTutor&style=for-the-badge&color=00d4ff" alt="Vistas">
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=HKUDS.cognisphereTutor&style=for-the-badge&color=00d4ff" alt="Vistas">
 </p>
 
 </div>

@@ -4,9 +4,9 @@ from types import SimpleNamespace
 
 import pytest
 
-from deeptutor.core.stream import StreamEvent, StreamEventType
-from deeptutor.services.session.sqlite_store import SQLiteSessionStore
-from deeptutor.services.session.turn_runtime import TurnRuntimeManager
+from cognispheretutor.core.stream import StreamEvent, StreamEventType
+from cognispheretutor.services.session.sqlite_store import SQLiteSessionStore
+from cognispheretutor.services.session.turn_runtime import TurnRuntimeManager
 
 
 async def _noop_async(*_args, **_kwargs):
@@ -135,13 +135,13 @@ async def test_turn_runtime_replays_events_and_materializes_messages(
             )
             yield StreamEvent(type=StreamEventType.DONE, source="chat")
 
-    monkeypatch.setattr("deeptutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
     monkeypatch.setattr(
-        "deeptutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
+        "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
-    monkeypatch.setattr("deeptutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
+    monkeypatch.setattr("cognispheretutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
     monkeypatch.setattr(
-        "deeptutor.book.context.build_book_context",
+        "cognispheretutor.book.context.build_book_context",
         lambda *_args, **_kwargs: SimpleNamespace(
             text="## Page: Signal Basics\nA selected page.",
             references=[{"book_id": "book-1", "page_ids": ["page-1"]}],
@@ -149,18 +149,18 @@ async def test_turn_runtime_replays_events_and_materializes_messages(
         ),
     )
     monkeypatch.setattr(
-        "deeptutor.services.memory.get_memory_store",
+        "cognispheretutor.services.memory.get_memory_store",
         lambda: SimpleNamespace(
             read_l3_concat=lambda: "",
             emit=_noop_async,
         ),
     )
     monkeypatch.setattr(
-        "deeptutor.services.skill.get_skill_service",
+        "cognispheretutor.services.skill.get_skill_service",
         _fake_skill_service,
     )
     monkeypatch.setattr(
-        "deeptutor.services.persona.get_persona_service",
+        "cognispheretutor.services.persona.get_persona_service",
         _fake_persona_service,
     )
 
@@ -280,30 +280,30 @@ async def test_turn_runtime_persists_llm_selection_in_turn_snapshot(
         ), object()
 
     monkeypatch.setattr(
-        "deeptutor.services.config.get_model_catalog_service",
+        "cognispheretutor.services.config.get_model_catalog_service",
         lambda: SimpleNamespace(load=_model_catalog),
     )
     monkeypatch.setattr(
-        "deeptutor.services.model_selection.runtime.activate_llm_selection",
+        "cognispheretutor.services.model_selection.runtime.activate_llm_selection",
         fake_activate,
     )
     monkeypatch.setattr(
-        "deeptutor.services.model_selection.runtime.reset_llm_selection",
+        "cognispheretutor.services.model_selection.runtime.reset_llm_selection",
         lambda _token: captured.setdefault("reset_called", True),
     )
     monkeypatch.setattr(
-        "deeptutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
+        "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
-    monkeypatch.setattr("deeptutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
+    monkeypatch.setattr("cognispheretutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
     monkeypatch.setattr(
-        "deeptutor.services.memory.get_memory_store",
+        "cognispheretutor.services.memory.get_memory_store",
         lambda: SimpleNamespace(
             read_l3_concat=lambda: "",
             emit=_noop_async,
         ),
     )
-    monkeypatch.setattr("deeptutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("deeptutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
+    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
 
     selection = {"profile_id": "p-alt", "model_id": "m-alt"}
     session, turn = await runtime.start_turn(
@@ -370,17 +370,17 @@ async def test_turn_runtime_session_persona_persists_falls_back_and_clears(
             )
             yield StreamEvent(type=StreamEventType.DONE, source="chat")
 
-    monkeypatch.setattr("deeptutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
     monkeypatch.setattr(
-        "deeptutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
+        "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
-    monkeypatch.setattr("deeptutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
+    monkeypatch.setattr("cognispheretutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
     monkeypatch.setattr(
-        "deeptutor.services.memory.get_memory_store",
+        "cognispheretutor.services.memory.get_memory_store",
         lambda: SimpleNamespace(read_l3_concat=lambda: "", emit=_noop_async),
     )
-    monkeypatch.setattr("deeptutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("deeptutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
+    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
 
     async def run_turn(session_id, extra):
         session, turn = await runtime.start_turn(
@@ -430,7 +430,7 @@ async def test_turn_runtime_rejects_invalid_llm_selection(
     store = SQLiteSessionStore(tmp_path / "chat_history.db")
     runtime = TurnRuntimeManager(store)
     monkeypatch.setattr(
-        "deeptutor.services.config.get_model_catalog_service",
+        "cognispheretutor.services.config.get_model_catalog_service",
         lambda: SimpleNamespace(load=_model_catalog),
     )
 
@@ -498,30 +498,30 @@ async def test_turn_runtime_allows_model_switching_within_same_session(
         )
 
     monkeypatch.setattr(
-        "deeptutor.services.config.get_model_catalog_service",
+        "cognispheretutor.services.config.get_model_catalog_service",
         lambda: SimpleNamespace(load=_model_catalog),
     )
     monkeypatch.setattr(
-        "deeptutor.services.model_selection.runtime.activate_llm_selection",
+        "cognispheretutor.services.model_selection.runtime.activate_llm_selection",
         fake_activate,
     )
     monkeypatch.setattr(
-        "deeptutor.services.model_selection.runtime.reset_llm_selection",
+        "cognispheretutor.services.model_selection.runtime.reset_llm_selection",
         lambda _token: None,
     )
     monkeypatch.setattr(
-        "deeptutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
+        "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
-    monkeypatch.setattr("deeptutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
+    monkeypatch.setattr("cognispheretutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
     monkeypatch.setattr(
-        "deeptutor.services.memory.get_memory_store",
+        "cognispheretutor.services.memory.get_memory_store",
         lambda: SimpleNamespace(
             read_l3_concat=lambda: "",
             emit=_noop_async,
         ),
     )
-    monkeypatch.setattr("deeptutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("deeptutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
+    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
 
     first_selection = {"profile_id": "p-default", "model_id": "m-default"}
     second_selection = {"profile_id": "p-alt", "model_id": "m-alt"}
@@ -657,20 +657,20 @@ async def test_turn_runtime_bootstraps_question_followup_context_once(
             )
             yield StreamEvent(type=StreamEventType.DONE, source="chat")
 
-    monkeypatch.setattr("deeptutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
     monkeypatch.setattr(
-        "deeptutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
+        "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
-    monkeypatch.setattr("deeptutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
+    monkeypatch.setattr("cognispheretutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
     monkeypatch.setattr(
-        "deeptutor.services.memory.get_memory_store",
+        "cognispheretutor.services.memory.get_memory_store",
         lambda: SimpleNamespace(
             read_l3_concat=lambda: "",
             emit=_noop_async,
         ),
     )
-    monkeypatch.setattr("deeptutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("deeptutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
+    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
 
     session, turn = await runtime.start_turn(
         {
@@ -782,20 +782,20 @@ async def test_turn_runtime_persists_deep_research_session_preference(
             )
             yield StreamEvent(type=StreamEventType.DONE, source="deep_research")
 
-    monkeypatch.setattr("deeptutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
     monkeypatch.setattr(
-        "deeptutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
+        "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
-    monkeypatch.setattr("deeptutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
+    monkeypatch.setattr("cognispheretutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
     monkeypatch.setattr(
-        "deeptutor.services.memory.get_memory_store",
+        "cognispheretutor.services.memory.get_memory_store",
         lambda: SimpleNamespace(
             read_l3_concat=lambda: "",
             emit=_noop_async,
         ),
     )
-    monkeypatch.setattr("deeptutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("deeptutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
+    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
 
     session, turn = await runtime.start_turn(
         {
@@ -875,20 +875,20 @@ async def test_turn_runtime_injects_memory_and_refreshes_after_completion(
         emit_calls.append(event)
         return None
 
-    monkeypatch.setattr("deeptutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
     monkeypatch.setattr(
-        "deeptutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
+        "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
-    monkeypatch.setattr("deeptutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
+    monkeypatch.setattr("cognispheretutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
     monkeypatch.setattr(
-        "deeptutor.services.memory.get_memory_store",
+        "cognispheretutor.services.memory.get_memory_store",
         lambda: SimpleNamespace(
             read_l3_concat=lambda: "## Memory\n## Preferences\n- Prefer concise answers.",
             emit=fake_emit,
         ),
     )
-    monkeypatch.setattr("deeptutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("deeptutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
+    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
 
     _session, turn = await runtime.start_turn(
         {

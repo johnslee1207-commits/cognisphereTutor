@@ -1,8 +1,8 @@
 const FENCE = "```";
 
-export const CO_WRITER_SAMPLE_TEMPLATE = `# DeepTutor Co-Writer
+export const CO_WRITER_SAMPLE_TEMPLATE = `# cognisphereTutor Co-Writer
 
-> DeepTutor's built-in writing canvas for notes, reports, tutorials, and AI-assisted drafts.
+> cognisphereTutor's built-in writing canvas for notes, reports, tutorials, and AI-assisted drafts.
 
 ### Features
 
@@ -10,14 +10,14 @@ export const CO_WRITER_SAMPLE_TEMPLATE = `# DeepTutor Co-Writer
 - Real-time preview for headings, tables, code, math, flowchart, and sequence diagrams
 - AI editing workflows for rewrite, shorten, and expand
 - HTML tag decoding for tags like <sub>, <sup>, <abbr>, and <mark>
-- A practical starter draft for DeepTutor product docs and learning content
+- A practical starter draft for cognisphereTutor product docs and learning content
 
 ## Headers (Underline)
 
-DeepTutor Learning Note
+cognisphereTutor Learning Note
 =============
 
-DeepTutor Study Outline
+cognisphereTutor Study Outline
 -------------
 
 ### Characters
@@ -33,43 +33,43 @@ Superscript: X<sup>2</sup>, Subscript: O<sub>2</sub>
 
 **Abbreviation(link HTML abbr tag)**
 
-The <abbr title="Large Language Model">LLM</abbr> layer powers DeepTutor while the <abbr title="Retrieval Augmented Generation">RAG</abbr> layer provides grounded knowledge support.
+The <abbr title="Large Language Model">LLM</abbr> layer powers cognisphereTutor while the <abbr title="Retrieval Augmented Generation">RAG</abbr> layer provides grounded knowledge support.
 
 ### Blockquotes
 
-> DeepTutor helps students turn questions into structured understanding.
+> cognisphereTutor helps students turn questions into structured understanding.
 >
-> "Learn deeply, write clearly.", [DeepTutor](#deeptutor-co-writer)
+> "Learn deeply, write clearly.", [cognisphereTutor](#cognispheretutor-co-writer)
 
 ### Links
 
-[DeepTutor Co-Writer](#deeptutor-co-writer "co-writer section")
+[cognisphereTutor Co-Writer](#cognispheretutor-co-writer "co-writer section")
 
-[DeepTutor Learning Note](#deeptutor-learning-note)
+[cognisphereTutor Learning Note](#cognispheretutor-learning-note)
 
-[DeepTutor Website](https://deeptutor.info)
+[cognisphereTutor Website](https://cognispheretutor.info)
 
-[Reference link][deeptutor-doc]
+[Reference link][cognispheretutor-doc]
 
-[deeptutor-doc]: #deeptutor-learning-note
+[cognispheretutor-doc]: #cognispheretutor-learning-note
 
 ### Code Blocks
 
 #### Inline code
 
-\`deeptutor chat --once "Summarize this section"\`
+\`cognispheretutor chat --once "Summarize this section"\`
 
 #### Code Blocks (Indented style)
 
-    from deeptutor.runtime.orchestrator import ChatOrchestrator
+    from cognispheretutor.runtime.orchestrator import ChatOrchestrator
     orchestrator = ChatOrchestrator()
-    print("DeepTutor is ready.")
+    print("cognisphereTutor is ready.")
 
 #### Python
 
 ${FENCE}python
-from deeptutor.runtime.orchestrator import ChatOrchestrator
-from deeptutor.core.context import UnifiedContext
+from cognispheretutor.runtime.orchestrator import ChatOrchestrator
+from cognispheretutor.core.context import UnifiedContext
 
 
 async def run_demo() -> str:
@@ -86,7 +86,7 @@ ${FENCE}
 
 ${FENCE}json
 {
-  "app_name": "DeepTutor",
+  "app_name": "cognisphereTutor",
   "default_capability": "chat",
   "enabled_tools": ["rag", "web_search", "code_execution", "reason"],
   "ui": {
@@ -98,8 +98,8 @@ ${FENCE}
 #### HTML code
 
 ${FENCE}html
-<section class="deeptutor-card">
-  <h1>DeepTutor</h1>
+<section class="cognispheretutor-card">
+  <h1>cognisphereTutor</h1>
   <p>Write, revise, and organize learning content with AI.</p>
 </section>
 ${FENCE}
@@ -108,13 +108,13 @@ ${FENCE}
 
 ![](/logo-ver2.png)
 
-> DeepTutor brand mark used inside the co-writer template.
+> cognisphereTutor brand mark used inside the co-writer template.
 
 ### Lists
 
-- DeepTutor Chat
-- DeepTutor Co-Writer
-- DeepTutor Research
+- cognisphereTutor Chat
+- cognisphereTutor Co-Writer
+- cognisphereTutor Research
 
 1. Draft a concept note
 2. Ask AI to refine it
@@ -136,7 +136,7 @@ Research      | Build structured multi-step reports
 
 ### Markdown extras
 
-- [x] Draft a DeepTutor product note
+- [x] Draft a cognisphereTutor product note
 - [x] Add references and structure
 - [ ] Polish the final explanation
   - [ ] Check headings
@@ -156,7 +156,7 @@ $$ \\sin(\\alpha)^{\\theta}=\\sum_{i=0}^{n}(x^i + \\cos(f))$$
 
 ${FENCE}flow
 st=>start: Student asks a question
-op=>operation: DeepTutor analyzes intent
+op=>operation: cognisphereTutor analyzes intent
 cond=>condition: Need deep workflow?
 chat=>operation: Answer with chat capability
 solve=>operation: Route to deep solve
@@ -172,11 +172,11 @@ ${FENCE}
 ### Sequence Diagram
 
 ${FENCE}seq
-Student->DeepTutor: Ask for help
-DeepTutor->KnowledgeBase: Load context
-Note right of DeepTutor: Collect memory\\nand relevant knowledge
-DeepTutor-->Student: Return guided response
-Student->>DeepTutor: Request rewrite in co-writer
+Student->cognisphereTutor: Ask for help
+cognisphereTutor->KnowledgeBase: Load context
+Note right of cognisphereTutor: Collect memory\\nand relevant knowledge
+cognisphereTutor-->Student: Return guided response
+Student->>cognisphereTutor: Request rewrite in co-writer
 ${FENCE}
 
 ### End

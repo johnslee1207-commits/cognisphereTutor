@@ -2,7 +2,7 @@ import { apiFetch, apiUrl, setRuntimeAuthEnabled } from "@/lib/api";
 
 // Auth state is resolved at runtime from the backend (`/api/v1/auth/status`),
 // not from a build-time/env constant: the browser bundle never sees
-// `DEEPTUTOR_AUTH_ENABLED` (not a `NEXT_PUBLIC_` var), and auth is runtime
+// `COGNISPHERETUTOR_AUTH_ENABLED` (not a `NEXT_PUBLIC_` var), and auth is runtime
 // config that must not be baked into the bundle. Components observe it via the
 // `useAuthStatus` hook (web/hooks/useAuthStatus.ts); `apiFetch`'s redirect gate
 // is driven by `setRuntimeAuthEnabled`, which `fetchAuthStatus` calls below.

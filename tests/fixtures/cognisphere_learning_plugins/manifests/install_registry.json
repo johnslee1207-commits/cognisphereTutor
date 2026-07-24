@@ -1,0 +1,25 @@
+{
+  "registry_id": "cognisphere.learning_plugins.install_registry.v1",
+  "registry_version": "1",
+  "plugins_root_env": "COGNISPHERE_LEARNING_PLUGINS_ROOT",
+  "plugins": [
+    {
+      "domain": "leetcode",
+      "relative_path": "plugins/leetcode",
+      "plugin_manifest": "plugins/leetcode/plugin_manifest.json",
+      "lifecycle": "available"
+    },
+    {
+      "domain": "ap_calculus",
+      "relative_path": "plugins/ap_calculus",
+      "plugin_manifest": "plugins/ap_calculus/plugin_manifest.json",
+      "lifecycle": "available"
+    },
+    {
+      "domain": "aws_certification",
+      "relative_path": "plugins/aws_certification",
+      "plugin_manifest": "plugins/aws_certification/plugin_manifest.json",
+      "lifecycle": "registered"
+    }
+  ]
+}

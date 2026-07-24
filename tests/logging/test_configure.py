@@ -5,12 +5,12 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.logging import LoggingConfig, bind_log_context
+from cognispheretutor.logging import LoggingConfig, bind_log_context
 
 
 @pytest.fixture(autouse=True)
 def _clean_logging_handlers():
-    configure_module = importlib.import_module("deeptutor.logging.configure")
+    configure_module = importlib.import_module("cognispheretutor.logging.configure")
     configure_module._remove_managed_handlers(logging.getLogger())
     yield
     configure_module._remove_managed_handlers(logging.getLogger())
@@ -22,7 +22,7 @@ def _flush_root_handlers() -> None:
 
 
 def test_configure_logging_writes_jsonl_and_respects_level(monkeypatch, tmp_path: Path):
-    configure_module = importlib.import_module("deeptutor.logging.configure")
+    configure_module = importlib.import_module("cognispheretutor.logging.configure")
     monkeypatch.setattr(
         configure_module,
         "load_logging_config",
@@ -37,23 +37,23 @@ def test_configure_logging_writes_jsonl_and_respects_level(monkeypatch, tmp_path
     )
 
     configure_module.configure_logging(force=True)
-    logger = logging.getLogger("deeptutor.tests.config")
+    logger = logging.getLogger("cognispheretutor.tests.config")
     with bind_log_context(request_id="req-1", task_id="task-1"):
         logger.info("filtered")
         logger.warning("written")
     _flush_root_handlers()
 
-    lines = (tmp_path / "deeptutor.jsonl").read_text(encoding="utf-8").splitlines()
+    lines = (tmp_path / "cognispheretutor.jsonl").read_text(encoding="utf-8").splitlines()
     assert len(lines) == 1
     entry = json.loads(lines[0])
     assert entry["level"] == "WARNING"
-    assert entry["logger"] == "deeptutor.tests.config"
+    assert entry["logger"] == "cognispheretutor.tests.config"
     assert entry["message"] == "written"
     assert entry["context"] == {"request_id": "req-1", "task_id": "task-1"}
 
 
 def test_configure_logging_uses_rotation_settings(monkeypatch, tmp_path: Path):
-    configure_module = importlib.import_module("deeptutor.logging.configure")
+    configure_module = importlib.import_module("cognispheretutor.logging.configure")
     monkeypatch.setattr(
         configure_module,
         "load_logging_config",
@@ -68,10 +68,10 @@ def test_configure_logging_uses_rotation_settings(monkeypatch, tmp_path: Path):
     )
 
     configure_module.configure_logging(force=True)
-    logger = logging.getLogger("deeptutor.tests.rotation")
+    logger = logging.getLogger("cognispheretutor.tests.rotation")
     for index in range(20):
         logger.info("rotation line %02d %s", index, "x" * 40)
     _flush_root_handlers()
 
-    assert (tmp_path / "deeptutor.jsonl").exists()
-    assert (tmp_path / "deeptutor.jsonl.1").exists()
+    assert (tmp_path / "cognispheretutor.jsonl").exists()
+    assert (tmp_path / "cognispheretutor.jsonl.1").exists()

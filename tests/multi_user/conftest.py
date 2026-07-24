@@ -13,8 +13,8 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.multi_user.context import reset_current_user, set_current_user
-from deeptutor.multi_user.models import CurrentUser, UserScope
+from cognispheretutor.multi_user.context import reset_current_user, set_current_user
+from cognispheretutor.multi_user.models import CurrentUser, UserScope
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def mu_isolated_root(tmp_path, monkeypatch) -> Path:
     Also clears the ``_path_services`` cache so ``get_path_service()`` can be
     re-resolved per test without leaking instances created in earlier tests.
     """
-    from deeptutor.multi_user import grants, identity, paths
+    from cognispheretutor.multi_user import grants, identity, paths
 
     project_root = tmp_path
     admin_root = (project_root / "data").resolve()
@@ -65,7 +65,7 @@ def make_user(mu_isolated_root):
     """Build a ``CurrentUser`` rooted under the isolated tmp_path."""
 
     def _make(uid: str, *, role: str = "user", username: str | None = None) -> CurrentUser:
-        from deeptutor.multi_user.paths import admin_scope
+        from cognispheretutor.multi_user.paths import admin_scope
 
         if role == "admin":
             scope = admin_scope()
@@ -110,8 +110,8 @@ def seed_user(mu_isolated_root):
     """Create a user record on disk and return the resulting record dict."""
 
     def _seed(username: str, password: str = "password1234", role: str = "user") -> dict:
-        from deeptutor.multi_user.identity import save_user
-        from deeptutor.services.auth import hash_password
+        from cognispheretutor.multi_user.identity import save_user
+        from cognispheretutor.services.auth import hash_password
 
         return save_user(username, hash_password(password), role=role)  # type: ignore[arg-type]
 

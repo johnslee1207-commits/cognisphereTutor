@@ -18,16 +18,16 @@ from pathlib import Path
 
 import httpx
 
-from deeptutor.services.rag.factory import get_pipeline, normalize_provider_name
-from deeptutor.services.rag.pipelines.lightrag_server.client import LightRagServerClient
-from deeptutor.services.rag.pipelines.lightrag_server.config import (
+from cognispheretutor.services.rag.factory import get_pipeline, normalize_provider_name
+from cognispheretutor.services.rag.pipelines.lightrag_server.client import LightRagServerClient
+from cognispheretutor.services.rag.pipelines.lightrag_server.config import (
     DEFAULT_MODE,
     LightRagServerConfig,
     LightRagServerNotConfiguredError,
     config_from_entry,
 )
-from deeptutor.services.rag.pipelines.lightrag_server.pipeline import LightRagServerPipeline
-from deeptutor.services.rag.pipelines.lightrag_server.probe import probe_server
+from cognispheretutor.services.rag.pipelines.lightrag_server.pipeline import LightRagServerPipeline
+from cognispheretutor.services.rag.pipelines.lightrag_server.probe import probe_server
 
 
 def _transport(*, auth_configured: bool = True, valid_key: str | None = "secret"):

@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DOCS_ROOT = ROOT / "site" / "src" / "content" / "docs"
 PUBLIC_DOCS = (
     ROOT / "README.md",
-    ROOT / "deeptutor_cli" / "README.md",
+    ROOT / "cognispheretutor_cli" / "README.md",
     ROOT / "SKILL.md",
 )
 
@@ -40,13 +40,13 @@ def _doc_ids() -> set[str]:
     return ids
 
 
-def _deeptutor_commands() -> list[str]:
+def _cognispheretutor_commands() -> list[str]:
     commands: list[str] = []
     pending = ""
     for path in _command_doc_paths():
         for line in path.read_text(encoding="utf-8").splitlines():
             stripped = line.strip()
-            if not pending and not stripped.startswith("deeptutor "):
+            if not pending and not stripped.startswith("cognispheretutor "):
                 continue
             continued = stripped.endswith("\\")
             line_part = stripped[:-1].strip() if continued else stripped
@@ -72,7 +72,7 @@ def test_internal_docs_links_point_to_existing_pages() -> None:
     assert missing == []
 
 
-def test_documented_deeptutor_subcommands_exist() -> None:
+def test_documented_cognispheretutor_subcommands_exist() -> None:
     top_level = {
         "book",
         "chat",
@@ -92,7 +92,7 @@ def test_documented_deeptutor_subcommands_exist() -> None:
     }
     provider_subcommands = {"login"}
 
-    for command in _deeptutor_commands():
+    for command in _cognispheretutor_commands():
         first_segment = command.split("|", 1)[0].split("#", 1)[0].strip()
         if "<" in first_segment or "[" in first_segment:
             continue
@@ -106,7 +106,7 @@ def test_documented_deeptutor_subcommands_exist() -> None:
 
 def test_deep_research_examples_include_required_config() -> None:
     examples = [
-        command for command in _deeptutor_commands() if "deeptutor run deep_research" in command
+        command for command in _cognispheretutor_commands() if "cognispheretutor run deep_research" in command
     ]
 
     assert examples, "docs should include at least one deep_research example"
@@ -119,6 +119,6 @@ def test_deep_research_examples_include_required_config() -> None:
 def test_docs_do_not_advertise_removed_cli_forms() -> None:
     text = _docs_text()
 
-    assert "deeptutor provider logout" not in text
-    assert "deeptutor memory show summary" not in text
+    assert "cognispheretutor provider logout" not in text
+    assert "cognispheretutor memory show summary" not in text
     assert "WS /api/v1/turns" not in text

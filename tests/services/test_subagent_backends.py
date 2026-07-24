@@ -13,17 +13,17 @@ import sys
 
 import pytest
 
-from deeptutor.services.subagent.claude_code import ClaudeCodeBackend
-from deeptutor.services.subagent.codex import CodexBackend
-from deeptutor.services.subagent.config import (
+from cognispheretutor.services.subagent.claude_code import ClaudeCodeBackend
+from cognispheretutor.services.subagent.codex import CodexBackend
+from cognispheretutor.services.subagent.config import (
     CONSULT_BUDGET_MAX,
     DEFAULT_CONSULT_BUDGET,
     BackendConfig,
     SubagentSettings,
     settings_from_dict,
 )
-from deeptutor.services.subagent.process import stream_process_lines
-from deeptutor.services.subagent.types import ConsultResult
+from cognispheretutor.services.subagent.process import stream_process_lines
+from cognispheretutor.services.subagent.types import ConsultResult
 
 # ---- command building --------------------------------------------------------
 
@@ -58,11 +58,11 @@ def test_codex_command_build_sandbox_and_resume() -> None:
 
 def test_claude_command_applies_model_effort_system_prompt() -> None:
     backend = ClaudeCodeBackend()
-    cfg = BackendConfig(model="opus", effort="high", system_prompt="consulted by DeepTutor")
+    cfg = BackendConfig(model="opus", effort="high", system_prompt="consulted by cognisphereTutor")
     cmd = backend._build_command("hi", session_id=None, config=cfg)
     assert "--model" in cmd and "opus" in cmd
     assert "--effort" in cmd and "high" in cmd
-    assert "--append-system-prompt" in cmd and "consulted by DeepTutor" in cmd
+    assert "--append-system-prompt" in cmd and "consulted by cognisphereTutor" in cmd
 
 
 def test_codex_command_applies_model_effort_network_ephemeral() -> None:
@@ -422,8 +422,8 @@ def test_materialize_images_writes_only_resolvable_images(tmp_path) -> None:
     import base64 as _b64
     from pathlib import Path
 
-    from deeptutor.core.context import Attachment
-    from deeptutor.services.subagent.images import materialize_images
+    from cognispheretutor.core.context import Attachment
+    from cognispheretutor.services.subagent.images import materialize_images
 
     atts = [
         Attachment(
@@ -469,7 +469,7 @@ _CLAUDE_MODEL_SCREEN = """\
 
 
 def test_parse_claude_model_screen() -> None:
-    from deeptutor.services.subagent.claude_models import _parse_model_screen
+    from cognispheretutor.services.subagent.claude_models import _parse_model_screen
 
     models = _parse_model_screen(_CLAUDE_MODEL_SCREEN)
     # Default (recommended) → CLI default (skipped); Fable (disabled) → skipped.
@@ -483,7 +483,7 @@ def test_parse_claude_model_screen() -> None:
 
 
 def test_claude_models_cache_roundtrip(monkeypatch, tmp_path) -> None:
-    from deeptutor.services.subagent import claude_models as cm
+    from cognispheretutor.services.subagent import claude_models as cm
 
     monkeypatch.setattr(cm, "_cache_path", lambda: tmp_path / "claude_models_cache.json")
     assert cm.load_cached_claude_models() == ([], "")
@@ -498,8 +498,8 @@ def test_claude_models_cache_roundtrip(monkeypatch, tmp_path) -> None:
 async def test_claude_options_prefers_synced_cache(monkeypatch) -> None:
     """When a /model sync has cached a catalog, _claude_options uses it over the
     curated fallback."""
-    from deeptutor.services.subagent import claude_models as cm
-    from deeptutor.services.subagent import models as models_mod
+    from cognispheretutor.services.subagent import claude_models as cm
+    from cognispheretutor.services.subagent import models as models_mod
 
     monkeypatch.setattr(
         cm,
@@ -522,7 +522,7 @@ async def test_claude_options_prefers_synced_cache(monkeypatch) -> None:
 
 
 def test_session_registry_roundtrip(monkeypatch, tmp_path) -> None:
-    from deeptutor.services.subagent import sessions as sess
+    from cognispheretutor.services.subagent import sessions as sess
 
     monkeypatch.setattr(sess, "_path", lambda: tmp_path / "subagent_sessions.json")
     key = sess.session_key("chat1", "agentX")
@@ -551,7 +551,7 @@ async def test_list_backend_options_reads_codex_cache(monkeypatch, tmp_path) -> 
     Claude Code falls back to its aliases and allows a free-text model."""
     import json
 
-    from deeptutor.services.subagent import models as models_mod
+    from cognispheretutor.services.subagent import models as models_mod
 
     home = tmp_path / "codex"
     home.mkdir()
@@ -601,7 +601,7 @@ async def test_list_backend_options_reads_codex_cache(monkeypatch, tmp_path) -> 
 @pytest.mark.asyncio
 async def test_codex_options_tolerate_missing_cache(monkeypatch, tmp_path) -> None:
     """No models_cache.json → empty model list, still allows a custom model."""
-    from deeptutor.services.subagent import models as models_mod
+    from cognispheretutor.services.subagent import models as models_mod
 
     monkeypatch.setenv("CODEX_HOME", str(tmp_path / "empty-codex"))
 
@@ -621,7 +621,7 @@ async def test_codex_options_tolerate_missing_cache(monkeypatch, tmp_path) -> No
 
 
 def test_registry_partner_is_non_cli_backend() -> None:
-    from deeptutor.services.subagent import PARTNER_BACKEND_KIND, get_backend, list_backend_kinds
+    from cognispheretutor.services.subagent import PARTNER_BACKEND_KIND, get_backend, list_backend_kinds
 
     assert PARTNER_BACKEND_KIND in list_backend_kinds()
     backend = get_backend(PARTNER_BACKEND_KIND)
@@ -632,7 +632,7 @@ def test_registry_partner_is_non_cli_backend() -> None:
 
 @pytest.mark.asyncio
 async def test_detect_all_excludes_partner_backend() -> None:
-    from deeptutor.services.subagent import detect_all
+    from cognispheretutor.services.subagent import detect_all
 
     kinds = {d.kind for d in await detect_all()}
     assert "partner" not in kinds
@@ -685,15 +685,15 @@ class _FakePartnerManager:
 
 
 def _patch_manager(monkeypatch, manager) -> None:
-    import deeptutor.services.partners as partners_pkg
+    import cognispheretutor.services.partners as partners_pkg
 
     monkeypatch.setattr(partners_pkg, "get_partner_manager", lambda: manager)
 
 
 @pytest.mark.asyncio
 async def test_partner_consult_mints_session_key_and_returns_reply(monkeypatch) -> None:
-    from deeptutor.core.stream import StreamEvent, StreamEventType
-    from deeptutor.services.subagent.partner import PartnerBackend
+    from cognispheretutor.core.stream import StreamEvent, StreamEventType
+    from cognispheretutor.services.subagent.partner import PartnerBackend
 
     manager = _FakePartnerManager(reply="The answer.")
     manager.script_trace(
@@ -734,7 +734,7 @@ async def test_partner_consult_mints_session_key_and_returns_reply(monkeypatch) 
 
 @pytest.mark.asyncio
 async def test_partner_consult_resumes_given_session(monkeypatch) -> None:
-    from deeptutor.services.subagent.partner import PartnerBackend
+    from cognispheretutor.services.subagent.partner import PartnerBackend
 
     manager = _FakePartnerManager()
     _patch_manager(monkeypatch, manager)
@@ -752,7 +752,7 @@ async def test_partner_consult_resumes_given_session(monkeypatch) -> None:
 
 @pytest.mark.asyncio
 async def test_partner_consult_starts_partner_when_idle(monkeypatch) -> None:
-    from deeptutor.services.subagent.partner import PartnerBackend
+    from cognispheretutor.services.subagent.partner import PartnerBackend
 
     manager = _FakePartnerManager(running=False)
     _patch_manager(monkeypatch, manager)
@@ -766,7 +766,7 @@ async def test_partner_consult_starts_partner_when_idle(monkeypatch) -> None:
 
 @pytest.mark.asyncio
 async def test_partner_consult_requires_partner_id() -> None:
-    from deeptutor.services.subagent.partner import PartnerBackend
+    from cognispheretutor.services.subagent.partner import PartnerBackend
 
     async def on_event(ev):
         pass
@@ -778,7 +778,7 @@ async def test_partner_consult_requires_partner_id() -> None:
 
 @pytest.mark.asyncio
 async def test_partner_consult_unknown_partner(monkeypatch) -> None:
-    from deeptutor.services.subagent.partner import PartnerBackend
+    from cognispheretutor.services.subagent.partner import PartnerBackend
 
     manager = _FakePartnerManager(exists=False)
     _patch_manager(monkeypatch, manager)
@@ -793,7 +793,7 @@ async def test_partner_consult_unknown_partner(monkeypatch) -> None:
 
 @pytest.mark.asyncio
 async def test_partner_consult_empty_reply_is_unsuccessful(monkeypatch) -> None:
-    from deeptutor.services.subagent.partner import PartnerBackend
+    from cognispheretutor.services.subagent.partner import PartnerBackend
 
     manager = _FakePartnerManager(reply="")
     _patch_manager(monkeypatch, manager)
@@ -811,8 +811,8 @@ def _partner_trace_state() -> dict[str, dict[str, str]]:
 
 
 def test_partner_event_mapping_covers_channels() -> None:
-    from deeptutor.core.stream import StreamEvent, StreamEventType
-    from deeptutor.services.subagent.partner import _to_subagent_events
+    from cognispheretutor.core.stream import StreamEvent, StreamEventType
+    from cognispheretutor.services.subagent.partner import _to_subagent_events
 
     def kinds(etype, **kw):
         return [
@@ -843,8 +843,8 @@ def test_partner_tool_call_pairs_with_its_result_adjacently() -> None:
     # TOOL_RESULT events - sharing a call_id per tool. Each call is buffered and
     # re-emitted right before its own result, so the trace reads as adjacent
     # call -> result pairs (never two calls then two results).
-    from deeptutor.core.stream import StreamEvent, StreamEventType
-    from deeptutor.services.subagent.partner import _to_subagent_events
+    from cognispheretutor.core.stream import StreamEvent, StreamEventType
+    from cognispheretutor.services.subagent.partner import _to_subagent_events
 
     st = _partner_trace_state()
     a = _to_subagent_events(
@@ -886,8 +886,8 @@ def test_partner_tool_call_pairs_with_its_result_adjacently() -> None:
 def test_partner_content_accumulates_cumulatively() -> None:
     # Incremental CONTENT deltas accumulate into a growing full-text row under a
     # stable merge_id - so the streamed answer never gets wiped by a new chunk.
-    from deeptutor.core.stream import StreamEvent, StreamEventType
-    from deeptutor.services.subagent.partner import _to_subagent_events
+    from cognispheretutor.core.stream import StreamEvent, StreamEventType
+    from cognispheretutor.services.subagent.partner import _to_subagent_events
 
     st = _partner_trace_state()
     a = _to_subagent_events(

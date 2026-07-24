@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from deeptutor.knowledge.manager import KnowledgeBaseManager
+from cognispheretutor.knowledge.manager import KnowledgeBaseManager
 
 
 def _seed_obsidian(manager: KnowledgeBaseManager, name: str, vault_path: str) -> None:

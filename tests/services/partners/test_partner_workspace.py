@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from deeptutor.services.partners.workspace import (
+from cognispheretutor.services.partners.workspace import (
     ensure_partner_workspace,
     list_assets,
     provision_assets,
@@ -117,11 +117,11 @@ class TestProvisioning:
         assert types == {"knowledge_base", "skill", "notebook"}
 
     def test_builtin_skill_copies_from_package(self, partners_root):
-        # skill-creator ships inside the package (deeptutor/skills/builtin);
+        # skill-creator ships inside the package (cognispheretutor/skills/builtin);
         # provisioning must fall back to it when the user workspace has no
         # skill of that name. Regression: builtin picks from the wizard's
         # default-all selection used to fail with "not accessible".
-        from deeptutor.services.skill.service import BUILTIN_SKILLS_ROOT
+        from cognispheretutor.services.skill.service import BUILTIN_SKILLS_ROOT
 
         builtin_names = [
             entry.name for entry in BUILTIN_SKILLS_ROOT.iterdir() if (entry / "SKILL.md").exists()

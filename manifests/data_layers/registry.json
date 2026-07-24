@@ -1,0 +1,77 @@
+{
+  "registry_id": "cognispheretutor.data_layers.registry.v1",
+  "registry_version": "1",
+  "description": "Minimal data-layer path map for cognisphereTutor program/data decoupling.",
+  "layers": [
+    {
+      "layer": "external_integration_specific",
+      "path_glob": "cognispheretutor/integrations/cognisphere/manifests/**",
+      "data_kind": "integration_contract",
+      "owner": "cognispheretutor.integrations.cognisphere",
+      "review_gate": "integration_contract_review"
+    },
+    {
+      "layer": "legacy_or_sample",
+      "path_glob": "tests/fixtures/cognisphere_learning_plugins/**",
+      "data_kind": "fixture",
+      "owner": "cognispheretutor.tests",
+      "review_gate": "test_fixture_review"
+    },
+    {
+      "layer": "project_specific",
+      "path_glob": "data/user/settings/**",
+      "data_kind": "runtime_settings",
+      "owner": "cognispheretutor.services.config",
+      "review_gate": "settings_review"
+    },
+    {
+      "layer": "local_machine_specific",
+      "path_glob": "data/user/**",
+      "data_kind": "workspace_state",
+      "owner": "operator",
+      "review_gate": "local_only"
+    },
+    {
+      "layer": "runtime_generated",
+      "path_glob": "data/user/workspace/cognisphere_imports/**",
+      "data_kind": "import_receipt_cache",
+      "owner": "cognispheretutor.integrations.cognisphere",
+      "review_gate": "runtime_generated_only"
+    },
+    {
+      "layer": "runtime_generated",
+      "path_glob": "data/user/workspace/cognisphere_trusted_context/**",
+      "data_kind": "trusted_context_cache",
+      "owner": "cognispheretutor.integrations.cognisphere",
+      "review_gate": "runtime_generated_only"
+    },
+    {
+      "layer": "runtime_generated",
+      "path_glob": "data/user/workspace/cognisphere_runtime/**",
+      "data_kind": "runtime_callback_state",
+      "owner": "cognispheretutor.integrations.cognisphere",
+      "review_gate": "runtime_generated_only"
+    },
+    {
+      "layer": "external_integration_specific",
+      "path_glob": "cognispheretutor/integrations/cognisphere/manifests/learning_loop_mapping.json",
+      "data_kind": "integration_contract",
+      "owner": "cognispheretutor.integrations.cognisphere",
+      "review_gate": "integration_contract_review"
+    },
+    {
+      "layer": "external_integration_specific",
+      "path_glob": "cognispheretutor/integrations/cognisphere/manifests/trusted_context_contract.json",
+      "data_kind": "integration_contract",
+      "owner": "cognispheretutor.integrations.cognisphere",
+      "review_gate": "integration_contract_review"
+    },
+    {
+      "layer": "external_integration_specific",
+      "path_glob": "cognispheretutor/integrations/cognisphere/manifests/runtime_adapters.json",
+      "data_kind": "integration_contract",
+      "owner": "cognispheretutor.integrations.cognisphere",
+      "review_gate": "integration_contract_review"
+    }
+  ]
+}

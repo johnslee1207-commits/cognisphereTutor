@@ -147,7 +147,7 @@ type SettingsPayload = {
   providers?: Record<ServiceName, ProviderOption[]>;
 };
 
-const DIAGNOSTICS_RESULTS_KEY = "deeptutor.settings.diagnosticsResults.v1";
+const DIAGNOSTICS_RESULTS_KEY = "cognispheretutor.settings.diagnosticsResults.v1";
 
 // ─── Tour ──────────────────────────────────────────────────────────────────
 //

@@ -12,11 +12,11 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.multi_user.paths import get_admin_path_service, user_context
-from deeptutor.partners.config.paths import get_partner_sessions_dir, get_partner_workspace
-from deeptutor.services.partners.scope import partner_user
-from deeptutor.services.partners.sessions import PartnerSessionStore
-from deeptutor.tools.partner_memory import (
+from cognispheretutor.multi_user.paths import get_admin_path_service, user_context
+from cognispheretutor.partners.config.paths import get_partner_sessions_dir, get_partner_workspace
+from cognispheretutor.services.partners.scope import partner_user
+from cognispheretutor.services.partners.sessions import PartnerSessionStore
+from cognispheretutor.tools.partner_memory import (
     PartnerMemorizeTool,
     PartnerReadTool,
     PartnerSearchTool,
@@ -32,7 +32,7 @@ def _run(coro):
 @pytest.fixture(autouse=True)
 def _fresh_memory_singleton(monkeypatch):
     """Each test gets a fresh MemoryStore so its write locks don't leak."""
-    from deeptutor.services.memory import store
+    from cognispheretutor.services.memory import store
 
     monkeypatch.setattr(store, "_singleton", None)
 

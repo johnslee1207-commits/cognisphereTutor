@@ -21,8 +21,8 @@ from typing import Any
 import httpx
 import pytest
 
-from deeptutor.services.embedding.adapters.base import EmbeddingRequest
-from deeptutor.services.embedding.adapters.openai_compatible import (
+from cognispheretutor.services.embedding.adapters.base import EmbeddingRequest
+from cognispheretutor.services.embedding.adapters.openai_compatible import (
     OpenAICompatibleEmbeddingAdapter,
 )
 

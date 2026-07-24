@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.services.skill import taxonomy
-from deeptutor.services.skill.hub import (
+from cognispheretutor.services.skill import taxonomy
+from cognispheretutor.services.skill.hub import (
     PublishOutcome,
     preflight_skill_dir,
     publish_to_hub,
@@ -152,7 +152,7 @@ def test_publish_overrides_win_over_frontmatter(tmp_path: Path) -> None:
 
 
 def test_publish_requires_version(tmp_path: Path) -> None:
-    from deeptutor.services.skill.service import SkillImportError
+    from cognispheretutor.services.skill.service import SkillImportError
 
     root = _write_skill(tmp_path, frontmatter="name: NoVersion")
     with pytest.raises(SkillImportError):
@@ -163,7 +163,7 @@ def test_publish_requires_version(tmp_path: Path) -> None:
 
 
 def test_select_domains_resolution(monkeypatch: pytest.MonkeyPatch) -> None:
-    from deeptutor_cli import skill_prompts
+    from cognispheretutor_cli import skill_prompts
 
     # Script the multi-selects: roots = [arts, math]; arts children = [instruments];
     # math children = [] (so math contributes itself).
@@ -178,7 +178,7 @@ def test_select_domains_resolution(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_parse_indices() -> None:
-    from deeptutor_cli.skill_prompts import _parse_indices
+    from cognispheretutor_cli.skill_prompts import _parse_indices
 
     assert _parse_indices("1, 3 4", 5) == [0, 2, 3]
     assert _parse_indices("", 5) == []

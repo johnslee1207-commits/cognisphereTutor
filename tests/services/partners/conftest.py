@@ -12,11 +12,11 @@ def partners_root(tmp_path, monkeypatch) -> Path:
     """Redirect the admin workspace (and multi-user roots) under ``tmp_path``.
 
     Everything the partners layer touches resolves through
-    ``deeptutor.multi_user.paths`` — the partners data dir is anchored at the
+    ``cognispheretutor.multi_user.paths`` — the partners data dir is anchored at the
     admin workspace root and partner scopes are synthetic ``UserScope``s — so
     patching that module is sufficient to keep tests off the real ``data/``.
     """
-    from deeptutor.multi_user import paths
+    from cognispheretutor.multi_user import paths
 
     project_root = tmp_path
     admin_root = (project_root / "data").resolve()

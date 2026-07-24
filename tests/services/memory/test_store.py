@@ -5,13 +5,13 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.services.memory import paths, store
-from deeptutor.services.memory.store import (
+from cognispheretutor.services.memory import paths, store
+from cognispheretutor.services.memory.store import (
     MemoryStore,
     migrate_partner_surface_if_needed,
     migrate_v1_if_needed,
 )
-from deeptutor.services.memory.trace import TraceEvent
+from cognispheretutor.services.memory.trace import TraceEvent
 
 
 @pytest.fixture

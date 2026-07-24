@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
-from deeptutor.core.agentic.usage import (
+from cognispheretutor.core.agentic.usage import (
     UsageTracker,
     message_content_chars,
     record_streamed_usage,

@@ -1,7 +1,7 @@
 """API tests for the in-app EduHub skill browser endpoints.
 
 ``GET /api/v1/skills/hub/catalog`` and ``/hub/detail`` proxy a hub's public
-catalog so the web panel can render it in DeepTutor's own UI (no iframe, no
+catalog so the web panel can render it in cognisphereTutor's own UI (no iframe, no
 login). The hub provider is mocked over an ``httpx`` transport.
 """
 
@@ -23,8 +23,8 @@ pytestmark = pytest.mark.skipif(
     FastAPI is None or TestClient is None, reason="fastapi not installed"
 )
 
-from deeptutor.services.skill import hub as hub_module
-from deeptutor.services.skill.hub import ClawHubProvider
+from cognispheretutor.services.skill import hub as hub_module
+from cognispheretutor.services.skill.hub import ClawHubProvider
 
 
 def _mock_provider() -> ClawHubProvider:
@@ -42,8 +42,8 @@ def _mock_provider() -> ClawHubProvider:
                             "version": "1.0.0",
                             "stats": {"downloads": 8, "stars": 2},
                             "owner": {
-                                "displayName": "DeepTutor",
-                                "htmlUrl": "https://deeptutor.info",
+                                "displayName": "cognisphereTutor",
+                                "htmlUrl": "https://cognispheretutor.info",
                             },
                         }
                     ]
@@ -61,7 +61,7 @@ def _mock_provider() -> ClawHubProvider:
                         "tags": ["tutor"],
                         "stats": {"downloads": 8, "stars": 2},
                     },
-                    "owner": {"displayName": "DeepTutor", "htmlUrl": "https://deeptutor.info"},
+                    "owner": {"displayName": "cognisphereTutor", "htmlUrl": "https://cognispheretutor.info"},
                     "distTags": {"latest": "1.0.0"},
                 },
             )
@@ -69,13 +69,13 @@ def _mock_provider() -> ClawHubProvider:
 
     return ClawHubProvider(
         "eduhub",
-        base_url="https://eduhub.deeptutor.info/api/v1",
+        base_url="https://eduhub.cognispheretutor.info/api/v1",
         client=httpx.Client(transport=httpx.MockTransport(handler)),
     )
 
 
 def _build_app() -> FastAPI:
-    router = importlib.import_module("deeptutor.api.routers.skills").router
+    router = importlib.import_module("cognispheretutor.api.routers.skills").router
     app = FastAPI()
     app.include_router(router, prefix="/api/v1/skills")
     return app
@@ -88,11 +88,11 @@ def test_hub_catalog_endpoint(monkeypatch: pytest.MonkeyPatch) -> None:
     assert resp.status_code == 200
     data = resp.json()
     assert data["hub"] == "eduhub"
-    assert data["web_url"] == "https://eduhub.deeptutor.info"
+    assert data["web_url"] == "https://eduhub.cognispheretutor.info"
     row = data["skills"][0]
     assert row["slug"] == "socratic-tutor"
     assert row["downloads"] == 8 and row["stars"] == 2
-    assert row["owner"] == "DeepTutor"
+    assert row["owner"] == "cognisphereTutor"
 
 
 def test_hub_detail_endpoint(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -103,4 +103,4 @@ def test_hub_detail_endpoint(monkeypatch: pytest.MonkeyPatch) -> None:
     data = resp.json()
     assert data["version"] == "1.0.0"
     assert "# Body" in data["content"]
-    assert data["web_url"] == "https://eduhub.deeptutor.info/skills/socratic-tutor"
+    assert data["web_url"] == "https://eduhub.cognispheretutor.info/skills/socratic-tutor"

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.runtime import launcher
+from cognispheretutor.runtime import launcher
 
 
 class _FakeTty:

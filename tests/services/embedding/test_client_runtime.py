@@ -6,13 +6,13 @@ from typing import Any
 
 import pytest
 
-from deeptutor.services.embedding.client import (
+from cognispheretutor.services.embedding.client import (
     EmbeddingClient,
     _resolve_adapter_class,
     get_embedding_client,
     reset_embedding_client,
 )
-from deeptutor.services.embedding.config import EmbeddingConfig
+from cognispheretutor.services.embedding.config import EmbeddingConfig
 
 
 class _FakeAdapter:
@@ -62,7 +62,7 @@ def _build_config(
 async def test_embedding_client_batches_requests(monkeypatch) -> None:
     _FakeAdapter.instances = []
     monkeypatch.setattr(
-        "deeptutor.services.embedding.client._resolve_adapter_class", lambda _b: _FakeAdapter
+        "cognispheretutor.services.embedding.client._resolve_adapter_class", lambda _b: _FakeAdapter
     )
     client = EmbeddingClient(_build_config("openai"))
     vectors = await client.embed(["a", "b", "c"])
@@ -82,7 +82,7 @@ async def test_embedding_client_rejects_null_vector_values(monkeypatch) -> None:
             return type("Resp", (), {"embeddings": [[0.1, None, 0.3]]})()
 
     monkeypatch.setattr(
-        "deeptutor.services.embedding.client._resolve_adapter_class",
+        "cognispheretutor.services.embedding.client._resolve_adapter_class",
         lambda _b: _NullValueAdapter,
     )
     client = EmbeddingClient(_build_config("openai"))
@@ -99,7 +99,7 @@ async def test_embedding_client_rejects_dropped_vectors(monkeypatch) -> None:
             return type("Resp", (), {"embeddings": [[0.1, 0.2]]})()
 
     monkeypatch.setattr(
-        "deeptutor.services.embedding.client._resolve_adapter_class",
+        "cognispheretutor.services.embedding.client._resolve_adapter_class",
         lambda _b: _DroppedVectorAdapter,
     )
     client = EmbeddingClient(_build_config("openai"))
@@ -116,7 +116,7 @@ async def test_embedding_client_rejects_inconsistent_batch_dimensions(monkeypatc
             return type("Resp", (), {"embeddings": [[0.1, 0.2], [0.3]]})()
 
     monkeypatch.setattr(
-        "deeptutor.services.embedding.client._resolve_adapter_class",
+        "cognispheretutor.services.embedding.client._resolve_adapter_class",
         lambda _b: _InconsistentAdapter,
     )
     client = EmbeddingClient(_build_config("openai"))
@@ -172,7 +172,7 @@ def test_embedding_client_rejects_openrouter_base_endpoint() -> None:
 
 
 def test_get_embedding_client_refreshes_when_config_changes(monkeypatch) -> None:
-    from deeptutor.services.embedding import client as client_module
+    from cognispheretutor.services.embedding import client as client_module
 
     _FakeAdapter.instances = []
     first_config = _build_config("openai")
@@ -210,7 +210,7 @@ def test_embedding_client_propagates_send_dimensions_to_adapter(
     """``EmbeddingConfig.send_dimensions`` must reach the adapter's config dict."""
     _FakeAdapter.instances = []
     monkeypatch.setattr(
-        "deeptutor.services.embedding.client._resolve_adapter_class", lambda _b: _FakeAdapter
+        "cognispheretutor.services.embedding.client._resolve_adapter_class", lambda _b: _FakeAdapter
     )
     EmbeddingClient(_build_config("openai", send_dimensions=flag))
     assert _FakeAdapter.instances[-1].config["send_dimensions"] is flag
@@ -218,7 +218,7 @@ def test_embedding_client_propagates_send_dimensions_to_adapter(
 
 def test_every_registered_provider_has_adapter() -> None:
     """All EMBEDDING_PROVIDERS entries must resolve to a valid adapter class."""
-    from deeptutor.services.config.provider_runtime import EMBEDDING_PROVIDERS
+    from cognispheretutor.services.config.provider_runtime import EMBEDDING_PROVIDERS
 
     for name in EMBEDDING_PROVIDERS:
         cls = _resolve_adapter_class(name)

@@ -6,12 +6,12 @@ from typing import Any
 
 import pytest
 
-from deeptutor.capabilities.explore_context import ExploreContextCapability
-from deeptutor.capabilities.explore_context import explorer as explorer_mod
-from deeptutor.capabilities.protocol import PromptBlock
-from deeptutor.core.context import Attachment, UnifiedContext
-from deeptutor.core.stream import StreamEventType
-from deeptutor.core.stream_bus import StreamBus
+from cognispheretutor.capabilities.explore_context import ExploreContextCapability
+from cognispheretutor.capabilities.explore_context import explorer as explorer_mod
+from cognispheretutor.capabilities.protocol import PromptBlock
+from cognispheretutor.core.context import Attachment, UnifiedContext
+from cognispheretutor.core.stream import StreamEventType
+from cognispheretutor.core.stream_bus import StreamBus
 
 
 def _ctx(**metadata: Any) -> UnifiedContext:

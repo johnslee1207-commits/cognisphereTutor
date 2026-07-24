@@ -1,6 +1,6 @@
 """Pricing table regression tests for research token tracking."""
 
-from deeptutor.agents.research.utils.token_tracker import get_model_pricing
+from cognispheretutor.agents.research.utils.token_tracker import get_model_pricing
 
 
 def test_deepseek_v4_pricing_entries() -> None:

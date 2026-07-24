@@ -30,7 +30,7 @@ import {
  * The tutoring itself runs on the chat agent loop (pick "Mastery Path" mode in
  * Chat); this page is the map of where the learner stands. It reads the
  * gate-accurate snapshot from ``/progress/{id}/map`` (per-type status computed
- * by ``deeptutor.learning.policy``) so the colours here agree with the gate the
+ * by ``cognispheretutor.learning.policy``) so the colours here agree with the gate the
  * tutor enforces. A path is keyed by its chat session, so "Continue" reopens
  * that session in mastery mode.
  */

@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.services.skill.service import (
+from cognispheretutor.services.skill.service import (
     InvalidSkillPathError,
     SkillNotFoundError,
     SkillReadOnlyError,
@@ -126,7 +126,7 @@ def test_sandbox_requirement_gating(tmp_path: Path, monkeypatch) -> None:
     )
     svc = SkillService(root=root, builtin_root=None)
 
-    import deeptutor.services.skill.service as svc_mod
+    import cognispheretutor.services.skill.service as svc_mod
 
     monkeypatch.setattr(svc_mod, "_sandbox_available", lambda kind: False)
     entry = next(e for e in svc.summary_entries() if e.name == "runner-skill")

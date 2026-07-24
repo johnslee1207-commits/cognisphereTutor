@@ -8,10 +8,10 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from deeptutor.partners.bus.events import OutboundMessage
-from deeptutor.partners.bus.queue import MessageBus
-from deeptutor.partners.channels import msteams as msteams_mod
-from deeptutor.partners.channels.msteams import (
+from cognispheretutor.partners.bus.events import OutboundMessage
+from cognispheretutor.partners.bus.queue import MessageBus
+from cognispheretutor.partners.channels import msteams as msteams_mod
+from cognispheretutor.partners.channels.msteams import (
     MSTEAMS_REF_FILENAME,
     MSTEAMS_REF_META_FILENAME,
     ConversationRef,
@@ -161,7 +161,7 @@ class TestSanitizeInboundText:
 
     def test_strips_bot_mention_markup(self, state_dir):
         ch = _make_channel()
-        out = ch._sanitize_inbound_text(_activity(text="<at>DeepTutor</at> explain entropy"))
+        out = ch._sanitize_inbound_text(_activity(text="<at>cognisphereTutor</at> explain entropy"))
         assert out == "explain entropy"
 
     def test_normalizes_html_entities(self, state_dir):
@@ -258,7 +258,7 @@ class TestHandleActivity:
     @pytest.mark.asyncio
     async def test_mention_only_text_uses_fallback_response(self, state_dir):
         ch = _make_channel()
-        await ch._handle_activity(_activity(text="<at>DeepTutor</at>"))
+        await ch._handle_activity(_activity(text="<at>cognisphereTutor</at>"))
         msg = ch.bus.publish_inbound.call_args[0][0]
         assert msg.content == ch.config.mention_only_response
 

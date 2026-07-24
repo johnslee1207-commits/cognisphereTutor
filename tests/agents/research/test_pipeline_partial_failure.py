@@ -14,9 +14,9 @@ from unittest.mock import patch
 
 import pytest
 
-from deeptutor.agents.research.pipeline import ResearchedBlock, ResearchPipeline, SubTopicItem
-from deeptutor.core.context import UnifiedContext
-from deeptutor.core.stream_bus import StreamBus
+from cognispheretutor.agents.research.pipeline import ResearchedBlock, ResearchPipeline, SubTopicItem
+from cognispheretutor.core.context import UnifiedContext
+from cognispheretutor.core.stream_bus import StreamBus
 
 pytestmark = pytest.mark.asyncio
 
@@ -47,8 +47,8 @@ class _FakeRegistry:
 
 def _make_pipeline() -> ResearchPipeline:
     with (
-        patch("deeptutor.agents.research.pipeline.get_llm_config", lambda: _FakeLLM()),
-        patch("deeptutor.agents.research.pipeline.get_tool_registry", lambda: _FakeRegistry()),
+        patch("cognispheretutor.agents.research.pipeline.get_llm_config", lambda: _FakeLLM()),
+        patch("cognispheretutor.agents.research.pipeline.get_tool_registry", lambda: _FakeRegistry()),
     ):
         return ResearchPipeline(language="en", runtime_config={"queue": {"max_length": 5}})
 
@@ -57,7 +57,7 @@ async def _run(pipeline: ResearchPipeline) -> dict:
     async def fake_emit(*_args, **_kwargs):
         return None
 
-    with patch("deeptutor.agents.research.pipeline.emit_capability_result", fake_emit):
+    with patch("cognispheretutor.agents.research.pipeline.emit_capability_result", fake_emit):
         return await pipeline._run_inner(
             context=UnifiedContext(session_id="s1", user_message="research this"),
             topic="Research topic",

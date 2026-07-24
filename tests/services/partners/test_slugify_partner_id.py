@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import string
 
-from deeptutor.services.partners.manager import slugify_partner_id, slugify_soul_id
+from cognispheretutor.services.partners.manager import slugify_partner_id, slugify_soul_id
 
 _ALLOWED = set(string.ascii_lowercase + string.digits + "-")
 

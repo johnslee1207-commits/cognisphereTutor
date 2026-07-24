@@ -12,11 +12,11 @@ from typing import Any
 import httpx
 import pytest
 
-from deeptutor.services.embedding.adapters.base import EmbeddingRequest
-from deeptutor.services.embedding.adapters.cohere import CohereEmbeddingAdapter
-from deeptutor.services.embedding.adapters.jina import JinaEmbeddingAdapter
-from deeptutor.services.embedding.adapters.ollama import OllamaEmbeddingAdapter
-from deeptutor.services.embedding.adapters.openai_compatible import (
+from cognispheretutor.services.embedding.adapters.base import EmbeddingRequest
+from cognispheretutor.services.embedding.adapters.cohere import CohereEmbeddingAdapter
+from cognispheretutor.services.embedding.adapters.jina import JinaEmbeddingAdapter
+from cognispheretutor.services.embedding.adapters.ollama import OllamaEmbeddingAdapter
+from cognispheretutor.services.embedding.adapters.openai_compatible import (
     OpenAICompatibleEmbeddingAdapter,
 )
 
@@ -54,7 +54,7 @@ def _capture_url(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
 
 
 def test_public_embedding_providers_do_not_use_openai_sdk_autopath() -> None:
-    from deeptutor.services.config.provider_runtime import EMBEDDING_PROVIDERS
+    from cognispheretutor.services.config.provider_runtime import EMBEDDING_PROVIDERS
 
     for name, spec in EMBEDDING_PROVIDERS.items():
         if name == "custom_openai_sdk":

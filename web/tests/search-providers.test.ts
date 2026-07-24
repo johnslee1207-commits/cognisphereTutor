@@ -65,7 +65,7 @@ test("provider name is matched case-insensitively and trimmed", () => {
 });
 
 // The 8 providers the backend offers in the Search dropdown
-// (deeptutor/api/routers/settings.py:_provider_choices) plus a few
+// (cognispheretutor/api/routers/settings.py:_provider_choices) plus a few
 // off-list values. Keep in sync if the backend adds a provider.
 const ALL_PROVIDERS = [
   "none",

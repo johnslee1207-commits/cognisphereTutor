@@ -15,7 +15,7 @@ TestClient = pytest.importorskip("fastapi.testclient").TestClient
 @pytest.fixture(autouse=True)
 def _cleanup_question_router_module():
     yield
-    sys.modules.pop("deeptutor.api.routers.question", None)
+    sys.modules.pop("cognispheretutor.api.routers.question", None)
 
 
 class _DummyProcessLogEvent:
@@ -38,57 +38,57 @@ def _package(name: str) -> types.ModuleType:
 
 
 def _load_question_router_module(monkeypatch: pytest.MonkeyPatch):
-    sys.modules.pop("deeptutor.api.routers.question", None)
+    sys.modules.pop("cognispheretutor.api.routers.question", None)
 
-    fake_agents = _package("deeptutor.agents")
-    fake_agents_question = types.ModuleType("deeptutor.agents.question")
+    fake_agents = _package("cognispheretutor.agents")
+    fake_agents_question = types.ModuleType("cognispheretutor.agents.question")
     fake_agents_question.AgentCoordinator = object
     fake_agents.question = fake_agents_question
-    monkeypatch.setitem(sys.modules, "deeptutor.agents", fake_agents)
-    monkeypatch.setitem(sys.modules, "deeptutor.agents.question", fake_agents_question)
+    monkeypatch.setitem(sys.modules, "cognispheretutor.agents", fake_agents)
+    monkeypatch.setitem(sys.modules, "cognispheretutor.agents.question", fake_agents_question)
 
-    fake_logging = _package("deeptutor.logging")
+    fake_logging = _package("cognispheretutor.logging")
     fake_logging.ProcessLogEvent = _DummyProcessLogEvent
     fake_logging.bind_log_context = _noop_context
     fake_logging.capture_process_logs = _noop_context
     fake_logging.current_log_context = lambda: {}
-    monkeypatch.setitem(sys.modules, "deeptutor.logging", fake_logging)
+    monkeypatch.setitem(sys.modules, "cognispheretutor.logging", fake_logging)
 
-    fake_config = types.ModuleType("deeptutor.services.config")
+    fake_config = types.ModuleType("cognispheretutor.services.config")
     fake_config.PROJECT_ROOT = Path.cwd()
     fake_config.load_config_with_main = lambda *_args, **_kwargs: {}
-    monkeypatch.setitem(sys.modules, "deeptutor.services.config", fake_config)
+    monkeypatch.setitem(sys.modules, "cognispheretutor.services.config", fake_config)
 
-    fake_llm_package = _package("deeptutor.services.llm")
-    fake_llm_config = types.ModuleType("deeptutor.services.llm.config")
+    fake_llm_package = _package("cognispheretutor.services.llm")
+    fake_llm_config = types.ModuleType("cognispheretutor.services.llm.config")
     fake_llm_config.get_llm_config = lambda: None
     fake_llm_package.config = fake_llm_config
-    monkeypatch.setitem(sys.modules, "deeptutor.services.llm", fake_llm_package)
-    monkeypatch.setitem(sys.modules, "deeptutor.services.llm.config", fake_llm_config)
+    monkeypatch.setitem(sys.modules, "cognispheretutor.services.llm", fake_llm_package)
+    monkeypatch.setitem(sys.modules, "cognispheretutor.services.llm.config", fake_llm_config)
 
-    fake_settings_package = _package("deeptutor.services.settings")
-    fake_interface_settings = types.ModuleType("deeptutor.services.settings.interface_settings")
+    fake_settings_package = _package("cognispheretutor.services.settings")
+    fake_interface_settings = types.ModuleType("cognispheretutor.services.settings.interface_settings")
     fake_interface_settings.get_ui_language = lambda default="en": default
     fake_settings_package.interface_settings = fake_interface_settings
-    monkeypatch.setitem(sys.modules, "deeptutor.services.settings", fake_settings_package)
+    monkeypatch.setitem(sys.modules, "cognispheretutor.services.settings", fake_settings_package)
     monkeypatch.setitem(
         sys.modules,
-        "deeptutor.services.settings.interface_settings",
+        "cognispheretutor.services.settings.interface_settings",
         fake_interface_settings,
     )
 
-    fake_tools = _package("deeptutor.tools")
-    fake_tools_question = types.ModuleType("deeptutor.tools.question")
+    fake_tools = _package("cognispheretutor.tools")
+    fake_tools_question = types.ModuleType("cognispheretutor.tools.question")
 
     async def _default_mimic_exam_questions(*_args, **_kwargs):
         return {"success": True}
 
     fake_tools_question.mimic_exam_questions = _default_mimic_exam_questions
     fake_tools.question = fake_tools_question
-    monkeypatch.setitem(sys.modules, "deeptutor.tools", fake_tools)
-    monkeypatch.setitem(sys.modules, "deeptutor.tools.question", fake_tools_question)
+    monkeypatch.setitem(sys.modules, "cognispheretutor.tools", fake_tools)
+    monkeypatch.setitem(sys.modules, "cognispheretutor.tools.question", fake_tools_question)
 
-    return importlib.import_module("deeptutor.api.routers.question")
+    return importlib.import_module("cognispheretutor.api.routers.question")
 
 
 def _build_app(router_module) -> FastAPI:

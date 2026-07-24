@@ -1,0 +1,18 @@
+{
+  "plugin_id": "cognisphere.domain.ap_calculus.plugin.v1",
+  "domain": "ap_calculus",
+  "version": "1.0.0-fixture",
+  "display_name": "AP Calculus Fixture",
+  "cognisphere_entrypoint": "fixture_plugins.ap_calculus.cognisphere_entrypoint",
+  "deeptutor_entrypoint": "fixture_plugins.ap_calculus.deeptutor_entrypoint",
+  "capabilities": [
+    "ontology",
+    "deeptutor_export"
+  ],
+  "forbidden_in_plugin": [
+    "ui",
+    "user_management",
+    "pageindex_core",
+    "tenant_security_core"
+  ]
+}

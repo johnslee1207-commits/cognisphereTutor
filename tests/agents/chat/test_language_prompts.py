@@ -4,9 +4,9 @@ from types import SimpleNamespace
 
 import pytest
 
-from deeptutor.agents.chat.agentic_pipeline import AgenticChatPipeline
-from deeptutor.agents.chat.chat_agent import ChatAgent
-from deeptutor.agents.chat.prompt_blocks import ChatPromptAssembler
+from cognispheretutor.agents.chat.agentic_pipeline import AgenticChatPipeline
+from cognispheretutor.agents.chat.chat_agent import ChatAgent
+from cognispheretutor.agents.chat.prompt_blocks import ChatPromptAssembler
 
 
 @pytest.fixture(autouse=True)
@@ -19,10 +19,10 @@ def _fake_llm_config(monkeypatch: pytest.MonkeyPatch) -> None:
         api_version=None,
     )
     monkeypatch.setattr(
-        "deeptutor.agents.chat.agentic_pipeline.get_llm_config",
+        "cognispheretutor.agents.chat.agentic_pipeline.get_llm_config",
         lambda: cfg,
     )
-    monkeypatch.setattr("deeptutor.agents.base_agent.get_llm_config", lambda: cfg)
+    monkeypatch.setattr("cognispheretutor.agents.base_agent.get_llm_config", lambda: cfg)
 
 
 def test_agentic_chat_final_prompt_uses_selected_language(
@@ -33,11 +33,11 @@ def test_agentic_chat_final_prompt_uses_selected_language(
             return "- tool"
 
     monkeypatch.setattr(
-        "deeptutor.agents.chat.agentic_pipeline.get_tool_registry",
+        "cognispheretutor.agents.chat.agentic_pipeline.get_tool_registry",
         lambda: FakeRegistry(),
     )
 
-    from deeptutor.core.context import UnifiedContext
+    from cognispheretutor.core.context import UnifiedContext
 
     ctx = UnifiedContext()
     zh_prompt = AgenticChatPipeline(language="zh")._build_system_prompt([], ctx)
@@ -49,8 +49,8 @@ def test_agentic_chat_final_prompt_uses_selected_language(
     assert "Write ALL reader-facing text" in en_prompt
     # Persona phrasing differs by language so the prompts are not just
     # English text with a Chinese tail appended.
-    assert "你是 DeepTutor" in zh_prompt
-    assert "You are DeepTutor" in en_prompt
+    assert "你是 cognisphereTutor" in zh_prompt
+    assert "You are cognisphereTutor" in en_prompt
 
 
 def test_mastery_plugin_system_prompt_uses_localized_fallback(
@@ -61,11 +61,11 @@ def test_mastery_plugin_system_prompt_uses_localized_fallback(
             return "- tool"
 
     monkeypatch.setattr(
-        "deeptutor.agents.chat.agentic_pipeline.get_tool_registry",
+        "cognispheretutor.agents.chat.agentic_pipeline.get_tool_registry",
         lambda: FakeRegistry(),
     )
 
-    from deeptutor.core.context import UnifiedContext
+    from cognispheretutor.core.context import UnifiedContext
 
     ctx = UnifiedContext(metadata={"mastery_mode": True, "mastery_path_id": "p1"})
     zh_prompt = AgenticChatPipeline(language="zh")._build_system_prompt([], ctx)
@@ -87,14 +87,14 @@ def test_legacy_chat_agent_system_prompt_uses_selected_language() -> None:
         history=[],
     )
 
-    assert "你是 DeepTutor" in zh_messages[0]["content"]
+    assert "你是 cognisphereTutor" in zh_messages[0]["content"]
     assert "请严格使用中文" in zh_messages[0]["content"]
-    assert "You are DeepTutor" in en_messages[0]["content"]
+    assert "You are cognisphereTutor" in en_messages[0]["content"]
     assert "Write ALL reader-facing text" in en_messages[0]["content"]
 
 
 def test_prompt_blocks_include_localized_optional_context() -> None:
-    from deeptutor.core.context import UnifiedContext
+    from cognispheretutor.core.context import UnifiedContext
 
     prompts = {
         "general": "通用",

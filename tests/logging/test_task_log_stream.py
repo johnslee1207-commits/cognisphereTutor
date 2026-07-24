@@ -3,7 +3,7 @@ import logging
 
 import pytest
 
-from deeptutor.api.utils.task_log_stream import (
+from cognispheretutor.api.utils.task_log_stream import (
     KnowledgeTaskStreamManager,
     capture_task_logs,
     get_task_stream_manager,

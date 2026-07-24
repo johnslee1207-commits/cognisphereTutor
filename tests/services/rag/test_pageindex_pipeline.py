@@ -12,10 +12,10 @@ import asyncio
 import json
 from pathlib import Path
 
-from deeptutor.services.rag.factory import get_pipeline, normalize_provider_name
-from deeptutor.services.rag.index_versioning import resolve_storage_dir_for_read
-from deeptutor.services.rag.pipelines.pageindex import storage
-from deeptutor.services.rag.pipelines.pageindex.pipeline import (
+from cognispheretutor.services.rag.factory import get_pipeline, normalize_provider_name
+from cognispheretutor.services.rag.index_versioning import resolve_storage_dir_for_read
+from cognispheretutor.services.rag.pipelines.pageindex import storage
+from cognispheretutor.services.rag.pipelines.pageindex.pipeline import (
     PageIndexPipeline,
     is_supported_file,
 )
@@ -178,7 +178,7 @@ def test_factory_dispatches_by_provider(tmp_path, monkeypatch) -> None:
     # Constructing a real LlamaIndexPipeline resolves the active embedding model
     # from the catalog; CI has none, so stub the settings hook (the same way the
     # llamaindex pipeline tests do) — this test only asserts factory routing.
-    from deeptutor.services.rag.pipelines.llamaindex.pipeline import LlamaIndexPipeline
+    from cognispheretutor.services.rag.pipelines.llamaindex.pipeline import LlamaIndexPipeline
 
     monkeypatch.setattr(LlamaIndexPipeline, "_configure_settings", lambda self: None)
 
@@ -197,7 +197,7 @@ def test_factory_dispatches_by_provider(tmp_path, monkeypatch) -> None:
 
 
 def test_ragservice_resolves_provider_from_metadata(tmp_path) -> None:
-    from deeptutor.services.rag.service import RAGService
+    from cognispheretutor.services.rag.service import RAGService
 
     kb = tmp_path / "kbx"
     kb.mkdir()

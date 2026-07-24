@@ -7,12 +7,12 @@ from typing import Any
 
 import pytest
 
-from deeptutor.core.stream import StreamEvent, StreamEventType
-from deeptutor.partners.bus.events import InboundMessage
-from deeptutor.partners.bus.queue import MessageBus
-from deeptutor.services.partners.manager import PartnerConfig
-from deeptutor.services.partners.runtime import PartnerRunner
-from deeptutor.services.partners.sessions import PartnerSessionStore
+from cognispheretutor.core.stream import StreamEvent, StreamEventType
+from cognispheretutor.partners.bus.events import InboundMessage
+from cognispheretutor.partners.bus.queue import MessageBus
+from cognispheretutor.services.partners.manager import PartnerConfig
+from cognispheretutor.services.partners.runtime import PartnerRunner
+from cognispheretutor.services.partners.sessions import PartnerSessionStore
 
 
 def _event(
@@ -65,7 +65,7 @@ class _FakeOrchestrator:
         pass
 
     async def handle(self, context):
-        from deeptutor.services.memory.paths import memory_root
+        from cognispheretutor.services.memory.paths import memory_root
 
         type(self).seen_contexts.append(context)
         type(self).seen_memory_roots.append(memory_root())
@@ -76,8 +76,8 @@ class _FakeOrchestrator:
 
 @pytest.fixture
 def fake_orchestrator(monkeypatch):
-    import deeptutor.runtime.orchestrator as orch_mod
-    from deeptutor.services.model_selection import runtime as selection_runtime
+    import cognispheretutor.runtime.orchestrator as orch_mod
+    from cognispheretutor.services.model_selection import runtime as selection_runtime
 
     _FakeOrchestrator.script = []
     _FakeOrchestrator.scripts = []
@@ -96,7 +96,7 @@ def fake_orchestrator(monkeypatch):
 
 
 def _runner(partners_root, config: PartnerConfig | None = None) -> PartnerRunner:
-    from deeptutor.partners.config.paths import get_partner_sessions_dir
+    from cognispheretutor.partners.config.paths import get_partner_sessions_dir
 
     config = config or PartnerConfig(name="Ada")
     bus = MessageBus()
@@ -237,8 +237,8 @@ class TestTurnExecution:
         # A setup failure with no resolvable LLM model (LLMConfigError) must
         # fold into the turn's error path — an apology carrying the real reason
         # — instead of propagating as an opaque crash / bare "Internal error".
-        from deeptutor.services.llm.exceptions import LLMConfigError
-        from deeptutor.services.model_selection import runtime as selection_runtime
+        from cognispheretutor.services.llm.exceptions import LLMConfigError
+        from cognispheretutor.services.model_selection import runtime as selection_runtime
 
         def _raise(selection):
             raise LLMConfigError("No active LLM model is configured.")
@@ -258,8 +258,8 @@ class TestTurnExecution:
         # Selection resolution now runs inside the turn's try, so a primary
         # model that no longer resolves falls back to the backup model instead
         # of crashing the turn outright.
-        from deeptutor.services.llm.exceptions import LLMConfigError
-        from deeptutor.services.model_selection import runtime as selection_runtime
+        from cognispheretutor.services.llm.exceptions import LLMConfigError
+        from cognispheretutor.services.model_selection import runtime as selection_runtime
 
         primary = {"profile_id": "p1", "model_id": "m1"}
         backup = {"profile_id": "p2", "model_id": "m2"}
@@ -306,7 +306,7 @@ class TestTurnExecution:
 class TestContextAssembly:
     @pytest.mark.asyncio
     async def test_context_carries_soul_tools_and_metadata(self, partners_root, fake_orchestrator):
-        from deeptutor.services.partners.workspace import write_soul
+        from cognispheretutor.services.partners.workspace import write_soul
 
         write_soul("ada", "# Soul\nBe kind.")
         fake_orchestrator.script = _finish("ok")
@@ -351,7 +351,7 @@ class TestContextAssembly:
     async def test_default_tools_resolve_to_full_toggleable_set(
         self, partners_root, fake_orchestrator
     ):
-        from deeptutor.agents._shared.tool_composition import default_optional_tools
+        from cognispheretutor.agents._shared.tool_composition import default_optional_tools
 
         fake_orchestrator.script = _finish("ok")
         runner = _runner(partners_root)  # enabled_tools=None
@@ -451,7 +451,7 @@ class TestBuiltinToolsAndMemory:
         the owner's. The partner_* tools (force-mounted) own the split-memory
         model: partner_read folds in the owner's shared L3 on top, while
         partner_memorize writes only the partner's own scope."""
-        from deeptutor.partners.config.paths import get_partner_workspace
+        from cognispheretutor.partners.config.paths import get_partner_workspace
 
         fake_orchestrator.script = _finish("ok")
         runner = _runner(partners_root)
@@ -465,7 +465,7 @@ class TestBuiltinToolsAndMemory:
 
     @pytest.mark.asyncio
     async def test_memory_override_is_reset_after_turn(self, partners_root, fake_orchestrator):
-        from deeptutor.services.memory.paths import memory_root
+        from cognispheretutor.services.memory.paths import memory_root
 
         fake_orchestrator.script = _finish("ok")
         runner = _runner(partners_root)
@@ -537,7 +537,7 @@ class TestSessionStoreOps:
 
 class TestLiveTurn:
     def test_buffer_replays_for_late_subscriber(self):
-        from deeptutor.services.partners.manager import LiveTurn
+        from cognispheretutor.services.partners.manager import LiveTurn
 
         turn = LiveTurn(user_content="q")
         turn.emit({"type": "stream_event", "event": {"i": 1}})
@@ -550,7 +550,7 @@ class TestLiveTurn:
         assert late.get_nowait()["event"]["i"] == 3
 
     def test_finish_pushes_terminal_and_marks_done(self):
-        from deeptutor.services.partners.manager import LiveTurn
+        from cognispheretutor.services.partners.manager import LiveTurn
 
         turn = LiveTurn()
         q = turn.subscribe()
@@ -567,7 +567,7 @@ class TestLiveTurn:
     async def test_web_turn_runs_on_instance_and_survives_resubscribe(
         self, partners_root, fake_orchestrator
     ):
-        from deeptutor.services.partners.manager import PartnerManager
+        from cognispheretutor.services.partners.manager import PartnerManager
 
         fake_orchestrator.script = _narration_round("c1", "working") + _finish("done!")
         mgr = PartnerManager()
@@ -596,7 +596,7 @@ class TestLiveTurn:
 class TestPartnerCommands:
     @pytest.mark.asyncio
     async def test_sessions_resume_delete_commands(self, partners_root, fake_orchestrator):
-        from deeptutor.services.partners.commands import PartnerCommandHandler
+        from cognispheretutor.services.partners.commands import PartnerCommandHandler
 
         runner = _runner(partners_root)
         fake_orchestrator.script = _finish("ok")
@@ -616,7 +616,7 @@ class TestPartnerCommands:
 
     @pytest.mark.asyncio
     async def test_stop_command_is_a_noop_on_im(self, partners_root, fake_orchestrator):
-        from deeptutor.services.partners.commands import PartnerCommandHandler
+        from cognispheretutor.services.partners.commands import PartnerCommandHandler
 
         runner = _runner(partners_root)
         handler = PartnerCommandHandler(partner_id="ada", config=runner.config, store=runner.store)
@@ -661,7 +661,7 @@ class TestPartnerCommands:
         runner = _runner(partners_root)
         await runner.process_message(_msg("first question"))
 
-        reply = await runner.process_message(_msg("/new@DeepTutorBot"))
+        reply = await runner.process_message(_msg("/new@cognisphereTutorBot"))
 
         assert "Started a new conversation" in reply
         assert len(fake_orchestrator.seen_contexts) == 1

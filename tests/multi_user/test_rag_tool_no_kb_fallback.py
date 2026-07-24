@@ -16,7 +16,7 @@ def _rag_search():
     # Bypass parent-attribute pollution from earlier tests' fake modules:
     # ``importlib.import_module`` reads ``sys.modules`` directly, which is
     # properly reverted by ``monkeypatch``.
-    return importlib.import_module("deeptutor.tools.rag_tool").rag_search
+    return importlib.import_module("cognispheretutor.tools.rag_tool").rag_search
 
 
 def test_rag_search_no_kb_raises_value_error(mu_isolated_root, as_user):

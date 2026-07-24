@@ -2,11 +2,11 @@
 
 export type AppLanguage = "en" | "zh";
 
-export const ACTIVE_SESSION_STORAGE_KEY = "deeptutor.activeSessionId.tab";
-export const LANGUAGE_STORAGE_KEY = "deeptutor-language";
-export const SIDEBAR_COLLAPSED_STORAGE_KEY = "deeptutor.sidebarCollapsed";
+export const ACTIVE_SESSION_STORAGE_KEY = "cognispheretutor.activeSessionId.tab";
+export const LANGUAGE_STORAGE_KEY = "cognispheretutor-language";
+export const SIDEBAR_COLLAPSED_STORAGE_KEY = "cognispheretutor.sidebarCollapsed";
 export const CHAT_RESPONSE_TIMEOUT_STORAGE_KEY =
-  "deeptutor.chatResponseTimeout";
+  "cognispheretutor.chatResponseTimeout";
 
 // Mirror of the per-user ``chat_response_timeout`` UI preference. Cached in
 // localStorage so the chat watchdog (a separate provider from Settings) can
@@ -49,9 +49,9 @@ export function writeStoredChatResponseTimeout(seconds: number): void {
   }
 }
 
-export const ACTIVE_SESSION_EVENT = "deeptutor:active-session";
-export const LANGUAGE_EVENT = "deeptutor:language";
-export const SIDEBAR_COLLAPSED_EVENT = "deeptutor:sidebar-collapsed";
+export const ACTIVE_SESSION_EVENT = "cognispheretutor:active-session";
+export const LANGUAGE_EVENT = "cognispheretutor:language";
+export const SIDEBAR_COLLAPSED_EVENT = "cognispheretutor:sidebar-collapsed";
 
 export function normalizeLanguage(
   value: string | null | undefined,

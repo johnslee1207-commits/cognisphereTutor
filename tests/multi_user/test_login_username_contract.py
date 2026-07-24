@@ -12,7 +12,7 @@ from __future__ import annotations
 from pydantic import ValidationError
 import pytest
 
-from deeptutor.api.routers.auth import LoginRequest, RegisterRequest
+from cognispheretutor.api.routers.auth import LoginRequest, RegisterRequest
 
 # ---------------------------------------------------------------------------
 # RegisterRequest.username — the real validator
@@ -92,7 +92,7 @@ def test_authenticate_round_trip_with_plain_username(
     monkeypatch: pytest.MonkeyPatch, seed_user
 ) -> None:
     pytest.importorskip("bcrypt")  # password hashing dep; present in CI/Docker
-    from deeptutor.services import auth as auth_service
+    from cognispheretutor.services import auth as auth_service
 
     monkeypatch.setattr(auth_service, "AUTH_ENABLED", True)
     seed_user("plainuser", password="password1234")

@@ -16,9 +16,9 @@ from typing import Any
 
 import pytest
 
-from deeptutor.core.agentic.loop import LabelProtocol, run_agentic_loop
-from deeptutor.core.agentic.tool_dispatch import DispatchOutcome
-from deeptutor.core.stream_bus import StreamBus
+from cognispheretutor.core.agentic.loop import LabelProtocol, run_agentic_loop
+from cognispheretutor.core.agentic.tool_dispatch import DispatchOutcome
+from cognispheretutor.core.stream_bus import StreamBus
 
 # --------------------------- scripted LLM client ---------------------------
 

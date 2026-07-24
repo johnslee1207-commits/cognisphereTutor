@@ -14,9 +14,9 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.agents.research.pipeline import ResearchPipeline, _RephraseLoopHost
-from deeptutor.core.context import UnifiedContext
-from deeptutor.core.stream_bus import StreamBus
+from cognispheretutor.agents.research.pipeline import ResearchPipeline, _RephraseLoopHost
+from cognispheretutor.core.context import UnifiedContext
+from cognispheretutor.core.stream_bus import StreamBus
 
 
 class _FakeLLM:
@@ -43,9 +43,9 @@ class _FakeRegistry:
 
 
 def _make_pipeline(monkeypatch: pytest.MonkeyPatch) -> ResearchPipeline:
-    monkeypatch.setattr("deeptutor.agents.research.pipeline.get_llm_config", lambda: _FakeLLM())
+    monkeypatch.setattr("cognispheretutor.agents.research.pipeline.get_llm_config", lambda: _FakeLLM())
     monkeypatch.setattr(
-        "deeptutor.agents.research.pipeline.get_tool_registry", lambda: _FakeRegistry()
+        "cognispheretutor.agents.research.pipeline.get_tool_registry", lambda: _FakeRegistry()
     )
     return ResearchPipeline(language="en", runtime_config={})
 

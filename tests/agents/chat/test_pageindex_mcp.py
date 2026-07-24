@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import asyncio
 
-from deeptutor.agents.chat.agentic_pipeline import AgenticChatPipeline
-from deeptutor.core.context import UnifiedContext
-from deeptutor.core.tool_protocol import BaseTool, ToolDefinition, ToolResult
+from cognispheretutor.agents.chat.agentic_pipeline import AgenticChatPipeline
+from cognispheretutor.core.context import UnifiedContext
+from cognispheretutor.core.tool_protocol import BaseTool, ToolDefinition, ToolResult
 
 
 class FakeMCPTool(BaseTool):
@@ -54,10 +54,10 @@ def _prepare(monkeypatch, docs: dict[str, dict[str, str]]) -> AgenticChatPipelin
     other_tool = FakeMCPTool("other", "do_thing")
     pipe.registry = FakeRegistry([pageindex_tool, other_tool])
 
-    monkeypatch.setattr("deeptutor.services.mcp.get_mcp_manager", lambda: FakeManager())
-    monkeypatch.setattr("deeptutor.services.mcp.load_loaded_tools", lambda _sid: set())
+    monkeypatch.setattr("cognispheretutor.services.mcp.get_mcp_manager", lambda: FakeManager())
+    monkeypatch.setattr("cognispheretutor.services.mcp.load_loaded_tools", lambda _sid: set())
     # Non-admin user without an MCP grant: fail-closed empty whitelist.
-    monkeypatch.setattr("deeptutor.multi_user.tool_access.allowed_mcp_tools", lambda: set())
+    monkeypatch.setattr("cognispheretutor.multi_user.tool_access.allowed_mcp_tools", lambda: set())
     monkeypatch.setattr(pipe, "_pageindex_doc_maps", lambda _ctx: docs)
 
     ctx = UnifiedContext(knowledge_bases=list(docs))

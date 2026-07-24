@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.runtime.request_contracts import (
+from cognispheretutor.runtime.request_contracts import (
     validate_capability_config,
     validate_chat_request_config,
 )

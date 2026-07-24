@@ -3,15 +3,15 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from deeptutor.services.rag.index_probe import (
+from cognispheretutor.services.rag.index_probe import (
     has_ready_provider_index,
     inspect_kb_versions,
     inspect_provider_index,
     inspect_provider_version,
     provider_failure_summary,
 )
-from deeptutor.services.rag.pipelines.graphrag import storage as graphrag_storage
-from deeptutor.services.rag.pipelines.pageindex import storage as pageindex_storage
+from cognispheretutor.services.rag.pipelines.graphrag import storage as graphrag_storage
+from cognispheretutor.services.rag.pipelines.pageindex import storage as pageindex_storage
 
 
 def _write_meta(version_dir: Path, *, provider: str, signature: str | None = None) -> None:

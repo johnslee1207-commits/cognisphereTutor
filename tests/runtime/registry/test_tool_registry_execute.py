@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.core.tool_protocol import BaseTool, ToolDefinition, ToolParameter, ToolResult
-from deeptutor.runtime.registry.tool_registry import ToolRegistry
+from cognispheretutor.core.tool_protocol import BaseTool, ToolDefinition, ToolParameter, ToolResult
+from cognispheretutor.runtime.registry.tool_registry import ToolRegistry
 
 
 class _NameParamTool(BaseTool):

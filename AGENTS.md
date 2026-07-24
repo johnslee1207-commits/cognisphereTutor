@@ -1,8 +1,8 @@
-# DeepTutor — Agent-Native Architecture
+# cognisphereTutor — Agent-Native Architecture
 
 ## Overview
 
-DeepTutor is an **agent-native** intelligent learning companion organized
+cognisphereTutor is an **agent-native** intelligent learning companion organized
 around a two-layer plugin model — single-shot **Tools** invoked by the
 LLM, and multi-stage **Capabilities** that take over a turn — exposed
 through three entry points: CLI, WebSocket API, and Python SDK.
@@ -66,7 +66,7 @@ Multi-stage pipelines that own the turn:
 | `math_animator`  | concept_analysis → concept_design → code_generation → code_retry → summary → render_output |
 
 All capabilities converge on `emit_capability_result()` in
-`deeptutor/capabilities/_shared.py` so every turn emits the same envelope
+`cognispheretutor/capabilities/_shared.py` so every turn emits the same envelope
 (response payload + `cost_summary` from `UsageTracker`). Status copy and
 prompts are i18n'd via `capabilities/prompts/{en,zh}/<name>.yaml`.
 
@@ -74,47 +74,48 @@ prompts are i18n'd via `capabilities/prompts/{en,zh}/<name>.yaml`.
 
 ```bash
 # Install
-pip install deeptutor      # Full app (CLI + Web/API + packaged Web assets)
-pip install deeptutor-cli  # CLI-only
+pip install cognispheretutor      # Full app (CLI + Web/API + packaged Web assets)
+pip install cognispheretutor-cli  # CLI-only
 
 # Run any capability
-deeptutor run chat "Explain Fourier transform"
-deeptutor run deep_solve "Solve x^2=4" -t rag --kb my-kb
-deeptutor run visualize "Animate sine wave" --config render_mode=manim_video
+cognispheretutor run chat "Explain Fourier transform"
+cognispheretutor run deep_solve "Solve x^2=4" -t rag --kb my-kb
+cognispheretutor run visualize "Animate sine wave" --config render_mode=manim_video
 
 # Interactive REPL
-deeptutor chat
+cognispheretutor chat
 # (inside the REPL: /regenerate or /retry re-runs the last user message)
 
 # Partners (IM-connected companions)
-deeptutor partner list
+cognispheretutor partner list
 
 # Knowledge bases, memory, server
-deeptutor kb list
-deeptutor kb create my-kb --doc textbook.pdf
-deeptutor memory show
-deeptutor serve --port 8001       # API server only
-deeptutor start                   # backend + frontend together
+cognispheretutor kb list
+cognispheretutor kb create my-kb --doc textbook.pdf
+cognispheretutor memory show
+cognispheretutor serve --port 8001       # API server only
+cognispheretutor start                   # backend + frontend together
 ```
 
 ## Key Files
 
 | Path                                       | Purpose                              |
 | ------------------------------------------ | ------------------------------------ |
-| `deeptutor/runtime/orchestrator.py`        | `ChatOrchestrator` — unified entry   |
-| `deeptutor/runtime/launcher.py`            | Backend + frontend lifecycle / port discovery |
-| `deeptutor/runtime/registry/`              | Tool + Capability registries         |
-| `deeptutor/runtime/bootstrap/builtin_capabilities.py` | Built-in capability class paths |
-| `deeptutor/services/config/runtime_settings.py` | JSON settings + process-env overrides |
-| `deeptutor/core/stream.py`, `stream_bus.py` | StreamEvent protocol + async fan-out |
-| `deeptutor/core/tool_protocol.py`          | `BaseTool` + `ToolDefinition`         |
-| `deeptutor/core/capability_protocol.py`    | `BaseCapability` + `CapabilityManifest` |
-| `deeptutor/core/context.py`                | `UnifiedContext` dataclass            |
-| `deeptutor/tools/builtin/__init__.py`      | All built-in tool wrappers           |
-| `deeptutor/capabilities/`                  | Built-in capability implementations  |
-| `deeptutor/app.py`                         | `DeepTutorApp` — Python SDK facade    |
-| `deeptutor_cli/main.py`                    | Typer CLI entry point                |
-| `deeptutor/api/routers/unified_ws.py`      | Unified WebSocket endpoint           |
+| `cognispheretutor/runtime/orchestrator.py`        | `ChatOrchestrator` — unified entry   |
+| `cognispheretutor/runtime/launcher.py`            | Backend + frontend lifecycle / port discovery |
+| `cognispheretutor/runtime/registry/`              | Tool + Capability registries         |
+| `cognispheretutor/runtime/bootstrap/builtin_capabilities.py` | Built-in capability class paths |
+| `cognispheretutor/services/config/runtime_settings.py` | JSON settings + process-env overrides |
+| `cognispheretutor/core/stream.py`, `stream_bus.py` | StreamEvent protocol + async fan-out |
+| `cognispheretutor/core/tool_protocol.py`          | `BaseTool` + `ToolDefinition`         |
+| `cognispheretutor/core/capability_protocol.py`    | `BaseCapability` + `CapabilityManifest` |
+| `cognispheretutor/core/context.py`                | `UnifiedContext` dataclass            |
+| `cognispheretutor/tools/builtin/__init__.py`      | All built-in tool wrappers           |
+| `cognispheretutor/capabilities/`                  | Built-in capability implementations  |
+| `cognispheretutor/integrations/cognisphere/`      | Cognisphere Learning Plugins client (DT-P1…P6: discover / negotiate / validate / import / trusted-context / runtime callbacks + offline runtime bridge / compose) |
+| `cognispheretutor/app.py`                         | `cognisphereTutorApp` — Python SDK facade    |
+| `cognispheretutor_cli/main.py`                    | Typer CLI entry point                |
+| `cognispheretutor/api/routers/unified_ws.py`      | Unified WebSocket endpoint           |
 
 ## Dependency Layers
 
@@ -122,8 +123,8 @@ Public install paths and source extras are defined in `pyproject.toml`.
 Requirements files mirror the same dependency groups for Docker/CI installs.
 
 ```
-pip install deeptutor      — Full app (CLI + Web/API + packaged Web assets)
-pip install deeptutor-cli  — CLI-only (LLM + RAG + providers + document parsing)
+pip install cognispheretutor      — Full app (CLI + Web/API + packaged Web assets)
+pip install cognispheretutor-cli  — CLI-only (LLM + RAG + providers + document parsing)
 pip install -e .           — Source install for development
 
 Source extras (.[ extra ], defined in pyproject.toml):
@@ -132,7 +133,7 @@ Source extras (.[ extra ], defined in pyproject.toml):
 .[partners]       — Partner channel SDKs + MCP client  (legacy alias: .[tutorbot])
 .[matrix]         — Matrix channel for Partners (matrix-nio; needs libolm)
 .[matrix-e2e]     — Matrix with end-to-end encryption (matrix-nio[e2e])
-.[math-animator]  — Manim addon (powers `visualize` Manim renders + `deeptutor run math_animator`)
+.[math-animator]  — Manim addon (powers `visualize` Manim renders + `cognispheretutor run math_animator`)
 .[dev]            — Test / lint tooling
 .[all]            — Everything above
 ```

@@ -1,6 +1,6 @@
 """Tests for LLM capability helpers."""
 
-from deeptutor.services.llm.capabilities import (
+from cognispheretutor.services.llm.capabilities import (
     get_capability,
     get_effective_temperature,
     has_thinking_tags,

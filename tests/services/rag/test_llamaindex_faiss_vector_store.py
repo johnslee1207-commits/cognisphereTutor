@@ -17,8 +17,8 @@ from llama_index.core.schema import ImageNode, TextNode
 import numpy as np
 import pytest
 
-from deeptutor.services.rag.pipelines.llamaindex import storage as storage_module
-from deeptutor.services.rag.pipelines.llamaindex import vector_store
+from cognispheretutor.services.rag.pipelines.llamaindex import storage as storage_module
+from cognispheretutor.services.rag.pipelines.llamaindex import vector_store
 
 faiss = pytest.importorskip("faiss")
 pytest.importorskip("llama_index.vector_stores.faiss")
@@ -127,7 +127,7 @@ def test_mixed_dimension_nodes_fall_back_to_simple() -> None:
 def _multimodal_nodes() -> list[object]:
     """A text + image node sharing one dimension (single multimodal embedding).
 
-    DeepTutor embeds text and images with the *same* embedding client, so both
+    cognisphereTutor embeds text and images with the *same* embedding client, so both
     modalities produce same-dimension vectors and (in a plain VectorStoreIndex)
     land in the ``default`` store together.
     """
@@ -227,7 +227,7 @@ def test_validation_skips_binary_faiss_files(tmp_path: Path) -> None:
 
 def test_reindex_supersedes_legacy_simple_version_with_faiss(tmp_path: Path) -> None:
     """Re-indexing a legacy KB writes a newer FAISS version that wins on read."""
-    from deeptutor.services.rag.index_versioning import (
+    from cognispheretutor.services.rag.index_versioning import (
         EmbeddingSignature,
         resolve_storage_dir_for_read,
         write_version_meta,

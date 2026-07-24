@@ -61,12 +61,12 @@ process.env.NEXT_PUBLIC_API_BASE = NEXT_PUBLIC_API_BASE;
 process.env.NEXT_PUBLIC_AUTH_ENABLED = NEXT_PUBLIC_AUTH_ENABLED;
 
 // Resolve the build-time application version from the single source of
-// truth at ``deeptutor/__version__.py``. The Python file is parsed with a
+// truth at ``cognispheretutor/__version__.py``. The Python file is parsed with a
 // small regex so the JS build does not need to execute Python.
 const APP_VERSION = (() => {
   try {
     const text = fs.readFileSync(
-      path.resolve(__dirname, "..", "deeptutor", "__version__.py"),
+      path.resolve(__dirname, "..", "cognispheretutor", "__version__.py"),
       "utf8",
     );
     const match = text.match(/__version__\s*=\s*["']([^"']+)["']/);

@@ -27,7 +27,7 @@ from fastapi.testclient import TestClient
 
 
 def test_require_auth_is_async_def() -> None:
-    from deeptutor.api.routers.auth import require_admin, require_auth
+    from cognispheretutor.api.routers.auth import require_admin, require_auth
 
     assert inspect.iscoroutinefunction(require_auth), (
         "require_auth must be async — a sync dep is run in a threadpool whose "
@@ -43,9 +43,9 @@ def test_install_current_user_maps_none_to_local_admin() -> None:
     for both HTTP and WS deps. It must install the local admin user so
     that ``get_current_path_service()`` resolves to the admin workspace
     rather than silently falling back through the None path."""
-    from deeptutor.api.routers.auth import _install_current_user
-    from deeptutor.multi_user.context import get_current_user_or_none, reset_current_user
-    from deeptutor.multi_user.models import LOCAL_ADMIN_ID, LOCAL_ADMIN_USERNAME
+    from cognispheretutor.api.routers.auth import _install_current_user
+    from cognispheretutor.multi_user.context import get_current_user_or_none, reset_current_user
+    from cognispheretutor.multi_user.models import LOCAL_ADMIN_ID, LOCAL_ADMIN_USERNAME
 
     token = _install_current_user(None)
     try:
@@ -63,9 +63,9 @@ def test_install_current_user_maps_payload_to_scoped_user() -> None:
     """``_install_current_user(payload)`` must produce a user-scoped
     CurrentUser whose workspace root lives under USERS_ROOT — the
     same shape that ``ws_require_auth`` and HTTP deps need to install."""
-    from deeptutor.api.routers.auth import _install_current_user
-    from deeptutor.multi_user.context import get_current_user_or_none, reset_current_user
-    from deeptutor.services.auth import TokenPayload
+    from cognispheretutor.api.routers.auth import _install_current_user
+    from cognispheretutor.multi_user.context import get_current_user_or_none, reset_current_user
+    from cognispheretutor.services.auth import TokenPayload
 
     token = _install_current_user(TokenPayload(username="alice", role="user", user_id="u_alice"))
     try:
@@ -84,9 +84,9 @@ def test_local_admin_token_payload_matches_local_admin_user() -> None:
     AUTH_ENABLED=false must use the same identity constants as
     ``local_admin_user()`` — drift between the two reintroduces the kind
     of dual-source-of-truth bug that #481 lived in."""
-    from deeptutor.api.routers.auth import _local_admin_token_payload
-    from deeptutor.multi_user.models import LOCAL_ADMIN_ID, LOCAL_ADMIN_USERNAME
-    from deeptutor.multi_user.paths import local_admin_user
+    from cognispheretutor.api.routers.auth import _local_admin_token_payload
+    from cognispheretutor.multi_user.models import LOCAL_ADMIN_ID, LOCAL_ADMIN_USERNAME
+    from cognispheretutor.multi_user.paths import local_admin_user
 
     tp = _local_admin_token_payload()
     user = local_admin_user()
@@ -98,9 +98,9 @@ def test_local_admin_token_payload_matches_local_admin_user() -> None:
 def test_require_auth_propagates_user_contextvar_to_endpoint(monkeypatch) -> None:
     """End-to-end: a valid token through require_auth makes the user
     ContextVar visible to the endpoint."""
-    from deeptutor.api.routers import auth as auth_router
-    from deeptutor.multi_user.context import get_current_user_or_none
-    from deeptutor.services.auth import TokenPayload
+    from cognispheretutor.api.routers import auth as auth_router
+    from cognispheretutor.multi_user.context import get_current_user_or_none
+    from cognispheretutor.services.auth import TokenPayload
 
     monkeypatch.setattr(auth_router, "AUTH_ENABLED", True)
     monkeypatch.setattr(
@@ -133,9 +133,9 @@ def test_require_auth_propagates_user_contextvar_to_endpoint(monkeypatch) -> Non
 
 
 def test_require_auth_propagates_admin_contextvar_to_endpoint(monkeypatch) -> None:
-    from deeptutor.api.routers import auth as auth_router
-    from deeptutor.multi_user.context import get_current_user_or_none
-    from deeptutor.services.auth import TokenPayload
+    from cognispheretutor.api.routers import auth as auth_router
+    from cognispheretutor.multi_user.context import get_current_user_or_none
+    from cognispheretutor.services.auth import TokenPayload
 
     monkeypatch.setattr(auth_router, "AUTH_ENABLED", True)
     monkeypatch.setattr(
@@ -163,10 +163,10 @@ def test_path_service_resolves_per_user_workspace_through_dependency(monkeypatch
     request lands on an endpoint that calls ``get_path_service()`` and
     that path service must point at ``data/users/<uid>/``, not the
     admin fallback."""
-    from deeptutor.api.routers import auth as auth_router
-    from deeptutor.multi_user import paths as mu_paths
-    from deeptutor.services.auth import TokenPayload
-    from deeptutor.services.path_service import get_path_service
+    from cognispheretutor.api.routers import auth as auth_router
+    from cognispheretutor.multi_user import paths as mu_paths
+    from cognispheretutor.services.auth import TokenPayload
+    from cognispheretutor.services.path_service import get_path_service
 
     monkeypatch.setattr(auth_router, "AUTH_ENABLED", True)
     monkeypatch.setattr(mu_paths, "USERS_ROOT", tmp_path / "data" / "users")

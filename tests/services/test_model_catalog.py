@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from deeptutor.services.config.model_catalog import ModelCatalogService
+from cognispheretutor.services.config.model_catalog import ModelCatalogService
 
 
 def test_load_creates_empty_catalog_without_dotenv_hydration(tmp_path: Path):

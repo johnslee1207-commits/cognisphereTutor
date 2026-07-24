@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.services.mcp.config import MCPConfig, MCPServerConfig
-from deeptutor.services.mcp.manager import wrapped_tool_name
-from deeptutor.services.mcp.network import validate_mcp_url
+from cognispheretutor.services.mcp.config import MCPConfig, MCPServerConfig
+from cognispheretutor.services.mcp.manager import wrapped_tool_name
+from cognispheretutor.services.mcp.network import validate_mcp_url
 
 
 def test_resolved_type_stdio() -> None:

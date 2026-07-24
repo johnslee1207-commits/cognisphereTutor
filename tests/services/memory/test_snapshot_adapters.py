@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.services.memory.snapshot import adapters
+from cognispheretutor.services.memory.snapshot import adapters
 
 
 class _FakePathService:
@@ -39,7 +39,7 @@ def _write_session(sessions_dir: Path, key: str, turns: list[tuple[str, str]]) -
 def partner_tree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Make ``tmp_path`` the admin root and route both path services there."""
     monkeypatch.setattr(adapters, "get_path_service", lambda: _FakePathService(tmp_path))
-    import deeptutor.multi_user.paths as mu_paths
+    import cognispheretutor.multi_user.paths as mu_paths
 
     monkeypatch.setattr(mu_paths, "get_admin_path_service", lambda: _FakePathService(tmp_path))
     return tmp_path
@@ -118,7 +118,7 @@ def test_non_admin_scope_sees_no_partners(tmp_path: Path, monkeypatch: pytest.Mo
     _write_session(pdir / "sessions", "web:s", [("user", "q"), ("assistant", "a")])
 
     monkeypatch.setattr(adapters, "get_path_service", lambda: _FakePathService(user_root))
-    import deeptutor.multi_user.paths as mu_paths
+    import cognispheretutor.multi_user.paths as mu_paths
 
     monkeypatch.setattr(mu_paths, "get_admin_path_service", lambda: _FakePathService(admin_root))
 

@@ -8,7 +8,7 @@ import pytest
 
 
 def test_custom_embedding_rejects_null_coordinates(monkeypatch: pytest.MonkeyPatch) -> None:
-    from deeptutor.services.rag.pipelines.llamaindex import (
+    from cognispheretutor.services.rag.pipelines.llamaindex import (
         embedding_adapter as embedding_module,
     )
 
@@ -27,7 +27,7 @@ def test_custom_embedding_rejects_null_coordinates(monkeypatch: pytest.MonkeyPat
 
 
 def test_custom_embedding_refreshes_stale_client(monkeypatch: pytest.MonkeyPatch) -> None:
-    from deeptutor.services.rag.pipelines.llamaindex import (
+    from cognispheretutor.services.rag.pipelines.llamaindex import (
         embedding_adapter as embedding_module,
     )
 
@@ -70,8 +70,8 @@ def test_custom_embedding_refreshes_stale_client(monkeypatch: pytest.MonkeyPatch
 async def test_search_returns_reindex_hint_for_null_vector_index(
     tmp_path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from deeptutor.services.rag.pipelines.llamaindex import storage as storage_module
-    from deeptutor.services.rag.pipelines.llamaindex.pipeline import LlamaIndexPipeline
+    from cognispheretutor.services.rag.pipelines.llamaindex import storage as storage_module
+    from cognispheretutor.services.rag.pipelines.llamaindex.pipeline import LlamaIndexPipeline
 
     storage_dir = tmp_path / "kb" / "version-1"
     storage_dir.mkdir(parents=True)
@@ -106,7 +106,7 @@ async def test_search_returns_reindex_hint_for_null_vector_index(
 def test_retrieve_nodes_rejects_invalid_persisted_embeddings(
     tmp_path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from deeptutor.services.rag.pipelines.llamaindex import storage as storage_module
+    from cognispheretutor.services.rag.pipelines.llamaindex import storage as storage_module
 
     class _RetrieverShouldNotRun:
         def retrieve(self, query: str):  # pragma: no cover - assertion helper
@@ -126,7 +126,7 @@ def test_retrieve_nodes_rejects_invalid_persisted_embeddings(
 
 
 def test_validate_storage_embeddings_rejects_invalid_vector_file(tmp_path) -> None:
-    from deeptutor.services.rag.pipelines.llamaindex import storage as storage_module
+    from cognispheretutor.services.rag.pipelines.llamaindex import storage as storage_module
 
     (tmp_path / "default__vector_store.json").write_text(
         json.dumps({"embedding_dict": {"bad-node": [0.1, None, 0.3]}}),
@@ -140,7 +140,7 @@ def test_validate_storage_embeddings_rejects_invalid_vector_file(tmp_path) -> No
 def test_retrieve_nodes_checks_storage_context_vector_stores(
     tmp_path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from deeptutor.services.rag.pipelines.llamaindex import storage as storage_module
+    from cognispheretutor.services.rag.pipelines.llamaindex import storage as storage_module
 
     class _RetrieverShouldNotRun:
         def retrieve(self, query: str):  # pragma: no cover - assertion helper
@@ -168,8 +168,8 @@ def test_retrieve_nodes_checks_storage_context_vector_stores(
 async def test_search_reconfigures_llamaindex_settings_for_cached_pipeline(
     tmp_path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from deeptutor.services.rag.pipelines.llamaindex import storage as storage_module
-    from deeptutor.services.rag.pipelines.llamaindex.pipeline import LlamaIndexPipeline
+    from cognispheretutor.services.rag.pipelines.llamaindex import storage as storage_module
+    from cognispheretutor.services.rag.pipelines.llamaindex.pipeline import LlamaIndexPipeline
 
     storage_dir = tmp_path / "kb" / "version-1"
     storage_dir.mkdir(parents=True)
@@ -197,9 +197,9 @@ async def test_search_reconfigures_llamaindex_settings_for_cached_pipeline(
 async def test_rag_service_hides_low_level_invalid_index_error_in_raw_logs(
     tmp_path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from deeptutor.services.rag.pipelines.llamaindex import storage as storage_module
-    from deeptutor.services.rag.pipelines.llamaindex.pipeline import LlamaIndexPipeline
-    from deeptutor.services.rag.service import RAGService
+    from cognispheretutor.services.rag.pipelines.llamaindex import storage as storage_module
+    from cognispheretutor.services.rag.pipelines.llamaindex.pipeline import LlamaIndexPipeline
+    from cognispheretutor.services.rag.service import RAGService
 
     storage_dir = tmp_path / "kb" / "version-1"
     storage_dir.mkdir(parents=True)

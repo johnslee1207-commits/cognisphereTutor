@@ -7,8 +7,8 @@ used to filter history to user/assistant roles, silently dropping it.
 
 from __future__ import annotations
 
-from deeptutor.agents.chat.agentic_pipeline import AgenticChatPipeline
-from deeptutor.core.context import UnifiedContext
+from cognispheretutor.agents.chat.agentic_pipeline import AgenticChatPipeline
+from cognispheretutor.core.context import UnifiedContext
 
 
 def test_summary_system_message_reaches_messages() -> None:

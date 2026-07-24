@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from deeptutor.services.search.providers.openrouter import OpenRouterProvider
-from deeptutor.services.search.types import WebSearchResponse
+from cognispheretutor.services.search.providers.openrouter import OpenRouterProvider
+from cognispheretutor.services.search.types import WebSearchResponse
 
 
 class TestOpenRouterProvider(unittest.TestCase):

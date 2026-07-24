@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from deeptutor.agents._shared.json_output import extract_json_object
+from cognispheretutor.agents._shared.json_output import extract_json_object
 
 
 @pytest.mark.parametrize(

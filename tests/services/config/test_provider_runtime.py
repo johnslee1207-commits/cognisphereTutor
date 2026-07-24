@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from deeptutor.services.config.provider_runtime import (
+from cognispheretutor.services.config.provider_runtime import (
     resolve_llm_runtime_config,
     resolve_search_runtime_config,
 )

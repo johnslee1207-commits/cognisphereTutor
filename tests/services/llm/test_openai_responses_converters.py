@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from deeptutor.services.llm.provider_core.openai_responses import (
+from cognispheretutor.services.llm.provider_core.openai_responses import (
     adapt_chat_kwargs_to_responses,
 )
 
@@ -17,7 +17,7 @@ class TestAdaptChatKwargsToResponses:
         assert result == {"temperature": 0.2}
 
     def test_translates_max_completion_tokens_to_max_output_tokens(self) -> None:
-        # Regression for DeepTutor#437: gpt-5.x callers pass
+        # Regression for cognisphereTutor#437: gpt-5.x callers pass
         # `max_completion_tokens` from `get_token_limit_kwargs(model, n)`,
         # but the Responses API only accepts `max_output_tokens`.
         result = adapt_chat_kwargs_to_responses({"max_completion_tokens": 8192, "temperature": 0.2})

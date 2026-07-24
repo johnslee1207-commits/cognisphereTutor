@@ -20,7 +20,7 @@ import sys
 # Allow running from project root without installing the package.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from deeptutor.services.config import load_integrations_settings
+from cognispheretutor.services.config import load_integrations_settings
 
 _INTEGRATIONS = load_integrations_settings()
 POCKETBASE_BASE_URL = str(_INTEGRATIONS["pocketbase_url"]).rstrip("/")

@@ -452,7 +452,7 @@ export default function AdminUsersPage() {
         </div>
 
         <p className="mt-8 text-center text-xs text-[var(--muted-foreground)]">
-          DeepTutor Admin · User Management
+          cognisphereTutor Admin · User Management
         </p>
       </div>
 

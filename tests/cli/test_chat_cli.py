@@ -1,4 +1,4 @@
-"""CLI smoke tests for the standalone ``deeptutor-cli`` package."""
+"""CLI smoke tests for the standalone ``cognispheretutor-cli`` package."""
 
 from __future__ import annotations
 
@@ -8,9 +8,9 @@ from typing import Any
 import pytest
 from typer.testing import CliRunner
 
-from deeptutor.app import DeepTutorApp, TurnRequest
-from deeptutor.runtime.bootstrap.builtin_capabilities import BUILTIN_CAPABILITY_CLASSES
-from deeptutor_cli.main import app
+from cognispheretutor.app import cognisphereTutorApp, TurnRequest
+from cognispheretutor.runtime.bootstrap.builtin_capabilities import BUILTIN_CAPABILITY_CLASSES
+from cognispheretutor_cli.main import app
 
 runner = CliRunner()
 
@@ -29,8 +29,8 @@ def _install_fake_runtime(monkeypatch, captured_requests: list[TurnRequest]) -> 
         yield {"type": "result", "metadata": {"response": "response body"}}
         yield {"type": "done"}
 
-    monkeypatch.setattr("deeptutor.app.facade.DeepTutorApp.start_turn", _start_turn)
-    monkeypatch.setattr("deeptutor.app.facade.DeepTutorApp.stream_turn", _stream_turn)
+    monkeypatch.setattr("cognispheretutor.app.facade.cognisphereTutorApp.start_turn", _start_turn)
+    monkeypatch.setattr("cognispheretutor.app.facade.cognisphereTutorApp.stream_turn", _stream_turn)
 
 
 def test_run_command_json_mode(monkeypatch) -> None:
@@ -75,7 +75,7 @@ def test_run_command_json_mode(monkeypatch) -> None:
 
 
 def test_builtin_capability_aliases_resolve_to_canonical_names() -> None:
-    runtime = DeepTutorApp()
+    runtime = cognisphereTutorApp()
 
     assert runtime.resolve_capability("solve") == "deep_solve"
     assert runtime.resolve_capability("quiz") == "deep_question"
@@ -192,7 +192,7 @@ def test_session_list_command_uses_shared_store(monkeypatch) -> None:
             }
         ]
 
-    monkeypatch.setattr("deeptutor.app.facade.DeepTutorApp.list_sessions", _list_sessions)
+    monkeypatch.setattr("cognispheretutor.app.facade.cognisphereTutorApp.list_sessions", _list_sessions)
 
     result = runner.invoke(app, ["session", "list"])
 
@@ -207,7 +207,7 @@ def test_start_command_delegates_to_runtime_launcher(monkeypatch) -> None:
     def _fake_start(home=None):  # noqa: ANN001
         calls.append(home)
 
-    monkeypatch.setattr("deeptutor.runtime.launcher.start", _fake_start)
+    monkeypatch.setattr("cognispheretutor.runtime.launcher.start", _fake_start)
 
     result = runner.invoke(app, ["start"])
 

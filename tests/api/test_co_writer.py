@@ -5,9 +5,9 @@ from pathlib import Path
 from fastapi import HTTPException
 import pytest
 
-from deeptutor.api.routers.co_writer import _validate_doc_id
-from deeptutor.co_writer import edit_agent
-from deeptutor.co_writer.storage import CoWriterStorage
+from cognispheretutor.api.routers.co_writer import _validate_doc_id
+from cognispheretutor.co_writer import edit_agent
+from cognispheretutor.co_writer.storage import CoWriterStorage
 
 
 class _StubPathService:

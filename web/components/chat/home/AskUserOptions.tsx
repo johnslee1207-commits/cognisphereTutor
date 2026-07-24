@@ -11,7 +11,7 @@ import {
 import type { StreamEvent } from "@/lib/unified-ws";
 
 /**
- * v3 ``ask_user`` payload. Mirrors ``deeptutor.tools.ask_user.AskUserPayload``.
+ * v3 ``ask_user`` payload. Mirrors ``cognispheretutor.tools.ask_user.AskUserPayload``.
  *
  * Every question is rendered as one tab on the card (labelled by its
  * short ``header`` when present); the user can switch between tabs

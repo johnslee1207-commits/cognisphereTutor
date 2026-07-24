@@ -6,7 +6,7 @@ import ToastViewport from "@/components/common/ToastViewport";
 import { AppShellProvider } from "@/context/AppShellContext";
 import { I18nClientBridge } from "@/i18n/I18nClientBridge";
 
-// Geist matches the public site (deeptutor.info) and stays crisp at the
+// Geist matches the public site (cognispheretutor.info) and stays crisp at the
 // small UI sizes the composer/toolbars use, unlike the rounder Jakarta.
 const fontSans = Geist({
   subsets: ["latin"],
@@ -21,7 +21,7 @@ const fontSerif = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "DeepTutor",
+  title: "cognisphereTutor",
   description: "Agent-native intelligent learning companion",
   icons: {
     icon: [

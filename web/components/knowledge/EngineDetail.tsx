@@ -72,8 +72,8 @@ const ENGINE_ICONS: Record<string, LucideIcon> = {
 };
 
 const INSTALL_HINTS: Record<string, string> = {
-  graphrag: "pip install 'deeptutor[graphrag]'",
-  lightrag: "pip install 'deeptutor[rag-lightrag]'",
+  graphrag: "pip install 'cognispheretutor[graphrag]'",
+  lightrag: "pip install 'cognispheretutor[rag-lightrag]'",
 };
 
 // Mode one-liners, keyed by `${engineId}:${mode}`. English source strings double

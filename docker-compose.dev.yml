@@ -1,5 +1,5 @@
 # ============================================
-# DeepTutor Docker Compose - Development Override
+# cognisphereTutor Docker Compose - Development Override
 # ============================================
 # Use with: python scripts/docker_compose.py -f docker-compose.yml -f docker-compose.dev.yml up
 #
@@ -14,14 +14,14 @@ services:
     volumes:
       - ./data/pocketbase:/pb/pb_data
 
-  deeptutor:
+  cognispheretutor:
     build:
       target: development
 
     volumes:
       # Mount backend source code for hot-reload
-      - ./deeptutor:/app/deeptutor:ro
-      - ./deeptutor_cli:/app/deeptutor_cli:ro
+      - ./cognispheretutor:/app/cognispheretutor:ro
+      - ./cognispheretutor_cli:/app/cognispheretutor_cli:ro
       - ./scripts:/app/scripts:ro
 
       # Mount frontend source for hot-reload
@@ -48,4 +48,4 @@ services:
     #     max-file: "3"
 
     networks:
-      - deeptutor-network
+      - cognispheretutor-network

@@ -6,7 +6,7 @@ import asyncio
 
 import pytest
 
-from deeptutor.services.memory.consolidator.runs import (
+from cognispheretutor.services.memory.consolidator.runs import (
     RunBusyError,
     RunManager,
     push_undo_checkpoint,

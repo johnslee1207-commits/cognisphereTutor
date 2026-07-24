@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import pytest
 
-from deeptutor.services.search import _assert_provider_supported
-from deeptutor.services.search.providers import (
+from cognispheretutor.services.search import _assert_provider_supported
+from cognispheretutor.services.search.providers import (
     _DEPRECATED_UNSUPPORTED,
     get_provider,
     get_providers_info,
     list_providers,
 )
-from deeptutor.services.search.types import Citation, SearchResult, WebSearchResponse
+from cognispheretutor.services.search.types import Citation, SearchResult, WebSearchResponse
 
 # ---------------------------------------------------------------------------
 # Type dataclasses

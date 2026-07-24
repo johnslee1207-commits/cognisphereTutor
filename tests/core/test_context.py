@@ -2,18 +2,18 @@
 
 from __future__ import annotations
 
-from deeptutor.core.context import Attachment, UnifiedContext
-from deeptutor.core.errors import (
+from cognispheretutor.core.context import Attachment, UnifiedContext
+from cognispheretutor.core.errors import (
     ConfigurationError,
-    DeepTutorError,
+    cognisphereTutorError,
     EnvironmentConfigError,
     LLMContextError,
     LLMServiceError,
     ServiceError,
     ValidationError,
 )
-from deeptutor.core.stream import StreamEvent, StreamEventType
-from deeptutor.core.trace import (
+from cognispheretutor.core.stream import StreamEvent, StreamEventType
+from cognispheretutor.core.trace import (
     build_trace_metadata,
     derive_trace_metadata,
     merge_trace_metadata,
@@ -145,18 +145,18 @@ class TestStreamEvent:
 
 class TestErrors:
     def test_base_error_str_without_details(self) -> None:
-        err = DeepTutorError("boom")
+        err = cognisphereTutorError("boom")
         assert str(err) == "boom"
         assert err.details == {}
 
     def test_base_error_str_with_details(self) -> None:
-        err = DeepTutorError("boom", details={"key": "val"})
+        err = cognisphereTutorError("boom", details={"key": "val"})
         assert "key" in str(err)
 
     def test_hierarchy(self) -> None:
-        assert issubclass(ConfigurationError, DeepTutorError)
-        assert issubclass(ValidationError, DeepTutorError)
-        assert issubclass(ServiceError, DeepTutorError)
+        assert issubclass(ConfigurationError, cognisphereTutorError)
+        assert issubclass(ValidationError, cognisphereTutorError)
+        assert issubclass(ServiceError, cognisphereTutorError)
         assert issubclass(LLMServiceError, ServiceError)
         assert issubclass(LLMContextError, LLMServiceError)
         assert issubclass(EnvironmentConfigError, ConfigurationError)

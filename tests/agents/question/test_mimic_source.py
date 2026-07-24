@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from deeptutor.agents.question.mimic_source import (
+from cognispheretutor.agents.question.mimic_source import (
     _coerce_difficulty,
     _coerce_question_type,
     _parse_sync,
@@ -99,8 +99,8 @@ def test_parse_sync_upload_mode_uses_parse_service_and_isolates_output(
 ) -> None:
     """Upload mode goes through the shared ParseService and writes the
     questions JSON to the session output dir, never the shared parse cache."""
-    from deeptutor.agents.question import mimic_source
-    from deeptutor.services.parsing.types import ParsedDocument
+    from cognispheretutor.agents.question import mimic_source
+    from cognispheretutor.services.parsing.types import ParsedDocument
 
     # The parse cache dir the (fake) ParseService returns as the parsed workdir.
     cache_dir = tmp_path / "parse_cache" / "abc"

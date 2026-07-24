@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from deeptutor.services.config.runtime_settings import (
+from cognispheretutor.services.config.runtime_settings import (
     RuntimeSettingsService,
     ensure_runtime_settings_files,
 )
@@ -106,12 +106,12 @@ def test_render_environment_uses_json_backed_runtime_names(monkeypatch, tmp_path
     assert env["AUTH_ENABLED"] == "true"
     assert env["NEXT_PUBLIC_AUTH_ENABLED"] == "true"
     # Server-side proxy contract consumed by web/proxy.ts (the Next.js
-    # middleware). DEEPTUTOR_AUTH_ENABLED gates the login redirect;
-    # DEEPTUTOR_API_BASE_URL is where the frontend server reaches the backend
+    # middleware). COGNISPHERETUTOR_AUTH_ENABLED gates the login redirect;
+    # COGNISPHERETUTOR_API_BASE_URL is where the frontend server reaches the backend
     # (falls back to localhost:<backend_port> when no in-network / external base
     # is configured).
-    assert env["DEEPTUTOR_AUTH_ENABLED"] == "true"
-    assert env["DEEPTUTOR_API_BASE_URL"] == "http://localhost:8010"
+    assert env["COGNISPHERETUTOR_AUTH_ENABLED"] == "true"
+    assert env["COGNISPHERETUTOR_API_BASE_URL"] == "http://localhost:8010"
     assert env["AUTH_TOKEN_EXPIRE_HOURS"] == "12"
     assert env["POCKETBASE_URL"] == "http://pocketbase:8090"
     assert "AUTH_SECRET" not in env
@@ -175,8 +175,8 @@ def test_startup_ensure_creates_missing_runtime_jsons_with_defaults(
     _clear_runtime_env(monkeypatch)
     settings_dir = tmp_path / "settings"
 
-    from deeptutor.services.config import model_catalog as model_catalog_module
-    from deeptutor.services.config import runtime_settings as runtime_settings_module
+    from cognispheretutor.services.config import model_catalog as model_catalog_module
+    from cognispheretutor.services.config import runtime_settings as runtime_settings_module
 
     runtime_settings_module.RuntimeSettingsService._instances.clear()
     model_catalog_module.ModelCatalogService._instances.clear()
@@ -288,7 +288,7 @@ def test_mineru_process_env_override(tmp_path: Path) -> None:
 def test_document_parsing_v1_to_v2_migration(tmp_path: Path) -> None:
     """A legacy flat mineru.json is folded into engines.mineru on first load,
     with the active engine pinned to MinerU (preserve existing behavior)."""
-    from deeptutor.services.config.runtime_settings import _atomic_write_json
+    from cognispheretutor.services.config.runtime_settings import _atomic_write_json
 
     service = RuntimeSettingsService(tmp_path / "settings", process_env={})
     legacy = {
@@ -328,7 +328,7 @@ def test_document_parsing_v1_to_v2_migration(tmp_path: Path) -> None:
 def test_document_parsing_legacy_filename_rename(tmp_path: Path) -> None:
     """A pre-existing v2 ``mineru.json`` is renamed to ``document_parsing.json``
     on first load, preserving its contents."""
-    from deeptutor.services.config.runtime_settings import _atomic_write_json
+    from cognispheretutor.services.config.runtime_settings import _atomic_write_json
 
     service = RuntimeSettingsService(tmp_path / "settings", process_env={})
     existing = service.save_document_parsing({"engine": "docling"})
@@ -372,7 +372,7 @@ def test_runtime_settings_can_ignore_process_overrides(tmp_path: Path) -> None:
     service = RuntimeSettingsService(
         tmp_path / "settings",
         process_env={
-            "DEEPTUTOR_IGNORE_PROCESS_ENV_OVERRIDES": "1",
+            "COGNISPHERETUTOR_IGNORE_PROCESS_ENV_OVERRIDES": "1",
             "BACKEND_PORT": "9901",
             "AUTH_ENABLED": "true",
         },
@@ -436,7 +436,7 @@ def test_chat_attachment_limits_env_overrides(tmp_path: Path) -> None:
 
 
 def test_compute_ws_max_size_floor_and_inflation() -> None:
-    from deeptutor.services.config.runtime_settings import compute_ws_max_size
+    from cognispheretutor.services.config.runtime_settings import compute_ws_max_size
 
     # Small totals never drop below uvicorn's 16MB default.
     assert compute_ws_max_size(1 * 1024 * 1024) == 16 * 1024 * 1024

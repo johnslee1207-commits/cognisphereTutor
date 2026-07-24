@@ -1,13 +1,13 @@
 # ============================================
-# DeepTutor Multi-Stage Dockerfile
+# cognisphereTutor Multi-Stage Dockerfile
 # ============================================
-# This Dockerfile builds a production-ready image for DeepTutor
+# This Dockerfile builds a production-ready image for cognisphereTutor
 # containing both the FastAPI backend and Next.js frontend
 #
 # Build/run:
-#   docker build -t deeptutor:local .
+#   docker build -t cognispheretutor:local .
 #   docker run -p 127.0.0.1:3782:3782 -p 127.0.0.1:8001:8001 \
-#     -v deeptutor-data:/app/data deeptutor:local
+#     -v cognispheretutor-data:/app/data cognispheretutor:local
 #
 # Prerequisites:
 #   1. Runtime settings are created under data/user/settings on first start
@@ -37,13 +37,13 @@ COPY web/ ./
 
 # Provide the single source of truth for the app version so next.config.js
 # can read it during ``npm run build`` and inline it into the bundle.
-COPY deeptutor/__version__.py /app/deeptutor/__version__.py
+COPY cognispheretutor/__version__.py /app/cognispheretutor/__version__.py
 
 # Create .env.local with the single env var the build needs (the app version,
 # exposed to the browser via next.config.js). URL knowledge is no longer baked
 # into the bundle: `apiUrl`/`wsUrl` in web/lib/api.ts are pass-throughs and
 # the actual backend host is read at request time by web/proxy.ts from
-# DEEPTUTOR_API_BASE_URL (exported by the entrypoint on every start).
+# COGNISPHERETUTOR_API_BASE_URL (exported by the entrypoint on every start).
 RUN printf 'NEXT_PUBLIC_APP_VERSION=\n' > .env.local
 
 # Build Next.js for production with standalone output
@@ -104,23 +104,23 @@ RUN pip install --upgrade pip && \
 FROM python:3.11-slim AS production
 
 # Labels
-LABEL maintainer="DeepTutor Team" \
-      description="DeepTutor: AI-Powered Personalized Learning Assistant"
+LABEL maintainer="cognisphereTutor Team" \
+      description="cognisphereTutor: AI-Powered Personalized Learning Assistant"
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=utf-8 \
     NODE_ENV=production \
-    DEEPTUTOR_IGNORE_PROCESS_ENV_OVERRIDES=1
+    COGNISPHERETUTOR_IGNORE_PROCESS_ENV_OVERRIDES=1
 
 # Code-execution sandbox: the restricted-subprocess backend (which the office
 # skills — docx/pdf/pptx/xlsx — rely on for `exec` / `code_execution`) is
 # enabled by default via the `sandbox_allow_subprocess` runtime setting
-# (system.json, default on), exported to DEEPTUTOR_SANDBOX_ALLOW_SUBPROCESS at
+# (system.json, default on), exported to COGNISPHERETUTOR_SANDBOX_ALLOW_SUBPROCESS at
 # startup. No hardcoded ENV here — that would override the setting and block
 # disabling it. docker-compose still routes exec to the hardened runner sidecar
-# (DEEPTUTOR_SANDBOX_RUNNER_URL), which build_backend() prefers.
+# (COGNISPHERETUTOR_SANDBOX_RUNNER_URL), which build_backend() prefers.
 
 WORKDIR /app
 
@@ -157,8 +157,8 @@ COPY --from=frontend-builder /app/web/.next/static/ ./web/.next/static/
 COPY --from=frontend-builder /app/web/public/ ./web/public/
 
 # Copy application source code
-COPY deeptutor/ ./deeptutor/
-COPY deeptutor_cli/ ./deeptutor_cli/
+COPY cognispheretutor/ ./cognispheretutor/
+COPY cognispheretutor_cli/ ./cognispheretutor_cli/
 COPY scripts/ ./scripts/
 COPY pyproject.toml ./
 COPY requirements/ ./requirements/
@@ -184,13 +184,13 @@ RUN mkdir -p \
 # Bake a non-root user (UID 1000) for the supervisord programs. supervisord
 # itself runs as PID 1's UID — root under rootful Docker/Podman, or UID 1000
 # under rootless podman + `userns_mode: keep-id` (where PID 1 is the host
-# user). Each child (backend/frontend) is dropped to this `deeptutor` user via
-# the per-program `user=deeptutor` directive, so the app processes stay
+# user). Each child (backend/frontend) is dropped to this `cognispheretutor` user via
+# the per-program `user=cognispheretutor` directive, so the app processes stay
 # non-root in either runtime. UID 1000 also matches the host user under
 # keep-id with a bind mount on ./data.
-RUN groupadd --system --gid 1000 deeptutor \
-    && useradd --system --uid 1000 --gid 1000 --no-create-home --shell /usr/sbin/nologin deeptutor \
-    && chown -R deeptutor:deeptutor /app/data /app/web/.next
+RUN groupadd --system --gid 1000 cognispheretutor \
+    && useradd --system --uid 1000 --gid 1000 --no-create-home --shell /usr/sbin/nologin cognispheretutor \
+    && chown -R cognispheretutor:cognispheretutor /app/data /app/web/.next
 
 # supervisord config is split into two files so the production and development
 # images share one daemon-level [supervisord] section instead of duplicating it:
@@ -222,13 +222,13 @@ EOF
 RUN sed -i 's/\r$//' /etc/supervisor/supervisord.conf
 
 # Program definitions (production). Each child drops to the unprivileged
-# deeptutor user (UID 1000) via per-program `user=deeptutor`; see the note on
+# cognispheretutor user (UID 1000) via per-program `user=cognispheretutor`; see the note on
 # the user= design above the daemon config.
 RUN cat > /etc/supervisor/conf.d/programs.conf <<'EOF'
 [program:backend]
 command=/bin/bash /app/start-backend.sh
 directory=/app
-user=deeptutor
+user=cognispheretutor
 autostart=true
 autorestart=true
 stdout_logfile=/dev/fd/1
@@ -240,7 +240,7 @@ environment=PYTHONPATH="/app",PYTHONUNBUFFERED="1"
 [program:frontend]
 command=/bin/bash /app/start-frontend.sh
 directory=/app/web
-user=deeptutor
+user=cognispheretutor
 autostart=true
 autorestart=true
 startsecs=5
@@ -274,8 +274,8 @@ echo "[Backend]  🚀 Starting FastAPI backend on ${BACKEND_HOST}:${BACKEND_PORT
 # --ws-max-size: chat attachments travel base64 inside one WS message; derive
 # the frame cap from the configured attachment policy (system.json) so uploads
 # the policy allows are not severed by uvicorn's 16MB default.
-WS_MAX_SIZE=$(python -c "from deeptutor.services.config import get_ws_max_size; print(get_ws_max_size())" 2>/dev/null || echo 16777216)
-exec python -m uvicorn deeptutor.api.main:app --host ${BACKEND_HOST} --port ${BACKEND_PORT} --no-access-log --ws-max-size ${WS_MAX_SIZE}
+WS_MAX_SIZE=$(python -c "from cognispheretutor.services.config import get_ws_max_size; print(get_ws_max_size())" 2>/dev/null || echo 16777216)
+exec python -m uvicorn cognispheretutor.api.main:app --host ${BACKEND_HOST} --port ${BACKEND_PORT} --no-access-log --ws-max-size ${WS_MAX_SIZE}
 EOF
 
 RUN sed -i 's/\r$//' /app/start-backend.sh && chmod +x /app/start-backend.sh
@@ -283,7 +283,7 @@ RUN sed -i 's/\r$//' /app/start-backend.sh && chmod +x /app/start-backend.sh
 # Create frontend startup script
 # This script starts the Next.js standalone server. URL knowledge is no
 # longer baked into the bundle: web/proxy.ts rewrites /api/* and /ws/* to
-# the configured backend at request time, reading DEEPTUTOR_API_BASE_URL
+# the configured backend at request time, reading COGNISPHERETUTOR_API_BASE_URL
 # (exported by the entrypoint from data/user/settings/system.json).
 RUN cat > /app/start-frontend.sh <<'EOF'
 #!/bin/bash
@@ -306,10 +306,10 @@ RUN cat > /app/entrypoint.sh <<'EOF'
 set -e
 
 echo "============================================"
-echo "🚀 Starting DeepTutor"
+echo "🚀 Starting cognisphereTutor"
 echo "============================================"
 
-export DEEPTUTOR_IGNORE_PROCESS_ENV_OVERRIDES=1
+export COGNISPHERETUTOR_IGNORE_PROCESS_ENV_OVERRIDES=1
 
 # Docker is JSON-driven. Ignore runtime env names even if the host or a stale
 # Compose environment provides them; the entrypoint re-exports values from
@@ -334,8 +334,8 @@ for key in \
     POCKETBASE_EXTERNAL_URL \
     POCKETBASE_ADMIN_EMAIL \
     POCKETBASE_ADMIN_PASSWORD \
-    DEEPTUTOR_API_BASE_URL \
-    DEEPTUTOR_AUTH_ENABLED; do
+    COGNISPHERETUTOR_API_BASE_URL \
+    COGNISPHERETUTOR_AUTH_ENABLED; do
     unset "$key"
 done
 
@@ -344,18 +344,18 @@ echo "📁 Checking data directories..."
 echo "   Ensuring runtime settings and workspace layout..."
 python -c "
 from pathlib import Path
-from deeptutor.services.setup import init_user_directories
+from cognispheretutor.services.setup import init_user_directories
 init_user_directories(Path('/app'))
 " 2>/dev/null || echo "   ⚠️ Directory initialization skipped (will be created on first use)"
 
-# Idempotent: re-chown /app/data so the unprivileged `deeptutor` user (UID 1000)
+# Idempotent: re-chown /app/data so the unprivileged `cognispheretutor` user (UID 1000)
 # owns it. Cheap on no-op; the only first-start cost is one stat per file.
-chown -R deeptutor:deeptutor /app/data 2>/dev/null || true
+chown -R cognispheretutor:cognispheretutor /app/data 2>/dev/null || true
 
 echo "⚙️  Loading runtime JSON settings..."
 eval "$(python - <<'PY'
 import shlex
-from deeptutor.services.config import export_runtime_settings_to_env
+from cognispheretutor.services.config import export_runtime_settings_to_env
 
 for key, value in export_runtime_settings_to_env(overwrite=True).items():
     print(f"export {key}={shlex.quote(str(value))}")
@@ -365,14 +365,14 @@ PY
 export BACKEND_PORT=${BACKEND_PORT:-8001}
 export FRONTEND_PORT=${FRONTEND_PORT:-3782}
 
-# DEEPTUTOR_API_BASE_URL and DEEPTUTOR_AUTH_ENABLED are exported by the
+# COGNISPHERETUTOR_API_BASE_URL and COGNISPHERETUTOR_AUTH_ENABLED are exported by the
 # export_runtime_settings_to_env eval above (see render_environment in
-# deeptutor/services/config/runtime_settings.py). web/proxy.ts reads them at
+# cognispheretutor/services/config/runtime_settings.py). web/proxy.ts reads them at
 # request time to rewrite /api/* and /ws/* to the backend and to gate the login
 # redirect. Keeping them in the single JSON-backed exporter means the Docker and
-# `deeptutor start` paths stay in sync.
-echo "📌 API Base URL (proxy): ${DEEPTUTOR_API_BASE_URL:-http://localhost:${BACKEND_PORT}}"
-echo "📌 Auth enabled: ${DEEPTUTOR_AUTH_ENABLED:-false}"
+# `cognispheretutor start` paths stay in sync.
+echo "📌 API Base URL (proxy): ${COGNISPHERETUTOR_API_BASE_URL:-http://localhost:${BACKEND_PORT}}"
+echo "📌 Auth enabled: ${COGNISPHERETUTOR_AUTH_ENABLED:-false}"
 
 echo "📌 Backend Port: ${BACKEND_PORT}"
 echo "📌 Frontend Port: ${FRONTEND_PORT}"
@@ -389,7 +389,7 @@ echo "============================================"
 
 # Hand off to supervisord as PID 1. The daemon-level config deliberately omits
 # `user=` so supervisord inherits PID 1's UID and stays portable across rootful
-# and rootless-keep-id runtimes; children drop to the deeptutor user via
+# and rootless-keep-id runtimes; children drop to the cognispheretutor user via
 # per-program `user=`. Full rationale lives next to the [supervisord] section
 # in the build step that writes /etc/supervisor/supervisord.conf.
 exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
@@ -435,11 +435,11 @@ COPY --from=frontend-builder /app/web/node_modules ./web/node_modules
 COPY --from=frontend-builder /app/web/package.json ./web/package.json
 COPY --from=frontend-builder /app/web/next.config.js ./web/next.config.js
 
-# `next dev` runs as the unprivileged deeptutor user (via `user=deeptutor` in
+# `next dev` runs as the unprivileged cognispheretutor user (via `user=cognispheretutor` in
 # the supervisord config) and must create/write its build cache under
 # /app/web/.next, so give that user ownership of the web dir and the cache.
 RUN mkdir -p /app/web/.next \
-    && chown deeptutor:deeptutor /app/web /app/web/.next
+    && chown cognispheretutor:cognispheretutor /app/web /app/web/.next
 
 # Install development tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -458,9 +458,9 @@ RUN pip install --no-cache-dir \
 # the production stage is reused as-is.
 RUN cat > /etc/supervisor/conf.d/programs.conf <<'EOF'
 [program:backend]
-command=/bin/bash -c "exec python -m uvicorn deeptutor.api.main:app --host 0.0.0.0 --port ${BACKEND_PORT:-8001} --reload --no-access-log --ws-max-size $(python -c 'from deeptutor.services.config import get_ws_max_size; print(get_ws_max_size())' 2>/dev/null || echo 16777216)"
+command=/bin/bash -c "exec python -m uvicorn cognispheretutor.api.main:app --host 0.0.0.0 --port ${BACKEND_PORT:-8001} --reload --no-access-log --ws-max-size $(python -c 'from cognispheretutor.services.config import get_ws_max_size; print(get_ws_max_size())' 2>/dev/null || echo 16777216)"
 directory=/app
-user=deeptutor
+user=cognispheretutor
 autostart=true
 autorestart=true
 stdout_logfile=/dev/fd/1
@@ -472,7 +472,7 @@ environment=PYTHONPATH="/app",PYTHONUNBUFFERED="1"
 [program:frontend]
 command=/bin/bash -c "cd /app/web && node node_modules/next/dist/bin/next dev -H 0.0.0.0 -p ${FRONTEND_PORT:-3782}"
 directory=/app/web
-user=deeptutor
+user=cognispheretutor
 autostart=true
 autorestart=true
 startsecs=5

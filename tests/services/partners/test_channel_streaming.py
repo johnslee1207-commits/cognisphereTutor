@@ -13,10 +13,10 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from deeptutor.partners.bus.queue import MessageBus
-from deeptutor.partners.channels.discord import DiscordChannel
-from deeptutor.partners.channels.feishu import FeishuChannel
-from deeptutor.partners.channels.telegram import TelegramChannel
+from cognispheretutor.partners.bus.queue import MessageBus
+from cognispheretutor.partners.channels.discord import DiscordChannel
+from cognispheretutor.partners.channels.feishu import FeishuChannel
+from cognispheretutor.partners.channels.telegram import TelegramChannel
 
 
 def _meta(stream_id: str, end: bool = False) -> dict[str, Any]:

@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from deeptutor.knowledge.manager import KnowledgeBaseManager
+from cognispheretutor.knowledge.manager import KnowledgeBaseManager
 
 
 def _external_index(tmp_path: Path) -> Path:

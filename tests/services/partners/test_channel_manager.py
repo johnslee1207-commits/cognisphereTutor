@@ -7,9 +7,9 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from deeptutor.partners.bus.events import OutboundMessage
-from deeptutor.partners.channels.manager import ChannelManager
-from deeptutor.partners.config.schema import ChannelsConfig
+from cognispheretutor.partners.bus.events import OutboundMessage
+from cognispheretutor.partners.channels.manager import ChannelManager
+from cognispheretutor.partners.config.schema import ChannelsConfig
 
 
 class _OneShotBus:
@@ -111,7 +111,7 @@ async def _dispatch_many(
 class TestSendRetry:
     @pytest.mark.asyncio
     async def test_send_retries_on_failure_then_succeeds(self, monkeypatch):
-        monkeypatch.setattr("deeptutor.partners.channels.manager._SEND_RETRY_DELAYS", (0, 0, 0))
+        monkeypatch.setattr("cognispheretutor.partners.channels.manager._SEND_RETRY_DELAYS", (0, 0, 0))
         msg = OutboundMessage(channel="zulip", chat_id="1", content="hi")
         channel = _DummyChannel()
         channel.send.side_effect = [RuntimeError("boom"), None]
@@ -123,7 +123,7 @@ class TestSendRetry:
 
     @pytest.mark.asyncio
     async def test_send_gives_up_after_max_retries(self, monkeypatch):
-        monkeypatch.setattr("deeptutor.partners.channels.manager._SEND_RETRY_DELAYS", (0, 0, 0))
+        monkeypatch.setattr("cognispheretutor.partners.channels.manager._SEND_RETRY_DELAYS", (0, 0, 0))
         msg = OutboundMessage(channel="zulip", chat_id="1", content="hi")
         channel = _DummyChannel()
         channel.send.side_effect = RuntimeError("boom")
@@ -235,8 +235,8 @@ class TestStreamDispatch:
 
 
 def test_channel_registry_discovers_builtin_channels() -> None:
-    from deeptutor.partners.channels.base import BaseChannel
-    from deeptutor.partners.channels.registry import discover_all, discover_channel_names
+    from cognispheretutor.partners.channels.base import BaseChannel
+    from cognispheretutor.partners.channels.registry import discover_all, discover_channel_names
 
     names = set(discover_channel_names())
     assert {"telegram", "slack", "discord", "zulip"} <= names

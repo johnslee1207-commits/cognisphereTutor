@@ -14,22 +14,22 @@ from typing import Any
 import httpx
 import pytest
 
-from deeptutor.services.config.provider_runtime import (
+from cognispheretutor.services.config.provider_runtime import (
     resolve_imagegen_runtime_config,
     resolve_videogen_runtime_config,
 )
-from deeptutor.services.generation_http import (
+from cognispheretutor.services.generation_http import (
     GenerationProviderError,
     build_auth_headers,
     join_api_path,
 )
-from deeptutor.services.imagegen import generate_image
-from deeptutor.services.imagegen.adapters.chat_completions import ChatCompletionsImagegenAdapter
-from deeptutor.services.imagegen.adapters.openai_compat import OpenAICompatImagegenAdapter
-from deeptutor.services.imagegen.config import ImagegenConfig
-from deeptutor.services.videogen import generate_video, probe_video
-from deeptutor.services.videogen.adapters.async_task import AsyncTaskVideogenAdapter
-from deeptutor.services.videogen.config import VideogenConfig
+from cognispheretutor.services.imagegen import generate_image
+from cognispheretutor.services.imagegen.adapters.chat_completions import ChatCompletionsImagegenAdapter
+from cognispheretutor.services.imagegen.adapters.openai_compat import OpenAICompatImagegenAdapter
+from cognispheretutor.services.imagegen.config import ImagegenConfig
+from cognispheretutor.services.videogen import generate_video, probe_video
+from cognispheretutor.services.videogen.adapters.async_task import AsyncTaskVideogenAdapter
+from cognispheretutor.services.videogen.config import VideogenConfig
 
 
 def _patch_http(
@@ -307,9 +307,9 @@ async def test_imagegen_tool_saves_public_artifact(monkeypatch: pytest.MonkeyPat
     """
     import shutil
 
-    import deeptutor.services.imagegen as imagegen_mod
-    from deeptutor.services.path_service import get_path_service
-    from deeptutor.tools.media_gen_tool import ImagegenTool
+    import cognispheretutor.services.imagegen as imagegen_mod
+    from cognispheretutor.services.path_service import get_path_service
+    from cognispheretutor.tools.media_gen_tool import ImagegenTool
 
     async def fake_generate_image(prompt: str, **_kwargs: Any) -> list[tuple[bytes, str]]:
         return [(b"\x89PNG\r\n\x1a\nfake", "image/png")]
@@ -339,9 +339,9 @@ async def test_imagegen_tool_without_injected_workspace_uses_public_fallback(
     """Direct tool calls still need a real public workspace, not a phantom agent dir."""
     import shutil
 
-    import deeptutor.services.imagegen as imagegen_mod
-    from deeptutor.services.path_service import get_path_service
-    from deeptutor.tools.media_gen_tool import ImagegenTool
+    import cognispheretutor.services.imagegen as imagegen_mod
+    from cognispheretutor.services.path_service import get_path_service
+    from cognispheretutor.tools.media_gen_tool import ImagegenTool
 
     async def fake_generate_image(prompt: str, **_kwargs: Any) -> list[tuple[bytes, str]]:
         return [(b"\x89PNG\r\n\x1a\nfake", "image/png")]
@@ -366,9 +366,9 @@ async def test_videogen_tool_forwards_progress_and_saves(monkeypatch: pytest.Mon
     watchdog during long renders) and save the video to a public path."""
     import shutil
 
-    from deeptutor.services.path_service import get_path_service
-    import deeptutor.services.videogen as videogen_mod
-    from deeptutor.tools.media_gen_tool import VideogenTool
+    from cognispheretutor.services.path_service import get_path_service
+    import cognispheretutor.services.videogen as videogen_mod
+    from cognispheretutor.tools.media_gen_tool import VideogenTool
 
     async def fake_generate_video(
         prompt: str, *, progress: Any = None, **_kwargs: Any

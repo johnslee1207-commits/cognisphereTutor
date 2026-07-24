@@ -5,8 +5,8 @@ from __future__ import annotations
 from fastapi import HTTPException
 import pytest
 
-from deeptutor.multi_user import partner_access
-from deeptutor.multi_user.grants import empty_grant, normalize_grant
+from cognispheretutor.multi_user import partner_access
+from cognispheretutor.multi_user.grants import empty_grant, normalize_grant
 
 
 class _FakeManager:
@@ -18,7 +18,7 @@ class _FakeManager:
 
 
 def _patch_manager(monkeypatch, partners: list[dict]) -> None:
-    import deeptutor.services.partners as pkg
+    import cognispheretutor.services.partners as pkg
 
     monkeypatch.setattr(pkg, "get_partner_manager", lambda: _FakeManager(partners))
 
@@ -123,7 +123,7 @@ def test_non_admin_with_no_grant_sees_nothing(as_user, monkeypatch):
 
 
 def test_admin_partner_summary_is_identity_only(monkeypatch):
-    from deeptutor.multi_user import router
+    from cognispheretutor.multi_user import router
 
     _patch_manager(
         monkeypatch,

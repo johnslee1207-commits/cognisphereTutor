@@ -1,6 +1,6 @@
-# DeepTutor Containerization
+# cognisphereTutor Containerization
 
-This document covers deploying DeepTutor from a container image: the
+This document covers deploying cognisphereTutor from a container image: the
 recommended `docker run` path, the hardened rootless-Podman path with a
 read-only root filesystem, runtime configuration, the optional PocketBase
 sidecar, and the security notes that motivate the default posture.
@@ -12,7 +12,7 @@ file is only about running the published image.
 
 ## Overview
 
-The published `ghcr.io/hkuds/deeptutor` image runs both the FastAPI
+The published `ghcr.io/hkuds/cognispheretutor` image runs both the FastAPI
 backend (`:8001`) and the Next.js frontend (`:3782`) under `supervisord`
 inside a single container, on top of `python:3.11-slim`. There is one
 data tree (`/app/data` inside the container) that holds settings,
@@ -38,13 +38,13 @@ no longer lives in the frontend bundle. Concretely:
   `wsUrl` as one-line pass-throughs, so the browser fetches relative
   paths through the frontend (`:3782/api/...`).
 - `web/proxy.ts` catches `/api/*` and `/ws/*` and rewrites them to
-  `DEEPTUTOR_API_BASE_URL` at request time. That env var is set by the
+  `COGNISPHERETUTOR_API_BASE_URL` at request time. That env var is set by the
   container entrypoint on every start, read from
   `data/user/settings/system.json`.
 - `start-frontend.sh` is now 12 lines: it sets `PORT`/`HOSTNAME` and
   `exec`s `node /app/web/server.js`. No mutations of the bundle.
 - `supervisord` runs as root (PID 1) and drops each program (backend,
-  frontend) to a non-root `deeptutor` user (UID 1000) via its per-program
+  frontend) to a non-root `cognispheretutor` user (UID 1000) via its per-program
   `user=` directive, so the app processes stay non-root. With
   `userns_mode: keep-id` on the host that UID maps to your host UID; with a
   regular `docker run` it's a normal unprivileged user inside the container.
@@ -59,23 +59,23 @@ The simplest possible deployment. One container, one volume, two port
 mappings.
 
 ```bash
-docker run --rm --name deeptutor \
+docker run --rm --name cognispheretutor \
   -p 127.0.0.1:3782:3782 \
-  -v deeptutor-data:/app/data \
-  ghcr.io/hkuds/deeptutor:latest
+  -v cognispheretutor-data:/app/data \
+  ghcr.io/hkuds/cognispheretutor:latest
 ```
 
 Open <http://127.0.0.1:3782>. The container creates
 `/app/data/user/settings/*.json` on first boot; configure model providers
 from the Web Settings page. Config, API keys, logs, workspace files,
-memory, and knowledge bases persist in the `deeptutor-data` named volume.
+memory, and knowledge bases persist in the `cognispheretutor-data` named volume.
 
 Notes:
 
 - **Only `3782` needs to be published.** The browser talks exclusively to
   the frontend origin (`:3782`); all `/api/*` and `/ws/*` traffic is
   forwarded to the FastAPI backend **inside the container** by the Next.js
-  middleware (`web/proxy.ts`), which reads `DEEPTUTOR_API_BASE_URL`
+  middleware (`web/proxy.ts`), which reads `COGNISPHERETUTOR_API_BASE_URL`
   (`http://localhost:8001` by default) at request time. You do **not** need
   to expose `:8001` to the host for the UI to work. Publishing `:8001`
   (`-p 127.0.0.1:8001:8001`) is optional — handy only for hitting the API
@@ -85,9 +85,9 @@ Notes:
   ports in `data/user/settings/system.json` (`backend_port`,
   `frontend_port`), restart the container and update the right side of
   each mapping to match.
-- **Detached:** add `-d`, then `docker logs -f deeptutor` to follow,
-  `docker stop deeptutor` to stop, `docker rm deeptutor` before reusing
-  the name. The `deeptutor-data` volume keeps your settings and workspace
+- **Detached:** add `-d`, then `docker logs -f cognispheretutor` to follow,
+  `docker stop cognispheretutor` to stop, `docker rm cognispheretutor` before reusing
+  the name. The `cognispheretutor-data` volume keeps your settings and workspace
   across restarts.
 
 ### Remote / reverse-proxy deployments
@@ -95,14 +95,14 @@ Notes:
 For the common **single-container** case (this image), you do **not** need
 to configure an API base at all. The browser issues relative `/api/*` and
 `/ws/*` requests against whatever origin serves the UI
-(`https://deeptutor.example.com`), and the in-container Next.js middleware
+(`https://cognispheretutor.example.com`), and the in-container Next.js middleware
 forwards them to the backend on `localhost:8001`. Just point your reverse
 proxy / TLS terminator at the published `:3782` and you're done.
 
 You only need to set an API base for a **split deployment** where the
 backend runs in a separate container. Edit `data/user/settings/system.json`
-on the host (inside the `deeptutor-data` volume — `docker volume inspect
-deeptutor-data` to find its mountpoint) and set the in-network address the
+on the host (inside the `cognispheretutor-data` volume — `docker volume inspect
+cognispheretutor-data` to find its mountpoint) and set the in-network address the
 frontend container uses to reach the backend container:
 
 ```json
@@ -112,20 +112,20 @@ frontend container uses to reach the backend container:
 ```
 
 The entrypoint reads this on every start and exports
-`DEEPTUTOR_API_BASE_URL` for `proxy.ts` (precedence: `next_public_api_base`,
+`COGNISPHERETUTOR_API_BASE_URL` for `proxy.ts` (precedence: `next_public_api_base`,
 then `next_public_api_base_external`, then `http://localhost:8001`). Note
-that because the proxy is **server-side**, `DEEPTUTOR_API_BASE_URL` is the
+that because the proxy is **server-side**, `COGNISPHERETUTOR_API_BASE_URL` is the
 address the frontend *server* uses to reach the backend — not a URL the
 browser ever sees. `public_api_base` is accepted as a compatibility alias
 and normalized into `next_public_api_base_external` on save.
 
 CORS uses frontend **origins**, not API URLs. With auth disabled,
-DeepTutor permits normal HTTP/HTTPS browser origins by default. With
+cognisphereTutor permits normal HTTP/HTTPS browser origins by default. With
 auth enabled, add exact frontend origins:
 
 ```json
 {
-  "cors_origins": ["https://deeptutor.example.com"]
+  "cors_origins": ["https://cognispheretutor.example.com"]
 }
 ```
 
@@ -136,11 +136,11 @@ machine. To reach a model service running on the host, use the host
 gateway (recommended):
 
 ```bash
-docker run --rm --name deeptutor \
+docker run --rm --name cognispheretutor \
   -p 127.0.0.1:3782:3782 -p 127.0.0.1:8001:8001 \
   --add-host=host.docker.internal:host-gateway \
-  -v deeptutor-data:/app/data \
-  ghcr.io/hkuds/deeptutor:latest
+  -v cognispheretutor-data:/app/data \
+  ghcr.io/hkuds/cognispheretutor:latest
 ```
 
 Then in **Settings → Models**, point the provider Base URL at
@@ -173,7 +173,7 @@ to loopback breaks the published `-p` port forward.
 
 For users who want the strongest default posture — rootless, with a
 read-only root filesystem — `compose.yaml` is the supported starting
-point. It pulls the same `ghcr.io/hkuds/deeptutor:latest` image and
+point. It pulls the same `ghcr.io/hkuds/cognispheretutor:latest` image and
 relies on the entrypoint chown + supervisord's per-program privilege drop,
 the URL-forwarding `proxy.ts`, and host-side bind mounts to make it all work.
 
@@ -181,7 +181,7 @@ the URL-forwarding `proxy.ts`, and host-side bind mounts to make it all work.
 cp .env.example .env       # then edit if needed
 podman compose -f compose.yaml up -d
 podman compose -f compose.yaml ps
-podman compose -f compose.yaml logs -f deeptutor
+podman compose -f compose.yaml logs -f cognispheretutor
 ```
 
 Verify rootless is active (`podman info | grep -i rootless` should
@@ -193,7 +193,7 @@ What `compose.yaml` does, and why:
   read-only. The only writable surface is the `tmpfs:` mounts listed
   per service plus the bind-mounted `./data` directory.
 - **`userns_mode: keep-id`.** The container's UID 0 maps to your host
-  UID; the container's UID 1000 (the `deeptutor` user inside the image)
+  UID; the container's UID 1000 (the `cognispheretutor` user inside the image)
   maps to your host UID 1000 (which most distros reserve for the first
   human user). The `:U` suffix on every volume mount tells podman to
   chown the bind-mount target to that mapped UID.
@@ -223,7 +223,7 @@ invariants apply if you want to drive `podman run` directly:
 mkdir -p data/user/settings
 echo '{}' > data/user/settings/system.json
 
-podman run --rm -d --name deeptutor \
+podman run --rm -d --name cognispheretutor \
   -p 127.0.0.1:8001:8001 \
   -p 127.0.0.1:3782:3782 \
   -v $(pwd)/data:/app/data:U \
@@ -235,12 +235,12 @@ podman run --rm -d --name deeptutor \
   --tmpfs /root:size=16m,mode=0700 \
   --tmpfs /home:size=16m,mode=0755 \
   --userns=keep-id \
-  ghcr.io/hkuds/deeptutor:latest
+  ghcr.io/hkuds/cognispheretutor:latest
 ```
 
 After the container is up, the backend and frontend always run as the
-non-root `deeptutor` user (UID 1000) — `podman exec deeptutor ps -o user,pid,comm`
-shows the `uvicorn`/`node` children as `deeptutor`. `supervisord` itself
+non-root `cognispheretutor` user (UID 1000) — `podman exec cognispheretutor ps -o user,pid,comm`
+shows the `uvicorn`/`node` children as `cognispheretutor`. `supervisord` itself
 (PID 1) runs as whatever UID the runtime started it with: root under rootful
 Docker/Podman, or the host user under rootless podman + `userns_mode: keep-id`.
 
@@ -248,7 +248,7 @@ Docker/Podman, or the host user under rootless podman + `userns_mode: keep-id`.
 
 The `[supervisord]` section carries **no `user=` directive**, so supervisord
 runs as PID 1's UID and never tries to drop its own privilege; only its child
-programs are dropped to `deeptutor` via the per-program `user=` directives.
+programs are dropped to `cognispheretutor` via the per-program `user=` directives.
 Pinning `user=root` here (an earlier design) broke rootless keep-id, where
 PID 1 is the non-root host user and lacks `CAP_SETUID`: supervisord refuses to
 drop privilege and exits at startup with `Can't drop privilege as nonroot
@@ -287,7 +287,7 @@ The two settings most relevant to a fresh install:
 
 - **`system.json` → `next_public_api_base`** (in-network) and
   **`next_public_api_base_external`** (cloud/external override). The
-  entrypoint reads these and exports `DEEPTUTOR_API_BASE_URL`, which
+  entrypoint reads these and exports `COGNISPHERETUTOR_API_BASE_URL`, which
   `web/proxy.ts` consumes. `public_api_base` is accepted as a
   compatibility alias and is normalized into
   `next_public_api_base_external` on save.
@@ -307,7 +307,7 @@ JSON/YAML files; deep links to each section live in the page sidebar.
 PocketBase is an optional auth + storage sidecar. Activate it by setting
 `integrations.pocketbase_url` to `http://pocketbase:8090` in
 `data/user/settings/integrations.json` and bringing the `pocketbase`
-service up alongside the main `deeptutor` service. With it running, the
+service up alongside the main `cognispheretutor` service. With it running, the
 main app stores user accounts and sessions in PocketBase instead of
 falling back to the SQLite single-user layout.
 
@@ -335,8 +335,8 @@ current image (or, on an old one, set the `/var/run` tmpfs to `mode=1777`).
 
 **Page loads but Settings says "Backend unreachable".** The UI reaches the
 backend through the in-container proxy, not a host port, so this is almost
-always a backend that failed to start (check `docker logs deeptutor` for the
-`[program:backend]` lines) or a wrong `DEEPTUTOR_API_BASE_URL` in a split
+always a backend that failed to start (check `docker logs cognispheretutor` for the
+`[program:backend]` lines) or a wrong `COGNISPHERETUTOR_API_BASE_URL` in a split
 deployment — **not** a missing `:8001` host mapping (which the UI does not
 need).
 
@@ -352,7 +352,7 @@ directory you own, or use `:U` on the volume mount.
 **`sed -i` errors on a fresh image.** There shouldn't be any — the
 runtime no longer mutates the bundle. The URL is forwarded at request
 time. If you see one, you are probably on an older image; pull
-`ghcr.io/hkuds/deeptutor:latest` again.
+`ghcr.io/hkuds/cognispheretutor:latest` again.
 
 **Settings page won't accept the API base URL.** Open
 `data/user/settings/system.json` on the host and set
@@ -364,7 +364,7 @@ renormalized on save.
 
 ## Security notes
 
-- The image drops privileges to a non-root `deeptutor` user (UID 1000)
+- The image drops privileges to a non-root `cognispheretutor` user (UID 1000)
   before starting `supervisord`. Anything that runs as root is the
   entrypoint, the chown, and the env-var export.
 - `read_only: true` plus `tmpfs:` for the expected writable system
@@ -382,7 +382,7 @@ renormalized on save.
   `sandbox_allow_subprocess`.
 - Auth (`data/user/settings/auth.json` → `auth_enabled = true`) gates
   `/api/*` and `/ws/*` via the `dt_token` cookie. `web/proxy.ts` reads
-  `DEEPTUTOR_AUTH_ENABLED` (exported by the entrypoint on every start)
+  `COGNISPHERETUTOR_AUTH_ENABLED` (exported by the entrypoint on every start)
   to decide whether to require the cookie.
 - CORS uses frontend **origins**, not API URLs. With auth enabled, set
   `cors_origins` in `system.json` to the exact frontend origins the

@@ -5,14 +5,14 @@ from __future__ import annotations
 from fastapi import HTTPException
 import pytest
 
-from deeptutor.multi_user import grants as grants_mod
-from deeptutor.multi_user.skill_access import (
+from cognispheretutor.multi_user import grants as grants_mod
+from cognispheretutor.multi_user.skill_access import (
     assert_skill_allowed,
     assigned_skill_detail,
     assigned_skill_ids,
     assigned_skill_infos,
 )
-from deeptutor.services.skill.service import SkillService
+from cognispheretutor.services.skill.service import SkillService
 
 
 def _write_skill(workspace_dir, name: str, body: str) -> None:

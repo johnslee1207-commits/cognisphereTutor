@@ -6,10 +6,10 @@ import os
 
 import pytest
 
-from deeptutor.services.config.provider_runtime import ResolvedLLMConfig
-from deeptutor.services.llm import config as config_module
-from deeptutor.services.llm.config import LLMConfig
-from deeptutor.services.llm.exceptions import LLMConfigError
+from cognispheretutor.services.config.provider_runtime import ResolvedLLMConfig
+from cognispheretutor.services.llm import config as config_module
+from cognispheretutor.services.llm.config import LLMConfig
+from cognispheretutor.services.llm.exceptions import LLMConfigError
 
 
 def _reset_config_cache() -> None:

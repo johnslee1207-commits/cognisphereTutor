@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-from deeptutor.agents.question.agents.followup_agent import FollowupAgent
+from cognispheretutor.agents.question.agents.followup_agent import FollowupAgent
 
 
 class CaptureFollowupAgent(FollowupAgent):

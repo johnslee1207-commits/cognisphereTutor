@@ -50,13 +50,13 @@ def render_docker_env(
     system = _read_json_object(settings_dir / "system.json")
     integrations = _read_json_object(settings_dir / "integrations.json")
     values = {
-        "DEEPTUTOR_DOCKER_BACKEND_PORT": str(
+        "COGNISPHERETUTOR_DOCKER_BACKEND_PORT": str(
             _coerce_port(system.get("backend_port"), DEFAULT_BACKEND_PORT)
         ),
-        "DEEPTUTOR_DOCKER_FRONTEND_PORT": str(
+        "COGNISPHERETUTOR_DOCKER_FRONTEND_PORT": str(
             _coerce_port(system.get("frontend_port"), DEFAULT_FRONTEND_PORT)
         ),
-        "DEEPTUTOR_DOCKER_POCKETBASE_PORT": str(
+        "COGNISPHERETUTOR_DOCKER_POCKETBASE_PORT": str(
             _coerce_port(integrations.get("pocketbase_port"), DEFAULT_POCKETBASE_PORT)
         ),
     }
@@ -85,9 +85,9 @@ def main(argv: list[str] | None = None) -> int:
     values = render_docker_env()
     print(
         "Docker settings: "
-        f"backend={values['DEEPTUTOR_DOCKER_BACKEND_PORT']} "
-        f"frontend={values['DEEPTUTOR_DOCKER_FRONTEND_PORT']} "
-        f"pocketbase={values['DEEPTUTOR_DOCKER_POCKETBASE_PORT']}",
+        f"backend={values['COGNISPHERETUTOR_DOCKER_BACKEND_PORT']} "
+        f"frontend={values['COGNISPHERETUTOR_DOCKER_FRONTEND_PORT']} "
+        f"pocketbase={values['COGNISPHERETUTOR_DOCKER_POCKETBASE_PORT']}",
         file=sys.stderr,
     )
 

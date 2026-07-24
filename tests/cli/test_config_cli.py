@@ -6,14 +6,14 @@ from types import SimpleNamespace
 
 from typer.testing import CliRunner
 
-from deeptutor_cli.main import app
+from cognispheretutor_cli.main import app
 
 runner = CliRunner()
 
 
 def test_config_show_handles_missing_embedding(monkeypatch) -> None:
     """CLI-only defaults skip embedding setup, so config show must not traceback."""
-    import deeptutor.services.config as config
+    import cognispheretutor.services.config as config
 
     monkeypatch.setattr(
         config,

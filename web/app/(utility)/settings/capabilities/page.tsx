@@ -12,7 +12,7 @@ import {
 } from "@/components/settings/shared";
 import { useSettings } from "@/components/settings/SettingsContext";
 
-// ── Shape mirrors deeptutor/services/config/capabilities_settings.py ──────
+// ── Shape mirrors cognispheretutor/services/config/capabilities_settings.py ──────
 
 interface SimpleLLMBlock {
   temperature: number;

@@ -1,0 +1,76 @@
+{
+  "contract_id": "deeptutor.cognisphere.plugin_contract.v1",
+  "schema_id": "cognisphere.learning_plugin.install_manifest.v1",
+  "plugins_root_env": "COGNISPHERE_LEARNING_PLUGINS_ROOT",
+  "install_profile_env": "COGNISPHERE_LEARNING_PLUGINS_INSTALL_PROFILE",
+  "leetcode_artifact_dir_env": "COGNISPHERE_LEETCODE_ARTIFACT_DIR",
+  "sandbox_authorized_env": "COGNISPHERE_LEETCODE_SANDBOX_AUTHORIZED",
+  "sandbox_authorized_value": "1",
+  "import_cache_env": "COGNISPHERE_IMPORT_CACHE_DIR",
+  "trusted_context_base_url_env": "COGNISPHERE_TRUSTED_CONTEXT_BASE_URL",
+  "default_sibling_name": "CognisphereLearningPlugins",
+  "install_registry_relative_path": "manifests/install_registry.json",
+  "sdk_import_root_relative_path": "packages/cognisphere_plugin_sdk/src",
+  "plugin_src_relative_template": "plugins/{domain}/src",
+  "learning_loop_mapping_manifest": "learning_loop_mapping.json",
+  "trusted_context_contract_manifest": "trusted_context_contract.json",
+  "runtime_adapters_manifest": "runtime_adapters.json",
+  "runtime_state_relative_workspace_path": "cognisphere_runtime",
+  "required_manifest_keys": [
+    "plugin_id",
+    "domain",
+    "version",
+    "cognisphere_entrypoint",
+    "deeptutor_entrypoint"
+  ],
+  "known_capabilities": [
+    "ontology",
+    "patterns",
+    "rules",
+    "benchmark",
+    "evidence",
+    "socratic_tutor",
+    "code_verification",
+    "mistake_memory",
+    "skill_graph",
+    "synthetic_factory",
+    "deeptutor_export"
+  ],
+  "forbidden_in_plugin": [
+    "ui",
+    "user_management",
+    "pageindex_core",
+    "tenant_security_core"
+  ],
+  "required_deeptutor_funcs": [
+    "export_deeptutor_package",
+    "validate_adapter",
+    "negotiate_capabilities"
+  ],
+  "required_cognisphere_funcs": [
+    "get_plugin_info",
+    "validate",
+    "status"
+  ],
+  "allowed_source_of_truth": [
+    "cognisphere_plugin_pack",
+    "cognisphere"
+  ],
+  "handoff": {
+    "bundle_schema_version": "1",
+    "required_top_level_keys": [
+      "bundle_id",
+      "domain",
+      "plugin_id",
+      "exported_at",
+      "knowledge",
+      "safety"
+    ],
+    "required_safety_keys": [
+      "no_answer_keys",
+      "no_full_solution_dump",
+      "source_of_truth"
+    ],
+    "legacy_timestamp_keys": ["generated_at", "exported_at"]
+  }
+}

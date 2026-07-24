@@ -1,4 +1,4 @@
-# DeepTutor v1.4.0-beta Release Notes
+# cognisphereTutor v1.4.0-beta Release Notes
 
 **Release Date:** 2026.05.21
 
@@ -191,7 +191,7 @@ fixed in a focused pass (#474, #465).
 
 ### Environment Settings, Installer, and Local Launcher
 The install + launch story has been rewritten to remove the `.env` parsing
-maze and make `deeptutor start` / `deeptutor init` first-class.
+maze and make `cognispheretutor start` / `cognispheretutor init` first-class.
 
 - **`runtime_settings.py`** — system / auth / launch settings now live in
   one typed module with explicit defaults (`backend_port`, `frontend_port`,
@@ -202,10 +202,10 @@ maze and make `deeptutor start` / `deeptutor init` first-class.
   backend + frontend lifecycle, port discovery, readiness probes, and
   cleanup. Generates `web/.env.local` so the Next.js frontend always picks
   up the resolved backend port.
-- **`deeptutor/runtime/banner.py`** — localized startup banner shared
-  between `deeptutor start` and `deeptutor init`; reads the language
+- **`cognispheretutor/runtime/banner.py`** — localized startup banner shared
+  between `cognispheretutor start` and `cognispheretutor init`; reads the language
   preference from interface settings so the banner matches the UI locale.
-- **`init_wizard.py`** — interactive `deeptutor init` wizard with provider
+- **`init_wizard.py`** — interactive `cognispheretutor init` wizard with provider
   menu, env-var auto-detect for API keys, live `GET {base_url}/models`
   fetch, curated fallback list, and an optional connectivity probe before
   save.
@@ -271,9 +271,9 @@ and a self-subscribe feature (#480).
   `data/user/settings/`. The legacy `env_store` shim is gone; if you
   scripted `.env` writes externally, point them at
   `runtime_settings.py` or the `/settings` API instead.
-- **`deeptutor start` is the recommended launcher** — `start_web.py` /
+- **`cognispheretutor start` is the recommended launcher** — `start_web.py` /
   `start_tour.py` continue to work but are now thin wrappers around the
-  new `runtime/launcher.py`. Run `deeptutor init` once to seed providers
+  new `runtime/launcher.py`. Run `cognispheretutor init` once to seed providers
   and credentials on a fresh machine.
 - **Animator menu users** — point at **Visualize** instead. The
   capability now picks Manim automatically when the user asks for a
@@ -289,4 +289,4 @@ and a self-subscribe feature (#480).
   Memory v2, settings split). Pin to `v1.4.0-beta` for production until
   the GA cut; bug reports against any of the new modules are welcome.
 
-**Full Changelog**: https://github.com/HKUDS/DeepTutor/compare/v1.3.10...v1.4.0-beta
+**Full Changelog**: https://github.com/HKUDS/cognisphereTutor/compare/v1.3.10...v1.4.0-beta

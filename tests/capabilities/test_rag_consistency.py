@@ -24,10 +24,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from deeptutor.agents.chat.agentic_pipeline import AgenticChatPipeline
-from deeptutor.core.context import UnifiedContext
-from deeptutor.core.stream import StreamEvent, StreamEventType
-from deeptutor.core.stream_bus import StreamBus
+from cognispheretutor.agents.chat.agentic_pipeline import AgenticChatPipeline
+from cognispheretutor.core.context import UnifiedContext
+from cognispheretutor.core.stream import StreamEvent, StreamEventType
+from cognispheretutor.core.stream_bus import StreamBus
 
 
 async def _drain(bus: StreamBus, task) -> list[StreamEvent]:
@@ -52,11 +52,11 @@ def _fake_llm_config() -> MagicMock:
 def _solve_pipeline(monkeypatch: pytest.MonkeyPatch) -> AgenticChatPipeline:
     """A bare pipeline whose only wired surface is tool composition."""
     monkeypatch.setattr(
-        "deeptutor.services.memory.get_memory_store",
+        "cognispheretutor.services.memory.get_memory_store",
         lambda: SimpleNamespace(read_raw=lambda *_a, **_k: ""),
     )
     monkeypatch.setattr(
-        "deeptutor.services.notebook.get_notebook_manager",
+        "cognispheretutor.services.notebook.get_notebook_manager",
         lambda: SimpleNamespace(list_notebooks=lambda: []),
     )
     pipeline = AgenticChatPipeline.__new__(AgenticChatPipeline)
@@ -109,7 +109,7 @@ async def test_deep_research_forwards_enabled_tools_and_kb_unchanged() -> None:
     and the attached KB (``kb_name``) through to the pipeline as-is. There
     is no per-source gating: ``compose_enabled_tools`` (run inside the
     pipeline) is the single arbiter of what the block loop sees."""
-    from deeptutor.agents.research.capability import DeepResearchCapability
+    from cognispheretutor.agents.research.capability import DeepResearchCapability
 
     captured_kwargs: dict[str, Any] = {}
 
@@ -142,15 +142,15 @@ async def test_deep_research_forwards_enabled_tools_and_kb_unchanged() -> None:
 
     with (
         patch(
-            "deeptutor.agents.research.capability.ResearchPipeline",
+            "cognispheretutor.agents.research.capability.ResearchPipeline",
             new=_FakePipeline,
         ),
         patch(
-            "deeptutor.services.llm.config.get_llm_config",
+            "cognispheretutor.services.llm.config.get_llm_config",
             return_value=_fake_llm_config(),
         ),
         patch(
-            "deeptutor.agents.research.capability.load_config_with_main",
+            "cognispheretutor.agents.research.capability.load_config_with_main",
             return_value={},
         ),
     ):

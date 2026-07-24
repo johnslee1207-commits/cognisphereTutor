@@ -108,9 +108,9 @@ const SECONDARY_NAV: NavEntry[] = [
   },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
-const GITHUB_REPO_URL = "https://github.com/HKUDS/DeepTutor";
-const DOCS_URL = "https://deeptutor.info/";
-const RECENTS_COLLAPSED_KEY = "deeptutor.sidebar.recentsCollapsed";
+const GITHUB_REPO_URL = "https://github.com/HKUDS/cognisphereTutor";
+const DOCS_URL = "https://cognispheretutor.info/";
+const RECENTS_COLLAPSED_KEY = "cognispheretutor.sidebar.recentsCollapsed";
 
 interface SidebarShellProps {
   sessions?: SessionSummary[];
@@ -193,12 +193,12 @@ export function SidebarShell({
         <div className="relative mb-2 flex h-9 w-9 items-center justify-center">
           <Link
             href="/"
-            aria-label="DeepTutor"
+            aria-label="cognisphereTutor"
             className="flex items-center justify-center transition-opacity duration-150 group-hover/sb:opacity-0"
           >
             <Image
               src="/logo.png"
-              alt="DeepTutor"
+              alt="cognisphereTutor"
               width={22}
               height={22}
               className="h-[22px] w-[22px] rounded-md"
@@ -327,14 +327,14 @@ export function SidebarShell({
         <Link href="/" className="group flex items-center gap-1.5">
           <Image
             src="/logo.png"
-            alt="DeepTutor"
+            alt="cognisphereTutor"
             width={22}
             height={22}
             className="h-[22px] w-[22px] transition-transform duration-200 group-hover:scale-105"
           />
           <Image
             src="/banner.png"
-            alt="DeepTutor"
+            alt="cognisphereTutor"
             width={897}
             height={236}
             priority

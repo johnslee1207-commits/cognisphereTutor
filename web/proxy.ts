@@ -9,14 +9,14 @@ import {
 } from "./lib/proxy-policy";
 
 // Backend base URL for `/api/*` and `/ws/*` rewrites. The container entrypoint
-// exports `DEEPTUTOR_API_BASE_URL` from `data/user/settings/system.json`
+// exports `COGNISPHERETUTOR_API_BASE_URL` from `data/user/settings/system.json`
 // (preferring `next_public_api_base`, then `next_public_api_base_external`,
-// then `http://localhost:${BACKEND_PORT}`). In dev (`deeptutor start`) it
+// then `http://localhost:${BACKEND_PORT}`). In dev (`cognispheretutor start`) it
 // defaults to `http://localhost:8001`.
 const API_BASE_URL =
-  process.env.DEEPTUTOR_API_BASE_URL ?? "http://localhost:8001";
+  process.env.COGNISPHERETUTOR_API_BASE_URL ?? "http://localhost:8001";
 
-const AUTH_ENABLED = parseAuthEnabled(process.env.DEEPTUTOR_AUTH_ENABLED);
+const AUTH_ENABLED = parseAuthEnabled(process.env.COGNISPHERETUTOR_AUTH_ENABLED);
 
 // Redirect to the login page, preserving the intended destination in `next`.
 // A present-but-invalid cookie is cleared so the browser stops resending it;

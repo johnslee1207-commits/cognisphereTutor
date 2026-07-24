@@ -8,12 +8,12 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from deeptutor.api.routers._partners_channel_schema import all_channel_schemas
-from deeptutor.partners.bus.events import OutboundMessage
-from deeptutor.partners.bus.queue import MessageBus
-from deeptutor.partners.channels import weixin as weixin_mod
-from deeptutor.partners.channels.registry import discover_all, discover_channel_names
-from deeptutor.partners.channels.weixin import (
+from cognispheretutor.api.routers._partners_channel_schema import all_channel_schemas
+from cognispheretutor.partners.bus.events import OutboundMessage
+from cognispheretutor.partners.bus.queue import MessageBus
+from cognispheretutor.partners.channels import weixin as weixin_mod
+from cognispheretutor.partners.channels.registry import discover_all, discover_channel_names
+from cognispheretutor.partners.channels.weixin import (
     CONTEXT_TOKEN_MAX_AGE_S,
     ITEM_IMAGE,
     ITEM_TEXT,
@@ -241,7 +241,7 @@ class TestOutbound:
         assert body["msg"]["to_user_id"] == "wx-user-1"
         assert body["msg"]["context_token"] == "ctx-1"
         assert body["msg"]["item_list"][0]["text_item"]["text"] == "hello"
-        assert body["msg"]["client_id"].startswith("deeptutor-")
+        assert body["msg"]["client_id"].startswith("cognispheretutor-")
 
     @pytest.mark.asyncio
     async def test_send_text_raises_api_error(self, state_dir):

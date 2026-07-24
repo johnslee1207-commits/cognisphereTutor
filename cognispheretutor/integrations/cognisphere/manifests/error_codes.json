@@ -1,0 +1,97 @@
+{
+  "contract_id": "deeptutor.cognisphere.error_codes.v1",
+  "codes": {
+    "plugins_root_missing": {
+      "meaning": "Learning plugins monorepo root path does not exist",
+      "handling": "Block import; prompt to set COGNISPHERE_LEARNING_PLUGINS_ROOT"
+    },
+    "install_registry_missing": {
+      "meaning": "manifests/install_registry.json is missing",
+      "handling": "Block discovery"
+    },
+    "missing_plugin_manifest": {
+      "meaning": "Domain folder lacks plugin_manifest.json",
+      "handling": "Skip domain or block"
+    },
+    "unknown_capability": {
+      "meaning": "Manifest lists a capability outside the known set",
+      "handling": "Refuse to load that plugin"
+    },
+    "missing_deeptutor_func": {
+      "meaning": "cognisphereTutor entrypoint is missing a required function",
+      "handling": "validate_adapter fails"
+    },
+    "missing_top_level": {
+      "meaning": "Export bundle missing a required top-level key",
+      "handling": "Reject import"
+    },
+    "missing_safety": {
+      "meaning": "Export bundle safety object missing a required key",
+      "handling": "Reject import"
+    },
+    "unexpected_source_of_truth": {
+      "meaning": "safety.source_of_truth is not an allowed Cognisphere value",
+      "handling": "Reject import"
+    },
+    "forbidden_verified_code_solutions_included": {
+      "meaning": "Bundle includes verified code solutions",
+      "handling": "Reject import"
+    },
+    "forbidden_full_official_statements_included": {
+      "meaning": "Bundle includes full official problem statements",
+      "handling": "Reject import"
+    },
+    "tutor_must_ask_not_spoil": {
+      "meaning": "Asks-not-spoils safety gate failed",
+      "handling": "Reject import / session"
+    },
+    "sandbox_unauthorized": {
+      "meaning": "Sandbox live execution not authorized",
+      "handling": "Fail-closed; allow offline simulated only"
+    },
+    "graphql_unauthorized": {
+      "meaning": "Live GraphQL gate closed",
+      "handling": "Fail-closed"
+    },
+    "llm_unauthorized": {
+      "meaning": "Live LLM tutor/interviewer gate closed",
+      "handling": "Fail-closed"
+    },
+    "lc003_ontology_missing": {
+      "meaning": "Export depends on missing ontology artifacts",
+      "handling": "Prompt host ontology/sync first"
+    },
+    "production_candidate_blocked": {
+      "meaning": "Cognisphere production-candidate readiness blocked",
+      "handling": "Forbid production integration"
+    },
+    "domain_not_found": {
+      "meaning": "Requested domain is not discoverable",
+      "handling": "Return structured error"
+    },
+    "entrypoint_import_failed": {
+      "meaning": "Failed to import plugin entrypoint module",
+      "handling": "Surface import error; check PYTHONPATH / plugins root"
+    },
+    "export_failed": {
+      "meaning": "Plugin export_deeptutor_package failed or returned ok=false",
+      "handling": "Reject import; inspect plugin / host ontology prerequisites"
+    },
+    "export_envelope_invalid": {
+      "meaning": "Export envelope missing bundle object",
+      "handling": "Reject import"
+    },
+    "trusted_context_kit_unavailable": {
+      "meaning": "Trusted-context kit base URL / credentials not configured",
+      "handling": "Fail-closed live fetch; use offline package import path"
+    },
+    "trusted_context_invalid": {
+      "meaning": "Trusted-context package failed validation",
+      "handling": "Reject workspace import"
+    },
+    "benchmark_unavailable": {
+      "meaning": "Interview/benchmark import not available for domain",
+      "handling": "Skip or stub until plugin P5 surfaces land"
+    }
+  }
+}

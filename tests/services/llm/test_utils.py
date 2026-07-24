@@ -2,7 +2,7 @@
 
 import pytest
 
-from deeptutor.services.llm.utils import (
+from cognispheretutor.services.llm.utils import (
     build_auth_headers,
     build_chat_url,
     build_completion_url,

@@ -4,8 +4,8 @@ import zipfile
 
 import pytest
 
-from deeptutor.services.parsing.engines import factory
-from deeptutor.services.parsing.types import ParserError
+from cognispheretutor.services.parsing.engines import factory
+from cognispheretutor.services.parsing.types import ParserError
 
 
 def test_known_engines() -> None:
@@ -52,7 +52,7 @@ def test_text_only_parser_extracts_docx_text(tmp_path) -> None:
             """
             <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
               <w:body>
-                <w:p><w:r><w:t>Hello DeepTutor</w:t></w:r></w:p>
+                <w:p><w:r><w:t>Hello cognisphereTutor</w:t></w:r></w:p>
               </w:body>
             </w:document>
             """.strip(),
@@ -62,12 +62,12 @@ def test_text_only_parser_extracts_docx_text(tmp_path) -> None:
     workdir.mkdir()
     parser.parse(docx, workdir, config={})
 
-    assert (workdir / "lesson.md").read_text(encoding="utf-8") == "Hello DeepTutor"
+    assert (workdir / "lesson.md").read_text(encoding="utf-8") == "Hello cognisphereTutor"
 
 
 def test_mineru_signature_distinguishes_local_and_cloud() -> None:
     parser = factory.get_parser("mineru")
-    from deeptutor.services.parsing.engines.mineru.config import MinerUConfig
+    from cognispheretutor.services.parsing.engines.mineru.config import MinerUConfig
 
     local = parser.signature(MinerUConfig(mode="local")).hash()
     cloud = parser.signature(MinerUConfig(mode="cloud")).hash()
@@ -75,17 +75,17 @@ def test_mineru_signature_distinguishes_local_and_cloud() -> None:
 
 
 def test_mineru_cloud_readiness_needs_token() -> None:
-    from deeptutor.services.parsing.engines.mineru.config import MinerUConfig
-    from deeptutor.services.parsing.engines.mineru.readiness import mineru_readiness
+    from cognispheretutor.services.parsing.engines.mineru.config import MinerUConfig
+    from cognispheretutor.services.parsing.engines.mineru.readiness import mineru_readiness
 
     assert mineru_readiness(MinerUConfig(mode="cloud", api_token="")).reason == "not_configured"
     assert mineru_readiness(MinerUConfig(mode="cloud", api_token="tok")).ready is True
 
 
 def test_mineru_local_model_download_gate(monkeypatch: pytest.MonkeyPatch) -> None:
-    from deeptutor.services.parsing.engines.mineru import backend
-    from deeptutor.services.parsing.engines.mineru import readiness as rd
-    from deeptutor.services.parsing.engines.mineru.config import MinerUConfig
+    from cognispheretutor.services.parsing.engines.mineru import backend
+    from cognispheretutor.services.parsing.engines.mineru import readiness as rd
+    from cognispheretutor.services.parsing.engines.mineru.config import MinerUConfig
 
     monkeypatch.setattr(
         backend,
@@ -115,7 +115,7 @@ def test_mineru_local_model_download_gate(monkeypatch: pytest.MonkeyPatch) -> No
 
 def test_pymupdf4llm_signature_tracks_image_knobs() -> None:
     parser = factory.get_parser("pymupdf4llm")
-    from deeptutor.services.parsing.engines.pymupdf4llm.config import PyMuPDF4LLMConfig
+    from cognispheretutor.services.parsing.engines.pymupdf4llm.config import PyMuPDF4LLMConfig
 
     base = parser.signature(
         PyMuPDF4LLMConfig(write_images=True, image_format="png", image_dpi=150)
@@ -144,12 +144,12 @@ def test_pymupdf4llm_readiness_reflects_install() -> None:
 def test_pymupdf4llm_parses_pdf_and_extracts_images(tmp_path) -> None:
     pymupdf = pytest.importorskip("pymupdf")
     pytest.importorskip("pymupdf4llm")
-    from deeptutor.services.parsing.engines.pymupdf4llm.config import PyMuPDF4LLMConfig
+    from cognispheretutor.services.parsing.engines.pymupdf4llm.config import PyMuPDF4LLMConfig
 
     pdf = tmp_path / "doc.pdf"
     doc = pymupdf.open()
     page = doc.new_page()
-    page.insert_text((72, 72), "Hello DeepTutor via PyMuPDF4LLM")
+    page.insert_text((72, 72), "Hello cognisphereTutor via PyMuPDF4LLM")
     pix = pymupdf.Pixmap(pymupdf.csRGB, pymupdf.IRect(0, 0, 120, 120))
     pix.clear_with(128)
     page.insert_image(pymupdf.Rect(100, 200, 320, 420), pixmap=pix)
@@ -166,7 +166,7 @@ def test_pymupdf4llm_parses_pdf_and_extracts_images(tmp_path) -> None:
     )
 
     md = (workdir / "doc.md").read_text(encoding="utf-8")
-    assert "DeepTutor" in md
+    assert "cognisphereTutor" in md
     images = workdir / "images"
     assert images.is_dir()
     extracted = list(images.glob("*.png"))
@@ -179,7 +179,7 @@ def test_pymupdf4llm_parses_pdf_and_extracts_images(tmp_path) -> None:
 def test_pymupdf4llm_no_images_leaves_no_asset_dir(tmp_path) -> None:
     pymupdf = pytest.importorskip("pymupdf")
     pytest.importorskip("pymupdf4llm")
-    from deeptutor.services.parsing.engines.pymupdf4llm.config import PyMuPDF4LLMConfig
+    from cognispheretutor.services.parsing.engines.pymupdf4llm.config import PyMuPDF4LLMConfig
 
     pdf = tmp_path / "text.pdf"
     doc = pymupdf.open()
@@ -199,7 +199,7 @@ def test_pymupdf4llm_no_images_leaves_no_asset_dir(tmp_path) -> None:
 
 
 def test_install_manager_spec_allowlist() -> None:
-    from deeptutor.services.parsing.engines._install import (
+    from cognispheretutor.services.parsing.engines._install import (
         ENGINE_PIP_SPECS,
         installable_engines,
     )
@@ -212,7 +212,7 @@ def test_install_manager_spec_allowlist() -> None:
 
 
 def test_model_download_allowlist() -> None:
-    from deeptutor.services.parsing.engines._install import (
+    from cognispheretutor.services.parsing.engines._install import (
         ENGINE_MODEL_DOWNLOADERS,
         model_downloadable_engines,
     )
@@ -224,14 +224,14 @@ def test_model_download_allowlist() -> None:
 
 
 def test_resolve_model_downloader_unknown_engine() -> None:
-    from deeptutor.services.parsing.engines._install import resolve_model_downloader
+    from cognispheretutor.services.parsing.engines._install import resolve_model_downloader
 
     assert resolve_model_downloader("pymupdf4llm") is None
     assert resolve_model_downloader("nope") is None
 
 
 def test_background_job_manager_idle_status() -> None:
-    from deeptutor.services.parsing.engines._install import get_background_job_manager
+    from cognispheretutor.services.parsing.engines._install import get_background_job_manager
 
     status = get_background_job_manager().status(0)
     assert status["state"] in {"idle", "running", "done", "failed", "cancelled"}
@@ -241,7 +241,7 @@ def test_background_job_manager_idle_status() -> None:
 
 
 def test_docling_models_dir_honors_cache_env(monkeypatch, tmp_path) -> None:
-    from deeptutor.services.parsing.engines.docling import engine as docling_engine
+    from cognispheretutor.services.parsing.engines.docling import engine as docling_engine
 
     monkeypatch.setenv("DOCLING_CACHE_DIR", str(tmp_path))
     assert docling_engine.docling_models_dir() == tmp_path / "models"
