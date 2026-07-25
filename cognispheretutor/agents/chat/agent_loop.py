@@ -257,7 +257,7 @@ class AgentLoop:
         """
         explore_label = self.pipeline._t("labels.exploring", default="Exploring")
         nudged_empty_finish = False
-        nudged_plain_mastery_quiz = False
+        mastery_quiz_repair_attempts = 0
         for _round in range(max(1, self.pipeline.effective_max_rounds(self.context))):
             try:
                 result = await self._call_llm(
@@ -321,15 +321,25 @@ class AgentLoop:
                         }
                     )
                     continue
-                if (
-                    not nudged_plain_mastery_quiz
-                    and _needs_mastery_quiz_card_repair(
-                        context=self.context,
-                        final_text=final_text,
-                        enabled_tools=self.enabled_tools,
-                    )
+                if _needs_mastery_quiz_card_repair(
+                    context=self.context,
+                    final_text=final_text,
+                    enabled_tools=self.enabled_tools,
+                    tools_used=state.tools_used,
                 ):
-                    nudged_plain_mastery_quiz = True
+                    if mastery_quiz_repair_attempts >= 2:
+                        return await self._finalize_finish(
+                            self.pipeline._t(
+                                "notices.mastery_quiz_card_required",
+                                default=(
+                                    "I need to present this check as an interactive "
+                                    "mastery card before we continue. Please retry this "
+                                    "turn; I will register the question with mastery_quiz "
+                                    "and ask_user instead of moving to the next lesson."
+                                ),
+                            )
+                        )
+                    mastery_quiz_repair_attempts += 1
                     await self.stream.progress(
                         self.pipeline._t(
                             "notices.mastery_plain_quiz_repaired",
@@ -753,6 +763,10 @@ _PLAIN_CHOICE_OPTION_RE = re.compile(r"(?im)^\s*(?:[-*]\s*)?([A-D])[\).:：]\s+\
 _PLAIN_TRUE_FALSE_RE = re.compile(
     r"(?i)\b(true\s*/\s*false|true or false|判断题|正确还是错误)\b"
 )
+_GENERIC_LEARNING_MENU_RE = re.compile(
+    r"(?i)\b(what subject|what topic|would you like to learn|tell me what .*learn)\b"
+    r"|想学.*什么|学习.*主题"
+)
 
 
 def _needs_mastery_quiz_card_repair(
@@ -760,10 +774,13 @@ def _needs_mastery_quiz_card_repair(
     context: UnifiedContext,
     final_text: str,
     enabled_tools: list[str],
+    tools_used: list[str],
 ) -> bool:
     if not context.metadata.get("mastery_mode"):
         return False
     if "mastery_quiz" not in enabled_tools or "ask_user" not in enabled_tools:
+        return False
+    if any(tool in {"mastery_quiz", "ask_user", "mastery_grade"} for tool in tools_used):
         return False
     text = str(final_text or "").strip()
     if not text:
@@ -772,7 +789,11 @@ def _needs_mastery_quiz_card_repair(
     has_choice_check = len(option_labels) >= 2 and bool(
         re.search(r"(?i)\b(question|quiz|select|choose|which|what)\b|问题|选择", text)
     )
-    return bool(has_choice_check or _PLAIN_TRUE_FALSE_RE.search(text))
+    return bool(
+        has_choice_check
+        or _PLAIN_TRUE_FALSE_RE.search(text)
+        or _GENERIC_LEARNING_MENU_RE.search(text)
+    )
 
 
 def _mastery_quiz_card_repair_instruction(final_text: str) -> str:
