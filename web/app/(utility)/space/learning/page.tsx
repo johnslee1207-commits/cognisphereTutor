@@ -26,11 +26,13 @@ import {
   type ObjectiveStatus,
 } from "@/lib/learning-api";
 import {
+  composeAndSeedCognisphere,
   domainFromCognispherePathId,
   fetchCognisphereLearningStatus,
   importAndSeedCognisphere,
   isCognispherePathId,
   masteryChatHref,
+  planCognispherePath,
   startCognisphereTutor,
   suggestCognisphereFocus,
   type CognisphereLearningStatus,
@@ -59,6 +61,8 @@ export default function MasteryPathPage() {
   const [csphereError, setCsphereError] = useState<string | null>(null);
   const [csphereNote, setCsphereNote] = useState<string | null>(null);
   const [focusHint, setFocusHint] = useState<string | null>(null);
+  const [planHint, setPlanHint] = useState<string | null>(null);
+  const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
   const [tutorBusy, setTutorBusy] = useState(false);
 
   const loadList = useCallback(async () => {
@@ -101,6 +105,7 @@ export default function MasteryPathPage() {
     if (!selected) {
       setDetail(null);
       setFocusHint(null);
+      setPlanHint(null);
       return;
     }
     let cancelled = false;
@@ -118,7 +123,7 @@ export default function MasteryPathPage() {
 
     const domain = domainFromCognispherePathId(selected);
     if (domain) {
-      suggestCognisphereFocus({ domain })
+      suggestCognisphereFocus({ domain, pathId: selected })
         .then((focus) => {
           if (cancelled) return;
           const suggestion = focus?.suggestion?.suggestion || focus?.suggestion;
@@ -128,7 +133,7 @@ export default function MasteryPathPage() {
             setFocusHint(
               [
                 slug ? `slug: ${slug}` : null,
-                suggestion ? `focus: ${suggestion}` : null,
+                typeof suggestion === "string" ? `focus: ${suggestion}` : null,
                 hint != null ? `hint ${hint}` : null,
               ]
                 .filter(Boolean)
@@ -141,14 +146,45 @@ export default function MasteryPathPage() {
         .catch(() => {
           if (!cancelled) setFocusHint(null);
         });
+      planCognispherePath({ domain, pathId: selected })
+        .then((plan) => {
+          if (cancelled) return;
+          const steps = plan?.plan?.steps || plan?.steps || plan?.path;
+          const summary =
+            plan?.plan?.summary ||
+            plan?.summary ||
+            (Array.isArray(steps)
+              ? steps
+                  .slice(0, 3)
+                  .map((s: unknown) =>
+                    typeof s === "string"
+                      ? s
+                      : (s as { name?: string; skill_id?: string })?.name ||
+                        (s as { skill_id?: string })?.skill_id,
+                  )
+                  .filter(Boolean)
+                  .join(" → ")
+              : null);
+          setPlanHint(
+            typeof summary === "string" && summary
+              ? summary
+              : plan?.ok
+                ? tr("路径计划已就绪", "Skill path ready")
+                : null,
+          );
+        })
+        .catch(() => {
+          if (!cancelled) setPlanHint(null);
+        });
     } else {
       setFocusHint(null);
+      setPlanHint(null);
     }
 
     return () => {
       cancelled = true;
     };
-  }, [selected]);
+  }, [selected, tr]);
 
   const handleDelete = useCallback(
     async (pathId: string) => {
@@ -206,6 +242,64 @@ export default function MasteryPathPage() {
     },
     [loadList, tr],
   );
+
+  const toggleDomain = useCallback((domain: string) => {
+    setSelectedDomains((prev) =>
+      prev.includes(domain)
+        ? prev.filter((d) => d !== domain)
+        : [...prev, domain],
+    );
+  }, []);
+
+  const handleComposeAndSeed = useCallback(async () => {
+    if (selectedDomains.length === 0) {
+      setCsphereError(
+        tr("请先勾选至少一个域", "Select at least one domain"),
+      );
+      return;
+    }
+    setCsphereBusy(true);
+    setCsphereError(null);
+    setCsphereNote(null);
+    try {
+      const result = await composeAndSeedCognisphere({
+        domains: selectedDomains,
+      });
+      const notes = [
+        tr(
+          `组合完成：成功 ${result.seeded_count}，失败 ${result.failed_count}`,
+          `Compose done: ${result.seeded_count} seeded, ${result.failed_count} failed`,
+        ),
+        ...(result.seeds || [])
+          .filter((s) => "mastery_path" in s && s.mastery_path?.note)
+          .map((s) =>
+            "mastery_path" in s ? String(s.mastery_path?.note) : "",
+          )
+          .filter(Boolean),
+      ];
+      setCsphereNote(notes.join(" · "));
+      if (result.failed_count > 0 && result.seeded_count === 0) {
+        setCsphereError(
+          tr("组合导入全部失败", "Compose-and-seed failed for all domains"),
+        );
+      }
+      await loadList();
+      const firstPath = result.seeds?.find(
+        (s) => "mastery_path" in s && s.mastery_path?.path_id,
+      );
+      if (firstPath && "mastery_path" in firstPath) {
+        setSelected(firstPath.mastery_path!.path_id);
+      }
+    } catch (err) {
+      setCsphereError(
+        err instanceof Error
+          ? err.message
+          : tr("组合导入失败", "Compose-and-seed failed"),
+      );
+    } finally {
+      setCsphereBusy(false);
+    }
+  }, [selectedDomains, loadList, tr]);
 
   const handleSocraticPractice = useCallback(async () => {
     const domain = selected ? domainFromCognispherePathId(selected) : null;
@@ -347,23 +441,35 @@ export default function MasteryPathPage() {
           )}
           <div className="space-y-1">
             {(csphere?.plugins || []).map((plugin) => (
-              <button
+              <div
                 key={plugin.domain}
-                disabled={csphereBusy || !plugin.valid}
-                onClick={() => handleImportDomain(plugin.domain)}
-                className="w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-md text-xs border border-[var(--border)] hover:border-[var(--primary)]/40 hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
+                className="flex items-center gap-1.5 px-1 py-1 rounded-md text-xs border border-[var(--border)]"
               >
-                <span className="truncate text-[var(--foreground)]">
-                  {plugin.domain}
-                </span>
-                {csphereBusy ? (
-                  <Loader2 className="w-3 h-3 animate-spin shrink-0" />
-                ) : (
-                  <span className="text-[var(--muted-foreground)] shrink-0">
-                    {tr("导入", "Import")}
+                <label className="flex items-center gap-1.5 flex-1 min-w-0 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selectedDomains.includes(plugin.domain)}
+                    disabled={!plugin.valid || csphereBusy}
+                    onChange={() => toggleDomain(plugin.domain)}
+                    className="shrink-0"
+                  />
+                  <span className="truncate text-[var(--foreground)]">
+                    {plugin.domain}
                   </span>
-                )}
-              </button>
+                </label>
+                <button
+                  type="button"
+                  disabled={csphereBusy || !plugin.valid}
+                  onClick={() => handleImportDomain(plugin.domain)}
+                  className="shrink-0 text-[var(--muted-foreground)] hover:text-[var(--primary)] disabled:opacity-50 cursor-pointer px-1"
+                >
+                  {csphereBusy ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : (
+                    tr("导入", "Import")
+                  )}
+                </button>
+              </div>
             ))}
             {!csphere?.plugins?.length && !csphereError && (
               <p className="px-1 text-[10px] text-[var(--muted-foreground)]">
@@ -371,6 +477,22 @@ export default function MasteryPathPage() {
               </p>
             )}
           </div>
+          <button
+            type="button"
+            disabled={csphereBusy || selectedDomains.length === 0}
+            onClick={handleComposeAndSeed}
+            className="w-full flex items-center justify-center gap-1.5 px-2 py-1.5 text-xs rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50 cursor-pointer"
+          >
+            {csphereBusy ? (
+              <Loader2 className="w-3 h-3 animate-spin" />
+            ) : (
+              <Package className="w-3 h-3" />
+            )}
+            {tr(
+              `组合并导入 (${selectedDomains.length})`,
+              `Compose & seed (${selectedDomains.length})`,
+            )}
+          </button>
         </div>
 
         <footer className="p-2 border-t border-[var(--border)]">
@@ -412,6 +534,7 @@ export default function MasteryPathPage() {
             tr={tr}
             cognisphere={selected ? isCognispherePathId(selected) : false}
             focusHint={focusHint}
+            planHint={planHint}
             tutorBusy={tutorBusy}
             onContinue={() =>
               selected && router.push(masteryChatHref(selected))
@@ -464,6 +587,7 @@ function MapView({
   tr,
   cognisphere,
   focusHint,
+  planHint,
   tutorBusy,
   onContinue,
   onSocratic,
@@ -475,6 +599,7 @@ function MapView({
   tr: (cn: string, en: string) => string;
   cognisphere: boolean;
   focusHint: string | null;
+  planHint: string | null;
   tutorBusy: boolean;
   onContinue: () => void;
   onSocratic: () => void;
@@ -559,6 +684,11 @@ function MapView({
           {focusHint && (
             <p className="text-[11px] text-[var(--muted-foreground)]">
               {tr("推荐焦点", "Suggested focus")}: {focusHint}
+            </p>
+          )}
+          {planHint && (
+            <p className="text-[11px] text-[var(--muted-foreground)]">
+              {tr("技能路径", "Skill path")}: {planHint}
             </p>
           )}
           <button

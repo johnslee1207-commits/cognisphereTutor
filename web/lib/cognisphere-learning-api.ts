@@ -92,9 +92,122 @@ export async function importAndSeedCognisphere(
   return res.json() as Promise<ImportAndSeedResult>;
 }
 
+export interface CrossDomainResult {
+  ok?: boolean;
+  goal?: string;
+  required_capabilities?: string[];
+  match_count?: number;
+  matches?: Array<{
+    domain?: string;
+    plugin_id?: string;
+    lifecycle?: string;
+    available?: string[];
+    matched?: boolean;
+  }>;
+  source?: string;
+  phase?: string;
+  [key: string]: unknown;
+}
+
+export interface ComposeResult {
+  ok?: boolean;
+  domains?: string[];
+  contexts?: Array<{
+    domain?: string;
+    plugin_id?: string;
+    matched?: boolean;
+    negotiation?: Record<string, unknown>;
+  }>;
+  issues?: string[];
+  source?: string;
+  phase?: string;
+  [key: string]: unknown;
+}
+
+export interface ComposeAndSeedResult {
+  ok: boolean;
+  phase?: string;
+  compose?: ComposeResult;
+  seeded_count: number;
+  failed_count: number;
+  seeds: Array<ImportAndSeedResult | { ok: false; domain: string; error?: unknown }>;
+  continue_in_chat?: string | null;
+}
+
+export async function queryCognisphereCrossDomain(opts: {
+  requiredCapabilities?: string[];
+  goal?: string;
+}): Promise<CrossDomainResult> {
+  const res = await apiFetch(
+    apiUrl("/api/v1/learning/cognisphere/cross-domain"),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        required_capabilities: opts.requiredCapabilities ?? [],
+        goal: opts.goal || null,
+      }),
+    },
+  );
+  if (!res.ok) throw new Error(`Cross-domain query failed: ${res.status}`);
+  return res.json() as Promise<CrossDomainResult>;
+}
+
+export async function composeCognisphereContexts(opts: {
+  domains?: string[];
+  requiredCapabilities?: string[];
+}): Promise<ComposeResult> {
+  const res = await apiFetch(apiUrl("/api/v1/learning/cognisphere/compose"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      domains: opts.domains ?? [],
+      required_capabilities: opts.requiredCapabilities ?? [],
+    }),
+  });
+  if (!res.ok) throw new Error(`Compose failed: ${res.status}`);
+  return res.json() as Promise<ComposeResult>;
+}
+
+export async function composeAndSeedCognisphere(opts: {
+  domains: string[];
+  requiredCapabilities?: string[];
+  stopOnError?: boolean;
+}): Promise<ComposeAndSeedResult> {
+  const res = await apiFetch(
+    apiUrl("/api/v1/learning/cognisphere/compose-and-seed"),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        domains: opts.domains,
+        required_capabilities: opts.requiredCapabilities ?? [],
+        seed_mastery_path: true,
+        persist_import: true,
+        stop_on_error: opts.stopOnError ?? false,
+      }),
+    },
+  );
+  if (!res.ok) {
+    let message = `Compose-and-seed failed: ${res.status}`;
+    try {
+      const body = await res.json();
+      message =
+        body?.detail?.message ||
+        body?.detail?.code ||
+        (typeof body?.detail === "string" ? body.detail : message);
+    } catch {
+      /* ignore */
+    }
+    throw new Error(message);
+  }
+  return res.json() as Promise<ComposeAndSeedResult>;
+}
+
 export async function suggestCognisphereFocus(opts: {
   domain: string;
   slug?: string;
+  pathId?: string;
 }) {
   const res = await apiFetch(
     apiUrl("/api/v1/learning/cognisphere/suggest-focus"),
@@ -104,10 +217,32 @@ export async function suggestCognisphereFocus(opts: {
       body: JSON.stringify({
         domain: opts.domain,
         slug: opts.slug || null,
+        path_id: opts.pathId || null,
       }),
     },
   );
   if (!res.ok) throw new Error(`Suggest focus failed: ${res.status}`);
+  return res.json();
+}
+
+export async function planCognispherePath(opts: {
+  domain: string;
+  learnerId?: string;
+  pathId?: string;
+}) {
+  const res = await apiFetch(
+    apiUrl("/api/v1/learning/cognisphere/plan-path"),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        domain: opts.domain,
+        learner_id: opts.learnerId || "offline-learner",
+        path_id: opts.pathId || null,
+      }),
+    },
+  );
+  if (!res.ok) throw new Error(`Plan path failed: ${res.status}`);
   return res.json();
 }
 

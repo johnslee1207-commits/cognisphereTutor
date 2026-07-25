@@ -98,3 +98,62 @@ def test_import_and_seed_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     assert payload["mastery_path"]["kp_count"] >= 1
     assert "capability=mastery_path" in (payload.get("continue_in_chat") or "")
     assert (store_root / "csphere-leetcode.json").exists()
+
+
+def test_cross_domain_and_compose_api(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(FIXTURE_ROOT))
+    monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
+
+    app = FastAPI()
+    app.include_router(cognisphere_learning.router, prefix="/api/v1/learning/cognisphere")
+    client = TestClient(app)
+
+    cross = client.post(
+        "/api/v1/learning/cognisphere/cross-domain",
+        json={"required_capabilities": ["socratic_tutor"], "goal": "practice algorithms"},
+    )
+    assert cross.status_code == 200, cross.text
+    cross_body = cross.json()
+    assert cross_body["match_count"] >= 1
+    assert any(m.get("domain") == "leetcode" for m in cross_body.get("matches") or [])
+
+    composed = client.post(
+        "/api/v1/learning/cognisphere/compose",
+        json={"domains": ["leetcode"], "required_capabilities": ["deeptutor_export"]},
+    )
+    assert composed.status_code == 200, composed.text
+    compose_body = composed.json()
+    assert compose_body.get("phase") == "DT-P6"
+    assert any(
+        (c.get("domain") == "leetcode") for c in (compose_body.get("contexts") or [])
+    )
+
+
+def test_compose_and_seed_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(FIXTURE_ROOT))
+    monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
+
+    store_root = tmp_path / "learning"
+    monkeypatch.setattr(
+        cognisphere_learning,
+        "_service",
+        lambda: __import__(
+            "cognispheretutor.learning.service", fromlist=["LearningService"]
+        ).LearningService(LearningStore(store_root)),
+    )
+
+    app = FastAPI()
+    app.include_router(cognisphere_learning.router, prefix="/api/v1/learning/cognisphere")
+    client = TestClient(app)
+
+    result = client.post(
+        "/api/v1/learning/cognisphere/compose-and-seed",
+        json={"domains": ["leetcode"], "seed_mastery_path": True},
+    )
+    assert result.status_code == 200, result.text
+    body = result.json()
+    assert body["seeded_count"] >= 1
+    assert any(s.get("domain") == "leetcode" and s.get("ok") for s in body["seeds"])
+    assert (store_root / "csphere-leetcode.json").exists()

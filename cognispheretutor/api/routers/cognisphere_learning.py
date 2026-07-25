@@ -96,6 +96,119 @@ class TrustedContextImportRequest(BaseModel):
     persist: bool = True
 
 
+class CrossDomainRequest(BaseModel):
+    required_capabilities: list[str] = Field(default_factory=list)
+    goal: str | None = Field(
+        default=None,
+        description="Natural-language learning goal (optional; used by negotiator/SDK)",
+        max_length=2000,
+    )
+
+
+class ComposeRequest(BaseModel):
+    domains: list[str] = Field(default_factory=list)
+    required_capabilities: list[str] = Field(default_factory=list)
+
+
+class ComposeAndSeedRequest(BaseModel):
+    domains: list[str] = Field(
+        default_factory=list,
+        description="Domains to compose; empty + capabilities → discover via cross-domain",
+    )
+    required_capabilities: list[str] = Field(default_factory=list)
+    seed_mastery_path: bool = True
+    persist_import: bool = True
+    stop_on_error: bool = False
+
+
+def _validate_path_id(path_id: str) -> None:
+    if "/" in path_id or "\\" in path_id or ".." in path_id or ":" in path_id:
+        raise HTTPException(status_code=400, detail="Invalid path_id")
+
+
+async def _import_and_seed_domain(
+    domain: str,
+    *,
+    path_id: str | None = None,
+    seed_mastery_path: bool = True,
+    persist_import: bool = True,
+) -> dict[str, Any]:
+    """Shared import+seed used by single-domain and compose-and-seed endpoints."""
+    from cognispheretutor.integrations.cognisphere import export_and_import
+
+    resolved_path = path_id or mastery_path_id_for_domain(domain)
+    _validate_path_id(resolved_path)
+
+    try:
+        receipt = export_and_import(
+            domain,
+            {"persist": persist_import},
+        )
+    except CognisphereIntegrationError as exc:
+        raise _http_error(exc) from exc
+
+    if not receipt.get("ok"):
+        raise HTTPException(status_code=400, detail=receipt)
+
+    seed_info: dict[str, Any] | None = None
+    if seed_mastery_path:
+        knowledge = _load_imported_knowledge(domain, receipt)
+        modules = modules_from_knowledge(
+            knowledge,
+            domain=domain,
+            path_id=resolved_path,
+        )
+        if not modules or not any(m.knowledge_points for m in modules):
+            raise HTTPException(
+                status_code=422,
+                detail={
+                    "ok": False,
+                    "code": "empty_knowledge",
+                    "message": "Import succeeded but knowledge was empty; cannot seed Mastery Path",
+                    "knowledge_summary": receipt.get("knowledge_summary"),
+                },
+            )
+        service = _service()
+        progress = service.get_or_create(resolved_path)
+        service.init_modules(progress, modules)
+        progress.current_module_id = modules[0].id
+        progress.current_kp_index = 0
+        progress.current_stage = LearningStage.DIAGNOSTIC
+        service.save(progress)
+        non_overview = [m for m in modules if not m.id.endswith("-overview")]
+        seed_info = {
+            "path_id": resolved_path,
+            "module_count": len(modules),
+            "kp_count": sum(len(m.knowledge_points) for m in modules),
+            "modules": [
+                {"id": m.id, "name": m.name, "kp_count": len(m.knowledge_points)} for m in modules
+            ],
+            "knowledge_sparse": len(non_overview) == 0,
+            "continue_in_chat": _chat_continue_url(resolved_path),
+            "note": (
+                "Bundle knowledge was sparse; seeded an overview path. "
+                "Re-import after the domain plugin ontology/export is available "
+                "for full knowledge items."
+                if len(non_overview) == 0
+                else None
+            ),
+        }
+
+    return {
+        "ok": True,
+        "domain": domain,
+        "import": {
+            "status": receipt.get("status"),
+            "phase": receipt.get("phase"),
+            "knowledge_summary": receipt.get("knowledge_summary"),
+            "artifact_path": receipt.get("artifact_path"),
+        },
+        "mastery_path": seed_info,
+        "is_cognisphere_path": is_cognisphere_path_id(resolved_path),
+        "continue_in_chat": _chat_continue_url(resolved_path) if seed_info else None,
+    }
+
+
 @router.get("/status")
 async def cognisphere_learning_status():
     """Discovery + gate snapshot for the Guided Learning UI."""
@@ -145,80 +258,95 @@ async def cognisphere_learning_status():
 @router.post("/import-and-seed")
 async def import_and_seed(body: ImportSeedRequest):
     """Export domain pack, optionally seed a Mastery Path from its knowledge."""
-    from cognispheretutor.integrations.cognisphere import export_and_import
+    return await _import_and_seed_domain(
+        body.domain,
+        path_id=body.path_id,
+        seed_mastery_path=body.seed_mastery_path,
+        persist_import=body.persist_import,
+    )
 
-    path_id = body.path_id or mastery_path_id_for_domain(body.domain)
-    if "/" in path_id or "\\" in path_id or ".." in path_id or ":" in path_id:
-        raise HTTPException(status_code=400, detail="Invalid path_id")
 
-    try:
-        receipt = export_and_import(
-            body.domain,
-            {"persist": body.persist_import},
-        )
-    except CognisphereIntegrationError as exc:
-        raise _http_error(exc) from exc
+@router.post("/cross-domain")
+async def cross_domain(body: CrossDomainRequest):
+    """DT-P6: query plugins matching required capabilities / optional NL goal."""
+    from cognispheretutor.integrations.cognisphere import query_cross_domain
 
-    if not receipt.get("ok"):
-        raise HTTPException(status_code=400, detail=receipt)
-
-    seed_info: dict[str, Any] | None = None
-    if body.seed_mastery_path:
-        # Prefer knowledge from the cached bundle file when available.
-        knowledge = _load_imported_knowledge(body.domain, receipt)
-        modules = modules_from_knowledge(
-            knowledge,
-            domain=body.domain,
-            path_id=path_id,
-        )
-        if not modules or not any(m.knowledge_points for m in modules):
-            raise HTTPException(
-                status_code=422,
-                detail={
-                    "ok": False,
-                    "code": "empty_knowledge",
-                    "message": "Import succeeded but knowledge was empty; cannot seed Mastery Path",
-                    "knowledge_summary": receipt.get("knowledge_summary"),
-                },
-            )
-        service = _service()
-        progress = service.get_or_create(path_id)
-        service.init_modules(progress, modules)
-        progress.current_module_id = modules[0].id
-        progress.current_kp_index = 0
-        progress.current_stage = LearningStage.DIAGNOSTIC
-        service.save(progress)
-        non_overview = [m for m in modules if not m.id.endswith("-overview")]
-        seed_info = {
-            "path_id": path_id,
-            "module_count": len(modules),
-            "kp_count": sum(len(m.knowledge_points) for m in modules),
-            "modules": [
-                {"id": m.id, "name": m.name, "kp_count": len(m.knowledge_points)} for m in modules
-            ],
-            "knowledge_sparse": len(non_overview) == 0,
-            "continue_in_chat": _chat_continue_url(path_id),
-            "note": (
-                "Bundle knowledge was sparse; seeded an overview path. "
-                "Re-import after the domain plugin ontology/export is available "
-                "for full knowledge items."
-                if len(non_overview) == 0
-                else None
-            ),
+    result = query_cross_domain(
+        {
+            "required_capabilities": list(body.required_capabilities),
+            "goal": body.goal,
         }
+    )
+    return result
 
+
+@router.post("/compose")
+async def compose(body: ComposeRequest):
+    """DT-P6: compose multi-domain learning contexts (no seed)."""
+    from cognispheretutor.integrations.cognisphere import compose_contexts
+
+    result = compose_contexts(
+        list(body.domains) or None,
+        required_capabilities=list(body.required_capabilities) or None,
+    )
+    return result
+
+
+@router.post("/compose-and-seed")
+async def compose_and_seed(body: ComposeAndSeedRequest):
+    """Compose selected domains, then import-and-seed each matched domain.
+
+    Fail-closed per domain: when ``stop_on_error`` is true the first failure
+    aborts; otherwise each domain gets an ok/error entry in ``seeds``.
+    """
+    from cognispheretutor.integrations.cognisphere import compose_contexts
+
+    composition = compose_contexts(
+        list(body.domains) or None,
+        required_capabilities=list(body.required_capabilities) or None,
+    )
+    contexts = list(composition.get("contexts") or [])
+    domain_list = [
+        str(ctx.get("domain"))
+        for ctx in contexts
+        if ctx.get("domain") and (ctx.get("matched") is not False)
+    ]
+    if not domain_list and body.domains:
+        # Compose returned no contexts; still try explicit domains the client selected.
+        domain_list = [d.strip() for d in body.domains if str(d).strip()]
+
+    seeds: list[dict[str, Any]] = []
+    for domain in domain_list:
+        try:
+            seeded = await _import_and_seed_domain(
+                domain,
+                seed_mastery_path=body.seed_mastery_path,
+                persist_import=body.persist_import,
+            )
+            seeds.append(seeded)
+        except HTTPException as exc:
+            entry = {
+                "ok": False,
+                "domain": domain,
+                "error": exc.detail,
+                "status_code": exc.status_code,
+            }
+            seeds.append(entry)
+            if body.stop_on_error:
+                break
+
+    ok_count = sum(1 for s in seeds if s.get("ok"))
     return {
-        "ok": True,
-        "domain": body.domain,
-        "import": {
-            "status": receipt.get("status"),
-            "phase": receipt.get("phase"),
-            "knowledge_summary": receipt.get("knowledge_summary"),
-            "artifact_path": receipt.get("artifact_path"),
-        },
-        "mastery_path": seed_info,
-        "is_cognisphere_path": is_cognisphere_path_id(path_id),
-        "continue_in_chat": _chat_continue_url(path_id) if seed_info else None,
+        "ok": ok_count > 0 and ok_count == len(seeds),
+        "phase": "DT-P6",
+        "compose": composition,
+        "seeded_count": ok_count,
+        "failed_count": len(seeds) - ok_count,
+        "seeds": seeds,
+        "continue_in_chat": next(
+            (s.get("continue_in_chat") for s in seeds if s.get("continue_in_chat")),
+            None,
+        ),
     }
 
 
