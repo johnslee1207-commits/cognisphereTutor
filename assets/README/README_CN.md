@@ -338,7 +338,7 @@ Guided Learning（学习空间 / 精通之路）可通过以下 API 将域包导
 - `GET /api/v1/learning/cognisphere/status`
 - `GET /api/v1/learning/cognisphere/ability-radar` — 域级掌握度 % + 薄弱点（可选 `path_id`，可附 skill_graph 提示）
 - `POST /api/v1/learning/cognisphere/import-and-seed`
-- `POST /api/v1/learning/cognisphere/cross-domain` — 按能力 / 可选 NL 目标匹配插件（DT-P6）
+- `POST /api/v1/learning/cognisphere/cross-domain` — 按能力与/或 NL 目标匹配插件（语义过滤；目标无域/关键词重叠时 fail-closed）
 - `POST /api/v1/learning/cognisphere/compose` — 多域上下文组合（不落库）
 - `POST /api/v1/learning/cognisphere/compose-and-seed` — 组合后逐域 import-and-seed
 - `POST /api/v1/learning/cognisphere/recommend-from-goal` — NL 学习目标 → 推荐插件；可一键 `compose_and_seed`

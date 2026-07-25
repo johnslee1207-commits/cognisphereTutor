@@ -9,6 +9,14 @@
     "ontology",
     "deeptutor_export"
   ],
+  "keywords": [
+    "cloud",
+    "certification",
+    "aws",
+    "solutions architect"
+  ],
+  "tags": ["cloud", "certification"],
+  "aliases": ["amazon web services"],
   "forbidden_in_plugin": [
     "ui",
     "user_management",

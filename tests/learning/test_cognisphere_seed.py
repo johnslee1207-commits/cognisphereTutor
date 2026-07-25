@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+import pytest
 
 from cognispheretutor.api.routers import cognisphere_learning
 from cognispheretutor.learning.cognisphere_seed import (
@@ -16,7 +16,6 @@ from cognispheretutor.learning.cognisphere_seed import (
     seed_payload_from_import_receipt,
 )
 from cognispheretutor.learning.storage import LearningStore
-
 
 FIXTURE_ROOT = (
     Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
@@ -204,7 +203,7 @@ def test_recommend_from_goal_api(
     preview = client.post(
         "/api/v1/learning/cognisphere/recommend-from-goal",
         json={
-            "goal": "practice algorithms with Tutor export packs",
+            "goal": "practice algorithms with coding interview packs",
             "required_capabilities": ["deeptutor_export"],
             "compose_and_seed": False,
         },
@@ -213,11 +212,12 @@ def test_recommend_from_goal_api(
     body = preview.json()
     assert body["match_count"] >= 1
     assert "leetcode" in body["recommended_domains"]
+    assert "aws_certification" not in body["recommended_domains"]
 
     seeded = client.post(
         "/api/v1/learning/cognisphere/recommend-from-goal",
         json={
-            "goal": "practice algorithms with Tutor export packs",
+            "goal": "practice algorithms with coding interview packs",
             "required_capabilities": ["deeptutor_export"],
             "compose_and_seed": True,
         },

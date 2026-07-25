@@ -72,6 +72,13 @@
       "data_kind": "integration_contract",
       "owner": "cognispheretutor.integrations.cognisphere",
       "review_gate": "integration_contract_review"
+    },
+    {
+      "layer": "external_integration_specific",
+      "path_glob": "cognispheretutor/integrations/cognisphere/manifests/goal_match_policy.json",
+      "data_kind": "integration_contract",
+      "owner": "cognispheretutor.integrations.cognisphere",
+      "review_gate": "integration_contract_review"
     }
   ]
 }

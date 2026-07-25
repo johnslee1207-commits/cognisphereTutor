@@ -9,6 +9,15 @@
     "ontology",
     "deeptutor_export"
   ],
+  "keywords": [
+    "calculus",
+    "derivatives",
+    "integrals",
+    "limits",
+    "ap calculus"
+  ],
+  "tags": ["math", "calculus"],
+  "aliases": ["apcalc", "calc ab"],
   "forbidden_in_plugin": [
     "ui",
     "user_management",

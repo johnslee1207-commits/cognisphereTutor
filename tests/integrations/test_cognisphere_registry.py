@@ -97,6 +97,51 @@ def test_query_cross_domain_filters(client: PluginRegistryClient) -> None:
     assert result["matches"][0]["domain"] == "leetcode"
 
 
+def test_query_cross_domain_goal_semantic_filter(client: PluginRegistryClient) -> None:
+    # Capability-only would return all deeptutor_export plugins; goal narrows.
+    broad = query_cross_domain(
+        {"required_capabilities": ["deeptutor_export"]},
+        client=client,
+    )
+    assert broad["match_count"] >= 2
+
+    algo = query_cross_domain(
+        {
+            "required_capabilities": ["deeptutor_export"],
+            "goal": "practice algorithms and coding interviews",
+        },
+        client=client,
+    )
+    assert algo["goal_filtered"] is True
+    assert algo["match_count"] >= 1
+    domains = [m["domain"] for m in algo["matches"]]
+    assert "leetcode" in domains
+    assert "aws_certification" not in domains
+    assert all(int(m.get("goal_score") or 0) >= 1 for m in algo["matches"])
+
+    calc = query_cross_domain(
+        {
+            "required_capabilities": ["deeptutor_export"],
+            "goal": "AP calculus derivatives and integrals",
+        },
+        client=client,
+    )
+    calc_domains = [m["domain"] for m in calc["matches"]]
+    assert "ap_calculus" in calc_domains
+    assert "leetcode" not in calc_domains
+
+    # Fail-closed: stopwords-only / unrelated goal → no matches.
+    empty = query_cross_domain(
+        {
+            "required_capabilities": ["deeptutor_export"],
+            "goal": "practice learning path with tutor export packs",
+        },
+        client=client,
+    )
+    assert empty["match_count"] == 0
+    assert empty["matches"] == []
+
+
 def test_import_rejects_verified_solutions() -> None:
     bad = {
         "bundle_id": "x",

@@ -64,10 +64,16 @@ def negotiate_from_manifest(
     manifest: dict[str, Any],
     request: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
+    from cognispheretutor.integrations.cognisphere.goal_match import (
+        score_goal_against_manifest,
+    )
+
     req = request or {}
     required = list(req.get("required_capabilities") or [])
     available = list(manifest.get("capabilities") or [])
     missing = [cap for cap in required if cap not in available]
+    goal = str(req.get("goal") or "")
+    goal_score = score_goal_against_manifest(goal, manifest) if goal.strip() else 0
     return {
         "plugin": manifest.get("plugin_id"),
         "domain": manifest.get("domain"),
@@ -80,6 +86,7 @@ def negotiate_from_manifest(
         ),
         "ok": True,
         "goal": req.get("goal"),
+        "goal_score": goal_score,
     }
 
 
@@ -90,6 +97,8 @@ def query_cross_domain(
     client: PluginRegistryClient | None = None,
 ) -> dict[str, Any]:
     """DT-P6 cross-domain capability query (local discovery + optional SDK)."""
+    from cognispheretutor.integrations.cognisphere.goal_match import filter_matches_by_goal
+
     registry = client or PluginRegistryClient(root)
     req = request or {}
     required = list(req.get("required_capabilities") or [])
@@ -97,6 +106,7 @@ def query_cross_domain(
     plugins_root = registry.resolve_plugins_root(root)
 
     # Prefer Cognisphere SDK when importable from the plugins monorepo.
+    sdk_payload: dict[str, Any] | None = None
     try:
         registry.ensure_import_paths(root=plugins_root)
         from cognisphere_plugin_sdk.entrypoint_surface import (  # type: ignore[import-not-found]
@@ -105,39 +115,80 @@ def query_cross_domain(
 
         sdk_result = query_cross_domain_capabilities(req, root=plugins_root)
         if isinstance(sdk_result, dict):
-            payload = dict(sdk_result)
-            payload.setdefault("source", "cognisphere_plugin_sdk")
-            payload.setdefault("phase", "DT-P6")
-            return payload
+            sdk_payload = dict(sdk_result)
+            sdk_payload.setdefault("source", "cognisphere_plugin_sdk")
+            sdk_payload.setdefault("phase", "DT-P6")
     except Exception:  # noqa: BLE001 — fall back to local discovery
-        pass
+        sdk_payload = None
 
     discovery = registry.list_plugins(root)
-    matches: list[dict[str, Any]] = []
+    manifests_by_domain: dict[str, dict[str, Any]] = {}
+    local_matches: list[dict[str, Any]] = []
     for item in discovery.get("plugins") or []:
         manifest = item.get("manifest") or {}
+        domain = str(item.get("domain") or "")
+        if domain:
+            manifests_by_domain[domain] = dict(manifest)
         negotiation = negotiate_from_manifest(manifest, req)
         if required and not negotiation.get("matched"):
             continue
-        matches.append(
+        local_matches.append(
             {
                 "domain": item.get("domain"),
                 "plugin_id": manifest.get("plugin_id"),
                 "lifecycle": item.get("lifecycle"),
                 "available": negotiation.get("available"),
                 "matched": negotiation.get("matched"),
+                "goal_score": negotiation.get("goal_score", 0),
                 "in_registry": bool(item.get("in_registry")),
                 "deeptutor_entrypoint": manifest.get("deeptutor_entrypoint"),
                 "cognisphere_entrypoint": manifest.get("cognisphere_entrypoint"),
+                "keywords": list(manifest.get("keywords") or []),
+                "tags": list(manifest.get("tags") or []),
+                "aliases": list(manifest.get("aliases") or []),
+                "display_name": manifest.get("display_name"),
+                "description": manifest.get("description"),
+                "manifest": manifest,
             }
         )
+
+    if sdk_payload is not None:
+        sdk_matches = list(sdk_payload.get("matches") or [])
+        filtered = filter_matches_by_goal(
+            sdk_matches,
+            goal,
+            manifests_by_domain=manifests_by_domain,
+        )
+        # Drop embedded manifests from client-facing rows.
+        cleaned = []
+        for row in filtered:
+            out = {k: v for k, v in row.items() if k != "manifest"}
+            cleaned.append(out)
+        sdk_payload["matches"] = cleaned
+        sdk_payload["match_count"] = len(cleaned)
+        sdk_payload["goal"] = goal
+        sdk_payload["goal_filtered"] = bool(goal.strip())
+        sdk_payload.setdefault("required_capabilities", required)
+        return sdk_payload
+
+    filtered_local = filter_matches_by_goal(
+        local_matches,
+        goal,
+        manifests_by_domain=manifests_by_domain,
+    )
+    cleaned_local = []
+    for row in filtered_local:
+        out = {k: v for k, v in row.items() if k != "manifest"}
+        cleaned_local.append(out)
+
     return {
         "ok": bool(discovery.get("ok")),
         "goal": goal,
+        "goal_filtered": bool(goal.strip()),
         "required_capabilities": required,
         "plugins_root": discovery.get("plugins_root"),
-        "match_count": len(matches),
-        "matches": matches,
+        "match_count": len(cleaned_local),
+        "matches": cleaned_local,
         "discovery_issues": list(discovery.get("issues") or []),
         "contract": "deeptutor.cognisphere.cross_domain_capability_query.v1",
         "source": "local_registry",

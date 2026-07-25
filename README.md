@@ -480,7 +480,7 @@ Guided Learning (Learning Space / Mastery Path) can import a domain pack into a 
 - `GET /api/v1/learning/cognisphere/status` (includes `gates.trusted_context`)
 - `GET /api/v1/learning/cognisphere/ability-radar` — domain-level mastery % + weak areas (optional `path_id`, skill_graph hint)
 - `POST /api/v1/learning/cognisphere/import-and-seed`
-- `POST /api/v1/learning/cognisphere/cross-domain` — capability / optional NL-goal plugin match (DT-P6)
+- `POST /api/v1/learning/cognisphere/cross-domain` — capabilities and/or NL goal (semantic filter; fail-closed when goal has no domain/keyword overlap)
 - `POST /api/v1/learning/cognisphere/compose` — multi-domain context composition (no seed)
 - `POST /api/v1/learning/cognisphere/compose-and-seed` — compose then import-and-seed each domain
 - `POST /api/v1/learning/cognisphere/recommend-from-goal` — NL goal → plugin matches; optional one-click `compose_and_seed`

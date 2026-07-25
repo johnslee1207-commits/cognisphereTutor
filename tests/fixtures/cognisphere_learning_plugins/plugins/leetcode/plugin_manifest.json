@@ -12,6 +12,16 @@
     "mistake_memory",
     "deeptutor_export"
   ],
+  "keywords": [
+    "algorithm",
+    "algorithms",
+    "coding",
+    "interview",
+    "leetcode",
+    "two pointers"
+  ],
+  "tags": ["coding", "algorithms"],
+  "aliases": ["lc", "coding interview"],
   "forbidden_in_plugin": [
     "ui",
     "user_management",
