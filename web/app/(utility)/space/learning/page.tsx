@@ -28,6 +28,7 @@ import {
 import {
   composeAndSeedCognisphere,
   domainFromCognispherePathId,
+  fetchAbilityRadar,
   fetchCognisphereLearningStatus,
   importAndSeedCognisphere,
   isCognispherePathId,
@@ -36,6 +37,7 @@ import {
   recommendCognisphereFromGoal,
   startCognisphereTutor,
   suggestCognisphereFocus,
+  type AbilityRadarResult,
   type CognisphereLearningStatus,
 } from "@/lib/cognisphere-learning-api";
 
@@ -67,6 +69,7 @@ export default function MasteryPathPage() {
   const [goalText, setGoalText] = useState("");
   const [recommendedDomains, setRecommendedDomains] = useState<string[]>([]);
   const [tutorBusy, setTutorBusy] = useState(false);
+  const [radar, setRadar] = useState<AbilityRadarResult | null>(null);
 
   const loadList = useCallback(async () => {
     setLoadingList(true);
@@ -109,6 +112,7 @@ export default function MasteryPathPage() {
       setDetail(null);
       setFocusHint(null);
       setPlanHint(null);
+      setRadar(null);
       return;
     }
     let cancelled = false;
@@ -122,6 +126,14 @@ export default function MasteryPathPage() {
       })
       .finally(() => {
         if (!cancelled) setLoadingDetail(false);
+      });
+
+    fetchAbilityRadar({ pathId: selected, includeSkillGraph: true })
+      .then((result) => {
+        if (!cancelled) setRadar(result);
+      })
+      .catch(() => {
+        if (!cancelled) setRadar(null);
       });
 
     const domain = domainFromCognispherePathId(selected);
@@ -663,6 +675,7 @@ export default function MasteryPathPage() {
         ) : (
           <MapView
             result={detail}
+            radar={radar}
             zh={!!zh}
             tr={tr}
             cognisphere={selected ? isCognispherePathId(selected) : false}
@@ -714,8 +727,109 @@ function StatusIcon({ status }: { status: ObjectiveStatus }) {
   return <Circle className={cls} />;
 }
 
+function AbilityRadarChart({
+  axes,
+  label,
+}: {
+  axes: { label?: string; pct: number }[];
+  label: string;
+}) {
+  const size = 200;
+  const cx = size / 2;
+  const cy = size / 2;
+  const radius = 72;
+  const n = Math.max(axes.length, 3);
+  const display =
+    axes.length >= 3
+      ? axes
+      : [
+          ...axes,
+          ...Array.from({ length: 3 - axes.length }, (_, i) => ({
+            label: `·${i}`,
+            pct: 0,
+          })),
+        ];
+  const point = (index: number, pct: number) => {
+    const angle = -Math.PI / 2 + (index / n) * Math.PI * 2;
+    const r = (Math.max(0, Math.min(100, pct)) / 100) * radius;
+    return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)] as const;
+  };
+  const grid = [0.25, 0.5, 0.75, 1].map((scale) =>
+    Array.from({ length: n }, (_, i) => {
+      const angle = -Math.PI / 2 + (i / n) * Math.PI * 2;
+      return `${cx + radius * scale * Math.cos(angle)},${cy + radius * scale * Math.sin(angle)}`;
+    }).join(" "),
+  );
+  const valuePts = display
+    .slice(0, n)
+    .map((axis, i) => point(i, axis.pct).join(","))
+    .join(" ");
+
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        role="img"
+        aria-label={label}
+        className="text-[var(--foreground)]"
+      >
+        {grid.map((pts, i) => (
+          <polygon
+            key={i}
+            points={pts}
+            fill="none"
+            stroke="currentColor"
+            strokeOpacity={0.12}
+            strokeWidth={1}
+          />
+        ))}
+        {Array.from({ length: n }, (_, i) => {
+          const [x, y] = point(i, 100);
+          return (
+            <line
+              key={`spoke-${i}`}
+              x1={cx}
+              y1={cy}
+              x2={x}
+              y2={y}
+              stroke="currentColor"
+              strokeOpacity={0.12}
+            />
+          );
+        })}
+        <polygon
+          points={valuePts}
+          fill="var(--primary)"
+          fillOpacity={0.22}
+          stroke="var(--primary)"
+          strokeWidth={1.5}
+        />
+        {display.slice(0, n).map((axis, i) => {
+          const [x, y] = point(i, 112);
+          return (
+            <text
+              key={`lbl-${i}`}
+              x={x}
+              y={y}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              className="fill-[var(--muted-foreground)]"
+              fontSize={9}
+            >
+              {(axis.label || "").slice(0, 14)}
+            </text>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
 function MapView({
   result,
+  radar,
   zh,
   tr,
   cognisphere,
@@ -728,6 +842,7 @@ function MapView({
   onDelete,
 }: {
   result: MasteryMapResult;
+  radar: AbilityRadarResult | null;
   zh: boolean;
   tr: (cn: string, en: string) => string;
   cognisphere: boolean;
@@ -747,6 +862,15 @@ function MapView({
     cn: next.reason,
     en: next.reason,
   };
+  const selectedRadar = radar?.selected;
+  const radarAxes =
+    selectedRadar?.axes?.filter((a) => (a.total ?? 0) > 0) ??
+    map.modules.map((m) => ({
+      label: m.name,
+      pct: m.total ? Math.round((m.mastered / m.total) * 100) : 0,
+      total: m.total,
+    }));
+  const weakAreas = selectedRadar?.weak_areas ?? [];
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-5">
@@ -790,6 +914,71 @@ function MapView({
           </button>
         </div>
       </div>
+
+      {(radarAxes.length > 0 || weakAreas.length > 0) && (
+        <div className="mt-4 rounded-lg border border-[var(--border)] p-3">
+          <div className="text-xs font-medium text-[var(--foreground)]">
+            {tr("能力雷达", "Ability radar")}
+            {selectedRadar?.mastered_pct != null && (
+              <span className="ml-2 text-[var(--muted-foreground)] font-normal">
+                {selectedRadar.mastered_pct}% {tr("域掌握", "domain mastery")}
+              </span>
+            )}
+          </div>
+          <div className="mt-2 flex flex-col sm:flex-row gap-3 items-center sm:items-start">
+            {radarAxes.length > 0 && (
+              <AbilityRadarChart
+                axes={radarAxes}
+                label={tr("模块掌握度雷达", "Module mastery radar")}
+              />
+            )}
+            <div className="flex-1 w-full min-w-0 space-y-2">
+              {(radar?.weak_domains || []).length > 1 && (
+                <div>
+                  <div className="text-[11px] text-[var(--muted-foreground)]">
+                    {tr("薄弱域", "Weak domains")}
+                  </div>
+                  <ul className="mt-1 space-y-0.5">
+                    {(radar?.weak_domains || []).slice(0, 4).map((d) => (
+                      <li
+                        key={d.path_id}
+                        className="text-xs text-[var(--foreground)] truncate"
+                      >
+                        {d.name} · {d.mastered_pct}%
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <div>
+                <div className="text-[11px] text-[var(--muted-foreground)]">
+                  {tr("薄弱知识点", "Weak areas")}
+                </div>
+                {weakAreas.length === 0 ? (
+                  <p className="mt-1 text-xs text-[var(--muted-foreground)]">
+                    {tr("暂无薄弱项", "No weak areas yet")}
+                  </p>
+                ) : (
+                  <ul className="mt-1 space-y-0.5">
+                    {weakAreas.slice(0, 6).map((w) => (
+                      <li
+                        key={String(w.kp_id)}
+                        className="text-xs text-[var(--foreground)] truncate"
+                      >
+                        {w.kp_name || w.kp_id}
+                        <span className="text-[var(--muted-foreground)]">
+                          {" "}
+                          · {w.mastery_pct ?? 0}% · {w.status}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <button
         onClick={onContinue}

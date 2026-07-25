@@ -59,6 +59,78 @@ export async function fetchCognisphereLearningStatus(): Promise<CognisphereLearn
   return res.json() as Promise<CognisphereLearningStatus>;
 }
 
+export interface AbilityRadarAxis {
+  id?: string;
+  label?: string;
+  mastered?: number;
+  total?: number;
+  pct: number;
+}
+
+export interface AbilityRadarWeakArea {
+  module_id?: string;
+  module_name?: string;
+  kp_id?: string;
+  kp_name?: string;
+  type?: string;
+  status?: string;
+  mastery?: number;
+  mastery_pct?: number;
+}
+
+export interface AbilityRadarDomain {
+  path_id: string;
+  name: string;
+  domain?: string | null;
+  is_cognisphere?: boolean;
+  mastered_pct: number;
+  avg_mastery_pct: number;
+  kp_count: number;
+  weak_count: number;
+  axes: AbilityRadarAxis[];
+}
+
+export interface AbilityRadarResult {
+  ok: boolean;
+  contract?: string;
+  domain_count: number;
+  domains: AbilityRadarDomain[];
+  weak_domains: AbilityRadarDomain[];
+  selected?: {
+    path_id: string;
+    name: string;
+    domain?: string | null;
+    mastered_pct: number;
+    avg_mastery_pct: number;
+    counts?: { mastered?: number; learning?: number; new?: number; total?: number };
+    axes: AbilityRadarAxis[];
+    weak_areas: AbilityRadarWeakArea[];
+    skill_graph?: Record<string, unknown> | null;
+  } | null;
+  path_id?: string | null;
+}
+
+export async function fetchAbilityRadar(opts?: {
+  pathId?: string;
+  weakLimit?: number;
+  includeSkillGraph?: boolean;
+}): Promise<AbilityRadarResult> {
+  const params = new URLSearchParams();
+  if (opts?.pathId) params.set("path_id", opts.pathId);
+  if (opts?.weakLimit != null) params.set("weak_limit", String(opts.weakLimit));
+  if (opts?.includeSkillGraph === false) {
+    params.set("include_skill_graph", "false");
+  }
+  const qs = params.toString();
+  const res = await apiFetch(
+    apiUrl(
+      `/api/v1/learning/cognisphere/ability-radar${qs ? `?${qs}` : ""}`,
+    ),
+  );
+  if (!res.ok) throw new Error(`Ability radar failed: ${res.status}`);
+  return res.json() as Promise<AbilityRadarResult>;
+}
+
 export async function importAndSeedCognisphere(
   domain: string,
   opts?: { pathId?: string; seed?: boolean },

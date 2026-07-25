@@ -24,11 +24,62 @@ FIXTURE_ROOT = (
 
 
 def test_mastery_path_id_helpers() -> None:
+    from cognispheretutor.learning.cognisphere_seed import domain_from_path_id
+
     assert mastery_path_id_for_domain("leetcode") == "csphere-leetcode"
     assert mastery_path_id_for_domain("ap_calculus") == "csphere-ap_calculus"
     assert mastery_path_id_for_domain("aws_certification") == "csphere-aws_certification"
     assert is_cognisphere_path_id("csphere-leetcode")
     assert not is_cognisphere_path_id("book-1")
+    assert domain_from_path_id("csphere-leetcode") == "leetcode"
+    assert domain_from_path_id("book-1") is None
+
+
+def test_ability_radar_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(FIXTURE_ROOT))
+    monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
+
+    store_root = tmp_path / "learning"
+    monkeypatch.setattr(
+        cognisphere_learning,
+        "_service",
+        lambda: __import__(
+            "cognispheretutor.learning.service", fromlist=["LearningService"]
+        ).LearningService(LearningStore(store_root)),
+    )
+
+    app = FastAPI()
+    app.include_router(cognisphere_learning.router, prefix="/api/v1/learning/cognisphere")
+    client = TestClient(app)
+
+    empty = client.get("/api/v1/learning/cognisphere/ability-radar")
+    assert empty.status_code == 200, empty.text
+    assert empty.json()["domain_count"] == 0
+
+    seeded = client.post(
+        "/api/v1/learning/cognisphere/import-and-seed",
+        json={"domain": "leetcode", "seed_mastery_path": True},
+    )
+    assert seeded.status_code == 200, seeded.text
+
+    radar = client.get(
+        "/api/v1/learning/cognisphere/ability-radar",
+        params={"path_id": "csphere-leetcode", "include_skill_graph": False},
+    )
+    assert radar.status_code == 200, radar.text
+    body = radar.json()
+    assert body["ok"] is True
+    assert body["domain_count"] >= 1
+    assert any(d.get("path_id") == "csphere-leetcode" for d in body["domains"])
+    selected = body["selected"]
+    assert selected is not None
+    assert selected["path_id"] == "csphere-leetcode"
+    assert isinstance(selected["axes"], list)
+    assert isinstance(selected["weak_areas"], list)
+    assert selected["mastered_pct"] >= 0
+    # Fresh seed → all objectives open → weak areas populated when KPs exist.
+    assert selected["counts"]["total"] >= 1
+    assert len(selected["weak_areas"]) >= 1
 
 
 def test_seed_payload_requires_domain() -> None:

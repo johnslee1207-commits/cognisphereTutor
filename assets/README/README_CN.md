@@ -336,6 +336,7 @@ cognispheretutor cognisphere interview -d leetcode --run-flow
 Guided Learning（学习空间 / 精通之路）可通过以下 API 将域包导入为 `csphere-{domain}` 精通路径：
 
 - `GET /api/v1/learning/cognisphere/status`
+- `GET /api/v1/learning/cognisphere/ability-radar` — 域级掌握度 % + 薄弱点（可选 `path_id`，可附 skill_graph 提示）
 - `POST /api/v1/learning/cognisphere/import-and-seed`
 - `POST /api/v1/learning/cognisphere/cross-domain` — 按能力 / 可选 NL 目标匹配插件（DT-P6）
 - `POST /api/v1/learning/cognisphere/compose` — 多域上下文组合（不落库）
@@ -343,7 +344,7 @@ Guided Learning（学习空间 / 精通之路）可通过以下 API 将域包导
 - `POST /api/v1/learning/cognisphere/recommend-from-goal` — NL 学习目标 → 推荐插件；可一键 `compose_and_seed`
 - `POST /api/v1/learning/cognisphere/tutor/start` / `suggest-focus` / `plan-path`
 
-Learning Space：输入自然语言目标 → **推荐插件** / 一键 **组合导入**；或手动多选域 → **组合并导入**；或单域 **导入**。Cognisphere 路径展示 `suggest-focus` / `plan-path` 的焦点与技能路径提示。
+Learning Space：输入自然语言目标 → **推荐插件** / 一键 **组合导入**；或手动多选域 → **组合并导入**；或单域 **导入**。Cognisphere 路径展示 `suggest-focus` / `plan-path` 的焦点与技能路径提示。路径详情展示**能力雷达**（模块轴 + 薄弱知识点），数据来自 Mastery 地图。
 
 集成代码位于 `cognispheretutor/integrations/cognisphere/`（发现 / 协商 / 校验 / Bundle 导入到 Assessment·Plan·Mastery / trusted-context 离线导入 / 运行时回调 + 离线 runtime bridge / 跨域组合）。在线 trusted-context 需配置 `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`。`runtime_adapters.json` 只声明能力→可调用契约；模块路径按域从插件 manifest `runtime_modules` 或 `module_template`（`cognisphere_plugins.{domain}.{module_key}`）解析，Tutor 内不硬编码任何域包路径。
 

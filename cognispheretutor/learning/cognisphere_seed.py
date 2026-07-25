@@ -23,6 +23,15 @@ def is_cognisphere_path_id(book_id: str) -> bool:
     return str(book_id or "").startswith(_PATH_PREFIX)
 
 
+def domain_from_path_id(book_id: str) -> str | None:
+    """Extract domain from ``csphere-{domain}`` path ids; else ``None``."""
+    text = str(book_id or "")
+    if not text.startswith(_PATH_PREFIX):
+        return None
+    domain = text[len(_PATH_PREFIX) :].strip()
+    return domain or None
+
+
 def _item_id(prefix: str, raw: Any, index: int) -> str:
     if isinstance(raw, dict):
         for key in ("id", "skill_id", "pattern_id", "slug", "concept_id"):

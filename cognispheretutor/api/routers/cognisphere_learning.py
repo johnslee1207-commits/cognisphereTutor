@@ -227,6 +227,36 @@ async def _import_and_seed_domain(
     }
 
 
+@router.get("/ability-radar")
+async def ability_radar(
+    path_id: str | None = Query(
+        default=None,
+        description="Optional Mastery Path id to expand axes / weak areas",
+        max_length=200,
+    ),
+    weak_limit: int = Query(8, ge=1, le=40),
+    include_skill_graph: bool = Query(
+        True,
+        description="When path is Cognisphere-seeded, attach skill_graph plan hint if available",
+    ),
+):
+    """Domain-level mastery % + weak areas (User Manual §6 style).
+
+    Aggregates LearningService mastery maps; optionally enriches Cognisphere
+    paths with plugin skill_graph planning (fail-soft when unavailable).
+    """
+    from cognispheretutor.learning.ability_radar import build_ability_radar
+
+    if path_id:
+        _validate_path_id(path_id)
+    return build_ability_radar(
+        _service(),
+        path_id=path_id,
+        weak_limit=weak_limit,
+        include_skill_graph=include_skill_graph,
+    )
+
+
 @router.get("/status")
 async def cognisphere_learning_status():
     """Discovery + gate snapshot for the Guided Learning UI."""

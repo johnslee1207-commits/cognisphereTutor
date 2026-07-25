@@ -26,8 +26,12 @@ class LearningService:
     def __init__(self, store: LearningStore | None = None) -> None:
         self._store = store or LearningStore()
 
+    def load(self, book_id: str) -> LearningProgress | None:
+        """Return persisted progress without creating an empty record."""
+        return self._store.load(book_id)
+
     def get_or_create(self, book_id: str) -> LearningProgress:
-        existing = self._store.load(book_id)
+        existing = self.load(book_id)
         if existing is not None:
             return existing
         progress = LearningProgress(book_id=book_id)
