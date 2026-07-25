@@ -1370,19 +1370,15 @@ class TurnRuntimeManager:
             # privileged workflow, so no grant gate applies).
             from cognispheretutor.multi_user.context import get_current_user
             from cognispheretutor.multi_user.paths import get_admin_path_service
+            from cognispheretutor.multi_user.persona_access import load_persona_for_context
             from cognispheretutor.multi_user.skill_access import assigned_skill_ids
-            from cognispheretutor.services.persona import PersonaService, get_persona_service
             from cognispheretutor.services.skill.service import SkillService, render_skills_manifest
 
             current_user = get_current_user()
             requested_persona = str(payload.get("persona") or "").strip()
-            persona_context = ""
-            if requested_persona:
-                persona_context = get_persona_service().load_for_context(requested_persona)
-                if not persona_context and not current_user.is_admin:
-                    persona_context = PersonaService(
-                        root=get_admin_path_service().get_workspace_dir() / "personas"
-                    ).load_for_context(requested_persona)
+            persona_context = (
+                load_persona_for_context(requested_persona) if requested_persona else ""
+            )
             active_persona = requested_persona if persona_context else ""
 
             # Skills: never user-selected per turn. The model sees a

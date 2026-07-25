@@ -299,24 +299,15 @@ def _resolve_soul_content(soul: SoulSpec | None) -> tuple[str, dict[str, str]]:
 
 
 def _load_persona_markdown(name: str) -> str:
-    from cognispheretutor.multi_user.context import get_current_user
-    from cognispheretutor.multi_user.paths import get_admin_path_service
-    from cognispheretutor.services.persona import PersonaService, get_persona_service
+    from cognispheretutor.multi_user.persona_access import get_visible_persona_detail
 
     try:
-        detail = get_persona_service().get_detail(name)
-        return strip_frontmatter(detail.content)
+        detail = get_visible_persona_detail(name)
     except Exception:
-        pass
-    try:
-        if not get_current_user().is_admin:
-            admin_service = PersonaService(
-                root=get_admin_path_service().get_workspace_dir() / "personas"
-            )
-            return strip_frontmatter(admin_service.get_detail(name).content)
-    except Exception:
-        pass
-    return ""
+        return ""
+    if not detail:
+        return ""
+    return strip_frontmatter(str(detail.get("content") or ""))
 
 
 # ── Soul template library (before /{partner_id} routes) ───────
@@ -365,9 +356,8 @@ async def delete_soul(soul_id: str):
 @router.get("/soul-sources")
 async def soul_sources():
     """Everything the create-wizard's soul step can start from."""
-    from cognispheretutor.multi_user.context import get_current_user
-    from cognispheretutor.multi_user.paths import get_admin_path_service
-    from cognispheretutor.services.persona import PersonaService, get_persona_service
+    from cognispheretutor.multi_user.persona_access import iter_visible_persona_entries
+    from cognispheretutor.services.persona import PersonaService
 
     def _persona_entry(service: PersonaService, info: Any) -> dict[str, str]:
         # Content rides along so the wizard can preview the clone; creation
@@ -379,24 +369,11 @@ async def soul_sources():
         return {"name": info.name, "description": info.description, "content": content}
 
     personas: list[dict[str, str]] = []
-    seen: set[str] = set()
     try:
-        service = get_persona_service()
-        for info in service.list_personas():
+        for service, info in iter_visible_persona_entries():
             personas.append(_persona_entry(service, info))
-            seen.add(info.name)
     except Exception:
-        logger.warning("Failed to list user personas", exc_info=True)
-    try:
-        if not get_current_user().is_admin:
-            admin_service = PersonaService(
-                root=get_admin_path_service().get_workspace_dir() / "personas"
-            )
-            for info in admin_service.list_personas():
-                if info.name not in seen:
-                    personas.append(_persona_entry(admin_service, info))
-    except Exception:
-        logger.warning("Failed to list admin personas", exc_info=True)
+        logger.warning("Failed to list visible personas", exc_info=True)
 
     return {"library": get_partner_manager().list_souls(), "personas": personas}
 
