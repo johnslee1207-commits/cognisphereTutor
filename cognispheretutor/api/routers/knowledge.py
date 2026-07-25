@@ -96,7 +96,7 @@ def format_bytes_human_readable(size_bytes: int) -> str:
         return f"{size_bytes} bytes"
 
 
-_kb_base_dir = PROJECT_ROOT / "data" / "knowledge_bases"
+_kb_base_dir = PROJECT_ROOT / "data" / "knowledge_bases"  # deprecated; tests only — use _current_kb_base_dir()
 DEFAULT_KB_ALIASES = {"", "default", "current", "selected", "默认", "默认知识库", "当前知识库"}
 
 # Lazy initialization

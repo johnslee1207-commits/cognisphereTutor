@@ -3,9 +3,13 @@
   "schema_id": "cognisphere.learning_plugin.install_manifest.v1",
   "plugins_root_env": "COGNISPHERE_LEARNING_PLUGINS_ROOT",
   "install_profile_env": "COGNISPHERE_LEARNING_PLUGINS_INSTALL_PROFILE",
-  "leetcode_artifact_dir_env": "COGNISPHERE_LEETCODE_ARTIFACT_DIR",
-  "sandbox_authorized_env": "COGNISPHERE_LEETCODE_SANDBOX_AUTHORIZED",
+  "artifact_dir_env": "COGNISPHERE_ARTIFACT_DIR",
+  "sandbox_authorized_env": "COGNISPHERE_SANDBOX_AUTHORIZED",
   "sandbox_authorized_value": "1",
+  "legacy_env_aliases": {
+    "artifact_dir_env": ["COGNISPHERE_LEETCODE_ARTIFACT_DIR"],
+    "sandbox_authorized_env": ["COGNISPHERE_LEETCODE_SANDBOX_AUTHORIZED"]
+  },
   "import_cache_env": "COGNISPHERE_IMPORT_CACHE_DIR",
   "trusted_context_base_url_env": "COGNISPHERE_TRUSTED_CONTEXT_BASE_URL",
   "default_sibling_name": "CognisphereLearningPlugins",

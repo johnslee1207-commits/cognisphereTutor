@@ -82,11 +82,7 @@
       "concepts"
     ]
   },
-  "domain_expected_knowledge_keys": {
-    "leetcode": ["problems", "patterns", "skills"],
-    "ap_calculus": ["concepts", "skills", "theorems", "problem_patterns"],
-    "aws_certification": ["domains", "skills"]
-  },
+  "default_expected_knowledge_keys": [],
   "import_cache": {
     "relative_workspace_path": "cognisphere_imports",
     "env_override": "COGNISPHERE_IMPORT_CACHE_DIR",

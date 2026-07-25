@@ -35,6 +35,32 @@ def kit_configured(*, env: dict[str, str] | None = None) -> bool:
     return bool(base)
 
 
+def trusted_context_status(*, env: dict[str, str] | None = None) -> dict[str, Any]:
+    """DT-P3 readiness snapshot for API / UI (live kit vs offline import)."""
+    contract = load_trusted_context_contract()
+    source = env if env is not None else os.environ
+    kit_env = str(contract.get("kit_base_url_env") or "")
+    live = kit_configured(env=source)
+    blocker = dict(contract.get("blocker") or {})
+    return {
+        "phase": "DT-P3",
+        "contract_id": contract.get("contract_id"),
+        "kit_configured": live,
+        "kit_base_url_env": kit_env,
+        "production_candidate_ready": production_candidate_ready(env=source),
+        "offline_path": "import_trusted_context_into_workspace",
+        "live_path": "fetch_and_import_trusted_context" if live else None,
+        "mode": "live" if live else "offline_only",
+        "blocker": None
+        if live
+        else {
+            "code": blocker.get("code") or "trusted_context_kit_unavailable",
+            "meaning": blocker.get("meaning"),
+            "handling": blocker.get("handling"),
+        },
+    }
+
+
 def resolve_trusted_context_cache_dir(
     *,
     project_id: str | None = None,
@@ -163,6 +189,43 @@ def fetch_trusted_context_package(
             details=report,
         )
     return package
+
+
+def fetch_and_import_trusted_context(
+    project_id: str,
+    payload_kind: str,
+    *,
+    readiness: dict[str, Any] | None = None,
+    env: dict[str, str] | None = None,
+    persist: bool = True,
+    cache_dir: str | Path | None = None,
+    timeout_s: float = 15.0,
+) -> dict[str, Any]:
+    """Live DT-P3: fetch from kit when configured, then validate + cache.
+
+    Raises ``CognisphereIntegrationError`` (fail-closed) when the kit URL is
+    unset or the package fails validation — use
+    ``import_trusted_context_into_workspace`` for offline packages.
+    """
+    package = fetch_trusted_context_package(
+        project_id,
+        payload_kind,
+        readiness=readiness,
+        env=env,
+        timeout_s=timeout_s,
+    )
+    receipt = import_trusted_context_into_workspace(
+        package,
+        persist=persist,
+        cache_dir=cache_dir,
+    )
+    receipt["source"] = "live_kit"
+    receipt["fetch"] = {
+        "project_id": project_id,
+        "payload_kind": payload_kind,
+        "kit_configured": True,
+    }
+    return receipt
 
 
 def import_trusted_context_into_workspace(

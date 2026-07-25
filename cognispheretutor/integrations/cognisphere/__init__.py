@@ -43,8 +43,11 @@ from cognispheretutor.integrations.cognisphere.security_gates import (
     is_sandbox_authorized,
 )
 from cognispheretutor.integrations.cognisphere.trusted_context_client import (
+    fetch_and_import_trusted_context,
     fetch_trusted_context_package,
     import_trusted_context_into_workspace,
+    kit_configured,
+    trusted_context_status,
     validate_trusted_context_package,
 )
 
@@ -55,6 +58,7 @@ __all__ = [
     "assert_sandbox_authorized",
     "compose_contexts",
     "export_and_import",
+    "fetch_and_import_trusted_context",
     "fetch_trusted_context_package",
     "gate_status",
     "get_plugin",
@@ -63,6 +67,7 @@ __all__ = [
     "import_trusted_context_into_workspace",
     "ingest_sandbox_result",
     "is_sandbox_authorized",
+    "kit_configured",
     "list_benchmark_cases",
     "list_plugins",
     "load_cognisphere_entrypoint",
@@ -78,6 +83,7 @@ __all__ = [
     "suggest_tutor_focus",
     "summarize_knowledge",
     "sync_mistake_memory",
+    "trusted_context_status",
     "validate_adapter",
     "validate_bundle_safety",
     "validate_trusted_context_package",

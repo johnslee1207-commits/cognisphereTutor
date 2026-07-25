@@ -1,8 +1,8 @@
 """Cognisphere Learning Plugins integration (cognisphereTutor product side).
 
-DT-P1 implements discovery, capability negotiation, and adapter validation.
-Later phases (bundle import, trusted context, runtime callbacks) live here too
-but remain thin stubs until their DT-P* gates land.
+Thin DT-P1…P6 client: discover / negotiate / validate / import /
+trusted-context / runtime callbacks + offline bridge / compose.
+Domain learning logic stays in plugins; Tutor only orchestrates.
 """
 
 from __future__ import annotations

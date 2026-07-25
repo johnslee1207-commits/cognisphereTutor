@@ -49,7 +49,7 @@ def describe_error(code: str) -> dict[str, Any]:
 
 
 def format_issue(code: str, suffix: str | None = None) -> str:
-    """Build SDK-aligned issue tokens such as ``missing_plugin_manifest:leetcode``."""
+    """Build SDK-aligned issue tokens such as ``missing_plugin_manifest:{domain}``."""
     if suffix:
         return f"{code}:{suffix}"
     return code

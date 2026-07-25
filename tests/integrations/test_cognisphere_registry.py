@@ -194,6 +194,7 @@ def test_export_and_import_ap_calculus_fixture(client: PluginRegistryClient, tmp
 
 
 def test_sandbox_gate_fail_closed(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.delenv("COGNISPHERE_SANDBOX_AUTHORIZED", raising=False)
     monkeypatch.delenv("COGNISPHERE_LEETCODE_SANDBOX_AUTHORIZED", raising=False)
     assert is_sandbox_authorized() is False
     with pytest.raises(CognisphereIntegrationError) as exc:
@@ -206,9 +207,15 @@ def test_sandbox_gate_fail_closed(monkeypatch: pytest.MonkeyPatch, tmp_path: Pat
     assert ok["mode"] == "offline_simulated"
     assert ok["mistake_memory"]["ok"] is True
 
-    monkeypatch.setenv("COGNISPHERE_LEETCODE_SANDBOX_AUTHORIZED", "1")
+    # Primary generic env
+    monkeypatch.setenv("COGNISPHERE_SANDBOX_AUTHORIZED", "1")
     live = ingest_sandbox_result({"passed": True, "session_id": "t2"})
     assert live["mode"] == "authorized_live"
+
+    # One-release legacy alias still accepted
+    monkeypatch.delenv("COGNISPHERE_SANDBOX_AUTHORIZED", raising=False)
+    monkeypatch.setenv("COGNISPHERE_LEETCODE_SANDBOX_AUTHORIZED", "1")
+    assert is_sandbox_authorized() is True
 
 
 def test_tutor_session_and_mastery_callbacks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -251,37 +258,122 @@ def test_trusted_context_offline_import(tmp_path: Path) -> None:
     assert (tmp_path / "demo-project" / "package.json").exists()
 
 
-def test_trusted_context_live_fetch_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_trusted_context_status_and_live_fetch_fail_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from cognispheretutor.integrations.cognisphere.trusted_context_client import (
+        trusted_context_status,
+    )
+
     monkeypatch.delenv("COGNISPHERE_TRUSTED_CONTEXT_BASE_URL", raising=False)
+    status = trusted_context_status()
+    assert status["phase"] == "DT-P3"
+    assert status["kit_configured"] is False
+    assert status["mode"] == "offline_only"
+    assert status["blocker"]["code"] == "trusted_context_kit_unavailable"
+
     with pytest.raises(CognisphereIntegrationError) as exc:
         fetch_trusted_context_package("proj", "knowledge_pack")
     assert exc.value.code == "trusted_context_kit_unavailable"
 
 
-def test_compose_contexts_local(client: PluginRegistryClient) -> None:
+def test_compose_contexts_local(client: PluginRegistryClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Prefer the local compose path so developer machines with the real SDK
+    # installed do not divert into live plugin packing (fixture ap_calculus
+    # cannot load under the SDK).
+    import sys
+    import types
+
+    import cognispheretutor.integrations.cognisphere.capability_negotiator as negotiator
+
+    monkeypatch.setattr(
+        negotiator.PluginRegistryClient,
+        "ensure_import_paths",
+        lambda self, *args, **kwargs: None,
+    )
+    blocked = types.ModuleType("cognisphere_plugin_sdk.entrypoint_surface")
+
+    def _blocked(*_a, **_k):
+        raise ImportError("force local compose")
+
+    blocked.compose_plugin_contexts = _blocked  # type: ignore[attr-defined]
+    blocked.query_cross_domain_capabilities = _blocked  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "cognisphere_plugin_sdk.entrypoint_surface", blocked)
+
     result = compose_contexts(
         ["leetcode", "ap_calculus"],
         required_capabilities=["deeptutor_export"],
         client=client,
     )
+    assert result["phase"] == "DT-P6"
+    assert result.get("source") == "local_compose"
     assert result["ok"] is True
     assert len(result["contexts"]) == 2
 
 
-def test_benchmark_stub(client: PluginRegistryClient) -> None:
-    result = import_benchmark_case("leetcode", client=client)
-    assert result["phase"] == "DT-P6"
-    assert result["status"] in {"stubbed", "imported"}
+def test_benchmark_unavailable_raises(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Missing interview runtime must raise — never a silent stubbed envelope."""
+    from cognispheretutor.integrations.cognisphere import runtime_bridge as bridge
 
+    def _missing(*_a, **_k):
+        raise CognisphereIntegrationError(
+            "benchmark_unavailable",
+            message="forced missing runtime",
+        )
+
+    monkeypatch.setattr(bridge, "load_runtime_module", _missing)
+    with pytest.raises(CognisphereIntegrationError) as exc:
+        import_benchmark_case("leetcode", {"case_id": "case-x"})
+    assert exc.value.code == "benchmark_unavailable"
 
 def test_runtime_adapters_manifest_loaded() -> None:
     from cognispheretutor.integrations.cognisphere._contract import load_runtime_adapters
 
     adapters = load_runtime_adapters()
     assert adapters["contract_id"].endswith("runtime_adapters.v1")
+    assert "default_domain" not in adapters
+    assert "{domain}" in str(adapters.get("module_template") or "")
     for key in ("socratic_tutor", "code_verification", "mistake_memory", "skill_graph", "benchmark"):
         assert key in adapters["adapters"]
-        assert adapters["adapters"][key]["module"]
+        assert adapters["adapters"][key].get("module_key")
+        assert "leetcode" not in str(adapters["adapters"][key].get("module") or "")
+
+
+def test_no_default_domain_hard_fail(monkeypatch: pytest.MonkeyPatch) -> None:
+    from cognispheretutor.integrations.cognisphere import runtime_bridge as bridge
+
+    with pytest.raises(CognisphereIntegrationError) as exc:
+        bridge.load_runtime_module("socratic_tutor", domain=None)
+    assert exc.value.code == "domain_required"
+
+
+def test_summarize_knowledge_no_domain_shaped_fallback() -> None:
+    from cognispheretutor.integrations.cognisphere.plugin_importer import summarize_knowledge
+
+    # aws-shaped pack: must not invent leetcode expected keys
+    summary = summarize_knowledge(
+        {
+            "domain": "aws_certification",
+            "knowledge": {"domains": [{"id": "d1"}], "skills": [{"id": "s1"}]},
+            "safety": {},
+        }
+    )
+    assert "problems" not in summary["expected_keys"] or "problems" in summary["counts"]
+    assert "domains" in summary["expected_keys"]
+    assert summary["counts"]["domains"] == 1
+
+    # plugin-declared expected keys win
+    declared = summarize_knowledge(
+        {
+            "domain": "ap_calculus",
+            "expected_knowledge_keys": ["concepts", "theorems"],
+            "knowledge": {"concepts": [{"id": "c1"}]},
+        }
+    )
+    assert declared["expected_keys"] == ["concepts", "theorems"]
+    assert "knowledge.theorems_empty" in declared["empty_reasons"] or (
+        "knowledge.theorems_missing" in declared["empty_reasons"]
+    )
 
 
 def test_runtime_bridge_with_mock_modules(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -360,19 +452,26 @@ def test_runtime_bridge_with_mock_modules(monkeypatch: pytest.MonkeyPatch, tmp_p
     }
 
     def fake_load(adapter_name, *, domain=None, root=None, client=None):
+        assert domain == "leetcode"
         return modules[adapter_name]
 
     monkeypatch.setattr(bridge, "load_runtime_module", fake_load)
 
-    started = bridge.start_tutor_session("two-sum", hint_level=1, persist=False)
+    started = bridge.start_tutor_session(
+        "two-sum", domain="leetcode", hint_level=1, persist=False
+    )
     assert started["ok"] is True
+    assert started["domain"] == "leetcode"
     assert started["session"]["hint_level"] == 1
     assert started["callback"]["ok"] is True
 
-    advanced = bridge.advance_tutor_session(started["session"], event="advance")
+    advanced = bridge.advance_tutor_session(
+        started["session"], domain="leetcode", event="advance"
+    )
     assert advanced["session"]["current_phase"] == "probe"
 
     verified = bridge.verify_submission(
+        domain="leetcode",
         slug="two-sum",
         offline_simulated=True,
         outcome={"outcome": "WA", "problem_slug": "two-sum"},
@@ -380,14 +479,14 @@ def test_runtime_bridge_with_mock_modules(monkeypatch: pytest.MonkeyPatch, tmp_p
     assert verified["ok"] is True
     assert verified["ingest"]["mode"] == "offline_simulated"
 
-    focus = bridge.suggest_tutor_focus(problem_slug="two-sum")
+    focus = bridge.suggest_tutor_focus(domain="leetcode", problem_slug="two-sum")
     assert focus["suggestion"]["suggestion"] == "skill_gap"
     assert "skill_gap" in focus["sync"]["suggest_tutor_focus"]
 
-    plan = bridge.plan_skill_path(learner_id="learner-1")
+    plan = bridge.plan_skill_path(domain="leetcode", learner_id="learner-1")
     assert plan["mastery"]["learning_store"]["mastery_path_id"] == "path-1"
 
-    interview = bridge.run_interview_session(learner_id="learner-1")
+    interview = bridge.run_interview_session(domain="leetcode", learner_id="learner-1")
     assert interview["ok"] is True
     assert interview["live_llm"] is False
 

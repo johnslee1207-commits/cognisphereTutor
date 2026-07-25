@@ -503,15 +503,16 @@ class AgenticChatPipeline:
         for kb in self._selected_kbs(context):
             try:
                 from cognispheretutor.multi_user.knowledge_access import resolve_kb
-                from cognispheretutor.services.rag.factory import PAGEINDEX_PROVIDER
-                from cognispheretutor.services.rag.pipelines.pageindex.pipeline import PageIndexPipeline
+                from cognispheretutor.services.rag.factory import PAGEINDEX_PROVIDER, get_pipeline
                 from cognispheretutor.services.rag.provider_binding import resolve_bound_provider
 
                 resource = resolve_kb(kb, require_write=False)
                 base_dir = str(resource.base_dir)
                 if resolve_bound_provider(base_dir, resource.name) != PAGEINDEX_PROVIDER:
                     continue
-                out[kb] = PageIndexPipeline(kb_base_dir=base_dir).document_map(resource.name)
+                out[kb] = get_pipeline(PAGEINDEX_PROVIDER, kb_base_dir=base_dir).document_map(
+                    resource.name
+                )
             except Exception:
                 logger.debug("pageindex doc-map resolution failed for %r", kb, exc_info=True)
         return out

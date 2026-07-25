@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Any
+import asyncio
+import json
+from pathlib import Path
+from typing import Any, AsyncIterator
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
@@ -19,6 +23,8 @@ from cognispheretutor.learning.service import LearningService
 from cognispheretutor.learning.storage import LearningStore
 
 router = APIRouter()
+
+_MASTERY_CAPABILITY = "mastery_path"
 
 
 def _service() -> LearningService:
@@ -35,7 +41,19 @@ def _http_error(exc: CognisphereIntegrationError) -> HTTPException:
         "benchmark_unavailable",
     }:
         status = 503
+    elif exc.code == "domain_required":
+        status = 422
     return HTTPException(status_code=status, detail=exc.to_dict())
+
+
+def _chat_continue_url(path_id: str, *, tutor_session_id: str | None = None) -> str:
+    """Deep-link into Chat with Mastery Path mode pre-selected."""
+    from urllib.parse import quote, urlencode
+
+    query = {"capability": _MASTERY_CAPABILITY}
+    if tutor_session_id:
+        query["tutor_session"] = tutor_session_id
+    return f"/home/{quote(path_id, safe='')}?{urlencode(query)}"
 
 
 class ImportSeedRequest(BaseModel):
@@ -49,6 +67,7 @@ class ImportSeedRequest(BaseModel):
 
 
 class TutorStartRequest(BaseModel):
+    domain: str = Field(..., min_length=1, max_length=64)
     slug: str = Field(..., min_length=1, max_length=200)
     hint_level: int = Field(0, ge=0, le=4)
     path_id: str | None = None
@@ -56,13 +75,25 @@ class TutorStartRequest(BaseModel):
 
 
 class SuggestFocusRequest(BaseModel):
+    domain: str = Field(..., min_length=1, max_length=64)
     slug: str | None = None
     path_id: str | None = None
 
 
 class PlanPathRequest(BaseModel):
+    domain: str = Field(..., min_length=1, max_length=64)
     learner_id: str = "offline-learner"
     path_id: str | None = None
+
+
+class TrustedContextImportRequest(BaseModel):
+    project_id: str = Field(..., min_length=1, max_length=200)
+    payload_kind: str = Field("knowledge_pack", min_length=1, max_length=64)
+    package: dict[str, Any] | None = Field(
+        default=None,
+        description="Offline package body; omit to fetch from live kit when configured",
+    )
+    persist: bool = True
 
 
 @router.get("/status")
@@ -70,6 +101,9 @@ async def cognisphere_learning_status():
     """Discovery + gate snapshot for the Guided Learning UI."""
     from cognispheretutor.integrations.cognisphere import gate_status, list_plugins
     from cognispheretutor.integrations.cognisphere.security_gates import is_sandbox_authorized
+    from cognispheretutor.integrations.cognisphere.trusted_context_client import (
+        trusted_context_status,
+    )
 
     try:
         discovery = list_plugins()
@@ -99,8 +133,12 @@ async def cognisphere_learning_status():
         "gates": {
             **gate_status(),
             "sandbox_authorized": is_sandbox_authorized(),
+            "trusted_context": trusted_context_status(),
         },
         "plugins": plugins,
+        "defaults": {
+            "chat_capability": _MASTERY_CAPABILITY,
+        },
     }
 
 
@@ -159,9 +197,11 @@ async def import_and_seed(body: ImportSeedRequest):
                 {"id": m.id, "name": m.name, "kp_count": len(m.knowledge_points)} for m in modules
             ],
             "knowledge_sparse": len(non_overview) == 0,
+            "continue_in_chat": _chat_continue_url(path_id),
             "note": (
                 "Bundle knowledge was sparse; seeded an overview path. "
-                "Re-import after LC-003 ontology is available for full problems/skills."
+                "Re-import after the domain plugin ontology/export is available "
+                "for full knowledge items."
                 if len(non_overview) == 0
                 else None
             ),
@@ -178,14 +218,12 @@ async def import_and_seed(body: ImportSeedRequest):
         },
         "mastery_path": seed_info,
         "is_cognisphere_path": is_cognisphere_path_id(path_id),
+        "continue_in_chat": _chat_continue_url(path_id) if seed_info else None,
     }
 
 
 def _load_imported_knowledge(domain: str, receipt: dict[str, Any]) -> dict[str, Any]:
     """Load full bundle.knowledge from import cache when present."""
-    import json
-    from pathlib import Path
-
     artifact = receipt.get("artifact_path")
     if artifact:
         bundle_path = Path(artifact) / "bundle.json"
@@ -199,12 +237,48 @@ def _load_imported_knowledge(domain: str, receipt: dict[str, Any]) -> dict[str, 
     return dict(seeded.get("knowledge") or {})
 
 
+@router.post("/trusted-context/import")
+async def import_trusted_context(body: TrustedContextImportRequest):
+    """DT-P3: offline package import, or live kit fetch+import when URL is set."""
+    from cognispheretutor.integrations.cognisphere.trusted_context_client import (
+        fetch_and_import_trusted_context,
+        import_trusted_context_into_workspace,
+        kit_configured,
+    )
+
+    try:
+        if body.package is not None:
+            receipt = import_trusted_context_into_workspace(
+                body.package,
+                persist=body.persist,
+            )
+            receipt["source"] = "offline_package"
+        elif kit_configured():
+            receipt = fetch_and_import_trusted_context(
+                body.project_id,
+                body.payload_kind,
+                persist=body.persist,
+            )
+        else:
+            raise CognisphereIntegrationError(
+                "trusted_context_kit_unavailable",
+                message=(
+                    "No package body and COGNISPHERE_TRUSTED_CONTEXT_BASE_URL unset; "
+                    "pass an offline package or configure the live kit"
+                ),
+                details={"project_id": body.project_id, "payload_kind": body.payload_kind},
+            )
+    except CognisphereIntegrationError as exc:
+        raise _http_error(exc) from exc
+    return receipt
+
+
 @router.post("/suggest-focus")
 async def suggest_focus(body: SuggestFocusRequest):
     from cognispheretutor.integrations.cognisphere import suggest_tutor_focus
 
     try:
-        result = suggest_tutor_focus(problem_slug=body.slug)
+        result = suggest_tutor_focus(domain=body.domain, problem_slug=body.slug)
     except CognisphereIntegrationError as exc:
         raise _http_error(exc) from exc
     return result
@@ -215,12 +289,13 @@ async def plan_path(body: PlanPathRequest):
     from cognispheretutor.integrations.cognisphere import plan_skill_path
 
     try:
-        result = plan_skill_path(learner_id=body.learner_id)
+        result = plan_skill_path(domain=body.domain, learner_id=body.learner_id)
     except CognisphereIntegrationError as exc:
         raise _http_error(exc) from exc
     if body.path_id and result.get("ok"):
         result = dict(result)
         result["path_id"] = body.path_id
+        result["continue_in_chat"] = _chat_continue_url(body.path_id)
     return result
 
 
@@ -231,13 +306,63 @@ async def tutor_start(body: TutorStartRequest):
     try:
         result = start_tutor_session(
             body.slug,
+            domain=body.domain,
             hint_level=body.hint_level,
             persist=body.persist,
         )
     except CognisphereIntegrationError as exc:
         raise _http_error(exc) from exc
     payload = dict(result)
+    session = payload.get("session") if isinstance(payload.get("session"), dict) else {}
+    tutor_session_id = str(session.get("session_id") or "")
     if body.path_id:
         payload["path_id"] = body.path_id
-        payload["continue_in_chat"] = f"/home/{body.path_id}"
+        payload["continue_in_chat"] = _chat_continue_url(
+            body.path_id,
+            tutor_session_id=tutor_session_id or None,
+        )
+        payload["chat_capability"] = _MASTERY_CAPABILITY
+    if tutor_session_id:
+        payload["tutor_session_id"] = tutor_session_id
+        payload["events_url"] = (
+            f"/api/v1/learning/cognisphere/tutor/events?session_id={tutor_session_id}"
+        )
     return payload
+
+
+@router.get("/tutor/events")
+async def tutor_events_sse(
+    session_id: str = Query(..., min_length=1, max_length=200),
+    since: int = Query(0, ge=0),
+):
+    """SSE stream of persisted tutor session events (DT-P4 product push)."""
+    from cognispheretutor.integrations.cognisphere.runtime_callbacks import (
+        resolve_runtime_state_dir,
+    )
+
+    events_path = resolve_runtime_state_dir(session_id=session_id) / "events.jsonl"
+
+    async def _generate() -> AsyncIterator[str]:
+        cursor = since
+        # Replay existing lines first, then poll for appends.
+        while True:
+            if events_path.is_file():
+                lines = events_path.read_text(encoding="utf-8").splitlines()
+                while cursor < len(lines):
+                    line = lines[cursor].strip()
+                    cursor += 1
+                    if not line:
+                        continue
+                    yield f"id: {cursor}\ndata: {line}\n\n"
+            yield f": ping {cursor}\n\n"
+            await asyncio.sleep(1.0)
+
+    return StreamingResponse(
+        _generate(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )

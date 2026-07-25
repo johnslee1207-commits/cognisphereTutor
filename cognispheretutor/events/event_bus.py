@@ -25,6 +25,7 @@ class EventType(str, Enum):
     SOLVE_COMPLETE = "SOLVE_COMPLETE"
     QUESTION_COMPLETE = "QUESTION_COMPLETE"
     CAPABILITY_COMPLETE = "CAPABILITY_COMPLETE"
+    COGNISPHERE_TUTOR = "COGNISPHERE_TUTOR"
 
 
 @dataclass
@@ -89,13 +90,15 @@ class EventBus:
         logger.debug("EventBus initialized")
 
     def subscribe(self, event_type: EventType, handler: EventHandler) -> None:
-        if handler not in self._subscribers[event_type]:
-            self._subscribers[event_type].append(handler)
+        handlers = self._subscribers.setdefault(event_type, [])
+        if handler not in handlers:
+            handlers.append(handler)
             logger.debug("Handler subscribed to %s", event_type.value)
 
     def unsubscribe(self, event_type: EventType, handler: EventHandler) -> None:
-        if handler in self._subscribers[event_type]:
-            self._subscribers[event_type].remove(handler)
+        handlers = self._subscribers.setdefault(event_type, [])
+        if handler in handlers:
+            handlers.remove(handler)
             logger.debug("Handler unsubscribed from %s", event_type.value)
 
     async def publish(self, event: Event) -> None:

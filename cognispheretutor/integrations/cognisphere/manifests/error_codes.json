@@ -57,9 +57,17 @@
       "meaning": "Live LLM tutor/interviewer gate closed",
       "handling": "Fail-closed"
     },
+    "domain_required": {
+      "meaning": "A domain id is required; Tutor has no default domain",
+      "handling": "Pass an explicit domain from discovery / CLI --domain / API body"
+    },
+    "ontology_artifacts_missing": {
+      "meaning": "Export depends on missing ontology artifacts for the domain plugin",
+      "handling": "Prompt host ontology/sync first for the selected domain"
+    },
     "lc003_ontology_missing": {
-      "meaning": "Export depends on missing ontology artifacts",
-      "handling": "Prompt host ontology/sync first"
+      "meaning": "Deprecated alias of ontology_artifacts_missing (LeetCode-era name)",
+      "handling": "Prefer ontology_artifacts_missing; still accepted for one release"
     },
     "production_candidate_blocked": {
       "meaning": "Cognisphere production-candidate readiness blocked",

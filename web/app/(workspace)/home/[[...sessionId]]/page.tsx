@@ -341,11 +341,17 @@ export default function ChatPage() {
   // `/home/<sessionId>` as soon as the new session is created, dropping the
   // query — so we can't read it later from the live search params.
   const pendingAgentRef = useRef<string | null | undefined>(undefined);
+  // Capture capability/tutor query before any session URL rewrite drops them.
+  const pendingCapabilityRef = useRef<string | null | undefined>(undefined);
+  const pendingTutorSessionRef = useRef<string | null | undefined>(undefined);
   if (pendingAgentRef.current === undefined) {
-    pendingAgentRef.current =
+    const params =
       typeof window === "undefined"
         ? null
-        : new URLSearchParams(window.location.search).get("agent");
+        : new URLSearchParams(window.location.search);
+    pendingAgentRef.current = params?.get("agent") ?? null;
+    pendingCapabilityRef.current = params?.get("capability") ?? null;
+    pendingTutorSessionRef.current = params?.get("tutor_session") ?? null;
   }
   const agentPreselectDoneRef = useRef(false);
   const [llmOptions, setLLMOptions] = useState<LLMOption[]>([]);
@@ -1039,13 +1045,13 @@ export default function ChatPage() {
     setCapabilityConfigs(loadCapabilityPlaygroundConfigs());
   }, []);
 
-  /* URL query params (capability, tool) */
+  /* URL query params (capability, tool) — prefer values captured at first paint */
   useEffect(() => {
     if (typeof window === "undefined") return;
     const p = new URLSearchParams(window.location.search);
-    const qc = p.get("capability");
+    const qc = pendingCapabilityRef.current ?? p.get("capability");
     const qt = p.getAll("tool");
-    if (qc !== null) handleSelectCapability(qc || "");
+    if (qc) handleSelectCapability(qc);
     else if (qt.length) {
       const valid = qt.filter((t): t is ToolName =>
         ALL_TOOLS.some((d) => d.name === t),
@@ -1642,6 +1648,26 @@ export default function ChatPage() {
     agentPreselectDoneRef.current = true;
     handleSelectAgent(name);
   }, [agentNameSet, handleSelectAgent]);
+
+  // When arriving from a Cognisphere tutor start, subscribe to tutor SSE so
+  // session events surface via `cognisphere-tutor-event` for UI hooks.
+  useEffect(() => {
+    const tutorSession = pendingTutorSessionRef.current;
+    if (!tutorSession || typeof window === "undefined") return;
+    const url = `/api/v1/learning/cognisphere/tutor/events?session_id=${encodeURIComponent(tutorSession)}`;
+    const source = new EventSource(url);
+    source.onmessage = (ev) => {
+      try {
+        const payload = JSON.parse(ev.data);
+        window.dispatchEvent(
+          new CustomEvent("cognisphere-tutor-event", { detail: payload }),
+        );
+      } catch {
+        /* ignore malformed lines */
+      }
+    };
+    return () => source.close();
+  }, []);
   const handleSelectNotebookPicker = useCallback(() => {
     setShowNotebookPicker(true);
   }, []);

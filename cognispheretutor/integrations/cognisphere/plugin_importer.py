@@ -134,15 +134,52 @@ def _count_knowledge_list(value: Any) -> int:
     return 0 if value in (None, "", {}, []) else 1
 
 
+def _resolve_expected_knowledge_keys(
+    bundle: dict[str, Any],
+    knowledge: dict[str, Any],
+    mapping: dict[str, Any],
+) -> list[str]:
+    """Prefer plugin-declared keys; never fall back to a domain-shaped default list.
+
+    Order:
+    1. ``bundle.expected_knowledge_keys`` (plugin handoff)
+    2. ``bundle.knowledge.expected_keys`` / ``meta.expected_knowledge_keys``
+    3. mapping ``default_expected_knowledge_keys`` when non-empty
+    4. Generic: union of ``surface_knowledge_keys`` values that appear in knowledge,
+       else all top-level knowledge keys (report-only, no domain bias)
+    """
+    for candidate in (
+        bundle.get("expected_knowledge_keys"),
+        (knowledge.get("expected_keys") if isinstance(knowledge.get("expected_keys"), list) else None),
+        ((bundle.get("meta") or {}).get("expected_knowledge_keys") if isinstance(bundle.get("meta"), dict) else None),
+    ):
+        if isinstance(candidate, list) and candidate:
+            return [str(k) for k in candidate if str(k).strip()]
+
+    defaults = list(mapping.get("default_expected_knowledge_keys") or [])
+    if defaults:
+        return [str(k) for k in defaults if str(k).strip()]
+
+    surfaces = dict(mapping.get("surface_knowledge_keys") or {})
+    surface_union: list[str] = []
+    seen: set[str] = set()
+    for keys in surfaces.values():
+        for key in list(keys or []):
+            text = str(key)
+            if text in knowledge and text not in seen:
+                seen.add(text)
+                surface_union.append(text)
+    if surface_union:
+        return surface_union
+    return sorted(str(k) for k in knowledge.keys())
+
+
 def summarize_knowledge(bundle: dict[str, Any]) -> dict[str, Any]:
-    """Summarize knowledge payload; explain empty expected keys per domain."""
+    """Summarize knowledge payload; expected keys are plugin-declared or generic."""
     mapping = load_learning_loop_mapping()
     knowledge = bundle.get("knowledge") if isinstance(bundle.get("knowledge"), dict) else {}
     domain = str(bundle.get("domain") or "")
-    expected = list(
-        (mapping.get("domain_expected_knowledge_keys") or {}).get(domain)
-        or ["problems", "patterns", "skills"]
-    )
+    expected = _resolve_expected_knowledge_keys(bundle, knowledge, mapping)
     counts: dict[str, int] = {}
     empty_reasons: list[str] = []
     for key in sorted(set(list(knowledge.keys()) + expected)):
@@ -164,6 +201,12 @@ def summarize_knowledge(bundle: dict[str, Any]) -> dict[str, Any]:
                 payload[key] = knowledge.get(key)
         surface_payloads[surface] = payload
 
+    # Domain-agnostic extras: any top-level *_graph plus common optional blobs.
+    graph_flags = {
+        key: bool(bundle.get(key))
+        for key in bundle.keys()
+        if str(key).endswith("_graph")
+    }
     return {
         "domain": domain,
         "counts": counts,
@@ -174,9 +217,8 @@ def summarize_knowledge(bundle: dict[str, Any]) -> dict[str, Any]:
         ),
         "surfaces": surface_payloads,
         "extra_top_level": {
-            "ontology_graph": bool(bundle.get("ontology_graph")),
+            **graph_flags,
             "tutor_scripts": _count_knowledge_list(bundle.get("tutor_scripts")),
-            "calculus_graph": bool(bundle.get("calculus_graph")),
             "forbidden_in_export": list(bundle.get("forbidden_in_export") or []),
         },
     }

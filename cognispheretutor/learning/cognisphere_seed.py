@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
 from cognispheretutor.learning.models import KnowledgePoint, KnowledgeType, LearningModule
 
 _PATH_PREFIX = "csphere-"
@@ -129,7 +130,14 @@ def modules_from_knowledge(
 
 def seed_payload_from_import_receipt(receipt: dict[str, Any]) -> dict[str, Any]:
     """Extract domain + knowledge dict from an export_and_import receipt."""
-    domain = str(receipt.get("domain") or (receipt.get("receipt") or {}).get("domain") or "leetcode")
+    domain = str(
+        receipt.get("domain") or (receipt.get("receipt") or {}).get("domain") or ""
+    ).strip()
+    if not domain:
+        raise CognisphereIntegrationError(
+            "domain_required",
+            message="import receipt missing domain; cognisphereTutor has no default domain",
+        )
     knowledge: dict[str, Any] = {}
     # Prefer full bundle knowledge when present on the receipt envelope.
     for key in ("knowledge", "bundle_knowledge"):

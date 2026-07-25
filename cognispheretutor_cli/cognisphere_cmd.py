@@ -188,7 +188,16 @@ def register(app: typer.Typer) -> None:
 
     @app.command("tutor-start")
     def cognisphere_tutor_start(
-        slug: str = typer.Argument(..., help="Problem slug, e.g. two-sum"),
+        domain: str = typer.Option(
+            ...,
+            "--domain",
+            "-d",
+            help="Domain id from plugin discovery (required; no default)",
+        ),
+        slug: str = typer.Argument(
+            ...,
+            help="Problem / item slug (example for leetcode fixture: two-sum)",
+        ),
         hint_level: int = typer.Option(0, "--hint-level", min=0, max=4),
         root: Optional[Path] = typer.Option(None, "--root"),
         no_persist: bool = typer.Option(False, "--no-persist"),
@@ -200,6 +209,7 @@ def register(app: typer.Typer) -> None:
         try:
             result = start_tutor_session(
                 slug,
+                domain=domain,
                 hint_level=hint_level,
                 root=root,
                 persist=not no_persist,
@@ -214,6 +224,12 @@ def register(app: typer.Typer) -> None:
     @app.command("tutor-advance")
     def cognisphere_tutor_advance(
         session_file: Path = typer.Argument(..., help="Path to a saved Socratic session JSON"),
+        domain: Optional[str] = typer.Option(
+            None,
+            "--domain",
+            "-d",
+            help="Domain id (required if session JSON has no domain field)",
+        ),
         event: str = typer.Option("advance", "--event"),
         checkpoint: Optional[str] = typer.Option(None, "--checkpoint"),
         root: Optional[Path] = typer.Option(None, "--root"),
@@ -226,6 +242,7 @@ def register(app: typer.Typer) -> None:
         try:
             result = advance_tutor_session(
                 session,
+                domain=domain or session.get("domain"),
                 event=event,
                 checkpoint=checkpoint,
                 root=root,
@@ -237,12 +254,22 @@ def register(app: typer.Typer) -> None:
 
     @app.command("sandbox-verify")
     def cognisphere_sandbox_verify(
+        domain: str = typer.Option(
+            ...,
+            "--domain",
+            "-d",
+            help="Domain id from plugin discovery (required; no default)",
+        ),
         outcome: str = typer.Option(
             "WA",
             "--outcome",
             help="Offline simulated sandbox outcome (AC/WA/RE/TLE/CE)",
         ),
-        slug: str = typer.Option("two-sum", "--slug"),
+        slug: str = typer.Option(
+            ...,
+            "--slug",
+            help="Problem / item slug (example for leetcode fixture: two-sum)",
+        ),
         root: Optional[Path] = typer.Option(None, "--root"),
     ) -> None:
         """Analyze an offline sandbox outcome and ingest (DT-P4/P5)."""
@@ -251,6 +278,7 @@ def register(app: typer.Typer) -> None:
 
         try:
             result = verify_submission(
+                domain=domain,
                 slug=slug,
                 offline_simulated=True,
                 outcome={"outcome": outcome, "problem_slug": slug},
@@ -263,6 +291,12 @@ def register(app: typer.Typer) -> None:
 
     @app.command("suggest-focus")
     def cognisphere_suggest_focus(
+        domain: str = typer.Option(
+            ...,
+            "--domain",
+            "-d",
+            help="Domain id from plugin discovery (required; no default)",
+        ),
         slug: Optional[str] = typer.Option(None, "--slug"),
         root: Optional[Path] = typer.Option(None, "--root"),
     ) -> None:
@@ -271,7 +305,7 @@ def register(app: typer.Typer) -> None:
         from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
 
         try:
-            result = suggest_tutor_focus(problem_slug=slug, root=root)
+            result = suggest_tutor_focus(domain=domain, problem_slug=slug, root=root)
         except CognisphereIntegrationError as exc:
             console.print_json(json.dumps(exc.to_dict(), indent=2, ensure_ascii=False))
             raise typer.Exit(code=1) from exc
@@ -279,6 +313,12 @@ def register(app: typer.Typer) -> None:
 
     @app.command("plan-path")
     def cognisphere_plan_path(
+        domain: str = typer.Option(
+            ...,
+            "--domain",
+            "-d",
+            help="Domain id from plugin discovery (required; no default)",
+        ),
         learner_id: str = typer.Option("offline-learner", "--learner-id"),
         root: Optional[Path] = typer.Option(None, "--root"),
     ) -> None:
@@ -287,7 +327,7 @@ def register(app: typer.Typer) -> None:
         from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
 
         try:
-            result = plan_skill_path(learner_id=learner_id, root=root)
+            result = plan_skill_path(domain=domain, learner_id=learner_id, root=root)
         except CognisphereIntegrationError as exc:
             console.print_json(json.dumps(exc.to_dict(), indent=2, ensure_ascii=False))
             raise typer.Exit(code=1) from exc
@@ -295,6 +335,12 @@ def register(app: typer.Typer) -> None:
 
     @app.command("interview")
     def cognisphere_interview(
+        domain: str = typer.Option(
+            ...,
+            "--domain",
+            "-d",
+            help="Domain id from plugin discovery (required; no default)",
+        ),
         case_id: Optional[str] = typer.Option(None, "--case-id"),
         learner_id: str = typer.Option("offline-learner", "--learner-id"),
         run_flow: bool = typer.Option(
@@ -306,27 +352,33 @@ def register(app: typer.Typer) -> None:
     ) -> None:
         """Start or run offline interview/benchmark session (DT-P6)."""
         from cognispheretutor.integrations.cognisphere import run_interview_session
+        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
 
         responses = (
             {
                 "problem_presentation": {"text": "problem received"},
                 "clarifying_questions": {"text": "clarify constraints"},
-                "approach_discussion": {"text": "hash map approach"},
+                "approach_discussion": {"text": "approach discussion"},
                 "coding": {"text": "implemented solution"},
                 "testing": {"text": "tests passed"},
-                "complexity_analysis": {"text": "O(n) time O(n) space"},
+                "complexity_analysis": {"text": "complexity analysis"},
                 "final_review": {"summary": "done", "text": "tradeoff explain alternative"},
             }
             if run_flow
             else None
         )
-        result = run_interview_session(
-            case_id=case_id,
-            learner_id=learner_id,
-            responses=responses,
-            root=root,
-            persist=False,
-        )
+        try:
+            result = run_interview_session(
+                domain=domain,
+                case_id=case_id,
+                learner_id=learner_id,
+                responses=responses,
+                root=root,
+                persist=False,
+            )
+        except CognisphereIntegrationError as exc:
+            console.print_json(json.dumps(exc.to_dict(), indent=2, ensure_ascii=False))
+            raise typer.Exit(code=1) from exc
         console.print_json(json.dumps(result, indent=2, ensure_ascii=False))
         if not result.get("ok"):
             raise typer.Exit(code=1)

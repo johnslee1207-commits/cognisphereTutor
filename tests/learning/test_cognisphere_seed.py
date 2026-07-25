@@ -13,6 +13,7 @@ from cognispheretutor.learning.cognisphere_seed import (
     is_cognisphere_path_id,
     mastery_path_id_for_domain,
     modules_from_knowledge,
+    seed_payload_from_import_receipt,
 )
 from cognispheretutor.learning.storage import LearningStore
 
@@ -24,8 +25,22 @@ FIXTURE_ROOT = (
 
 def test_mastery_path_id_helpers() -> None:
     assert mastery_path_id_for_domain("leetcode") == "csphere-leetcode"
+    assert mastery_path_id_for_domain("ap_calculus") == "csphere-ap_calculus"
+    assert mastery_path_id_for_domain("aws_certification") == "csphere-aws_certification"
     assert is_cognisphere_path_id("csphere-leetcode")
     assert not is_cognisphere_path_id("book-1")
+
+
+def test_seed_payload_requires_domain() -> None:
+    from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+
+    with pytest.raises(CognisphereIntegrationError) as exc:
+        seed_payload_from_import_receipt({"knowledge": {}})
+    assert exc.value.code == "domain_required"
+    payload = seed_payload_from_import_receipt(
+        {"domain": "ap_calculus", "knowledge": {"concepts": [{"id": "c1"}]}}
+    )
+    assert payload["domain"] == "ap_calculus"
 
 
 def test_modules_from_knowledge_groups() -> None:
@@ -66,6 +81,9 @@ def test_import_and_seed_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     assert status.status_code == 200
     body = status.json()
     assert body["ok"] is True
+    assert body["defaults"]["chat_capability"] == "mastery_path"
+    assert "trusted_context" in body["gates"]
+    assert body["gates"]["trusted_context"]["phase"] == "DT-P3"
     domains = {p["domain"] for p in body["plugins"]}
     assert "leetcode" in domains
 
@@ -78,4 +96,5 @@ def test_import_and_seed_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     assert payload["ok"] is True
     assert payload["mastery_path"]["path_id"] == "csphere-leetcode"
     assert payload["mastery_path"]["kp_count"] >= 1
+    assert "capability=mastery_path" in (payload.get("continue_in_chat") or "")
     assert (store_root / "csphere-leetcode.json").exists()

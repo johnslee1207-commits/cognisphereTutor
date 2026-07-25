@@ -294,15 +294,23 @@ cognispheretutor config show
 
 #### Cognisphere Learning Plugins（DT-P1…P6）
 
+**架构边界（禁止漂移）：** 领域学习专属能力（本体、知识图谱、benchmark、域 runtime，如 LeetCode / AP Calculus / AWS）由 **Cognisphere Learning Plugins** 实现。Tutor 侧只做**通用**编排与教学闭环——发现 / 协商 / 校验 / 导入 / trusted-context / 运行时回调与 bridge / 跨域 compose，以及 Learning Space、精通之路、chat 能力。**不要**把域专属逻辑写进 Tutor 核心（`capabilities/`、`agents/`、`runtime/`）；应落在插件仓或 `integrations/cognisphere/` 下的薄、数据驱动适配层。
+
 cognisphereTutor 可通过进程环境变量对接 CognisphereLearningPlugins monorepo（项目根 `.env` 会被忽略）：
 
 | 变量 | 要求 | 用途 |
 |:---|:---|:---|
 | `COGNISPHERE_LEARNING_PLUGINS_ROOT` | 生产环境必须设置 | Learning Plugins monorepo 根目录 |
 | `COGNISPHERE_IMPORT_CACHE_DIR` | 可选 | 覆盖导入 bundle 缓存目录 |
-| `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL` | 在线 DT-P3 拉取时 | trusted-context kit 基址；未设置则 fail-closed |
-| `COGNISPHERE_LEETCODE_SANDBOX_AUTHORIZED` | 真 sandbox 执行前 | 必须为 `1`；默认 fail-closed |
-| `COGNISPHERE_LEETCODE_ARTIFACT_DIR` | 可选 | LeetCode 产物目录 |
+| `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL` | 在线 DT-P3 拉取时 | trusted-context kit 基址；未设置则 **仅离线**（在线拉取 fail-closed） |
+| `COGNISPHERE_SANDBOX_AUTHORIZED` | 真 sandbox 执行前 | 必须为 `1`；默认 fail-closed。过渡期兼容别名：`COGNISPHERE_LEETCODE_SANDBOX_AUTHORIZED` |
+| `COGNISPHERE_ARTIFACT_DIR` | 可选 | 域插件产物目录。过渡期兼容别名：`COGNISPHERE_LEETCODE_ARTIFACT_DIR` |
+
+**无默认域：** Tutor 不会默认 `leetcode` / `ap_calculus` / `aws_certification`。CLI 运行时命令必须传 `--domain`；API body 必须带 `domain`。下文示例中的 `leetcode` 仅作 fixture 域举例。
+
+**DT-P3 双路径：** 离线包用 `POST /api/v1/learning/cognisphere/trusted-context/import` 提交 `package`；配置了 `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL` 时可无 body 走在线 kit。`GET .../status` 的 `gates.trusted_context.mode` 为 `live` 或 `offline_only`。
+
+**精通之路 → 对话：** Learning Space 深链 `/home/{path_id}?capability=mastery_path` 自动切 Mastery Path；`tutor/start` 返回 `continue_in_chat` 与 SSE `events_url`。
 
 ```bash
 $env:COGNISPHERE_LEARNING_PLUGINS_ROOT = "D:\Projects\CognisphereLearningPlugins"
@@ -313,12 +321,12 @@ cognispheretutor cognisphere import leetcode
 cognispheretutor cognisphere import-bundle path\to\bundle.json
 cognispheretutor cognisphere cross-domain -c deeptutor_export
 cognispheretutor cognisphere compose -d leetcode -d ap_calculus -c deeptutor_export
-# DT-P4/P5/P6 产品绑定（插件离线 runtime）
-cognispheretutor cognisphere tutor-start two-sum --hint-level 1
-cognispheretutor cognisphere sandbox-verify --outcome WA --slug two-sum
-cognispheretutor cognisphere suggest-focus --slug two-sum
-cognispheretutor cognisphere plan-path --learner-id offline-learner
-cognispheretutor cognisphere interview --run-flow
+# DT-P4/P5/P6 产品绑定（插件离线 runtime；必须 --domain）
+cognispheretutor cognisphere tutor-start two-sum -d leetcode --hint-level 1
+cognispheretutor cognisphere sandbox-verify -d leetcode --outcome WA --slug two-sum
+cognispheretutor cognisphere suggest-focus -d leetcode --slug two-sum
+cognispheretutor cognisphere plan-path -d leetcode --learner-id offline-learner
+cognispheretutor cognisphere interview -d leetcode --run-flow
 ```
 
 Guided Learning（学习空间 / 精通之路）可通过以下 API 将域包导入为 `csphere-{domain}` 精通路径：
@@ -327,7 +335,7 @@ Guided Learning（学习空间 / 精通之路）可通过以下 API 将域包导
 - `POST /api/v1/learning/cognisphere/import-and-seed`
 - `POST /api/v1/learning/cognisphere/tutor/start` / `suggest-focus` / `plan-path`
 
-集成代码位于 `cognispheretutor/integrations/cognisphere/`（发现 / 协商 / 校验 / Bundle 导入到 Assessment·Plan·Mastery / trusted-context 离线导入 / 运行时回调 + 离线 runtime bridge / 跨域组合）。在线 trusted-context 需配置 `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`。适配器模块路径由 `manifests/runtime_adapters.json` 数据驱动。
+集成代码位于 `cognispheretutor/integrations/cognisphere/`（发现 / 协商 / 校验 / Bundle 导入到 Assessment·Plan·Mastery / trusted-context 离线导入 / 运行时回调 + 离线 runtime bridge / 跨域组合）。在线 trusted-context 需配置 `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`。`runtime_adapters.json` 只声明能力→可调用契约；模块路径按域从插件 manifest `runtime_modules` 或 `module_template`（`cognisphere_plugins.{domain}.{module_key}`）解析，Tutor 内不硬编码任何域包路径。
 
 </details>
 
@@ -525,12 +533,12 @@ Settings 是操作控制面板，带有实时状态条（后端、LLM、嵌入�
 ```text
 data/
 ├── user/                    # 管理员工作区 + 全局设置
-├── users/<uid>/             # 用户作用域：聊天历史、记忆、笔记本、知识库
-├── partners/<id>/workspace/ # Partner（合成用户）作用域
+├── users/<uid>/             # 用户作用域：聊天、记忆、笔记本、Learning、技能、知识库
+├── partners/<id>/workspace/ # Partner（合成用户）作用域 — 锚定管理员树，不随请求用户作用域漂移
 └── system/                  # auth/users.json · grants/<uid>.json · audit/usage.jsonl
 ```
 
-**第一个注册用户成为管理员**，拥有模型目录、提供商凭证、共享知识库、技能和用户授权的管理权。其他所有人获得隔离的工作区和删减版的 Settings 页面 — 管理员分配的模型、知识库和技能以作用域只读选项的形式出现，原始 API Key 不可见。
+**第一个注册用户成为管理员**，拥有模型目录、提供商凭证、共享知识库、技能和用户授权的管理权。其他所有人获得隔离的工作区和删减版的 Settings 页面 — 管理员分配的模型、知识库和技能以作用域只读选项的形式出现，原始 API Key 不可见。Learning 路径、技能安装与 KB 根目录跟随当前用户作用域；Partner 树固定在 `data/partners/`（API 侧管理员门控），避免 Partner runtime 经请求用户工作区递归布局。
 
 **启用方式：** 在 `data/user/settings/auth.json` 中开启认证，重启 `cognispheretutor start`，在 `/register` 注册第一个管理员，然后从 `/admin/users` 添加用户，并通过授权分配模型、知识库、技能、Partner、工具/MCP 策略和代码执行权限。
 

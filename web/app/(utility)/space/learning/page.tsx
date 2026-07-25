@@ -26,9 +26,11 @@ import {
   type ObjectiveStatus,
 } from "@/lib/learning-api";
 import {
+  domainFromCognispherePathId,
   fetchCognisphereLearningStatus,
   importAndSeedCognisphere,
   isCognispherePathId,
+  masteryChatHref,
   startCognisphereTutor,
   suggestCognisphereFocus,
   type CognisphereLearningStatus,
@@ -114,8 +116,9 @@ export default function MasteryPathPage() {
         if (!cancelled) setLoadingDetail(false);
       });
 
-    if (isCognispherePathId(selected)) {
-      suggestCognisphereFocus()
+    const domain = domainFromCognispherePathId(selected);
+    if (domain) {
+      suggestCognisphereFocus({ domain })
         .then((focus) => {
           if (cancelled) return;
           const suggestion = focus?.suggestion?.suggestion || focus?.suggestion;
@@ -205,25 +208,39 @@ export default function MasteryPathPage() {
   );
 
   const handleSocraticPractice = useCallback(async () => {
-    if (!selected || !isCognispherePathId(selected)) return;
+    const domain = selected ? domainFromCognispherePathId(selected) : null;
+    if (!selected || !domain) return;
     setTutorBusy(true);
     try {
-      const slug =
-        detail?.next?.knowledge_point_name
-          ?.toLowerCase()
-          .replace(/\s+/g, "-") || "two-sum";
       const problemKp = detail?.map.modules
         .flatMap((m) => m.knowledge_points)
         .find((kp) => kp.id.startsWith("prob-") || kp.type === "procedure");
       const practiceSlug = problemKp?.id.startsWith("prob-")
         ? problemKp.id.replace(/^prob-/, "")
-        : slug;
-      await startCognisphereTutor({
+        : detail?.next?.knowledge_point_name
+            ?.toLowerCase()
+            .replace(/\s+/g, "-");
+      if (!practiceSlug) {
+        setCsphereError(
+          tr(
+            "当前路径没有可练习的知识点",
+            "No practice item available on this path",
+          ),
+        );
+        return;
+      }
+      const started = await startCognisphereTutor({
+        domain,
         slug: practiceSlug,
         hintLevel: 1,
         pathId: selected,
       });
-      router.push(`/home/${encodeURIComponent(selected)}`);
+      const href =
+        started.continue_in_chat ||
+        masteryChatHref(selected, {
+          tutorSessionId: started.tutor_session_id,
+        });
+      router.push(href);
     } catch (err) {
       setCsphereError(
         err instanceof Error
@@ -343,11 +360,17 @@ export default function MasteryPathPage() {
 
         <footer className="p-2 border-t border-[var(--border)]">
           <button
-            onClick={() => router.push("/home")}
+            onClick={() =>
+              router.push(
+                selected
+                  ? masteryChatHref(selected)
+                  : "/home?capability=mastery_path",
+              )
+            }
             className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-sm rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-opacity cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            {tr("新建（在对话中）", "New (in Chat)")}
+            {tr("在对话中继续（Mastery）", "Continue in Chat (Mastery)")}
           </button>
         </footer>
       </aside>
@@ -376,7 +399,7 @@ export default function MasteryPathPage() {
             focusHint={focusHint}
             tutorBusy={tutorBusy}
             onContinue={() =>
-              selected && router.push(`/home/${encodeURIComponent(selected)}`)
+              selected && router.push(masteryChatHref(selected))
             }
             onSocratic={handleSocraticPractice}
             onRedo={() => selected && handleRedo(selected)}

@@ -431,15 +431,23 @@ Project-root `.env` is **not** read as an application config file. For a minimal
 
 #### Cognisphere Learning Plugins (DT-P1…P6)
 
+**Architecture boundary (do not drift):** Domain-specific learning (ontology, knowledge graphs, benchmarks, domain runtimes such as LeetCode / AP Calculus / AWS) is owned by **Cognisphere Learning Plugins**. cognisphereTutor owns **generic** orchestration only — discover / negotiate / validate / import / trusted-context / runtime callbacks + bridge / compose, plus the teaching loop (Learning Space, Mastery Path, chat capabilities). Do **not** embed domain-exclusive logic in Tutor core (`capabilities/`, `agents/`, `runtime/`); put it in plugins or thin data-driven adapters under `integrations/cognisphere/`.
+
 cognisphereTutor can discover, negotiate, validate, and import domain learning packs from the CognisphereLearningPlugins monorepo (in-process path). Set process environment variables (not project `.env` files — those are ignored):
 
 | Variable | Required | Purpose |
 |:---|:---|:---|
 | `COGNISPHERE_LEARNING_PLUGINS_ROOT` | **Yes** (production) | Absolute path to the Learning Plugins monorepo root |
 | `COGNISPHERE_IMPORT_CACHE_DIR` | Optional | Override workspace cache for imported bundles |
-| `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL` | For live DT-P3 fetch | Cognisphere trusted-context kit base URL; unset → fail-closed |
-| `COGNISPHERE_LEETCODE_SANDBOX_AUTHORIZED` | Before live sandbox | Must be `1` to allow real sandbox execution; default fail-closed |
-| `COGNISPHERE_LEETCODE_ARTIFACT_DIR` | Optional | LeetCode artifact / export directory on the host |
+| `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL` | For live DT-P3 fetch | Cognisphere trusted-context kit base URL; unset → **offline-only** (fail-closed on live fetch) |
+| `COGNISPHERE_SANDBOX_AUTHORIZED` | Before live sandbox | Must be `1` to allow real sandbox execution; default fail-closed. Legacy alias for one release: `COGNISPHERE_LEETCODE_SANDBOX_AUTHORIZED` |
+| `COGNISPHERE_ARTIFACT_DIR` | Optional | Domain plugin artifact / export directory on the host. Legacy alias: `COGNISPHERE_LEETCODE_ARTIFACT_DIR` |
+
+**No default domain:** Tutor never assumes `leetcode` / `ap_calculus` / `aws_certification`. CLI runtime commands require `--domain`; API bodies require `domain`. Examples below may use `leetcode` as a fixture domain only.
+
+**DT-P3 dual path:** offline packages go through `POST /api/v1/learning/cognisphere/trusted-context/import` with a `package` body (or CLI offline import). Live kit fetch uses the same endpoint without `package` when `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL` is set (`fetch_and_import_trusted_context`). Status exposes `gates.trusted_context.mode` (`live` | `offline_only`).
+
+**Guided Learning → Chat:** Learning Space deep-links open `/home/{path_id}?capability=mastery_path` so Chat auto-selects Mastery Path. Tutor start returns `continue_in_chat` plus `events_url` (SSE) for DT-P4 session events.
 
 ```bash
 # Windows PowerShell example
@@ -451,21 +459,23 @@ cognispheretutor cognisphere import leetcode
 cognispheretutor cognisphere import-bundle path\to\bundle.json
 cognispheretutor cognisphere cross-domain -c deeptutor_export
 cognispheretutor cognisphere compose -d leetcode -d ap_calculus -c deeptutor_export
-# DT-P4/P5/P6 product binding (offline plugin runtimes)
-cognispheretutor cognisphere tutor-start two-sum --hint-level 1
-cognispheretutor cognisphere sandbox-verify --outcome WA --slug two-sum
-cognispheretutor cognisphere suggest-focus --slug two-sum
-cognispheretutor cognisphere plan-path --learner-id offline-learner
-cognispheretutor cognisphere interview --run-flow
+# DT-P4/P5/P6 product binding (offline plugin runtimes; --domain required)
+cognispheretutor cognisphere tutor-start two-sum -d leetcode --hint-level 1
+cognispheretutor cognisphere sandbox-verify -d leetcode --outcome WA --slug two-sum
+cognispheretutor cognisphere suggest-focus -d leetcode --slug two-sum
+cognispheretutor cognisphere plan-path -d leetcode --learner-id offline-learner
+cognispheretutor cognisphere interview -d leetcode --run-flow
 ```
 
 Guided Learning (Learning Space / Mastery Path) can import a domain pack into a `csphere-{domain}` mastery path via:
 
-- `GET /api/v1/learning/cognisphere/status`
+- `GET /api/v1/learning/cognisphere/status` (includes `gates.trusted_context`)
 - `POST /api/v1/learning/cognisphere/import-and-seed`
+- `POST /api/v1/learning/cognisphere/trusted-context/import`
 - `POST /api/v1/learning/cognisphere/tutor/start` / `suggest-focus` / `plan-path`
+- `GET /api/v1/learning/cognisphere/tutor/events?session_id=` (SSE)
 
-Integration code lives under `cognispheretutor/integrations/cognisphere/` (registry, negotiate, validate, bundle import → Assessment/Plan/Mastery mapping, trusted-context offline import, runtime callbacks + **runtime bridge** to plugin P2–P5 offline runtimes, cross-domain compose). Live trusted-context kit fetch requires `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`. Runtime adapter module paths are data-driven via `manifests/runtime_adapters.json`.
+Integration code lives under `cognispheretutor/integrations/cognisphere/` (registry, negotiate, validate, bundle import → Assessment/Plan/Mastery mapping, trusted-context offline/live import, runtime callbacks + **runtime bridge** to plugin P2–P5 offline runtimes, cross-domain compose). Live trusted-context kit fetch requires `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`. Runtime adapters declare capability → callable contracts only; modules resolve per domain via plugin manifest `runtime_modules` or `module_template` (`cognisphere_plugins.{domain}.{module_key}`) — no hard-coded domain package paths in Tutor.
 
 </details>
 
@@ -663,12 +673,12 @@ Authentication is **off by default** — cognisphereTutor runs single-user. Turn
 ```text
 data/
 ├── user/                    # Admin workspace + global settings
-├── users/<uid>/             # Per-user scope: chat history, memory, notebooks, KBs
-├── partners/<id>/workspace/ # Partner (synthetic-user) scope
+├── users/<uid>/             # Per-user scope: chat, memory, notebooks, Learning, skills, KBs
+├── partners/<id>/workspace/ # Partner (synthetic-user) scope — admin-anchored, not request-user scoped
 └── system/                  # auth/users.json · grants/<uid>.json · audit/usage.jsonl
 ```
 
-The **first registered user becomes admin** and owns model catalogs, provider credentials, shared knowledge bases, skills, and per-user grants. Everyone else gets an isolated workspace and a redacted Settings page — admin-assigned models, KBs, and skills show up as scoped, read-only options, never as raw API keys.
+The **first registered user becomes admin** and owns model catalogs, provider credentials, shared knowledge bases, skills, and per-user grants. Everyone else gets an isolated workspace and a redacted Settings page — admin-assigned models, KBs, and skills show up as scoped, read-only options, never as raw API keys. Learning paths, skill installs, and KB roots follow the current user scope; Partner trees stay under `data/partners/` (API admin-gated) so partner runtimes do not recurse through the request user's workspace.
 
 **Enable it:** turn auth on in `data/user/settings/auth.json`, restart `cognispheretutor start`, register the first admin at `/register`, then add users from `/admin/users` and assign models, KBs, skills, partners, tool/MCP policy, and code-execution access through grants.
 

@@ -1,12 +1,12 @@
 {
   "contract_id": "deeptutor.cognisphere.runtime_adapters.v1",
   "phase": "DT-P4/P5/P6",
-  "description": "Maps domain capabilities to offline plugin runtime modules (product binding).",
-  "default_domain": "leetcode",
+  "description": "Maps capabilities to callable contracts. Module paths resolve per domain via plugin manifest runtime_modules or module_template — no default domain.",
+  "module_template": "cognisphere_plugins.{domain}.{module_key}",
   "adapters": {
     "socratic_tutor": {
       "capability": "socratic_tutor",
-      "module": "cognisphere_plugins.leetcode.socratic_tutor_runtime",
+      "module_key": "socratic_tutor_runtime",
       "start": "start_dialogue_session",
       "advance": "advance_dialogue",
       "apply_sandbox": "apply_sandbox_feedback",
@@ -17,7 +17,7 @@
     },
     "code_verification": {
       "capability": "code_verification",
-      "module": "cognisphere_plugins.leetcode.sandbox_verification_runtime",
+      "module_key": "sandbox_verification_runtime",
       "verify": "run_categorized_verification",
       "analyze": "analyze_outcome",
       "to_socratic": "to_socratic_feedback",
@@ -26,7 +26,7 @@
     },
     "mistake_memory": {
       "capability": "mistake_memory",
-      "module": "cognisphere_plugins.leetcode.mistake_memory",
+      "module_key": "mistake_memory",
       "record": "record_mistake",
       "record_from_sandbox": "record_mistake_from_sandbox",
       "list": "list_mistakes",
@@ -35,7 +35,7 @@
     },
     "skill_graph": {
       "capability": "skill_graph",
-      "module": "cognisphere_plugins.leetcode.skill_graph_runtime",
+      "module_key": "skill_graph_runtime",
       "plan_path": "plan_learning_path",
       "recommend": "recommend_problems",
       "update_mastery": "update_skill_mastery",
@@ -45,7 +45,7 @@
     },
     "benchmark": {
       "capability": "benchmark",
-      "module": "cognisphere_plugins.leetcode.expert_benchmark_runtime",
+      "module_key": "expert_benchmark_runtime",
       "start_interview": "start_interview_session",
       "run_flow": "run_interview_flow",
       "list_cases": "list_benchmark_cases",

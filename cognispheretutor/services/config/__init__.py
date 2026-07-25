@@ -33,6 +33,7 @@ from .runtime_settings import (
     load_lightrag_settings,
     load_llamaindex_settings,
     load_mineru_settings,
+    load_pageindex_settings,
     load_system_settings,
 )
 
@@ -84,6 +85,7 @@ __all__ = [
     "load_lightrag_settings",
     "load_llamaindex_settings",
     "load_mineru_settings",
+    "load_pageindex_settings",
     "load_system_settings",
 ]
 

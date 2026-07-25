@@ -234,49 +234,57 @@ def import_benchmark_case(
     root: str | Path | None = None,
     client: PluginRegistryClient | None = None,
 ) -> dict[str, Any]:
-    """DT-P6 optional benchmark/interview import — prefers plugin P5 runtime."""
+    """DT-P6 benchmark/interview import — domain-agnostic bridge then entrypoint.
+
+    Never returns a silent ``stubbed`` success envelope: when the runtime or
+    entrypoint is missing, raises ``CognisphereIntegrationError`` so CLI/API
+    surfaces a hard failure instead of a soft stub.
+    """
     from cognispheretutor.integrations.cognisphere.runtime_bridge import run_interview_session
+
+    resolved = str(domain or "").strip()
+    if not resolved:
+        raise CognisphereIntegrationError(
+            "domain_required",
+            message="domain is required for benchmark import; no default domain",
+        )
 
     case_payload = case if isinstance(case, dict) else {}
     case_id = case_payload.get("case_id") or case_payload.get("id")
     learner_id = case_payload.get("learner_id")
 
-    # Prefer expert_benchmark_runtime bridge (leetcode adapters).
-    if domain == "leetcode":
-        if case_payload.get("run_flow"):
-            started = run_interview_session(
-                case_id=case_id,
-                learner_id=learner_id,
-                responses=case_payload.get("responses") or {},
-                root=root,
-                client=client,
-                persist=bool(case_payload.get("persist", False)),
-            )
-        else:
-            started = run_interview_session(
-                case_id=case_id,
-                learner_id=learner_id,
-                root=root,
-                client=client,
-                persist=bool(case_payload.get("persist", False)),
-            )
+    # Prefer expert_benchmark_runtime via domain-resolved adapters (all domains).
+    try:
+        started = run_interview_session(
+            domain=resolved,
+            case_id=case_id,
+            learner_id=learner_id,
+            responses=case_payload.get("responses") if case_payload.get("run_flow") else None,
+            root=root,
+            client=client,
+            persist=bool(case_payload.get("persist", False)),
+        )
         started = dict(started)
-        started.setdefault("domain", domain)
-        if started.get("ok") or started.get("status") != "stubbed":
-            return started
+        started.setdefault("domain", resolved)
+        return started
+    except CognisphereIntegrationError as bridge_exc:
+        # Fall back to deeptutor entrypoint only when the bridge module is unavailable.
+        if bridge_exc.code not in {
+            "benchmark_unavailable",
+            "plugins_root_missing",
+            "entrypoint_import_failed",
+        }:
+            raise
 
     registry = client or PluginRegistryClient(root)
     try:
-        mod = registry.load_deeptutor_entrypoint(domain, root=root)
+        mod = registry.load_deeptutor_entrypoint(resolved, root=root)
     except CognisphereIntegrationError as exc:
-        return {
-            "ok": False,
-            "phase": "DT-P6",
-            "status": "stubbed",
-            "code": "benchmark_unavailable",
-            "domain": domain,
-            "issues": [exc.code],
-        }
+        raise CognisphereIntegrationError(
+            "benchmark_unavailable",
+            message=f"No benchmark runtime or deeptutor entrypoint for domain {resolved!r}",
+            details={"domain": resolved, "phase": "DT-P6", "cause": exc.code},
+        ) from exc
 
     for name in ("import_benchmark_case", "run_interview_session", "export_interview_package"):
         fn = getattr(mod, name, None)
@@ -289,16 +297,17 @@ def import_benchmark_case(
                 "ok": True,
                 "phase": "DT-P6",
                 "status": "imported",
-                "domain": domain,
+                "domain": resolved,
                 "entrypoint": name,
                 "result": result,
             }
 
-    return {
-        "ok": False,
-        "phase": "DT-P6",
-        "status": "stubbed",
-        "code": "benchmark_unavailable",
-        "domain": domain,
-        "note": "Plugin does not expose benchmark/interview import yet (LP-005 / P5 deepening)",
-    }
+    raise CognisphereIntegrationError(
+        "benchmark_unavailable",
+        message=(
+            "Plugin does not expose benchmark/interview import "
+            "(runtime adapter or import_benchmark_case / run_interview_session / "
+            "export_interview_package)"
+        ),
+        details={"domain": resolved, "phase": "DT-P6"},
+    )

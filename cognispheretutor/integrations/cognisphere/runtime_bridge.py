@@ -3,6 +3,10 @@
 Callbacks in ``runtime_callbacks`` persist events; this module *drives* the
 plugin P2–P5 runtimes (Socratic / sandbox / mistake / skill / interview) and
 then feeds results through those callbacks.
+
+Domain is always required — Tutor has no default domain. Module paths resolve
+from plugin manifest ``runtime_modules`` when present, else
+``module_template`` + adapter ``module_key``.
 """
 
 from __future__ import annotations
@@ -28,6 +32,19 @@ def _adapters() -> dict[str, Any]:
     return load_runtime_adapters()
 
 
+def _require_domain(domain: str | None) -> str:
+    resolved = str(domain or "").strip()
+    if not resolved:
+        raise CognisphereIntegrationError(
+            "domain_required",
+            message=(
+                "domain is required; cognisphereTutor has no default domain. "
+                "Pass an explicit domain from plugin discovery."
+            ),
+        )
+    return resolved
+
+
 def _adapter(name: str) -> dict[str, Any]:
     cfg = _adapters()
     adapters = cfg.get("adapters") or {}
@@ -40,6 +57,64 @@ def _adapter(name: str) -> dict[str, Any]:
     return item
 
 
+def resolve_adapter_module_path(
+    adapter_name: str,
+    domain: str,
+    *,
+    root: str | Path | None = None,
+    client: PluginRegistryClient | None = None,
+) -> str:
+    """Resolve importable module path for ``adapter_name`` under ``domain``.
+
+    Order:
+    1. Plugin manifest ``runtime_modules[adapter_name]`` (or nested ``module``)
+    2. ``module_template`` + adapter ``module_key``
+    3. Legacy absolute ``module`` on the adapter (compat; discouraged)
+    """
+    adapter = _adapter(adapter_name)
+    registry = client or PluginRegistryClient(root)
+    try:
+        record = registry.get_plugin(domain, root)
+        manifest = (record.get("plugin") or {}).get("manifest") or {}
+        runtime_modules = manifest.get("runtime_modules")
+        if isinstance(runtime_modules, dict):
+            declared = runtime_modules.get(adapter_name)
+            if isinstance(declared, str) and declared.strip():
+                return declared.strip()
+            if isinstance(declared, dict):
+                mod = str(declared.get("module") or "").strip()
+                if mod:
+                    return mod
+    except CognisphereIntegrationError:
+        pass
+
+    module_key = str(adapter.get("module_key") or "").strip()
+    template = str(_adapters().get("module_template") or "").strip()
+    if template and module_key:
+        try:
+            return template.format(domain=domain, module_key=module_key)
+        except (KeyError, ValueError) as exc:
+            raise CognisphereIntegrationError(
+                "unknown_capability:" + adapter_name,
+                message=f"invalid module_template: {exc}",
+                details={"domain": domain, "adapter": adapter_name},
+            ) from exc
+
+    # Legacy: absolute module path on adapter (pre-domain-generic manifests).
+    legacy = str(adapter.get("module") or "").strip()
+    if legacy:
+        return legacy
+
+    raise CognisphereIntegrationError(
+        "unknown_capability:" + adapter_name,
+        message=(
+            "cannot resolve runtime module: plugin manifest has no "
+            f"runtime_modules.{adapter_name} and adapter lacks module_key/template"
+        ),
+        details={"domain": domain, "adapter": adapter_name},
+    )
+
+
 def load_runtime_module(
     adapter_name: str,
     *,
@@ -47,18 +122,17 @@ def load_runtime_module(
     root: str | Path | None = None,
     client: PluginRegistryClient | None = None,
 ) -> ModuleType:
-    """Import the plugin runtime module declared in runtime_adapters.json."""
-    adapter = _adapter(adapter_name)
+    """Import the plugin runtime module for ``domain`` + ``adapter_name``."""
+    resolved_domain = _require_domain(domain)
     registry = client or PluginRegistryClient(root)
     plugins_root = registry.resolve_plugins_root(root)
-    resolved_domain = domain or str(_adapters().get("default_domain") or "leetcode")
     registry.ensure_import_paths(domain=resolved_domain, root=plugins_root)
-    module_path = str(adapter.get("module") or "")
-    if not module_path:
-        raise CognisphereIntegrationError(
-            "unknown_capability:" + adapter_name,
-            message="adapter missing module path",
-        )
+    module_path = resolve_adapter_module_path(
+        adapter_name,
+        resolved_domain,
+        root=plugins_root,
+        client=registry,
+    )
     try:
         return import_module(module_path)
     except ImportError as exc:
@@ -95,6 +169,7 @@ def start_tutor_session(
     **kwargs: Any,
 ) -> dict[str, Any]:
     """Start offline Socratic dialogue (plugin P2) and log via DT-P4 callback."""
+    resolved_domain = _require_domain(domain)
     adapter = _adapter("socratic_tutor")
     lo = int(adapter.get("hint_level_min", 0))
     hi = int(adapter.get("hint_level_max", 4))
@@ -105,7 +180,9 @@ def start_tutor_session(
             details={"hint_level": hint_level},
         )
 
-    mod = load_runtime_module("socratic_tutor", domain=domain, root=root, client=client)
+    mod = load_runtime_module(
+        "socratic_tutor", domain=resolved_domain, root=root, client=client
+    )
     session = _call(
         mod,
         str(adapter["start"]),
@@ -136,7 +213,7 @@ def start_tutor_session(
             "problem_slug": problem_slug,
             "asks_not_spoils": True,
             "full_solution_included": False,
-            "domain": domain or _adapters().get("default_domain"),
+            "domain": resolved_domain,
         },
     )
     status = str(session.get("status") or "ok")
@@ -144,6 +221,7 @@ def start_tutor_session(
         "ok": status in {"ok", "started", "in_progress"},
         "phase": "DT-P4",
         "status": status,
+        "domain": resolved_domain,
         "session": session,
         "callback": event_receipt,
         "source": "plugin_socratic_tutor_runtime",
@@ -162,8 +240,13 @@ def advance_tutor_session(
     **kwargs: Any,
 ) -> dict[str, Any]:
     """Advance an offline Socratic session and persist the stage event."""
+    resolved_domain = _require_domain(
+        domain or (session.get("domain") if isinstance(session, dict) else None)
+    )
     adapter = _adapter("socratic_tutor")
-    mod = load_runtime_module("socratic_tutor", domain=domain, root=root, client=client)
+    mod = load_runtime_module(
+        "socratic_tutor", domain=resolved_domain, root=root, client=client
+    )
     call_kwargs = dict(kwargs)
     call_kwargs["event"] = event
     if checkpoint is not None:
@@ -179,6 +262,9 @@ def advance_tutor_session(
 
     # Plugin may return the session nested or as the top-level object.
     payload = updated.get("session") if isinstance(updated.get("session"), dict) else updated
+    if isinstance(payload, dict) and "domain" not in payload:
+        payload = dict(payload)
+        payload["domain"] = resolved_domain
     session_id = str(payload.get("session_id") or session.get("session_id") or "tutor")
     event_receipt = on_tutor_session_event(
         session_id,
@@ -190,11 +276,13 @@ def advance_tutor_session(
             "full_solution_included": bool(
                 (payload.get("safety") or {}).get("full_solution_included")
             ),
+            "domain": resolved_domain,
         },
     )
     return {
         "ok": True,
         "phase": "DT-P4",
+        "domain": resolved_domain,
         "session": payload,
         "raw": updated,
         "callback": event_receipt,
@@ -204,6 +292,7 @@ def advance_tutor_session(
 
 def verify_submission(
     *,
+    domain: str | None = None,
     slug: str | None = None,
     source_code: str | None = None,
     offline_simulated: bool = True,
@@ -214,6 +303,7 @@ def verify_submission(
     **kwargs: Any,
 ) -> dict[str, Any]:
     """Run plugin P3 verification (offline/dry by default) and ingest via DT-P4."""
+    resolved_domain = _require_domain(domain)
     adapter = _adapter("code_verification")
     authorized = is_sandbox_authorized()
     if execute and not authorized:
@@ -221,7 +311,9 @@ def verify_submission(
     if adapter.get("require_authorized_or_offline") and not offline_simulated and not authorized:
         raise CognisphereIntegrationError("sandbox_unauthorized")
 
-    mod = load_runtime_module("code_verification", root=root, client=client)
+    mod = load_runtime_module(
+        "code_verification", domain=resolved_domain, root=root, client=client
+    )
     if outcome is not None:
         analysis = _call(mod, str(adapter["analyze"]), outcome, **kwargs)
         verification = {"status": "ok", "analysis": analysis, "outcome": outcome}
@@ -259,12 +351,14 @@ def verify_submission(
         "passed": bool(passed),
         "status": "passed" if passed else "failed",
         "offline_simulated": offline_simulated or not execute or not authorized,
+        "domain": resolved_domain,
         "verification": verification,
     }
     ingest = ingest_sandbox_result(ingest_payload)
     return {
         "ok": True,
         "phase": "DT-P4",
+        "domain": resolved_domain,
         "verification": verification,
         "ingest": ingest,
         "source": "plugin_sandbox_verification_runtime",
@@ -273,13 +367,17 @@ def verify_submission(
 
 def suggest_tutor_focus(
     *,
+    domain: str | None = None,
     problem_slug: str | None = None,
     root: str | Path | None = None,
     client: PluginRegistryClient | None = None,
 ) -> dict[str, Any]:
     """DT-P5: call plugin mistake_memory.suggest_tutor_focus and sync locally."""
+    resolved_domain = _require_domain(domain)
     adapter = _adapter("mistake_memory")
-    mod = load_runtime_module("mistake_memory", root=root, client=client)
+    mod = load_runtime_module(
+        "mistake_memory", domain=resolved_domain, root=root, client=client
+    )
     suggestion = _call(mod, str(adapter["suggest"]), problem_slug=problem_slug)
     if not isinstance(suggestion, dict):
         raise CognisphereIntegrationError(
@@ -291,6 +389,7 @@ def suggest_tutor_focus(
         {
             "source": "plugin_mistake_memory",
             "slug": suggestion.get("problem_slug") or problem_slug,
+            "domain": resolved_domain,
             "suggest_tutor_focus": suggestion.get("suggestion"),
             "hint_level": suggestion.get("hint_level"),
             "plugin_result": suggestion,
@@ -299,6 +398,7 @@ def suggest_tutor_focus(
     return {
         "ok": True,
         "phase": "DT-P5",
+        "domain": resolved_domain,
         "suggestion": suggestion,
         "sync": sync,
         "source": "plugin_mistake_memory",
@@ -311,14 +411,18 @@ def suggest_tutor_focus(
 
 def plan_skill_path(
     *,
+    domain: str | None = None,
     learner_id: str | None = None,
     root: str | Path | None = None,
     client: PluginRegistryClient | None = None,
     **kwargs: Any,
 ) -> dict[str, Any]:
     """DT-P5: plan next learning path via plugin skill_graph_runtime."""
+    resolved_domain = _require_domain(domain)
     adapter = _adapter("skill_graph")
-    mod = load_runtime_module("skill_graph", root=root, client=client)
+    mod = load_runtime_module(
+        "skill_graph", domain=resolved_domain, root=root, client=client
+    )
     plan = _call(mod, str(adapter["plan_path"]), learner_id=learner_id, **kwargs)
     if not isinstance(plan, dict):
         raise CognisphereIntegrationError(
@@ -329,6 +433,7 @@ def plan_skill_path(
     evidence = {
         "source": "plugin_skill_graph",
         "learner_id": learner_id,
+        "domain": resolved_domain,
         "path_id": plan.get("path_id") or plan.get("plan_id"),
         "skill_ids": list(plan.get("skill_ids") or plan.get("skills") or []),
         "recommended": plan.get("recommended") or plan.get("sequence") or plan.get("next"),
@@ -338,6 +443,7 @@ def plan_skill_path(
     return {
         "ok": True,
         "phase": "DT-P5",
+        "domain": resolved_domain,
         "plan": plan,
         "mastery": mastery,
         "source": "plugin_skill_graph_runtime",
@@ -346,6 +452,7 @@ def plan_skill_path(
 
 def run_interview_session(
     *,
+    domain: str | None = None,
     case_id: str | None = None,
     learner_id: str | None = None,
     responses: dict[str, dict[str, Any]] | None = None,
@@ -355,18 +462,24 @@ def run_interview_session(
     **kwargs: Any,
 ) -> dict[str, Any]:
     """DT-P6: drive offline interview via plugin expert_benchmark_runtime."""
+    resolved_domain = _require_domain(domain)
     adapter = _adapter("benchmark")
     try:
-        mod = load_runtime_module("benchmark", root=root, client=client)
+        mod = load_runtime_module(
+            "benchmark", domain=resolved_domain, root=root, client=client
+        )
     except CognisphereIntegrationError as exc:
-        return {
-            "ok": False,
-            "phase": "DT-P6",
-            "status": "stubbed",
-            "code": "benchmark_unavailable",
-            "issues": [exc.code],
-            "note": str(exc),
-        }
+        raise CognisphereIntegrationError(
+            "benchmark_unavailable",
+            message=str(exc) or "benchmark runtime module unavailable",
+            details={
+                "phase": "DT-P6",
+                "domain": resolved_domain,
+                "case_id": case_id,
+                "learner_id": learner_id,
+                "cause": exc.code,
+            },
+        ) from exc
 
     if responses is not None:
         result = _call(
@@ -389,18 +502,22 @@ def run_interview_session(
         )
 
     if not isinstance(result, dict):
-        return {
-            "ok": False,
-            "phase": "DT-P6",
-            "status": "stubbed",
-            "code": "benchmark_unavailable",
-            "note": "interview runtime returned non-object",
-        }
+        raise CognisphereIntegrationError(
+            "benchmark_unavailable",
+            message="interview runtime returned non-object",
+            details={
+                "phase": "DT-P6",
+                "domain": resolved_domain,
+                "case_id": case_id,
+                "type": type(result).__name__,
+            },
+        )
 
     status = str(result.get("status") or "ok")
     return {
         "ok": status == "ok",
         "phase": "DT-P6",
+        "domain": resolved_domain,
         "status": "imported" if status == "ok" else status,
         "result": result,
         "source": "plugin_expert_benchmark_runtime",
@@ -411,18 +528,23 @@ def run_interview_session(
 
 def list_benchmark_cases(
     *,
+    domain: str | None = None,
     root: str | Path | None = None,
     client: PluginRegistryClient | None = None,
     **kwargs: Any,
 ) -> dict[str, Any]:
+    resolved_domain = _require_domain(domain)
     adapter = _adapter("benchmark")
     try:
-        mod = load_runtime_module("benchmark", root=root, client=client)
+        mod = load_runtime_module(
+            "benchmark", domain=resolved_domain, root=root, client=client
+        )
         cases = _call(mod, str(adapter["list_cases"]), **kwargs)
     except CognisphereIntegrationError as exc:
         return {
             "ok": False,
             "phase": "DT-P6",
+            "domain": resolved_domain,
             "status": "stubbed",
             "code": "benchmark_unavailable",
             "issues": [exc.code],
@@ -430,6 +552,7 @@ def list_benchmark_cases(
     return {
         "ok": True,
         "phase": "DT-P6",
+        "domain": resolved_domain,
         "cases": cases,
         "source": "plugin_expert_benchmark_runtime",
     }

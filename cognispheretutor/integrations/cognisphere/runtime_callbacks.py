@@ -72,7 +72,7 @@ def on_tutor_session_event(session_id: str, event: dict[str, Any]) -> dict[str, 
     _append_jsonl(state_dir / "events.jsonl", record)
 
     stage = event.get("stage_id") or event.get("stage") or event.get("type")
-    return {
+    receipt = {
         "ok": True,
         "phase": "DT-P4",
         "status": "accepted",
@@ -86,6 +86,42 @@ def on_tutor_session_event(session_id: str, event: dict[str, Any]) -> dict[str, 
             "notes": "Event logged for Guided Learning / Socratic loop binding",
         },
     }
+    _publish_tutor_bus_event(session_id, event, receipt)
+    return receipt
+
+
+def _publish_tutor_bus_event(
+    session_id: str,
+    event: dict[str, Any],
+    receipt: dict[str, Any],
+) -> None:
+    """Best-effort fan-out to EventBus for SSE / product subscribers."""
+    try:
+        import asyncio
+
+        from cognispheretutor.events.event_bus import Event, EventType, get_event_bus
+
+        bus = get_event_bus()
+        payload = Event(
+            type=EventType.COGNISPHERE_TUTOR,
+            task_id=session_id,
+            user_input=str(event.get("type") or "tutor_event"),
+            agent_output=str(receipt.get("stage") or ""),
+            metadata={
+                "session_id": session_id,
+                "event": event,
+                "receipt": receipt,
+                "capability": "mastery_path",
+            },
+        )
+
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            return
+        loop.create_task(bus.publish(payload))
+    except Exception:  # noqa: BLE001 — never fail the product binding write path
+        pass
 
 
 def ingest_sandbox_result(result: dict[str, Any]) -> dict[str, Any]:

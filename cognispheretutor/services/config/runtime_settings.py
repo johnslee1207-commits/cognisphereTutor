@@ -1034,6 +1034,10 @@ def load_lightrag_settings() -> dict[str, Any]:
     return get_runtime_settings_service().load_lightrag()
 
 
+def load_pageindex_settings() -> dict[str, Any]:
+    return get_runtime_settings_service().load_pageindex()
+
+
 def load_document_parsing_settings() -> dict[str, Any]:
     return get_runtime_settings_service().load_document_parsing()
 
@@ -1077,5 +1081,6 @@ __all__ = [
     "load_lightrag_settings",
     "load_llamaindex_settings",
     "load_mineru_settings",
+    "load_pageindex_settings",
     "load_system_settings",
 ]

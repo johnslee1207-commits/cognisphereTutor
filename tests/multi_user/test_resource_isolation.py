@@ -24,6 +24,33 @@ def test_book_session_ids_are_scoped_per_user(as_user) -> None:
     assert "u_attacker" in str(attacker_book_root)
 
 
+def test_learning_skill_kb_roots_are_scoped_per_user(as_user) -> None:
+    """Learning / skills / KB roots must follow CurrentUser scope (P1 isolation)."""
+    from cognispheretutor.learning.storage import LearningStore
+    from cognispheretutor.multi_user.knowledge_access import current_kb_base_dir
+    from cognispheretutor.services.skill.service import get_skill_service
+
+    with as_user("u_victim"):
+        victim_learning = LearningStore()._root
+        victim_skills = get_skill_service()._root
+        victim_kb = current_kb_base_dir()
+
+    with as_user("u_attacker"):
+        attacker_learning = LearningStore()._root
+        attacker_skills = get_skill_service()._root
+        attacker_kb = current_kb_base_dir()
+
+    assert victim_learning != attacker_learning
+    assert victim_skills != attacker_skills
+    assert victim_kb != attacker_kb
+    assert "u_victim" in str(victim_learning)
+    assert "u_attacker" in str(attacker_learning)
+    assert "u_victim" in str(victim_skills)
+    assert "u_attacker" in str(attacker_skills)
+    assert "u_victim" in str(victim_kb)
+    assert "u_attacker" in str(attacker_kb)
+
+
 def test_partner_data_is_admin_anchored_not_user_scoped(as_user) -> None:
     """Partners are process-wide resources anchored at the admin workspace.
 
@@ -44,5 +71,5 @@ def test_partner_data_is_admin_anchored_not_user_scoped(as_user) -> None:
         attacker_dir = manager._partners_dir
 
     assert victim_dir == attacker_dir
-    assert str(victim_dir).endswith("data/partners")
+    assert victim_dir.as_posix().endswith("data/partners")
     assert "u_victim" not in str(victim_dir)

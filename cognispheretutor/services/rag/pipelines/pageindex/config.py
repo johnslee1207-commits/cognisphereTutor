@@ -29,9 +29,9 @@ def get_pageindex_config(*, require_key: bool = True) -> PageIndexConfig:
     is empty, so callers (indexing / retrieval) fail with a clear, actionable
     message instead of an opaque 401 from the API.
     """
-    from cognispheretutor.services.config import get_runtime_settings_service
+    from cognispheretutor.services.config import load_pageindex_settings
 
-    settings = get_runtime_settings_service().load_pageindex()
+    settings = load_pageindex_settings()
     api_key = str(settings.get("api_key") or "").strip()
     base_url = str(settings.get("api_base_url") or DEFAULT_API_BASE_URL).strip().rstrip("/")
     if require_key and not api_key:

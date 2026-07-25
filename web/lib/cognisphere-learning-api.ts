@@ -17,8 +17,15 @@ export interface CognisphereLearningStatus {
   gates: {
     sandbox?: { authorized?: boolean; env?: string };
     sandbox_authorized?: boolean;
+    trusted_context?: {
+      phase?: string;
+      kit_configured?: boolean;
+      mode?: string;
+      blocker?: { code?: string; meaning?: string } | null;
+    };
   };
   plugins: CognispherePluginInfo[];
+  defaults?: { chat_capability?: string };
 }
 
 export interface ImportAndSeedResult {
@@ -36,9 +43,11 @@ export interface ImportAndSeedResult {
     kp_count: number;
     knowledge_sparse?: boolean;
     note?: string | null;
+    continue_in_chat?: string;
     modules: { id: string; name: string; kp_count: number }[];
   };
   is_cognisphere_path?: boolean;
+  continue_in_chat?: string;
 }
 
 export async function fetchCognisphereLearningStatus(): Promise<CognisphereLearningStatus> {
@@ -83,13 +92,19 @@ export async function importAndSeedCognisphere(
   return res.json() as Promise<ImportAndSeedResult>;
 }
 
-export async function suggestCognisphereFocus(slug?: string) {
+export async function suggestCognisphereFocus(opts: {
+  domain: string;
+  slug?: string;
+}) {
   const res = await apiFetch(
     apiUrl("/api/v1/learning/cognisphere/suggest-focus"),
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ slug: slug || null }),
+      body: JSON.stringify({
+        domain: opts.domain,
+        slug: opts.slug || null,
+      }),
     },
   );
   if (!res.ok) throw new Error(`Suggest focus failed: ${res.status}`);
@@ -97,16 +112,27 @@ export async function suggestCognisphereFocus(slug?: string) {
 }
 
 export async function startCognisphereTutor(opts: {
+  domain: string;
   slug: string;
   hintLevel?: number;
   pathId?: string;
-}) {
+}): Promise<{
+  ok?: boolean;
+  continue_in_chat?: string;
+  tutor_session_id?: string;
+  events_url?: string;
+  chat_capability?: string;
+  path_id?: string;
+  session?: Record<string, unknown>;
+  [key: string]: unknown;
+}> {
   const res = await apiFetch(
     apiUrl("/api/v1/learning/cognisphere/tutor/start"),
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        domain: opts.domain,
         slug: opts.slug,
         hint_level: opts.hintLevel ?? 0,
         path_id: opts.pathId,
@@ -118,6 +144,25 @@ export async function startCognisphereTutor(opts: {
   return res.json();
 }
 
+/** Chat deep-link that pre-selects Mastery Path mode. */
+export function masteryChatHref(
+  pathId: string,
+  opts?: { tutorSessionId?: string },
+): string {
+  const params = new URLSearchParams({ capability: "mastery_path" });
+  if (opts?.tutorSessionId) {
+    params.set("tutor_session", opts.tutorSessionId);
+  }
+  return `/home/${encodeURIComponent(pathId)}?${params.toString()}`;
+}
+
 export function isCognispherePathId(bookId: string): boolean {
   return bookId.startsWith("csphere-");
+}
+
+/** Extract domain from ``csphere-{domain}`` mastery path ids. */
+export function domainFromCognispherePathId(bookId: string): string | null {
+  if (!isCognispherePathId(bookId)) return null;
+  const domain = bookId.slice("csphere-".length).trim();
+  return domain || null;
 }
