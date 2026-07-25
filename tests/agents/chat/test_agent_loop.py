@@ -1091,6 +1091,248 @@ async def test_mastery_generic_menu_after_plain_choice_gets_repaired_again(
 
 
 @pytest.mark.asyncio
+async def test_mastery_ask_user_without_quiz_is_repaired_before_dispatch(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _PausingRegistry(_Registry):
+        def build_openai_schemas(self, _enabled):
+            return [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "mastery_quiz",
+                        "description": "Register quiz",
+                        "parameters": {"type": "object", "properties": {}},
+                    },
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "ask_user",
+                        "description": "Ask the user",
+                        "parameters": {"type": "object", "properties": {}},
+                    },
+                },
+            ]
+
+        async def execute(self, name: str, **kwargs):
+            self.executed.append({"name": name, "kwargs": kwargs})
+            if name == "ask_user":
+                return ToolResult(
+                    content="Asked the user.",
+                    success=True,
+                    pause_for_user={"questions": [{"id": "q1", "prompt": "Choose"}]},
+                )
+            return ToolResult(content="registered", success=True)
+
+    registry = _PausingRegistry()
+    client = _ScriptedChatClient(
+        [
+            [
+                _llm_chunk(
+                    tool_calls=[
+                        {
+                            "id": "call-unregistered-ask",
+                            "name": "ask_user",
+                            "arguments": json.dumps({"questions": [{"id": "q1"}]}),
+                        }
+                    ]
+                )
+            ],
+            [
+                _llm_chunk(
+                    tool_calls=[
+                        {
+                            "id": "call-quiz",
+                            "name": "mastery_quiz",
+                            "arguments": json.dumps(
+                                {
+                                    "knowledge_point_id": "kp1",
+                                    "question": "What is elasticity?",
+                                    "expected_answer": "B",
+                                    "question_type": "choice",
+                                    "options": [
+                                        "A: Pay only for active resources",
+                                        "B: Scale resources based on demand",
+                                    ],
+                                }
+                            ),
+                        },
+                        {
+                            "id": "call-ask",
+                            "name": "ask_user",
+                            "arguments": json.dumps({"questions": [{"id": "q1"}]}),
+                        },
+                    ]
+                )
+            ],
+        ]
+    )
+    pipeline = AgenticChatPipeline(language="en")
+    pipeline.registry = registry
+    monkeypatch.setattr(
+        pipeline,
+        "_compose_enabled_tools",
+        lambda _context: ["mastery_quiz", "ask_user"],
+    )
+    monkeypatch.setattr(pipeline, "_build_openai_client", lambda: client)
+    monkeypatch.setattr(
+        pipeline,
+        "_capability_pre_loop_seed",
+        lambda context: context.metadata.setdefault("mastery_status_injected", True)
+        and "### Deterministic Mastery Status\n{}",
+    )
+
+    events = await _run(
+        pipeline,
+        UnifiedContext(
+            session_id="s1",
+            user_message="learn aws one by one",
+            enabled_tools=["mastery_quiz", "ask_user"],
+            metadata={"mastery_mode": True, "mastery_path_id": "csphere-aws_certification"},
+        ),
+    )
+
+    assert client.call_count == 2
+    repair_instruction = client.calls[1]["messages"][-1]["content"]
+    assert "without first registering the question with mastery_quiz" in repair_instruction
+    assert [call["name"] for call in registry.executed] == ["mastery_quiz", "ask_user"]
+    result = _result(events)
+    assert result.metadata["completed"] is False
+
+
+@pytest.mark.asyncio
+async def test_mastery_answered_card_requires_grade_before_final(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _GradingRegistry(_Registry):
+        def build_openai_schemas(self, _enabled):
+            return [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "mastery_quiz",
+                        "description": "Register quiz",
+                        "parameters": {"type": "object", "properties": {}},
+                    },
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "ask_user",
+                        "description": "Ask the user",
+                        "parameters": {"type": "object", "properties": {}},
+                    },
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "mastery_grade",
+                        "description": "Grade answer",
+                        "parameters": {"type": "object", "properties": {}},
+                    },
+                },
+            ]
+
+        async def execute(self, name: str, **kwargs):
+            self.executed.append({"name": name, "kwargs": kwargs})
+            if name == "ask_user":
+                return ToolResult(
+                    content="Asked the user.",
+                    success=True,
+                    pause_for_user={"questions": [{"id": "q1", "prompt": "Choose"}]},
+                )
+            if name == "mastery_grade":
+                return ToolResult(
+                    content=json.dumps({"is_correct": True, "mastered": False}),
+                    success=True,
+                    metadata={"mastery_grade": {"is_correct": True, "mastered": False}},
+                )
+            return ToolResult(content="registered", success=True)
+
+    pending_checks = {"value": True}
+
+    def _fake_pending(_context):
+        return pending_checks["value"]
+
+    async def _waiter():
+        return {"text": "B"}
+
+    registry = _GradingRegistry()
+    client = _ScriptedChatClient(
+        [
+            [
+                _llm_chunk(
+                    tool_calls=[
+                        {
+                            "id": "call-quiz",
+                            "name": "mastery_quiz",
+                            "arguments": json.dumps({"knowledge_point_id": "kp1"}),
+                        },
+                        {
+                            "id": "call-ask",
+                            "name": "ask_user",
+                            "arguments": json.dumps({"questions": [{"id": "q1"}]}),
+                        },
+                    ]
+                )
+            ],
+            [_llm_chunk(content="Hello! What subject would you like to learn?")],
+            [
+                _llm_chunk(
+                    tool_calls=[
+                        {
+                            "id": "call-grade",
+                            "name": "mastery_grade",
+                            "arguments": json.dumps({"answer": "B"}),
+                        }
+                    ]
+                )
+            ],
+            [_llm_chunk(content="Correct, but let's practice once more.")],
+        ]
+    )
+    pipeline = AgenticChatPipeline(language="en")
+    pipeline.registry = registry
+    monkeypatch.setattr(
+        pipeline,
+        "_compose_enabled_tools",
+        lambda _context: ["mastery_quiz", "ask_user", "mastery_grade"],
+    )
+    monkeypatch.setattr(pipeline, "_build_openai_client", lambda: client)
+    monkeypatch.setattr(
+        "cognispheretutor.agents.chat.agent_loop._has_pending_mastery_question",
+        _fake_pending,
+    )
+
+    events = await _run(
+        pipeline,
+        UnifiedContext(
+            session_id="s1",
+            user_message="learn aws one by one",
+            enabled_tools=["mastery_quiz", "ask_user", "mastery_grade"],
+            metadata={
+                "mastery_mode": True,
+                "mastery_path_id": "csphere-aws_certification",
+                "wait_for_user_reply": _waiter,
+            },
+        ),
+    )
+
+    assert client.call_count == 4
+    repair_instruction = client.calls[2]["messages"][-1]["content"]
+    assert "You must grade that answer" in repair_instruction
+    assert [call["name"] for call in registry.executed] == [
+        "mastery_quiz",
+        "ask_user",
+        "mastery_grade",
+    ]
+    result = _result(events)
+    assert result.metadata["completed"] is True
+    assert result.metadata["response"].startswith("Correct, but let's practice once more.")
+
+
+@pytest.mark.asyncio
 async def test_round_budget_forces_tool_less_finish(monkeypatch: pytest.MonkeyPatch) -> None:
     registry = _Registry()
     client = _ScriptedChatClient(

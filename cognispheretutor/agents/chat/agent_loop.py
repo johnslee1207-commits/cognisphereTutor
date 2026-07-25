@@ -258,6 +258,8 @@ class AgentLoop:
         explore_label = self.pipeline._t("labels.exploring", default="Exploring")
         nudged_empty_finish = False
         mastery_quiz_repair_attempts = 0
+        mastery_ask_registration_repair_attempts = 0
+        mastery_grade_repair_attempts = 0
         for _round in range(max(1, self.pipeline.effective_max_rounds(self.context))):
             try:
                 result = await self._call_llm(
@@ -321,6 +323,46 @@ class AgentLoop:
                         }
                     )
                     continue
+                if _needs_mastery_grade_repair(
+                    context=self.context,
+                    enabled_tools=self.enabled_tools,
+                    tools_used=state.tools_used,
+                ):
+                    if mastery_grade_repair_attempts >= 2:
+                        return await self._finalize_finish(
+                            self.pipeline._t(
+                                "notices.mastery_grade_required",
+                                default=(
+                                    "I need to grade the answer with mastery_grade "
+                                    "before we continue. Please retry this turn so "
+                                    "the mastery gate can be updated correctly."
+                                ),
+                            )
+                        )
+                    mastery_grade_repair_attempts += 1
+                    await self.stream.progress(
+                        self.pipeline._t(
+                            "notices.mastery_grade_repaired",
+                            default=(
+                                "Detected an answered mastery card; asking the "
+                                "model to grade it before continuing."
+                            ),
+                        ),
+                        source="chat",
+                        stage=LOOP_STAGE,
+                        metadata={
+                            "trace_kind": "warning",
+                            "mastery_grade_repair": True,
+                        },
+                    )
+                    messages.append({"role": "assistant", "content": result.text})
+                    messages.append(
+                        {
+                            "role": "user",
+                            "content": _mastery_grade_repair_instruction(),
+                        }
+                    )
+                    continue
                 if _needs_mastery_quiz_card_repair(
                     context=self.context,
                     final_text=final_text,
@@ -365,6 +407,55 @@ class AgentLoop:
                     continue
                 # Finish: the text streamed live this round IS the answer.
                 return await self._finalize_finish(final_text)
+
+            if _needs_mastery_ask_user_registration_repair(
+                context=self.context,
+                tool_calls=result.tool_calls,
+                enabled_tools=self.enabled_tools,
+                tools_used=state.tools_used,
+            ):
+                if mastery_ask_registration_repair_attempts >= 2:
+                    return await self._finalize_finish(
+                        self.pipeline._t(
+                            "notices.mastery_quiz_card_required",
+                            default=(
+                                "I need to present this check as an interactive "
+                                "mastery card before we continue. Please retry this "
+                                "turn; I will register the question with mastery_quiz "
+                                "and ask_user instead of moving to the next lesson."
+                            ),
+                        )
+                    )
+                mastery_ask_registration_repair_attempts += 1
+                await self.stream.progress(
+                    self.pipeline._t(
+                        "notices.mastery_ask_user_without_quiz_repaired",
+                        default=(
+                            "Detected an unregistered mastery card; asking the "
+                            "model to register mastery_quiz before ask_user."
+                        ),
+                    ),
+                    source="chat",
+                    stage=LOOP_STAGE,
+                    metadata={
+                        "trace_kind": "warning",
+                        "mastery_ask_user_registration_repair": True,
+                    },
+                )
+                messages.append(
+                    {
+                        "role": "assistant",
+                        "content": result.text
+                        or "I attempted to show an interactive mastery check.",
+                    }
+                )
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": _mastery_ask_user_registration_repair_instruction(),
+                    }
+                )
+                continue
 
             messages.append(assistant_message_with_tool_calls(result.text, result.tool_calls))
             dispatch = await self.pipeline._dispatch_tool_calls(
@@ -796,6 +887,61 @@ def _needs_mastery_quiz_card_repair(
     )
 
 
+def _needs_mastery_ask_user_registration_repair(
+    *,
+    context: UnifiedContext,
+    tool_calls: list[dict[str, Any]],
+    enabled_tools: list[str],
+    tools_used: list[str],
+) -> bool:
+    if not context.metadata.get("mastery_mode"):
+        return False
+    if "mastery_quiz" not in enabled_tools or "ask_user" not in enabled_tools:
+        return False
+    call_names = {
+        str(call.get("function", {}).get("name") or call.get("name") or "").strip()
+        for call in tool_calls
+    }
+    if "ask_user" not in call_names:
+        return False
+    if "mastery_quiz" in call_names or "mastery_grade" in call_names:
+        return False
+    if any(tool in {"mastery_quiz", "mastery_grade"} for tool in tools_used):
+        return False
+    return True
+
+
+def _needs_mastery_grade_repair(
+    *,
+    context: UnifiedContext,
+    enabled_tools: list[str],
+    tools_used: list[str],
+) -> bool:
+    if not context.metadata.get("mastery_mode"):
+        return False
+    if "mastery_grade" not in enabled_tools:
+        return False
+    if "ask_user" not in tools_used:
+        return False
+    if "mastery_grade" in tools_used:
+        return False
+    return _has_pending_mastery_question(context)
+
+
+def _has_pending_mastery_question(context: UnifiedContext) -> bool:
+    path_id = str(context.metadata.get("mastery_path_id") or "").strip()
+    if not path_id:
+        return False
+    try:
+        from cognispheretutor.learning.service import LearningService
+        from cognispheretutor.learning.storage import LearningStore
+
+        progress = LearningService(LearningStore()).get_or_create(path_id)
+        return progress.pending_question is not None
+    except Exception:
+        return False
+
+
 def _mastery_quiz_card_repair_instruction(final_text: str) -> str:
     excerpt = str(final_text or "").strip()
     if len(excerpt) > 1800:
@@ -817,6 +963,39 @@ def _mastery_quiz_card_repair_instruction(final_text: str) -> str:
     )
 
 
+def _mastery_grade_repair_instruction() -> str:
+    return (
+        "The learner has answered an ask_user mastery card and a pending "
+        "mastery_quiz question exists. You must grade that answer before any "
+        "new teaching or generic response.\n\n"
+        "Repair this now:\n"
+        "1. Read the learner's answer from the latest ask_user tool result in "
+        "this conversation.\n"
+        "2. Call mastery_grade with that answer verbatim.\n"
+        "3. Give feedback based on mastery_grade.is_correct and mastery_grade.mastered.\n"
+        "4. Continue to the next objective only if mastery_grade.mastered is true; "
+        "otherwise reteach the same objective briefly and ask another registered "
+        "mastery_quiz + ask_user check."
+    )
+
+
+def _mastery_ask_user_registration_repair_instruction() -> str:
+    return (
+        "You attempted to show an ask_user card in mastery mode without first "
+        "registering the question with mastery_quiz. That creates an ungradable "
+        "card and is not allowed.\n\n"
+        "Repair this now without teaching new content:\n"
+        "1. Call mastery_quiz for the current objective from Deterministic "
+        "Mastery Status.\n"
+        "2. Use question_type='choice' for multiple-choice checks.\n"
+        "3. Pass full option bodies like ['A: ...', 'B: ...'] and set "
+        "expected_answer to the correct label.\n"
+        "4. Then call ask_user with matching option labels so the learner answers "
+        "on an interactive card.\n"
+        "5. Do not continue to another lesson until mastery_grade grades the reply."
+    )
+
+
 __all__ = [
     "AgentLoop",
     "AgentLoopState",
@@ -824,6 +1003,9 @@ __all__ = [
     "LLMCallResult",
     "LOOP_STAGE",
     "LoopOutcome",
+    "_has_pending_mastery_question",
+    "_needs_mastery_ask_user_registration_repair",
+    "_needs_mastery_grade_repair",
     "_needs_mastery_quiz_card_repair",
     "_source_provenance_for_turn",
 ]
