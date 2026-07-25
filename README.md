@@ -455,7 +455,7 @@ cognisphereTutor can discover, negotiate, validate, and import domain learning p
 
 **DT-P3 dual path:** offline packages go through `POST /api/v1/learning/cognisphere/trusted-context/import` with a `package` body (or CLI offline import). Live kit fetch uses the same endpoint without `package` when `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL` is set (`fetch_and_import_trusted_context`). Status exposes `gates.trusted_context.mode` (`live` | `offline_only`).
 
-**Guided Learning → Chat:** Learning Space deep-links open `/home/{path_id}?capability=mastery_path` so Chat auto-selects Mastery Path. Tutor start returns `continue_in_chat` plus `events_url` (SSE) for DT-P4 session events.
+**Guided Learning → Chat:** Learning Space deep-links open `/home/{path_id}?capability=mastery_path` so Chat auto-selects Mastery Path. Tutor start returns `continue_in_chat` plus `events_url` (SSE) for DT-P4 session events. Chat home (empty state) also exposes an NL learning-goal entry: recommend plugins → continue to `/space/learning?goal=…&domains=…` or one-click compose/seed then Mastery Chat.
 
 ```bash
 # Windows PowerShell example

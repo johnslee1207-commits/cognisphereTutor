@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import {
   GraduationCap,
@@ -53,6 +53,12 @@ export default function MasteryPathPage() {
   const zh = i18n.language?.toLowerCase().startsWith("zh");
   const tr = useCallback((cn: string, en: string) => (zh ? cn : en), [zh]);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const goalFromUrl = (searchParams.get("goal") || "").trim();
+  const domainsFromUrl = (searchParams.get("domains") || "")
+    .split(",")
+    .map((d) => d.trim())
+    .filter(Boolean);
 
   const [paths, setPaths] = useState<ProgressSummary[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
@@ -66,10 +72,11 @@ export default function MasteryPathPage() {
   const [focusHint, setFocusHint] = useState<string | null>(null);
   const [planHint, setPlanHint] = useState<string | null>(null);
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
-  const [goalText, setGoalText] = useState("");
+  const [goalText, setGoalText] = useState(goalFromUrl);
   const [recommendedDomains, setRecommendedDomains] = useState<string[]>([]);
   const [tutorBusy, setTutorBusy] = useState(false);
   const [radar, setRadar] = useState<AbilityRadarResult | null>(null);
+  const [urlGoalApplied, setUrlGoalApplied] = useState(false);
 
   const loadList = useCallback(async () => {
     setLoadingList(true);
@@ -106,6 +113,22 @@ export default function MasteryPathPage() {
     loadList();
     loadCsphere();
   }, [loadList, loadCsphere]);
+
+  // Deep-link from Chat: ?goal=…&domains=a,b pre-fills goal / selection.
+  useEffect(() => {
+    if (urlGoalApplied) return;
+    if (goalFromUrl) {
+      setGoalText(goalFromUrl);
+    }
+    if (domainsFromUrl.length) {
+      setSelectedDomains(domainsFromUrl);
+      setRecommendedDomains(domainsFromUrl);
+    }
+    if (goalFromUrl || domainsFromUrl.length) {
+      setUrlGoalApplied(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- apply URL once per landing
+  }, [goalFromUrl, searchParams, urlGoalApplied]);
 
   useEffect(() => {
     if (!selected) {

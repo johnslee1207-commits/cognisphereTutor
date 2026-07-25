@@ -314,7 +314,7 @@ cognisphereTutor 可通过进程环境变量对接 CognisphereLearningPlugins mo
 
 **DT-P3 双路径：** 离线包用 `POST /api/v1/learning/cognisphere/trusted-context/import` 提交 `package`；配置了 `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL` 时可无 body 走在线 kit。`GET .../status` 的 `gates.trusted_context.mode` 为 `live` 或 `offline_only`。
 
-**精通之路 → 对话：** Learning Space 深链 `/home/{path_id}?capability=mastery_path` 自动切 Mastery Path；`tutor/start` 返回 `continue_in_chat` 与 SSE `events_url`。
+**精通之路 → 对话：** Learning Space 深链 `/home/{path_id}?capability=mastery_path` 自动切 Mastery Path；`tutor/start` 返回 `continue_in_chat` 与 SSE `events_url`。Chat 首页空态也提供 NL 学习目标入口：推荐插件 → 跳转 `/space/learning?goal=…&domains=…`，或一键组合导入后进入 Mastery 对话。
 
 ```bash
 $env:COGNISPHERE_LEARNING_PLUGINS_ROOT = "D:\Projects\CognisphereLearningPlugins"

@@ -3,8 +3,13 @@ import { apiFetch, apiUrl } from "./api";
 export interface CognispherePluginInfo {
   domain: string;
   plugin_id?: string;
+  display_name?: string;
+  description?: string;
+  version?: string;
   lifecycle?: string;
   capabilities: string[];
+  distribution?: Record<string, unknown>;
+  tutor_pack?: Record<string, unknown>;
   path_id?: string;
   valid: boolean;
 }
@@ -25,6 +30,8 @@ export interface CognisphereLearningStatus {
     };
   };
   plugins: CognispherePluginInfo[];
+  tutor_pack?: Record<string, unknown>;
+  distribution_catalog?: Record<string, unknown>;
   defaults?: { chat_capability?: string };
 }
 
@@ -407,6 +414,20 @@ export function masteryChatHref(
     params.set("tutor_session", opts.tutorSessionId);
   }
   return `/home/${encodeURIComponent(pathId)}?${params.toString()}`;
+}
+
+/** Learning Space deep-link carrying an NL goal (+ optional recommended domains). */
+export function learningSpaceGoalHref(
+  goal: string,
+  opts?: { domains?: string[] },
+): string {
+  const params = new URLSearchParams();
+  const text = goal.trim();
+  if (text) params.set("goal", text);
+  const domains = (opts?.domains || []).map((d) => d.trim()).filter(Boolean);
+  if (domains.length) params.set("domains", domains.join(","));
+  const qs = params.toString();
+  return qs ? `/space/learning?${qs}` : "/space/learning";
 }
 
 export function isCognispherePathId(bookId: string): boolean {
