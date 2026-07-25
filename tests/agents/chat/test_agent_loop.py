@@ -822,6 +822,173 @@ async def test_unresolved_ask_user_halts_turn(monkeypatch: pytest.MonkeyPatch) -
 
 
 @pytest.mark.asyncio
+async def test_mastery_plain_text_choice_is_repaired_into_quiz_card(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _MasteryRegistry(_Registry):
+        def build_openai_schemas(self, _enabled):
+            return [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "mastery_quiz",
+                        "description": "Register quiz",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "knowledge_point_id": {"type": "string"},
+                                "question": {"type": "string"},
+                                "expected_answer": {"type": "string"},
+                                "question_type": {"type": "string"},
+                                "options": {"type": "array", "items": {"type": "string"}},
+                            },
+                            "required": [
+                                "knowledge_point_id",
+                                "question",
+                                "expected_answer",
+                            ],
+                        },
+                    },
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "ask_user",
+                        "description": "Ask the user",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {"questions": {"type": "array"}},
+                            "required": ["questions"],
+                        },
+                    },
+                },
+            ]
+
+        async def execute(self, name: str, **kwargs):
+            self.executed.append({"name": name, "kwargs": kwargs})
+            if name == "ask_user":
+                return ToolResult(
+                    content="Asked the user.",
+                    success=True,
+                    pause_for_user={
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "prompt": "Which AWS concept isolates data centers?",
+                                "options": [
+                                    {"label": "A", "description": "Edge Location"},
+                                    {"label": "B", "description": "Availability Zone"},
+                                ],
+                            }
+                        ]
+                    },
+                )
+            return ToolResult(content="registered", success=True)
+
+    registry = _MasteryRegistry()
+    plain_choice = (
+        "Quick check:\n\n"
+        "Question: Which AWS component is an isolated set of data centers?\n\n"
+        "A) Edge Location\n"
+        "B) Availability Zone\n"
+        "C) Global Namespace\n"
+        "D) Service Tier"
+    )
+    client = _ScriptedChatClient(
+        [
+            [_llm_chunk(content=plain_choice)],
+            [
+                _llm_chunk(
+                    tool_calls=[
+                        {
+                            "id": "call-quiz",
+                            "name": "mastery_quiz",
+                            "arguments": json.dumps(
+                                {
+                                    "knowledge_point_id": "sk-aws-clf-c02",
+                                    "question": (
+                                        "Which AWS component is an isolated set "
+                                        "of data centers?"
+                                    ),
+                                    "expected_answer": "B",
+                                    "question_type": "choice",
+                                    "options": [
+                                        "A: Edge Location",
+                                        "B: Availability Zone",
+                                        "C: Global Namespace",
+                                        "D: Service Tier",
+                                    ],
+                                }
+                            ),
+                        },
+                        {
+                            "id": "call-ask",
+                            "name": "ask_user",
+                            "arguments": json.dumps(
+                                {
+                                    "questions": [
+                                        {
+                                            "id": "q1",
+                                            "prompt": (
+                                                "Which AWS component is an isolated "
+                                                "set of data centers?"
+                                            ),
+                                            "options": [
+                                                {
+                                                    "label": "A",
+                                                    "description": "Edge Location",
+                                                },
+                                                {
+                                                    "label": "B",
+                                                    "description": "Availability Zone",
+                                                },
+                                            ],
+                                        }
+                                    ]
+                                }
+                            ),
+                        },
+                    ]
+                )
+            ],
+        ]
+    )
+    pipeline = AgenticChatPipeline(language="en")
+    pipeline.registry = registry
+    monkeypatch.setattr(
+        pipeline,
+        "_compose_enabled_tools",
+        lambda _context: ["mastery_quiz", "ask_user"],
+    )
+    monkeypatch.setattr(pipeline, "_build_openai_client", lambda: client)
+    monkeypatch.setattr(
+        pipeline,
+        "_capability_pre_loop_seed",
+        lambda context: context.metadata.setdefault("mastery_status_injected", True)
+        and "### Deterministic Mastery Status\n{}",
+    )
+
+    events = await _run(
+        pipeline,
+        UnifiedContext(
+            session_id="s1",
+            user_message="teach aws",
+            enabled_tools=["mastery_quiz", "ask_user"],
+            metadata={"mastery_mode": True, "mastery_path_id": "csphere-aws_certification"},
+        ),
+    )
+
+    assert client.call_count == 2
+    repair_instruction = client.calls[1]["messages"][-1]["content"]
+    assert "Register the same check with mastery_quiz" in repair_instruction
+    assert "Plain-text check to convert" in repair_instruction
+    assert [call["name"] for call in registry.executed] == ["mastery_quiz", "ask_user"]
+    assert _call_roles(events) == ["finish", "narration"]
+    result = _result(events)
+    assert result.metadata["completed"] is False
+
+
+@pytest.mark.asyncio
 async def test_round_budget_forces_tool_less_finish(monkeypatch: pytest.MonkeyPatch) -> None:
     registry = _Registry()
     client = _ScriptedChatClient(

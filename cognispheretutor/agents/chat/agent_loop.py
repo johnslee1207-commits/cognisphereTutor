@@ -257,6 +257,7 @@ class AgentLoop:
         """
         explore_label = self.pipeline._t("labels.exploring", default="Exploring")
         nudged_empty_finish = False
+        nudged_plain_mastery_quiz = False
         for _round in range(max(1, self.pipeline.effective_max_rounds(self.context))):
             try:
                 result = await self._call_llm(
@@ -317,6 +318,38 @@ class AgentLoop:
                                     "user-facing answer directly."
                                 ),
                             ),
+                        }
+                    )
+                    continue
+                if (
+                    not nudged_plain_mastery_quiz
+                    and _needs_mastery_quiz_card_repair(
+                        context=self.context,
+                        final_text=final_text,
+                        enabled_tools=self.enabled_tools,
+                    )
+                ):
+                    nudged_plain_mastery_quiz = True
+                    await self.stream.progress(
+                        self.pipeline._t(
+                            "notices.mastery_plain_quiz_repaired",
+                            default=(
+                                "Detected a mastery quiz written as plain text; "
+                                "asking the model to register an interactive card."
+                            ),
+                        ),
+                        source="chat",
+                        stage=LOOP_STAGE,
+                        metadata={
+                            "trace_kind": "warning",
+                            "mastery_plain_quiz_repair": True,
+                        },
+                    )
+                    messages.append({"role": "assistant", "content": result.text})
+                    messages.append(
+                        {
+                            "role": "user",
+                            "content": _mastery_quiz_card_repair_instruction(final_text),
                         }
                     )
                     continue
@@ -716,6 +749,53 @@ def _source_provenance_for_turn(
     }
 
 
+_PLAIN_CHOICE_OPTION_RE = re.compile(r"(?im)^\s*(?:[-*]\s*)?([A-D])[\).:：]\s+\S+")
+_PLAIN_TRUE_FALSE_RE = re.compile(
+    r"(?i)\b(true\s*/\s*false|true or false|判断题|正确还是错误)\b"
+)
+
+
+def _needs_mastery_quiz_card_repair(
+    *,
+    context: UnifiedContext,
+    final_text: str,
+    enabled_tools: list[str],
+) -> bool:
+    if not context.metadata.get("mastery_mode"):
+        return False
+    if "mastery_quiz" not in enabled_tools or "ask_user" not in enabled_tools:
+        return False
+    text = str(final_text or "").strip()
+    if not text:
+        return False
+    option_labels = {match.group(1).upper() for match in _PLAIN_CHOICE_OPTION_RE.finditer(text)}
+    has_choice_check = len(option_labels) >= 2 and bool(
+        re.search(r"(?i)\b(question|quiz|select|choose|which|what)\b|问题|选择", text)
+    )
+    return bool(has_choice_check or _PLAIN_TRUE_FALSE_RE.search(text))
+
+
+def _mastery_quiz_card_repair_instruction(final_text: str) -> str:
+    excerpt = str(final_text or "").strip()
+    if len(excerpt) > 1800:
+        excerpt = f"{excerpt[:1800].rstrip()}..."
+    return (
+        "You just wrote a mastery check as plain text. That is not allowed in "
+        "mastery mode because it cannot be graded deterministically.\n\n"
+        "Repair this now without teaching a new lesson:\n"
+        "1. Register the same check with mastery_quiz, including the current "
+        "knowledge_point_id from the deterministic mastery status.\n"
+        "2. For choice questions, set question_type='choice', pass full option "
+        "bodies such as ['A: ...', 'B: ...'], and set expected_answer to the "
+        "correct label.\n"
+        "3. Immediately present the registered question with ask_user using "
+        "matching short labels A/B/C/D or True/False.\n"
+        "4. Do not answer the question, do not mark mastery, and do not advance "
+        "to another objective until mastery_grade runs on the learner's reply.\n\n"
+        f"Plain-text check to convert:\n{excerpt}"
+    )
+
+
 __all__ = [
     "AgentLoop",
     "AgentLoopState",
@@ -723,5 +803,6 @@ __all__ = [
     "LLMCallResult",
     "LOOP_STAGE",
     "LoopOutcome",
+    "_needs_mastery_quiz_card_repair",
     "_source_provenance_for_turn",
 ]
