@@ -11,6 +11,7 @@ status:
   repair_incomplete: "已尝试修复；仍有遗留问题：{error}"
   repair_skipped_error: "跳过修复——直接使用草稿。"
   html_invalid_fallback: "HTML 未通过校验；使用兜底模板。"
+  manim_missing: "Manim 渲染需要可选的 Manim 依赖。请安装：`pip install 'cognispheretutor[math-animator]'` 或 `pip install -r requirements/math-animator.txt`。"
   manim_code_prepared: "Manim 代码已准备好。"
   manim_rendering: "正在渲染 {mode}，质量={quality}。"
   manim_retry: "重试 {attempt}：{error}"

@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
-import importlib.util
 import time
 from typing import Any
 
 from cognispheretutor.agents._shared.capability_result import emit_capability_result
+from cognispheretutor.agents.math_animator.deps import (
+    MANIM_INSTALL_HINT,
+    emit_manim_unavailable,
+    is_manim_available,
+)
 from cognispheretutor.core.agentic.usage import UsageTracker
 from cognispheretutor.core.capability_protocol import BaseCapability, CapabilityManifest
 from cognispheretutor.core.context import UnifiedContext
@@ -39,12 +43,20 @@ class MathAnimatorCapability(BaseCapability):
     )
 
     async def run(self, context: UnifiedContext, stream: StreamBus) -> None:
-        if importlib.util.find_spec("manim") is None:
-            raise RuntimeError(
-                "math_animator requires optional dependencies. "
-                "Install with `pip install 'cognispheretutor[math-animator]'` "
-                "or `pip install -r requirements/math-animator.txt`."
+        i18n = StatusI18n(self.name, context.language, module="math_animator")
+        if not is_manim_available():
+            message = i18n.t(
+                "manim_missing",
+                "Math Animator needs the optional Manim extra. " + MANIM_INSTALL_HINT,
             )
+            await emit_manim_unavailable(
+                stream,
+                source=self.name,
+                message=message,
+                extra={"output_mode": "unavailable"},
+            )
+            return
+
         from cognispheretutor.agents.math_animator.pipeline import MathAnimatorPipeline
         from cognispheretutor.agents.math_animator.request_config import (
             validate_math_animator_request_config,
@@ -54,7 +66,6 @@ class MathAnimatorCapability(BaseCapability):
         llm_config = get_llm_config()
         request_config = validate_math_animator_request_config(context.config_overrides)
         usage = UsageTracker(model=getattr(llm_config, "model", None))
-        i18n = StatusI18n(self.name, context.language, module="math_animator")
         pipeline = MathAnimatorPipeline(
             api_key=llm_config.api_key,
             base_url=llm_config.base_url,

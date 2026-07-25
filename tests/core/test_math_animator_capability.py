@@ -34,8 +34,8 @@ async def test_math_animator_capability_emits_summary_and_result(
 ) -> None:
     # Unit test should not require real optional dependency installation.
     monkeypatch.setattr(
-        "cognispheretutor.agents.math_animator.capability.importlib.util.find_spec",
-        lambda name: object() if name == "manim" else None,
+        "cognispheretutor.agents.math_animator.capability.is_manim_available",
+        lambda: True,
     )
 
     class FakePipeline:
@@ -119,3 +119,29 @@ async def test_math_animator_capability_emits_summary_and_result(
     assert result_event.metadata["output_mode"] == "video"
     assert result_event.metadata["code"]["language"] == "python"
     assert result_event.metadata["artifacts"][0]["filename"] == "video.mp4"
+
+
+@pytest.mark.asyncio
+async def test_math_animator_degrades_when_manim_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "cognispheretutor.agents.math_animator.capability.is_manim_available",
+        lambda: False,
+    )
+
+    context = UnifiedContext(
+        session_id="session_1",
+        user_message="Animate a sine wave",
+        active_capability="math_animator",
+        language="en",
+    )
+    capability = MathAnimatorCapability()
+    events = await _collect_events(lambda bus: capability.run(context, bus))
+
+    content_event = next(event for event in events if event.type == StreamEventType.CONTENT)
+    assert "math-animator" in content_event.content.lower() or "Manim" in content_event.content
+    result_event = next(event for event in events if event.type == StreamEventType.RESULT)
+    assert result_event.metadata["error"]["code"] == "manim_unavailable"
+    assert result_event.metadata["artifacts"] == []
+    assert not any(event.type == StreamEventType.ERROR for event in events)

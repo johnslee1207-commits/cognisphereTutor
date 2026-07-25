@@ -6,11 +6,39 @@ import asyncio
 
 import pytest
 
-from cognispheretutor.services.sandbox.backends import BwrapBackend, RestrictedSubprocessBackend
+from cognispheretutor.services.sandbox.backends import (
+    BwrapBackend,
+    RestrictedSubprocessBackend,
+    SandboxBackend,
+)
 from cognispheretutor.services.sandbox.config import SandboxSettings, build_backend
 from cognispheretutor.services.sandbox.quota import QuotaExceeded, UserExecQuota
+from cognispheretutor.services.sandbox.registry import (
+    IMPLEMENTED_BACKENDS,
+    assert_sandbox_registry_valid,
+    list_implemented_backend_ids,
+    validate_sandbox_registry,
+)
 from cognispheretutor.services.sandbox.service import SandboxService
 from cognispheretutor.services.sandbox.spec import ExecRequest, ExecResult, IsolationLevel, ResourceLimits
+
+
+def test_sandbox_registry_lists_only_concrete_backends() -> None:
+    assert validate_sandbox_registry() == []
+    assert_sandbox_registry_valid()
+    ids = list_implemented_backend_ids()
+    assert ids == ("runner_sidecar", "bwrap", "restricted_subprocess")
+    for backend_id in ids:
+        assert issubclass(IMPLEMENTED_BACKENDS[backend_id], SandboxBackend)
+        assert IMPLEMENTED_BACKENDS[backend_id] is not SandboxBackend
+
+
+def test_sandbox_registry_rejects_abstract_entry() -> None:
+    errors = validate_sandbox_registry({"broken": SandboxBackend})
+    assert errors
+    assert any("abstract" in err for err in errors)
+    with pytest.raises(RuntimeError, match="Sandbox backend registry invalid"):
+        assert_sandbox_registry_valid({"broken": SandboxBackend})
 
 
 def test_backend_selection_runner_url() -> None:

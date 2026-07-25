@@ -291,16 +291,13 @@ class VisualizeCapability(BaseCapability):
         the final result with ``render_type`` as the discriminator so the
         unified frontend dispatcher can route to ``MathAnimatorViewer``.
         """
-        import importlib.util
         import time
 
-        if importlib.util.find_spec("manim") is None:
-            raise RuntimeError(
-                "Manim rendering requires optional dependencies. "
-                "Install with `pip install 'cognispheretutor[math-animator]'` "
-                "or `pip install -r requirements/math-animator.txt`."
-            )
-
+        from cognispheretutor.agents.math_animator.deps import (
+            MANIM_INSTALL_HINT,
+            emit_manim_unavailable,
+            is_manim_available,
+        )
         from cognispheretutor.agents.math_animator.pipeline import MathAnimatorPipeline
         from cognispheretutor.agents.math_animator.request_config import MathAnimatorRequestConfig
         from cognispheretutor.core.trace import build_trace_metadata, new_call_id
@@ -308,6 +305,19 @@ class VisualizeCapability(BaseCapability):
 
         if i18n is None:
             i18n = StatusI18n(self.name, context.language, module="visualize")
+        if not is_manim_available():
+            message = i18n.t(
+                "manim_missing",
+                "Manim rendering needs the optional Manim extra. " + MANIM_INSTALL_HINT,
+            )
+            await emit_manim_unavailable(
+                stream,
+                source=self.name,
+                message=message,
+                extra={"render_type": render_type, "output_mode": "unavailable"},
+            )
+            return
+
         output_mode = "image" if render_type == "manim_image" else "video"
         request_config = MathAnimatorRequestConfig(
             output_mode=output_mode,  # type: ignore[arg-type]

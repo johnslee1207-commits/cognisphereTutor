@@ -1486,10 +1486,13 @@ BUILTIN_TOOL_TYPES: tuple[type[BaseTool], ...] = (
     PartnerSearchTool,
 )
 
-# No tools are parked right now. When a tool's implementation is being
-# redesigned, list its type here: it stays OUT of the runtime registry (the
-# chat agent cannot invoke it) while the settings page still surfaces it with
-# a "Coming soon" badge. Re-add to ``BUILTIN_TOOL_TYPES`` when ready to ship.
+# Empty by product contract: GeoGebra and other formerly experimental tools
+# already ship via ``BUILTIN_TOOL_TYPES`` / ``USER_TOGGLEABLE_TOOL_NAMES``.
+# When a tool's implementation is being redesigned, list its type here: it
+# stays OUT of the runtime registry (the chat agent cannot invoke it) while
+# the settings page still surfaces it with a "Coming soon" badge. Re-add to
+# ``BUILTIN_TOOL_TYPES`` when ready to ship. Keep this tuple empty unless a
+# real placeholder is intentional — an empty list means no Coming-soon UI.
 COMING_SOON_TOOL_TYPES: tuple[type[BaseTool], ...] = ()
 
 BUILTIN_TOOL_NAMES: tuple[str, ...] = tuple(tool_type().name for tool_type in BUILTIN_TOOL_TYPES)

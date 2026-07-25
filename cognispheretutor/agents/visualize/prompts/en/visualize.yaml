@@ -11,6 +11,7 @@ status:
   repair_incomplete: "Repair attempted; residual issue: {error}"
   repair_skipped_error: "Repair skipped — using draft as-is."
   html_invalid_fallback: "HTML did not validate; using fallback template."
+  manim_missing: "Manim rendering needs the optional Manim extra. Install with `pip install 'cognispheretutor[math-animator]'` or `pip install -r requirements/math-animator.txt`."
   manim_code_prepared: "Manim code prepared."
   manim_rendering: "Rendering {mode} with quality={quality}."
   manim_retry: "Retry {attempt}: {error}"

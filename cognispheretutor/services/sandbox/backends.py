@@ -17,6 +17,7 @@ isolation level it actually provides via :attr:`level`.
 from __future__ import annotations
 
 import asyncio
+from abc import ABC, abstractmethod
 from contextlib import suppress
 import os
 from pathlib import Path
@@ -31,13 +32,14 @@ from cognispheretutor.services.sandbox.spec import (
 )
 
 
-class SandboxBackend:
-    """Abstract execution backend."""
+class SandboxBackend(ABC):
+    """Abstract execution backend — only concrete subclasses may be registered."""
 
     level: IsolationLevel = IsolationLevel.OFF
 
+    @abstractmethod
     async def exec(self, request: ExecRequest) -> ExecResult:
-        raise NotImplementedError
+        """Execute *request* and return stdout/stderr/exit metadata."""
 
     async def health(self) -> tuple[bool, str]:
         """Return ``(available, detail)`` — whether the backend can run now."""

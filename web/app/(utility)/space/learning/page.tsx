@@ -330,6 +330,21 @@ export default function MasteryPathPage() {
               )}
             </p>
           )}
+          {csphere?.gates?.trusted_context && (
+            <p className="px-1 text-[10px] leading-relaxed text-[var(--muted-foreground)]">
+              {tr("可信上下文", "Trusted context")}:{" "}
+              {csphere.gates.trusted_context.kit_configured
+                ? tr("在线 kit 已配置", "live kit configured")
+                : tr("仅离线导入", "offline import only")}
+              {csphere.gates.trusted_context.mode
+                ? ` · ${csphere.gates.trusted_context.mode}`
+                : ""}
+              {!csphere.gates.trusted_context.kit_configured &&
+              csphere.gates.trusted_context.blocker?.code
+                ? ` · ${csphere.gates.trusted_context.blocker.code}`
+                : ""}
+            </p>
+          )}
           <div className="space-y-1">
             {(csphere?.plugins || []).map((plugin) => (
               <button

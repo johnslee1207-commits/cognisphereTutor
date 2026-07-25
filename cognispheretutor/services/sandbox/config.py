@@ -21,11 +21,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 import os
 
-from cognispheretutor.services.sandbox.backends import (
-    BwrapBackend,
-    RestrictedSubprocessBackend,
-    RunnerSidecarBackend,
-    SandboxBackend,
+from cognispheretutor.services.sandbox.backends import SandboxBackend
+from cognispheretutor.services.sandbox.registry import (
+    IMPLEMENTED_BACKENDS,
+    assert_sandbox_registry_valid,
 )
 from cognispheretutor.services.sandbox.spec import ResourceLimits
 
@@ -66,21 +65,24 @@ class SandboxSettings:
 def build_backend(settings: SandboxSettings) -> SandboxBackend | None:
     """Pick the backend implied by *settings*; ``None`` when none is usable.
 
-    Note: returns the candidate by configuration shape. Liveness (e.g. can
-    bwrap actually create namespaces here) is confirmed lazily via the
-    backend's ``health()`` — see :mod:`cognispheretutor.services.sandbox.service`.
+    Only backends listed in :data:`IMPLEMENTED_BACKENDS` may be returned.
+    Liveness (e.g. can bwrap actually create namespaces here) is confirmed
+    lazily via the backend's ``health()`` — see
+    :mod:`cognispheretutor.services.sandbox.service`.
     """
     import sys
 
+    assert_sandbox_registry_valid()
+
     if settings.runner_url:
-        return RunnerSidecarBackend(settings.runner_url)
+        return IMPLEMENTED_BACKENDS["runner_sidecar"](settings.runner_url)
     if sys.platform.startswith("linux"):
         import shutil
 
         if shutil.which("bwrap"):
-            return BwrapBackend()
+            return IMPLEMENTED_BACKENDS["bwrap"]()
     if settings.allow_subprocess:
-        return RestrictedSubprocessBackend()
+        return IMPLEMENTED_BACKENDS["restricted_subprocess"]()
     return None
 
 

@@ -59,8 +59,9 @@ any of them can also be force-enabled via `--tool`. Auto-mounted set: `rag`,
 `exec`, `code_execution` (sandboxed Python: NL intent → code → run),
 `list_notebook`, `write_note`, `web_fetch`, `github`, `cron`,
 `ask_user` (pauses the turn and resumes with the user's reply), plus the
-mastery-path tools. `geogebra_analysis` is parked under
-`COMING_SOON_TOOL_TYPES`.
+mastery-path tools. `geogebra_analysis` ships as a user-toggleable tool.
+`COMING_SOON_TOOL_TYPES` is an empty parking slot for redesign-in-progress
+tools (settings shows a badge only when that tuple is non-empty).
 
 ### Level 2 — Capabilities
 

@@ -136,6 +136,8 @@ pip install -e ".[matrix-e2e]"      # Matrix E2EE；需要 libolm
 pip install -e ".[math-animator]"   # Manim 插件；需要 LaTeX/ffmpeg/系统库
 ```
 
+未安装 math-animator 时，`math_animator` 与 `visualize` 的 Manim 模式会返回友好的安装提示（`error.code=manim_unavailable`），而不是以裸 `RuntimeError` 结束本轮。
+
 </details>
 
 <details>
@@ -272,6 +274,8 @@ cognispheretutor config show
 - **docker-compose：** 通过 `COGNISPHERETUTOR_SANDBOX_RUNNER_URL` 路由至加固的最小权限**运行器 sidecar**（`Dockerfile.runner`） — 安全性最强，有 sidecar 时自动优先使用。
 
 子进程沙箱由 `data/user/settings/system.json` 中的 `sandbox_allow_subprocess` 设置控制（默认 `true`）。在宿主机上运行模型生成的代码是一个真实的信任决策 — 将其设为 `false`（或导出 `COGNISPHERETUTOR_SANDBOX_ALLOW_SUBPROCESS=0`）可禁用宿主机侧执行，代价是 Office 技能将无法生成文件。
+
+仅沙箱注册表中的具体后端（`runner_sidecar` / `bwrap` / `restricted_subprocess`）可被选中；抽象桩在选型时会被拒绝。
 
 </details>
 

@@ -7,8 +7,17 @@ from cognispheretutor.api.routers import tools as tools_router
 from cognispheretutor.tools.builtin import (
     BUILTIN_TOOL_NAMES,
     COMING_SOON_TOOL_NAMES,
+    COMING_SOON_TOOL_TYPES,
     USER_TOGGLEABLE_TOOL_NAMES,
 )
+
+
+def test_coming_soon_slot_empty_and_geogebra_ships() -> None:
+    """Product contract: no Coming-soon placeholders; GeoGebra is shipped."""
+    assert COMING_SOON_TOOL_TYPES == ()
+    assert COMING_SOON_TOOL_NAMES == ()
+    assert "geogebra_analysis" in BUILTIN_TOOL_NAMES
+    assert "geogebra_analysis" in USER_TOGGLEABLE_TOOL_NAMES
 
 
 @pytest.mark.asyncio

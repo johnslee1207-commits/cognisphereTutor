@@ -251,6 +251,10 @@ pip install -e ".[matrix-e2e]"      # Matrix E2EE; requires libolm
 pip install -e ".[math-animator]"   # Manim addon; requires LaTeX/ffmpeg/system libs
 ```
 
+Without the math-animator extra, `math_animator` and `visualize` Manim modes
+emit a friendly install hint (`error.code=manim_unavailable`) instead of
+failing the turn with a raw `RuntimeError`.
+
 </details>
 
 <details>
@@ -409,6 +413,10 @@ The subprocess sandbox is controlled by the `sandbox_allow_subprocess` setting i
 on your host is a real trust decision — set it to `false` (or export
 `COGNISPHERETUTOR_SANDBOX_ALLOW_SUBPROCESS=0`) to disable host-side execution, at the
 cost of the office skills no longer being able to produce files.
+
+Only concrete backends in the sandbox registry (`runner_sidecar`, `bwrap`,
+`restricted_subprocess`) can be selected; abstract stubs are rejected at
+selection time.
 
 </details>
 
