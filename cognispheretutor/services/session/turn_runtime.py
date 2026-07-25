@@ -696,6 +696,13 @@ class TurnRuntimeManager:
         }
         session = await self.store.ensure_session(payload.get("session_id"))
         preferences = session.get("preferences") or {}
+        turn_config = dict(payload.get("config", {}) or {})
+        mastery_path_id = str(turn_config.get("mastery_path_id") or "").strip()
+        if capability == "mastery_path" and not mastery_path_id:
+            mastery_path_id = str(preferences.get("mastery_path_id") or "").strip()
+            if mastery_path_id:
+                turn_config["mastery_path_id"] = mastery_path_id
+                payload = {**payload, "config": turn_config}
         # Persona is a session-level preference (mirrors llm_selection): an
         # explicit ``persona`` key in the payload — including an empty string,
         # which means "Default" / no persona — wins and is persisted below; an
@@ -799,6 +806,8 @@ class TurnRuntimeManager:
         }
         if llm_selection:
             preference_update["llm_selection"] = llm_selection
+        if capability == "mastery_path" and mastery_path_id:
+            preference_update["mastery_path_id"] = mastery_path_id
         if persona_explicit:
             # Persist explicit set AND explicit clear ("" = back to Default).
             preference_update["persona"] = persona_pref
@@ -1179,6 +1188,15 @@ class TurnRuntimeManager:
                     if not (call_id and call_id in narration_call_ids)
                 )
             )
+
+        def _visible_error_fallback() -> str:
+            for event in reversed(assistant_events):
+                if str(event.get("type") or "") != "error":
+                    continue
+                content = str(event.get("content") or "").strip()
+                if content:
+                    return content
+            return ""
 
         # Files the model generated this turn (exec/code_execution artifacts),
         # persisted as assistant-message attachments so the UI shows openable
@@ -1678,7 +1696,7 @@ class TurnRuntimeManager:
 
             # The persisted answer is the captured content minus any narration
             # rounds (their text stayed in the trace, never the answer).
-            assistant_content = _persisted_answer()
+            assistant_content = _persisted_answer() or _visible_error_fallback()
 
             # Assistant continues the same branch as the user message it
             # answers. If we just persisted a new user row we chain off

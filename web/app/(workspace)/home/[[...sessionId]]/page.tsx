@@ -103,9 +103,14 @@ import {
 import { downloadChatMarkdown } from "@/lib/chat-export";
 import type { SpaceMemoryFile } from "@/lib/space-items";
 import {
+  apiFetch,
+  apiUrl,
+} from "@/lib/api";
+import {
   selectedBooksToPayload,
   type SelectedBookReference,
 } from "@/lib/book-references";
+import { isCognispherePathId, masteryChatHref } from "@/lib/cognisphere-learning-api";
 
 const NotebookRecordPicker = dynamic(
   () => import("@/components/notebook/NotebookRecordPicker"),
@@ -305,6 +310,38 @@ function getCapability(value: string | null): CapabilityDef {
   return CAPABILITIES.find((c) => c.value === (value || "")) ?? CAPABILITIES[0];
 }
 
+function cognispherePathTitle(pathId: string): string {
+  const domain = pathId.slice("csphere-".length);
+  if (domain === "aws_certification") return "AWS Certification Learning Path";
+  if (domain === "ap_calculus") return "AP Calculus Learning Path";
+  if (domain === "leetcode") return "LeetCode Learning Path";
+  return `${domain.replaceAll("_", " ")} Learning Path`;
+}
+
+function progressLooksLikeAwsCertification(progress: unknown): boolean {
+  const modules = Array.isArray((progress as { modules?: unknown[] })?.modules)
+    ? ((progress as { modules?: unknown[] }).modules ?? [])
+    : [];
+  const text = modules
+    .flatMap((module) => {
+      const m = module as { name?: unknown; knowledge_points?: unknown[] };
+      const points = Array.isArray(m.knowledge_points) ? m.knowledge_points : [];
+      return [
+        String(m.name || ""),
+        ...points.map((point) => String((point as { name?: unknown }).name || "")),
+      ];
+    })
+    .join(" ")
+    .toLowerCase();
+  return [
+    "aws certification",
+    "cloud practitioner",
+    "clf-c02",
+    "saa-c03",
+    "dva-c02",
+  ].some((signal) => text.includes(signal));
+}
+
 /* ------------------------------------------------------------------ */
 /*  Chat page                                                         */
 /* ------------------------------------------------------------------ */
@@ -319,6 +356,10 @@ export default function ChatPage() {
     [i18n.language],
   );
   const sessionIdParam = params.sessionId?.[0] ?? null;
+  const masteryPathParam =
+    sessionIdParam && isCognispherePathId(sessionIdParam) ? sessionIdParam : null;
+  const chatSessionIdParam = masteryPathParam ? null : sessionIdParam;
+  const masteryPathTitle = masteryPathParam ? cognispherePathTitle(masteryPathParam) : "";
   const { setActiveSessionId, language: appLanguage } = useAppShell();
 
   const {
@@ -350,6 +391,7 @@ export default function ChatPage() {
   // Capture capability/tutor query before any session URL rewrite drops them.
   const pendingCapabilityRef = useRef<string | null | undefined>(undefined);
   const pendingTutorSessionRef = useRef<string | null | undefined>(undefined);
+  const pendingMasteryPathRef = useRef<string | null | undefined>(undefined);
   if (pendingAgentRef.current === undefined) {
     const params =
       typeof window === "undefined"
@@ -358,7 +400,27 @@ export default function ChatPage() {
     pendingAgentRef.current = params?.get("agent") ?? null;
     pendingCapabilityRef.current = params?.get("capability") ?? null;
     pendingTutorSessionRef.current = params?.get("tutor_session") ?? null;
+    pendingMasteryPathRef.current = masteryPathParam;
   }
+  useEffect(() => {
+    if (!sessionIdParam?.startsWith("unified_")) return;
+    if ((pendingCapabilityRef.current || "") !== "mastery_path") return;
+    let cancelled = false;
+    void apiFetch(
+      apiUrl(`/api/v1/learning/progress/${encodeURIComponent(sessionIdParam)}`),
+      { skipAuthRedirect: true },
+    )
+      .then((res) => (res.ok ? res.json() : null))
+      .then((progress) => {
+        if (cancelled || !progressLooksLikeAwsCertification(progress)) return;
+        pendingMasteryPathRef.current = "csphere-aws_certification";
+        router.replace(masteryChatHref("csphere-aws_certification"));
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [router, sessionIdParam]);
   const agentPreselectDoneRef = useRef(false);
   const [llmOptions, setLLMOptions] = useState<LLMOption[]>([]);
   const [activeLLMDefault, setActiveLLMDefault] = useState<LLMSelection | null>(
@@ -454,9 +516,9 @@ export default function ChatPage() {
   // Storing the form by sessionId in localStorage keeps the selections —
   // and the Confirmed badge — stable for the rest of the session.
   const capabilityConfigStorageKey = useMemo(() => {
-    const sid = state.sessionId || sessionIdParam || "";
+    const sid = state.sessionId || chatSessionIdParam || masteryPathParam || "";
     return sid ? `dt:chat:capability-config:${sid}` : null;
-  }, [state.sessionId, sessionIdParam]);
+  }, [state.sessionId, chatSessionIdParam, masteryPathParam]);
   const lastHydratedConfigKeyRef = useRef<string | null>(null);
   // Hydrate the form configs on first encounter of each session id, so
   // the user's prior selections come back when they return to a session.
@@ -925,8 +987,8 @@ export default function ChatPage() {
   useEffect(() => {
     if (initialLoadRef.current) return;
     initialLoadRef.current = true;
-    if (sessionIdParam) {
-      startSessionLoad(sessionIdParam);
+    if (chatSessionIdParam) {
+      startSessionLoad(chatSessionIdParam);
     } else {
       newSession();
     }
@@ -936,35 +998,35 @@ export default function ChatPage() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // When URL param changes (sidebar navigation), load the corresponding session
-  const prevSessionIdParam = useRef(sessionIdParam);
+  const prevSessionIdParam = useRef(chatSessionIdParam);
   useEffect(() => {
-    if (sessionIdParam === prevSessionIdParam.current) return;
-    prevSessionIdParam.current = sessionIdParam;
+    if (chatSessionIdParam === prevSessionIdParam.current) return;
+    prevSessionIdParam.current = chatSessionIdParam;
     // Abort any in-flight session load from the previous param
     loadAbortRef.current?.abort();
     loadAbortRef.current = null;
-    if (sessionIdParam) {
-      if (sessionIdParam === state.sessionId) {
+    if (chatSessionIdParam) {
+      if (chatSessionIdParam === state.sessionId) {
         setSessionLoading(false);
         return;
       }
-      startSessionLoad(sessionIdParam);
+      startSessionLoad(chatSessionIdParam);
     } else {
       newSession();
       setSessionLoading(false);
     }
-  }, [sessionIdParam, startSessionLoad, newSession, state.sessionId]);
+  }, [chatSessionIdParam, startSessionLoad, newSession, state.sessionId]);
 
   // When a new session_id is assigned by the server, update the URL
   useEffect(() => {
-    if (state.sessionId && !sessionIdParam) {
+    if (state.sessionId && !chatSessionIdParam) {
       router.replace(`/home/${state.sessionId}`, { scroll: false });
     }
-  }, [state.sessionId, sessionIdParam, router]);
+  }, [state.sessionId, chatSessionIdParam, router]);
 
   useEffect(() => {
-    setActiveSessionId(state.sessionId || sessionIdParam || null);
-  }, [state.sessionId, sessionIdParam, setActiveSessionId]);
+    setActiveSessionId(state.sessionId || chatSessionIdParam || masteryPathParam || null);
+  }, [state.sessionId, chatSessionIdParam, masteryPathParam, setActiveSessionId]);
 
   const refreshKnowledgeBases = useCallback(
     async (options?: { force?: boolean }) => {
@@ -1139,6 +1201,20 @@ export default function ChatPage() {
     },
     [capabilityConfigs, setCapability, setKBs, setTools, userEnabledTools],
   );
+
+  useEffect(() => {
+    let pathId = pendingMasteryPathRef.current;
+    if (!pathId && typeof window !== "undefined") {
+      const pathPart = window.location.pathname.split("/").filter(Boolean)[1];
+      const decoded = pathPart ? decodeURIComponent(pathPart) : "";
+      pathId = isCognispherePathId(decoded) ? decoded : null;
+      pendingMasteryPathRef.current = pathId;
+    }
+    if (!pathId) return;
+    if (state.activeCapability === "mastery_path") return;
+    handleSelectCapability("mastery_path");
+    setSessionLoading(false);
+  }, [handleSelectCapability, masteryPathParam, state.activeCapability]);
 
   const fileToAttachment = useCallback(
     (f: File): Promise<PendingAttachment> =>
@@ -1485,6 +1561,16 @@ export default function ChatPage() {
         if (!researchValidation.valid) return;
         config = buildResearchWSConfig(researchConfig);
       }
+      const masteryPathId = pendingMasteryPathRef.current;
+      if (state.activeCapability === "mastery_path" && masteryPathId) {
+        config = {
+          ...(config ?? {}),
+          mastery_path_id: masteryPathId,
+          ...(pendingTutorSessionRef.current
+            ? { cognisphere_tutor_session_id: pendingTutorSessionRef.current }
+            : {}),
+        };
+      }
       // When a connected agent is selected, carry the per-turn consult budget
       // (how many times cognisphereTutor may ask it) so the subagent capability uses it.
       if (selectedAgent && subagentBudget) {
@@ -1537,6 +1623,7 @@ export default function ChatPage() {
       isVisualizeMode,
       memoryReferencesPayload,
       notebookReferencesPayload,
+      pendingMasteryPathRef,
       questionNotebookReferencesPayload,
       quizConfig,
       quizPdf,
@@ -1551,6 +1638,7 @@ export default function ChatPage() {
       selectedQuestionEntries.length,
       sendMessage,
       shouldAutoScrollRef,
+      state.activeCapability,
       state.isStreaming,
       subagentBudget,
       t,
@@ -1905,10 +1993,10 @@ export default function ChatPage() {
                       draggable={false}
                     />
                     <h1 className="font-serif text-[40px] font-medium leading-[1.1] tracking-[-0.015em] text-[var(--foreground)]">
-                      {t(welcomeGreeting)}
+                      {masteryPathTitle || t(welcomeGreeting)}
                     </h1>
                   </div>
-                  <LearningGoalEntry tr={goalTr} />
+                  {!masteryPathParam && <LearningGoalEntry tr={goalTr} />}
                 </div>
               </div>
             ) : (

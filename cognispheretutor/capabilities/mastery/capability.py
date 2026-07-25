@@ -22,6 +22,8 @@ from cognispheretutor.capabilities.mastery.tools import MASTERY_TOOL_NAMES
 from cognispheretutor.core.capability_protocol import BaseCapability, CapabilityManifest
 from cognispheretutor.core.context import UnifiedContext
 from cognispheretutor.core.stream_bus import StreamBus
+from cognispheretutor.learning.cognisphere_seed import mastery_path_id_for_domain
+from cognispheretutor.learning.storage import LearningStore
 
 _UNSAFE_ID_CHARS = re.compile(r"[^A-Za-z0-9_-]")
 
@@ -36,10 +38,13 @@ def resolve_mastery_path_id(context: UnifiedContext) -> str:
     """Resolve which learner-path the turn operates on.
 
     Prefers an explicit ``mastery_path_id`` set by the frontend (so the tutor
-    and the build wizard / dashboard agree on one storage key), then a book
-    reference, then the session id for an ad-hoc path built inside a chat.
+    and the build wizard / dashboard agree on one storage key), either as
+    turn metadata or public capability config, then a book reference, then the
+    session id for an ad-hoc path built inside a chat.
     """
     explicit = str(context.metadata.get("mastery_path_id") or "").strip()
+    if not explicit:
+        explicit = str(context.config_overrides.get("mastery_path_id") or "").strip()
     if explicit:
         return _sanitize_path_id(explicit)
     refs = (context.metadata or {}).get("book_references", [])
@@ -51,7 +56,43 @@ def resolve_mastery_path_id(context: UnifiedContext) -> str:
             candidate = str(ref.get("book_id") or ref.get("id") or "").strip()
             if candidate:
                 return _sanitize_path_id(candidate)
-    return _sanitize_path_id(str(context.session_id or "default"))
+    session_path = _sanitize_path_id(str(context.session_id or "default"))
+    corrected = _plugin_path_for_legacy_unified_path(session_path)
+    return corrected or session_path
+
+
+def _plugin_path_for_legacy_unified_path(path_id: str) -> str:
+    """Map older generated AWS paths back to the installed Cognisphere pack path."""
+    if not path_id.startswith("unified_"):
+        return ""
+    try:
+        progress = LearningStore().load(path_id)
+    except Exception:
+        return ""
+    if not progress:
+        return ""
+    names = " ".join(
+        [module.name for module in progress.modules]
+        + [
+            kp.name
+            for module in progress.modules
+            for kp in module.knowledge_points
+        ]
+    ).lower()
+    aws_signals = (
+        "aws certification",
+        "cloud practitioner",
+        "clf-c02",
+        "saa-c03",
+        "dva-c02",
+    )
+    if not any(signal in names for signal in aws_signals):
+        return ""
+    target = mastery_path_id_for_domain("aws_certification")
+    try:
+        return target if LearningStore().exists(target) else ""
+    except Exception:
+        return ""
 
 
 class MasteryPathCapability(BaseCapability):

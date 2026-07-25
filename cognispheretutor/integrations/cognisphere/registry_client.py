@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
+from importlib import import_module
 import json
 import os
-import sys
-from importlib import import_module
 from pathlib import Path
+import sys
 from types import ModuleType
 from typing import Any
 
@@ -15,6 +15,16 @@ from cognispheretutor.integrations.cognisphere.error_codes import (
     CognisphereIntegrationError,
     format_issue,
 )
+
+
+def _read_json_if_exists(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    return payload if isinstance(payload, dict) else {}
 
 
 class PluginRegistryClient:
@@ -89,6 +99,23 @@ class PluginRegistryClient:
         registry = self.load_install_registry(plugins_root)
         if "install_registry_missing" in list(registry.get("issues") or []):
             issues.append("install_registry_missing")
+        tutor_pack_profile = _read_json_if_exists(
+            plugins_root / "manifests" / "ops" / "tutor_pack_profile.json"
+        )
+        distribution_catalog = _read_json_if_exists(
+            plugins_root / "manifests" / "ops" / "domain_distribution_catalog.json"
+        )
+        distributions: dict[str, dict[str, Any]] = {
+            str(key): value
+            for key, value in dict(distribution_catalog.get("domains") or {}).items()
+            if isinstance(value, dict)
+        }
+        for package in list(distribution_catalog.get("packages") or []):
+            if not isinstance(package, dict):
+                continue
+            domain = str(package.get("domain") or package.get("unit_id") or "").strip()
+            if domain and domain not in distributions:
+                distributions[domain] = package
 
         plugins_dir = plugins_root / "plugins"
         if not plugins_dir.is_dir():
@@ -134,6 +161,11 @@ class PluginRegistryClient:
                 "validation": validation,
                 "in_registry": domain_dir.name in registry_paths,
                 "lifecycle": self._lifecycle_for_domain(domain_dir.name, registry),
+                "distribution": distributions.get(domain_dir.name) or {},
+                "tutor_pack": {
+                    **dict(tutor_pack_profile.get("defaults") or {}),
+                    **_read_json_if_exists(domain_dir / "tutor_pack_profile.json"),
+                },
             }
             found.append(entry)
             if not validation.get("ok"):
@@ -146,6 +178,8 @@ class PluginRegistryClient:
             "plugins": found,
             "issues": issues,
             "registry": registry,
+            "tutor_pack": tutor_pack_profile,
+            "distribution_catalog": distribution_catalog,
             "env": self._contract["plugins_root_env"],
         }
 

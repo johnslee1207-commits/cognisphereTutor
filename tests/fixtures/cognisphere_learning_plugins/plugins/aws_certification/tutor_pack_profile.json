@@ -1,0 +1,13 @@
+{
+  "profile_id": "fixture.aws_certification.tutor_pack_profile.v1",
+  "profile_version": "1",
+  "domain": "aws_certification",
+  "mastery_prompt_contract": {
+    "zh": [
+      "AWS fixture policy: use local pack objectives."
+    ],
+    "en": [
+      "AWS fixture policy: use local pack objectives."
+    ]
+  }
+}

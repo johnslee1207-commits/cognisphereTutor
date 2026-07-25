@@ -18,7 +18,12 @@ from cognispheretutor.learning.cognisphere_seed import (
     modules_from_knowledge,
     seed_payload_from_import_receipt,
 )
-from cognispheretutor.learning.models import LearningStage
+from cognispheretutor.learning.models import (
+    KnowledgePoint,
+    KnowledgeType,
+    LearningModule,
+    LearningStage,
+)
 from cognispheretutor.learning.service import LearningService
 from cognispheretutor.learning.storage import LearningStore
 
@@ -176,6 +181,12 @@ async def _import_and_seed_domain(
             domain=domain,
             path_id=resolved_path,
         )
+        fallback_used = False
+        if len([m for m in modules if not m.id.endswith("-overview")]) == 0:
+            fallback_modules = _modules_from_runtime_plan(domain, resolved_path)
+            if fallback_modules:
+                modules = modules + fallback_modules
+                fallback_used = True
         if not modules or not any(m.knowledge_points for m in modules):
             raise HTTPException(
                 status_code=422,
@@ -202,11 +213,20 @@ async def _import_and_seed_domain(
                 {"id": m.id, "name": m.name, "kp_count": len(m.knowledge_points)} for m in modules
             ],
             "knowledge_sparse": len(non_overview) == 0,
+            "runtime_plan_fallback": fallback_used,
             "continue_in_chat": _chat_continue_url(resolved_path),
             "note": (
-                "Bundle knowledge was sparse; seeded an overview path. "
-                "Re-import after the domain plugin ontology/export is available "
-                "for full knowledge items."
+                (
+                    "Bundle knowledge was sparse; seeded a plugin runtime plan. "
+                    "Re-import after the domain plugin ontology/export is available "
+                    "for full knowledge items."
+                )
+                if fallback_used
+                else (
+                    "Bundle knowledge was sparse; seeded an overview path. "
+                    "Re-import after the domain plugin ontology/export is available "
+                    "for full knowledge items."
+                )
                 if len(non_overview) == 0
                 else None
             ),
@@ -279,8 +299,13 @@ async def cognisphere_learning_status():
             {
                 "domain": domain,
                 "plugin_id": manifest.get("plugin_id"),
+                "display_name": manifest.get("display_name") or manifest.get("name"),
+                "description": manifest.get("description"),
+                "version": manifest.get("version"),
                 "lifecycle": item.get("lifecycle"),
                 "capabilities": list(manifest.get("capabilities") or []),
+                "distribution": item.get("distribution") or {},
+                "tutor_pack": item.get("tutor_pack") or {},
                 "path_id": mastery_path_id_for_domain(domain) if domain else None,
                 "valid": bool((item.get("validation") or {}).get("ok")),
             }
@@ -297,6 +322,8 @@ async def cognisphere_learning_status():
             "trusted_context": trusted_context_status(),
         },
         "plugins": plugins,
+        "tutor_pack": discovery.get("tutor_pack") or {},
+        "distribution_catalog": discovery.get("distribution_catalog") or {},
         "defaults": {
             "chat_capability": _MASTERY_CAPABILITY,
         },
@@ -485,6 +512,59 @@ def _load_imported_knowledge(domain: str, receipt: dict[str, Any]) -> dict[str, 
 
     seeded = seed_payload_from_import_receipt(receipt)
     return dict(seeded.get("knowledge") or {})
+
+
+def _modules_from_runtime_plan(domain: str, path_id: str) -> list[LearningModule]:
+    """Build a minimal Mastery module from a plugin-provided runtime plan."""
+    from cognispheretutor.integrations.cognisphere import plan_skill_path
+
+    try:
+        result = plan_skill_path(domain=domain)
+    except CognisphereIntegrationError:
+        return []
+    if not result.get("ok"):
+        return []
+    plan = result.get("plan") if isinstance(result.get("plan"), dict) else {}
+    raw_items = plan.get("next_sequence") or plan.get("gaps") or plan.get("steps") or []
+    if not isinstance(raw_items, list) or not raw_items:
+        return []
+
+    kps: list[KnowledgePoint] = []
+    seen: set[str] = set()
+    for index, item in enumerate(raw_items):
+        if isinstance(item, dict):
+            raw_id = item.get("skill_id") or item.get("id") or item.get("name") or index
+            name = str(item.get("name") or item.get("skill_id") or raw_id).strip()
+        else:
+            raw_id = item
+            name = str(item).strip()
+        if not name:
+            continue
+        safe_id = str(raw_id).replace(":", "-").strip() or str(index)
+        kp_id = f"rt-{safe_id}"[:120]
+        if kp_id in seen:
+            continue
+        seen.add(kp_id)
+        kps.append(
+            KnowledgePoint(
+                id=kp_id,
+                name=name[:200],
+                type=KnowledgeType.PROCEDURE,
+                module_id=f"{path_id}-runtime-plan",
+            )
+        )
+
+    if not kps:
+        return []
+    return [
+        LearningModule(
+            id=f"{path_id}-runtime-plan",
+            name="Plugin runtime plan",
+            order=1,
+            pass_threshold=0.7,
+            knowledge_points=kps,
+        )
+    ]
 
 
 @router.post("/trusted-context/import")

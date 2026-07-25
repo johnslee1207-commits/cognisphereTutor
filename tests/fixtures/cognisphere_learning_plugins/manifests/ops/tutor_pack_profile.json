@@ -1,0 +1,7 @@
+{
+  "profile_id": "fixture.tutor_pack_profile.v1",
+  "defaults": {
+    "check_command": "python -m cognisphere_plugin_sdk.tutor_pack --domain {domain} --check",
+    "export_command": "python -m cognisphere_plugin_sdk.tutor_pack --domain {domain} --out {domain}_bundle.json"
+  }
+}

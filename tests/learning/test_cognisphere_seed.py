@@ -46,7 +46,6 @@ def test_ability_radar_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> N
             "cognispheretutor.learning.service", fromlist=["LearningService"]
         ).LearningService(LearningStore(store_root)),
     )
-
     app = FastAPI()
     app.include_router(cognisphere_learning.router, prefix="/api/v1/learning/cognisphere")
     client = TestClient(app)
@@ -110,6 +109,112 @@ def test_modules_from_knowledge_groups() -> None:
     assert sum(len(m.knowledge_points) for m in modules) >= 4
 
 
+def test_modules_from_knowledge_maps_assessments_and_references() -> None:
+    modules = modules_from_knowledge(
+        {
+            "assessments": [
+                {
+                    "assessment_id": "apcalc.assess.related_rates",
+                    "pattern_hint": "Related Rates FRQ",
+                }
+            ],
+            "problem_patterns": [{"pattern_id": "optimization", "label": "Optimization"}],
+            "theorems": [{"theorem_id": "ftc", "label": "Fundamental Theorem"}],
+            "ontology_classes": [{"class_id": "concept", "purpose": "Concept taxonomy"}],
+        },
+        domain="ap_calculus",
+    )
+
+    by_name = {module.name: module for module in modules}
+    assert by_name["Practice problems"].knowledge_points[0].id.endswith(
+        "apcalc-assess-related_rates"
+    )
+    assert by_name["Practice problems"].knowledge_points[0].name == "Related Rates FRQ"
+    assert by_name["Patterns"].knowledge_points[0].name == "Optimization"
+    assert by_name["Reference rules"].knowledge_points[0].name == "Fundamental Theorem"
+    assert by_name["Concepts"].knowledge_points[0].name == "Concept taxonomy"
+
+
+def test_modules_from_knowledge_maps_lightweight_learning_loop() -> None:
+    modules = modules_from_knowledge(
+        {"learning_loop": ["plan", "teach", "assess", "memory"]},
+        domain="aws_certification",
+    )
+
+    by_name = {module.name: module for module in modules}
+    assert "Learning loop" in by_name
+    assert [kp.name for kp in by_name["Learning loop"].knowledge_points] == [
+        "plan",
+        "teach",
+        "assess",
+        "memory",
+    ]
+
+
+def test_modules_from_knowledge_maps_thin_certification_surface() -> None:
+    modules = modules_from_knowledge(
+        {
+            "certification_tracks": [
+                {"track_id": "aws.clf-c02", "label": "Cloud Practitioner"}
+            ],
+            "topic_families": [
+                {"topic_family_id": "security", "label": "Security and Identity"}
+            ],
+            "learning_fixture": {
+                "excerpts": [
+                    {
+                        "excerpt_id": "rel.iam_roles_s3",
+                        "title": "IAM roles instead of long-term credentials",
+                    }
+                ]
+            },
+            "original_knowledge": {
+                "units": [
+                    {
+                        "unit_id": "aws.concept.certification-home",
+                        "title": "AWS Certification Home",
+                    }
+                ]
+            },
+        },
+        domain="aws_certification",
+    )
+
+    by_name = {module.name: module for module in modules}
+    assert by_name["Skills"].knowledge_points[0].name == "Cloud Practitioner"
+    assert by_name["Learning objectives"].knowledge_points[0].name == "Security and Identity"
+    assert by_name["Concepts"].knowledge_points[0].name == (
+        "IAM roles instead of long-term credentials"
+    )
+    assert by_name["Reference rules"].knowledge_points[0].name == "AWS Certification Home"
+
+
+def test_modules_from_knowledge_orders_foundational_tracks_first() -> None:
+    modules = modules_from_knowledge(
+        {
+            "certification_tracks": [
+                {
+                    "track_id": "aws.saa-c03",
+                    "label": "Solutions Architect Associate",
+                    "level": "associate",
+                },
+                {
+                    "track_id": "aws.clf-c02",
+                    "label": "Cloud Practitioner",
+                    "level": "foundational",
+                },
+            ]
+        },
+        domain="aws_certification",
+    )
+
+    skills = next(module for module in modules if module.name == "Skills")
+    assert [kp.name for kp in skills.knowledge_points[:2]] == [
+        "Cloud Practitioner",
+        "Solutions Architect Associate",
+    ]
+
+
 def test_import_and_seed_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(FIXTURE_ROOT))
     monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
@@ -134,8 +239,12 @@ def test_import_and_seed_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     assert body["defaults"]["chat_capability"] == "mastery_path"
     assert "trusted_context" in body["gates"]
     assert body["gates"]["trusted_context"]["phase"] == "DT-P3"
+    assert body["tutor_pack"]["defaults"]["check_command"]
     domains = {p["domain"] for p in body["plugins"]}
     assert "leetcode" in domains
+    leetcode = next(p for p in body["plugins"] if p["domain"] == "leetcode")
+    assert leetcode["distribution"]["package_name"] == "cognisphere-plugins-leetcode"
+    assert leetcode["tutor_pack"]["check_command"]
 
     seeded = client.post(
         "/api/v1/learning/cognisphere/import-and-seed",
@@ -148,6 +257,61 @@ def test_import_and_seed_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     assert payload["mastery_path"]["kp_count"] >= 1
     assert "capability=mastery_path" in (payload.get("continue_in_chat") or "")
     assert (store_root / "csphere-leetcode.json").exists()
+
+
+def test_runtime_plan_fallback_seeds_sparse_domain(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import cognispheretutor.integrations.cognisphere as cognisphere_integration
+
+    monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(FIXTURE_ROOT))
+    monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
+
+    store_root = tmp_path / "learning"
+    monkeypatch.setattr(
+        cognisphere_learning,
+        "_service",
+        lambda: __import__(
+            "cognispheretutor.learning.service", fromlist=["LearningService"]
+        ).LearningService(LearningStore(store_root)),
+    )
+    real_modules_from_knowledge = modules_from_knowledge
+    monkeypatch.setattr(
+        cognisphere_learning,
+        "modules_from_knowledge",
+        lambda _knowledge, *, domain, path_id=None: real_modules_from_knowledge(
+            {},
+            domain=domain,
+            path_id=path_id,
+        ),
+    )
+
+    def fake_plan_skill_path(*, domain: str, learner_id: str = "offline-learner"):
+        return {
+            "ok": True,
+            "domain": domain,
+            "plan": {
+                "next_sequence": [
+                    {"skill_id": "skill:a", "name": "Skill A"},
+                    {"skill_id": "skill:b", "name": "Skill B"},
+                ]
+            },
+        }
+
+    monkeypatch.setattr(cognisphere_integration, "plan_skill_path", fake_plan_skill_path)
+
+    app = FastAPI()
+    app.include_router(cognisphere_learning.router, prefix="/api/v1/learning/cognisphere")
+    client = TestClient(app)
+
+    seeded = client.post(
+        "/api/v1/learning/cognisphere/import-and-seed",
+        json={"domain": "aws_certification", "seed_mastery_path": True},
+    )
+    assert seeded.status_code == 200, seeded.text
+    path = seeded.json()["mastery_path"]
+    assert path["runtime_plan_fallback"] is True
+    assert any(module["name"] == "Plugin runtime plan" for module in path["modules"])
 
 
 def test_cross_domain_and_compose_api(

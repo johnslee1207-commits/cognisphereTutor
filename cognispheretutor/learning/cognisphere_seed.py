@@ -34,7 +34,24 @@ def domain_from_path_id(book_id: str) -> str | None:
 
 def _item_id(prefix: str, raw: Any, index: int) -> str:
     if isinstance(raw, dict):
-        for key in ("id", "skill_id", "pattern_id", "slug", "concept_id"):
+        for key in (
+            "id",
+            "skill_id",
+            "pattern_id",
+            "slug",
+            "concept_id",
+            "assessment_id",
+            "theorem_id",
+            "topic_id",
+            "objective_id",
+            "unit_id",
+            "class_id",
+            "service_id",
+            "track_id",
+            "topic_family_id",
+            "excerpt_id",
+            "document_id",
+        ):
             value = raw.get(key)
             if value:
                 text = re.sub(r"[^a-zA-Z0-9_-]+", "-", str(value)).strip("-")
@@ -45,7 +62,18 @@ def _item_id(prefix: str, raw: Any, index: int) -> str:
 
 def _item_name(raw: Any, fallback: str) -> str:
     if isinstance(raw, dict):
-        for key in ("name", "title", "slug", "label"):
+        for key in (
+            "name",
+            "title",
+            "display_name",
+            "label",
+            "slug",
+            "title_en",
+            "pattern_hint",
+            "summary",
+            "description",
+            "purpose",
+        ):
             value = raw.get(key)
             if value:
                 return str(value).strip()[:200]
@@ -58,13 +86,49 @@ def _as_list(knowledge: dict[str, Any], *keys: str) -> list[Any]:
     for key in keys:
         value = knowledge.get(key)
         if isinstance(value, list) and value:
-            return value
+            return _learning_order(value)
         if isinstance(value, dict) and value:
             # catalog-style: {"items": [...]} or id→obj map
             if isinstance(value.get("items"), list):
-                return list(value["items"])
-            return list(value.values())
+                return _learning_order(list(value["items"]))
+            return _learning_order(list(value.values()))
     return []
+
+
+def _nested_list(knowledge: dict[str, Any], key: str, child_key: str) -> list[Any]:
+    value = knowledge.get(key)
+    if isinstance(value, dict) and isinstance(value.get(child_key), list):
+        return _learning_order(list(value[child_key]))
+    return []
+
+
+def _learning_order(items: list[Any]) -> list[Any]:
+    """Respect declarative learning levels when a domain pack provides them."""
+    level_rank = {
+        "intro": 0,
+        "introduction": 0,
+        "foundational": 0,
+        "foundation": 0,
+        "fundamentals": 0,
+        "beginner": 0,
+        "basic": 1,
+        "core": 1,
+        "intermediate": 2,
+        "associate": 3,
+        "advanced": 4,
+        "professional": 5,
+        "expert": 6,
+        "specialty": 6,
+    }
+
+    def _rank(row: tuple[int, Any]) -> tuple[int, int]:
+        index, item = row
+        if not isinstance(item, dict):
+            return 99, index
+        level = str(item.get("level") or item.get("difficulty") or "").strip().lower()
+        return level_rank.get(level, 50), index
+
+    return [item for _, item in sorted(enumerate(items), key=_rank)]
 
 
 def modules_from_knowledge(
@@ -113,10 +177,25 @@ def modules_from_knowledge(
         order += 1
 
     # Display name for the Learning Space sidebar comes from the first module.
-    patterns = _as_list(data, "patterns")
-    skills = _as_list(data, "skills")
-    problems = _as_list(data, "problems")
-    concepts = _as_list(data, "concepts", "catalog")
+    patterns = _as_list(data, "patterns", "problem_patterns")
+    skills = _as_list(data, "skills", "procedures", "certification_tracks")
+    problems = _as_list(data, "problems", "practice_problems", "assessments")
+    concepts = (
+        _as_list(data, "concepts", "catalog", "ontology_classes")
+        + _nested_list(data, "learning_fixture", "excerpts")
+    )
+    objectives = _as_list(
+        data,
+        "objectives",
+        "learning_objectives",
+        "topics",
+        "topic_families",
+    )
+    references = (
+        _as_list(data, "theorems", "rules", "principles")
+        + _nested_list(data, "original_knowledge", "units")
+    )
+    learning_loop = _as_list(data, "learning_loop", "sample_learning_path")
 
     overview_items: list[dict[str, Any]] = [
         {
@@ -128,8 +207,11 @@ def modules_from_knowledge(
 
     _add_module("patterns", "Patterns", patterns, KnowledgeType.CONCEPT, id_prefix="pat")
     _add_module("skills", "Skills", skills, KnowledgeType.PROCEDURE, id_prefix="sk")
+    _add_module("objectives", "Learning objectives", objectives, KnowledgeType.CONCEPT, id_prefix="obj")
     _add_module("concepts", "Concepts", concepts, KnowledgeType.CONCEPT, id_prefix="con")
+    _add_module("references", "Reference rules", references, KnowledgeType.CONCEPT, id_prefix="ref")
     _add_module("problems", "Practice problems", problems, KnowledgeType.PROCEDURE, id_prefix="prob")
+    _add_module("learning-loop", "Learning loop", learning_loop, KnowledgeType.PROCEDURE, id_prefix="loop")
 
     # If the pack was empty, keep a single overview module so the path is visible.
     if len(modules) == 1:

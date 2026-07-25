@@ -38,7 +38,10 @@ from cognispheretutor.core.context import UnifiedContext
 from cognispheretutor.core.stream_bus import StreamBus
 from cognispheretutor.core.trace import build_trace_metadata, merge_trace_metadata, new_call_id
 from cognispheretutor.services.llm import clean_thinking_tags
-from cognispheretutor.services.llm.multimodal import should_degrade_to_text, strip_image_parts_inplace
+from cognispheretutor.services.llm.multimodal import (
+    should_degrade_to_text,
+    strip_image_parts_inplace,
+)
 from cognispheretutor.services.llm.request_compat import (
     is_image_input_unsupported,
     is_stream_options_unsupported,
@@ -122,6 +125,7 @@ class AgentLoopState:
 
     rounds: int = 0
     tool_steps: int = 0
+    tools_used: list[str] = field(default_factory=list)
     sources: list[dict[str, Any]] = field(default_factory=list)
 
 
@@ -205,6 +209,19 @@ class AgentLoop:
                 stage=LOOP_STAGE,
                 metadata={"trace_kind": "sources"},
             )
+        source_provenance = _source_provenance_for_turn(self.context, state)
+        if source_provenance.get("visible_label"):
+            marker = f"\n\n{source_provenance['visible_label']}"
+            await self.stream.content(
+                marker,
+                source="chat",
+                stage=LOOP_STAGE,
+                metadata={
+                    "trace_kind": "source_provenance",
+                    "source_provenance": source_provenance,
+                },
+            )
+            outcome.final_text = f"{outcome.final_text.rstrip()}{marker}"
         await emit_capability_result(
             self.stream,
             {
@@ -213,6 +230,7 @@ class AgentLoop:
                 "engine": "agent_loop",
                 "rounds": state.rounds,
                 "tool_steps": state.tool_steps,
+                "metadata": {"source_provenance": source_provenance},
             },
             source="chat",
             usage=self.pipeline.usage,
@@ -314,6 +332,14 @@ class AgentLoop:
                 stage=LOOP_STAGE,
             )
             state.tool_steps += 1
+            state.tools_used.extend(
+                tool_name
+                for tool_name in (
+                    str(call.get("function", {}).get("name") or call.get("name") or "").strip()
+                    for call in result.tool_calls
+                )
+                if tool_name
+            )
             state.sources.extend(dispatch.sources)
             messages.extend(dispatch.tool_messages)
 
@@ -657,6 +683,39 @@ def _last_context_checkpoint_summary(dispatch: DispatchOutcome) -> str:
     return summary
 
 
+def _source_provenance_for_turn(
+    context: UnifiedContext,
+    state: AgentLoopState,
+) -> dict[str, Any]:
+    """Classify the visible source basis for the final answer."""
+    path_id = str(context.metadata.get("mastery_path_id") or "").strip()
+    tools = [tool for tool in state.tools_used if tool]
+    sources: list[str] = []
+    used_mastery_grounding = (
+        bool(context.metadata.get("mastery_status_injected"))
+        or bool(context.metadata.get("plugin_graph_grounding_injected"))
+        or any(tool.startswith("mastery_") for tool in tools)
+    )
+    if path_id.startswith("csphere-") and used_mastery_grounding:
+        sources.extend(["local plugin pack", "Cognisphere materialized"])
+    if any(tool == "web_search" for tool in tools):
+        sources.append("web_search")
+    if state.sources or any(tool in {"rag", "read_source"} for tool in tools):
+        sources.append("Knowledge/RAG")
+    if not sources:
+        sources.append("model")
+    deduped = list(dict.fromkeys(sources))
+    show_visible_label = bool(context.metadata.get("mastery_mode")) or path_id.startswith(
+        "csphere-"
+    )
+    return {
+        "sources": deduped,
+        "mastery_path_id": path_id or None,
+        "tools_used": tools,
+        "visible_label": f"Source: {', '.join(deduped)}" if show_visible_label else "",
+    }
+
+
 __all__ = [
     "AgentLoop",
     "AgentLoopState",
@@ -664,4 +723,5 @@ __all__ = [
     "LLMCallResult",
     "LOOP_STAGE",
     "LoopOutcome",
+    "_source_provenance_for_turn",
 ]

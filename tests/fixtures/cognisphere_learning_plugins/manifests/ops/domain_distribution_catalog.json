@@ -1,0 +1,35 @@
+{
+  "catalog_id": "fixture.domain_distribution_catalog.v1",
+  "domains": {
+    "leetcode": {
+      "package_name": "cognisphere-plugins-leetcode"
+    },
+    "ap_calculus": {
+      "package_name": "cognisphere-plugins-ap-calculus"
+    },
+    "aws_certification": {
+      "package_name": "cognisphere-plugins-aws-certification"
+    }
+  },
+  "packages": [
+    {
+      "unit_id": "sdk",
+      "distribution_name": "cognisphere-plugin-sdk"
+    },
+    {
+      "unit_id": "leetcode",
+      "domain": "leetcode",
+      "distribution_name": "cognisphere-plugins-leetcode"
+    },
+    {
+      "unit_id": "ap_calculus",
+      "domain": "ap_calculus",
+      "distribution_name": "cognisphere-plugins-ap-calculus"
+    },
+    {
+      "unit_id": "aws_certification",
+      "domain": "aws_certification",
+      "distribution_name": "cognisphere-plugins-aws-certification"
+    }
+  ]
+}

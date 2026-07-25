@@ -239,6 +239,165 @@ async def test_turn_runtime_replays_events_and_materializes_messages(
 
 
 @pytest.mark.asyncio
+async def test_turn_runtime_persists_error_event_as_visible_message(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path,
+) -> None:
+    store = SQLiteSessionStore(tmp_path / "chat_history.db")
+    runtime = TurnRuntimeManager(store)
+
+    class FakeContextBuilder:
+        def __init__(self, *_args, **_kwargs) -> None:
+            pass
+
+        async def build(self, **_kwargs):
+            return SimpleNamespace(
+                conversation_history=[],
+                conversation_summary="",
+                context_text="",
+                token_count=0,
+                budget=0,
+            )
+
+    class FakeOrchestrator:
+        async def handle(self, context):
+            yield StreamEvent(
+                type=StreamEventType.ERROR,
+                source="mastery_path",
+                content="Request timed out.",
+            )
+            yield StreamEvent(
+                type=StreamEventType.DONE,
+                source="mastery_path",
+                metadata={"status": "failed"},
+            )
+
+    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr(
+        "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
+    )
+    monkeypatch.setattr("cognispheretutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
+    monkeypatch.setattr(
+        "cognispheretutor.services.memory.get_memory_store",
+        lambda: SimpleNamespace(
+            read_l3_concat=lambda: "",
+            emit=_noop_async,
+        ),
+    )
+    monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
+    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
+
+    session, turn = await runtime.start_turn(
+        {
+            "type": "start_turn",
+            "content": "continue",
+            "session_id": None,
+            "capability": "mastery_path",
+            "tools": [],
+            "knowledge_bases": [],
+            "attachments": [],
+            "language": "en",
+            "config": {},
+        }
+    )
+
+    async for _event in runtime.subscribe_turn(turn["id"], after_seq=0):
+        pass
+
+    detail = await store.get_session_with_messages(session["id"])
+    assert detail is not None
+    assert detail["messages"][1]["role"] == "assistant"
+    assert detail["messages"][1]["content"] == "Request timed out."
+
+
+@pytest.mark.asyncio
+async def test_mastery_path_id_persists_across_session_turns(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path,
+) -> None:
+    store = SQLiteSessionStore(tmp_path / "chat_history.db")
+    runtime = TurnRuntimeManager(store)
+    seen_path_ids: list[str] = []
+
+    class FakeContextBuilder:
+        def __init__(self, *_args, **_kwargs) -> None:
+            pass
+
+        async def build(self, **_kwargs):
+            return SimpleNamespace(
+                conversation_history=[],
+                conversation_summary="",
+                context_text="",
+                token_count=0,
+                budget=0,
+            )
+
+    class FakeOrchestrator:
+        async def handle(self, context):
+            seen_path_ids.append(str(context.config_overrides.get("mastery_path_id") or ""))
+            yield StreamEvent(
+                type=StreamEventType.CONTENT,
+                source="chat",
+                stage="responding",
+                content="ok",
+                metadata={"call_kind": "llm_final_response"},
+            )
+            yield StreamEvent(type=StreamEventType.DONE, source="chat")
+
+    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr(
+        "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
+    )
+    monkeypatch.setattr("cognispheretutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
+    monkeypatch.setattr(
+        "cognispheretutor.services.memory.get_memory_store",
+        lambda: SimpleNamespace(read_l3_concat=lambda: "", emit=_noop_async),
+    )
+    monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
+    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
+
+    session, turn = await runtime.start_turn(
+        {
+            "type": "start_turn",
+            "content": "start aws",
+            "session_id": None,
+            "capability": "mastery_path",
+            "tools": [],
+            "knowledge_bases": [],
+            "attachments": [],
+            "language": "en",
+            "config": {"mastery_path_id": "csphere-aws_certification"},
+        }
+    )
+    async for _event in runtime.subscribe_turn(turn["id"], after_seq=0):
+        pass
+
+    _, turn = await runtime.start_turn(
+        {
+            "type": "start_turn",
+            "content": "continue",
+            "session_id": session["id"],
+            "capability": "mastery_path",
+            "tools": [],
+            "knowledge_bases": [],
+            "attachments": [],
+            "language": "en",
+            "config": {},
+        }
+    )
+    async for _event in runtime.subscribe_turn(turn["id"], after_seq=0):
+        pass
+
+    detail = await store.get_session_with_messages(session["id"])
+    assert detail is not None
+    assert detail["preferences"]["mastery_path_id"] == "csphere-aws_certification"
+    assert seen_path_ids == ["csphere-aws_certification", "csphere-aws_certification"]
+    assert detail["messages"][2]["metadata"]["request_snapshot"]["config"] == {
+        "mastery_path_id": "csphere-aws_certification"
+    }
+
+
+@pytest.mark.asyncio
 async def test_turn_runtime_persists_llm_selection_in_turn_snapshot(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path,

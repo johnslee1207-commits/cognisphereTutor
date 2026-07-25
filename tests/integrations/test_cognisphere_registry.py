@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
+import shutil
 
 import pytest
 
@@ -50,6 +52,24 @@ def test_list_plugins_discovers_three_domains(client: PluginRegistryClient) -> N
     assert result["plugin_count"] == 3
     assert result["plugins_root"] == str(FIXTURE_ROOT.resolve())
     assert not any(i.startswith("missing_plugin_manifest") for i in result["issues"])
+    assert result["tutor_pack"]["defaults"]["check_command"]
+    leetcode = next(item for item in result["plugins"] if item["domain"] == "leetcode")
+    assert leetcode["distribution"]["package_name"] == "cognisphere-plugins-leetcode"
+    assert leetcode["tutor_pack"]["check_command"]
+
+
+def test_list_plugins_maps_distribution_packages_without_domains(tmp_path: Path) -> None:
+    root = tmp_path / "plugins_root"
+    shutil.copytree(FIXTURE_ROOT, root)
+    catalog_path = root / "manifests" / "ops" / "domain_distribution_catalog.json"
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    catalog.pop("domains", None)
+    catalog_path.write_text(json.dumps(catalog), encoding="utf-8")
+
+    result = PluginRegistryClient(root).list_plugins()
+    aws = next(item for item in result["plugins"] if item["domain"] == "aws_certification")
+
+    assert aws["distribution"]["distribution_name"] == "cognisphere-plugins-aws-certification"
 
 
 def test_negotiate_leetcode_deeptutor_export_matched(client: PluginRegistryClient) -> None:

@@ -173,6 +173,19 @@ def test_build_openai_client_routes_github_copilot_backend_through_adapter(monke
     assert captured["default_model"] == "github-copilot/gpt-4.1"
 
 
+def test_build_openai_client_routes_ollama_through_native_adapter() -> None:
+    client = build_openai_client(
+        LLMClientConfig(
+            binding="ollama",
+            model="gemma4:latest",
+            api_key="ollama",
+            base_url="http://127.0.0.1:11434/v1",
+        )
+    )
+
+    assert isinstance(client, _ProviderOpenAIAdapter)
+
+
 def test_anthropic_backend_can_use_native_tool_calling() -> None:
     assert can_use_native_tool_calling(binding="custom_anthropic", model="claude-test") is True
     assert can_use_native_tool_calling(binding="minimax_anthropic", model="MiniMax-M3") is True
@@ -223,11 +236,15 @@ def test_openai_codex_backend_can_use_native_tool_calling() -> None:
     )
 
 
+def test_ollama_can_use_native_tool_calling_via_adapter() -> None:
+    assert can_use_native_tool_calling(binding="ollama", model="gemma4:latest") is True
+    assert can_use_native_tool_calling(binding="ollama", model="gemma3:4b") is False
+
+
 def test_local_and_github_copilot_backends_stay_opted_out_of_native_tools() -> None:
     # Local OpenAI-compatible servers have model-dependent, unreliable tool support.
-    # GitHub Copilot remains opted out until its native tool path is validated.
+    # Ollama has a native adapter; the rest stay opted out until validated.
     for binding in (
-        "ollama",
         "vllm",
         "lm_studio",
         "llama_cpp",
@@ -317,4 +334,86 @@ async def test_anthropic_adapter_emits_final_tool_call_delta() -> None:
     assert tool_delta.id == "toolu_123"
     assert tool_delta.function.name == "read_file"
     assert '"SOUL.md"' in tool_delta.function.arguments
+    assert chunks[-1].choices[0].finish_reason == "tool_calls"
+
+
+@pytest.mark.asyncio
+async def test_ollama_adapter_streams_native_tool_call(monkeypatch) -> None:
+    captured = {}
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "message": {
+                    "role": "assistant",
+                    "content": "",
+                    "tool_calls": [
+                        {
+                            "id": "call_weather",
+                            "function": {
+                                "name": "get_weather",
+                                "arguments": {"city": "Paris"},
+                            },
+                        }
+                    ],
+                },
+                "done_reason": "stop",
+                "prompt_eval_count": 10,
+                "eval_count": 4,
+            }
+
+    class FakeAsyncClient:
+        def __init__(self, **kwargs):
+            captured["client_kwargs"] = kwargs
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *_args):
+            return None
+
+        async def post(self, url, json):
+            captured["url"] = url
+            captured["payload"] = json
+            return FakeResponse()
+
+    monkeypatch.setattr("cognispheretutor.core.agentic.client.httpx.AsyncClient", FakeAsyncClient)
+
+    client = build_openai_client(
+        LLMClientConfig(
+            binding="ollama",
+            model="gemma4:latest",
+            api_key="ollama",
+            base_url="http://127.0.0.1:11434/v1",
+        )
+    )
+    stream = await client.chat.completions.create(
+        model="gemma4:latest",
+        messages=[{"role": "user", "content": "weather"}],
+        stream=True,
+        max_tokens=32,
+        tools=[
+            {
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "parameters": {"type": "object", "properties": {}},
+                },
+            }
+        ],
+    )
+
+    chunks = [chunk async for chunk in stream]
+    tool_delta = chunks[-2].choices[0].delta.tool_calls[0]
+
+    assert captured["url"] == "http://127.0.0.1:11434/api/chat"
+    assert captured["client_kwargs"]["trust_env"] is False
+    assert captured["payload"]["think"] is False
+    assert captured["payload"]["tools"][0]["function"]["name"] == "get_weather"
+    assert tool_delta.id == "call_weather"
+    assert tool_delta.function.name == "get_weather"
+    assert '"Paris"' in tool_delta.function.arguments
     assert chunks[-1].choices[0].finish_reason == "tool_calls"

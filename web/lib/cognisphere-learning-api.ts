@@ -49,6 +49,7 @@ export interface ImportAndSeedResult {
     module_count: number;
     kp_count: number;
     knowledge_sparse?: boolean;
+    runtime_plan_fallback?: boolean;
     note?: string | null;
     continue_in_chat?: string;
     modules: { id: string; name: string; kp_count: number }[];

@@ -933,6 +933,203 @@ def test_augment_tool_kwargs_injects_mastery_path_id() -> None:
     assert augmented["_mastery_path_id"] == "book-1"
 
 
+def test_mastery_path_id_resolves_from_config_override() -> None:
+    from cognispheretutor.capabilities.mastery.capability import resolve_mastery_path_id
+
+    context = UnifiedContext(
+        session_id="chat-session-1",
+        config_overrides={"mastery_path_id": "csphere-aws_certification"},
+    )
+
+    assert resolve_mastery_path_id(context) == "csphere-aws_certification"
+
+
+def test_legacy_aws_unified_path_resolves_to_plugin_path(monkeypatch) -> None:
+    from cognispheretutor.capabilities.mastery import capability as mastery_capability
+    from cognispheretutor.learning.models import (
+        KnowledgePoint,
+        KnowledgeType,
+        LearningModule,
+        LearningProgress,
+    )
+
+    progress = LearningProgress(
+        book_id="unified_aws",
+        modules=[
+            LearningModule(
+                id="m1",
+                name="AWS Certification Overview",
+                order=0,
+                knowledge_points=[
+                    KnowledgePoint(
+                        id="kp1",
+                        name="Cloud Practitioner CLF-C02",
+                        type=KnowledgeType.CONCEPT,
+                        module_id="m1",
+                    )
+                ],
+            )
+        ],
+    )
+
+    class FakeStore:
+        def load(self, book_id: str):
+            return progress if book_id == "unified_aws" else None
+
+        def exists(self, book_id: str) -> bool:
+            return book_id == "csphere-aws_certification"
+
+    monkeypatch.setattr(mastery_capability, "LearningStore", FakeStore)
+    context = UnifiedContext(session_id="unified_aws")
+
+    assert mastery_capability.resolve_mastery_path_id(context) == "csphere-aws_certification"
+
+
+def test_source_provenance_marks_plugin_web_and_rag() -> None:
+    from cognispheretutor.agents.chat.agent_loop import (
+        AgentLoopState,
+        _source_provenance_for_turn,
+    )
+
+    context = UnifiedContext(
+        user_message="teach aws",
+        metadata={"mastery_path_id": "csphere-aws_certification"},
+    )
+    state = AgentLoopState(
+        tools_used=["mastery_status", "web_search", "rag"],
+        sources=[{"title": "doc"}],
+    )
+
+    provenance = _source_provenance_for_turn(context, state)
+
+    assert provenance["sources"] == [
+        "local plugin pack",
+        "Cognisphere materialized",
+        "web_search",
+        "Knowledge/RAG",
+    ]
+    assert provenance["visible_label"] == (
+        "Source: local plugin pack, Cognisphere materialized, web_search, Knowledge/RAG"
+    )
+
+
+def test_source_provenance_does_not_mark_plugin_without_grounding() -> None:
+    from cognispheretutor.agents.chat.agent_loop import (
+        AgentLoopState,
+        _source_provenance_for_turn,
+    )
+
+    context = UnifiedContext(
+        user_message="teach aws",
+        metadata={"mastery_mode": True, "mastery_path_id": "csphere-aws_certification"},
+    )
+    state = AgentLoopState()
+
+    provenance = _source_provenance_for_turn(context, state)
+
+    assert provenance["sources"] == ["model"]
+    assert provenance["visible_label"] == "Source: model"
+
+
+def test_mastery_loop_pre_loop_seed_injects_deterministic_status(monkeypatch) -> None:
+    from cognispheretutor.capabilities.mastery import loop as mastery_loop
+
+    monkeypatch.setattr(mastery_loop, "_auto_advance_overview_if_ready", lambda _context: "")
+    monkeypatch.setattr(
+        mastery_loop,
+        "_deterministic_mastery_status",
+        lambda _context: "### Deterministic Mastery Status\n{}",
+    )
+    monkeypatch.setattr(
+        mastery_loop,
+        "_deterministic_plugin_grounding",
+        lambda _context: "### Cognisphere Plugin Graph Grounding\n{}",
+    )
+    monkeypatch.setattr(
+        mastery_loop,
+        "_deterministic_lesson_contract",
+        lambda _context: "### Mastery Lesson Contract\n{}",
+    )
+    context = UnifiedContext(
+        user_message="teach aws",
+        metadata={"mastery_mode": True, "mastery_path_id": "csphere-aws_certification"},
+    )
+
+    seed = mastery_loop.MasteryLoopCapability().pre_loop_seed(context)
+
+    assert "Deterministic Mastery Status" in seed
+    assert "Cognisphere Plugin Graph Grounding" in seed
+    assert "Mastery Lesson Contract" in seed
+    assert "Mastery Turn Directive" in seed
+    assert "do not finish with a menu" in seed
+    assert context.metadata["mastery_status_injected"] is True
+    assert context.metadata["plugin_graph_grounding_injected"] is True
+    assert context.metadata["mastery_lesson_contract_injected"] is True
+
+
+def test_mastery_overview_auto_advance_records_qualitative_pass(tmp_path, monkeypatch) -> None:
+    from cognispheretutor.capabilities.mastery import loop as mastery_loop
+    from cognispheretutor.learning.models import (
+        KnowledgePoint,
+        KnowledgeType,
+        LearningModule,
+        LearningProgress,
+    )
+    import cognispheretutor.learning.storage as storage_mod
+
+    real_store_cls = storage_mod.LearningStore
+    store = real_store_cls(tmp_path)
+    progress = LearningProgress(
+        book_id="csphere-demo",
+        modules=[
+            LearningModule(
+                id="csphere-demo-overview",
+                name="Cognisphere · demo",
+                order=0,
+                knowledge_points=[
+                    KnowledgePoint(
+                        id="ov-overview",
+                        name="Cognisphere · demo",
+                        type=KnowledgeType.CONCEPT,
+                        module_id="csphere-demo-overview",
+                    )
+                ],
+            ),
+            LearningModule(
+                id="csphere-demo-objectives",
+                name="Learning objectives",
+                order=1,
+                knowledge_points=[
+                    KnowledgePoint(
+                        id="obj-first",
+                        name="First real content",
+                        type=KnowledgeType.CONCEPT,
+                        module_id="csphere-demo-objectives",
+                    )
+                ],
+            ),
+        ],
+        knowledge_types={
+            "ov-overview": KnowledgeType.CONCEPT,
+            "obj-first": KnowledgeType.CONCEPT,
+        },
+    )
+    store.save(progress)
+    monkeypatch.setattr(storage_mod, "LearningStore", lambda: real_store_cls(tmp_path))
+    context = UnifiedContext(
+        user_message="the direction how to pass the exam",
+        metadata={"mastery_mode": True, "mastery_path_id": "csphere-demo"},
+    )
+
+    seed = mastery_loop._auto_advance_overview_if_ready(context)
+    updated = store.load("csphere-demo")
+
+    assert "Mastery Auto Advance" in seed
+    assert updated.qualitative_mastery["ov-overview"] is True
+    assert "First real content" in seed
+    assert context.metadata["mastery_overview_auto_advanced"] is True
+
+
 def test_augment_tool_kwargs_injects_geogebra_image() -> None:
     pipeline = AgenticChatPipeline.__new__(AgenticChatPipeline)
     pipeline.language = "zh"

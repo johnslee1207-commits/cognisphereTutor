@@ -13,6 +13,7 @@ from dataclasses import dataclass
 import json
 from types import SimpleNamespace
 from typing import Any
+from urllib.parse import urlparse
 
 import httpx
 from openai import AsyncAzureOpenAI, AsyncOpenAI
@@ -27,7 +28,7 @@ from cognispheretutor.services.provider_registry import find_by_name
 # Providers that don't reliably support OpenAI function-calling. The loop
 # still runs without tool schemas — the model just produces prose.
 _NATIVE_TOOL_BLOCKED_BINDINGS: frozenset[str] = frozenset(
-    {"anthropic", "claude", "ollama", "lm_studio", "vllm", "llama_cpp"}
+    {"anthropic", "claude", "lm_studio", "vllm", "llama_cpp"}
 )
 
 # Native provider adapters whose backends speak OpenAI-style function calling
@@ -38,6 +39,7 @@ _NATIVE_TOOL_BLOCKED_BINDINGS: frozenset[str] = frozenset(
 # AsyncOpenAI client pointed at a non-OpenAI wire format. github_copilot is
 # adapter-routed but deliberately excluded from this set.
 _NATIVE_TOOL_BACKENDS: frozenset[str] = frozenset({"anthropic", "openai_codex"})
+_NATIVE_TOOL_PROVIDER_NAMES: frozenset[str] = frozenset({"ollama"})
 
 
 @dataclass(frozen=True)
@@ -65,6 +67,8 @@ def build_openai_client(config: LLMClientConfig) -> Any:
     http_client = None
     if load_system_settings()["disable_ssl_verify"]:
         http_client = httpx.AsyncClient(verify=False)  # nosec B501
+    elif _is_local_base_url(config.base_url):
+        http_client = httpx.AsyncClient(trust_env=False, timeout=300.0)
     if config.binding == "azure_openai" or (config.binding == "openai" and config.api_version):
         return AsyncAzureOpenAI(
             api_key=config.api_key or "sk-no-key-required",
@@ -79,6 +83,16 @@ def build_openai_client(config: LLMClientConfig) -> Any:
         http_client=http_client,
         default_headers=default_headers,
     )
+
+
+def _is_local_base_url(base_url: str | None) -> bool:
+    if not base_url:
+        return False
+    try:
+        host = (urlparse(base_url).hostname or "").lower()
+    except Exception:
+        return False
+    return host in {"localhost", "127.0.0.1", "::1"}
 
 
 def _build_anthropic_adapter(config: LLMClientConfig, spec: Any) -> Any:
@@ -112,16 +126,166 @@ def _build_copilot_adapter(config: LLMClientConfig, spec: Any) -> Any:
     return _ProviderOpenAIAdapter(copilot_provider)
 
 
+def _build_ollama_adapter(config: LLMClientConfig, spec: Any) -> Any:
+    provider = _OllamaNativeProvider(
+        api_base=config.base_url or spec.default_api_base or "http://127.0.0.1:11434/v1",
+        default_model=config.model or "llama3.1",
+    )
+    return _ProviderOpenAIAdapter(provider)
+
+
 _NATIVE_ADAPTER_BUILDERS: dict[str, Callable[[LLMClientConfig, Any], Any]] = {
     "anthropic": _build_anthropic_adapter,
     "openai_codex": _build_codex_adapter,
     "github_copilot": _build_copilot_adapter,
+    "openai_compat:ollama": _build_ollama_adapter,
 }
 
 
 def _build_native_provider_adapter(config: LLMClientConfig, spec: Any) -> Any | None:
-    builder = _NATIVE_ADAPTER_BUILDERS.get(spec.backend)
+    builder = _NATIVE_ADAPTER_BUILDERS.get(f"{spec.backend}:{spec.name}")
+    if builder is None:
+        builder = _NATIVE_ADAPTER_BUILDERS.get(spec.backend)
     return builder(config, spec) if builder else None
+
+
+class _OllamaNativeProvider:
+    """Minimal Ollama ``/api/chat`` provider with native tool-call parsing."""
+
+    def __init__(self, *, api_base: str, default_model: str) -> None:
+        self.api_base = _ollama_api_base(api_base)
+        self.default_model = default_model
+
+    async def chat(
+        self,
+        *,
+        messages: list[dict[str, Any]],
+        tools: list[dict[str, Any]] | None = None,
+        model: str | None = None,
+        max_tokens: int = 4096,
+        temperature: float = 0.7,
+        **_kwargs: Any,
+    ) -> Any:
+        from cognispheretutor.services.llm.provider_core import LLMResponse, ToolCallRequest
+
+        payload: dict[str, Any] = {
+            "model": model or self.default_model,
+            "messages": [_ollama_message(message) for message in messages],
+            "stream": False,
+            "think": False,
+            "options": {
+                "temperature": temperature,
+                "num_predict": max_tokens,
+                "num_ctx": 4096,
+            },
+        }
+        if tools:
+            payload["tools"] = tools
+
+        async with httpx.AsyncClient(trust_env=False, timeout=300.0) as client:
+            response = await client.post(f"{self.api_base}/api/chat", json=payload)
+            response.raise_for_status()
+            data = response.json()
+
+        message = data.get("message") if isinstance(data, dict) else {}
+        if not isinstance(message, dict):
+            message = {}
+        content = str(message.get("content") or "")
+        reasoning = str(message.get("thinking") or "") or None
+        tool_calls: list[Any] = []
+        for index, raw_call in enumerate(message.get("tool_calls") or []):
+            if not isinstance(raw_call, dict):
+                continue
+            function = raw_call.get("function") or {}
+            if not isinstance(function, dict):
+                continue
+            name = str(function.get("name") or "").strip()
+            if not name:
+                continue
+            args = function.get("arguments") or {}
+            if isinstance(args, str):
+                try:
+                    args = json.loads(args)
+                except json.JSONDecodeError:
+                    args = {}
+            if not isinstance(args, dict):
+                args = {}
+            tool_calls.append(
+                ToolCallRequest(
+                    id=str(raw_call.get("id") or f"call_{index}"),
+                    name=name,
+                    arguments=args,
+                )
+            )
+
+        return LLMResponse(
+            content=content,
+            tool_calls=tool_calls,
+            finish_reason="tool_calls" if tool_calls else str(data.get("done_reason") or "stop"),
+            usage=_ollama_usage(data),
+            reasoning_content=reasoning,
+        )
+
+    async def chat_stream(self, **kwargs: Any) -> Any:
+        on_content_delta = kwargs.pop("on_content_delta", None)
+        response = await self.chat(**kwargs)
+        if response.content and callable(on_content_delta):
+            await on_content_delta(response.content)
+        return response
+
+
+def _ollama_api_base(api_base: str) -> str:
+    base = (api_base or "").rstrip("/")
+    if base.endswith("/v1"):
+        base = base[:-3]
+    return base or "http://127.0.0.1:11434"
+
+
+def _ollama_message(message: dict[str, Any]) -> dict[str, Any]:
+    role = str(message.get("role") or "user")
+    out: dict[str, Any] = {"role": role, "content": message.get("content") or ""}
+    if role == "assistant" and message.get("tool_calls"):
+        tool_calls = []
+        for call in message.get("tool_calls") or []:
+            converted = _ollama_prior_tool_call(call)
+            if converted:
+                tool_calls.append(converted)
+        if tool_calls:
+            out["tool_calls"] = tool_calls
+    if role == "tool":
+        out["tool_name"] = str(message.get("name") or "")
+    return out
+
+
+def _ollama_prior_tool_call(call: Any) -> dict[str, Any] | None:
+    if not isinstance(call, dict):
+        return None
+    function = call.get("function") or {}
+    if not isinstance(function, dict):
+        return None
+    name = str(function.get("name") or "").strip()
+    if not name:
+        return None
+    args = function.get("arguments") or {}
+    if isinstance(args, str):
+        try:
+            args = json.loads(args)
+        except json.JSONDecodeError:
+            args = {}
+    if not isinstance(args, dict):
+        args = {}
+    return {"id": str(call.get("id") or ""), "function": {"name": name, "arguments": args}}
+
+
+def _ollama_usage(data: dict[str, Any]) -> dict[str, int]:
+    prompt = int(data.get("prompt_eval_count") or 0)
+    completion = int(data.get("eval_count") or 0)
+    total = prompt + completion if prompt or completion else 0
+    return {
+        "prompt_tokens": prompt,
+        "completion_tokens": completion,
+        "total_tokens": total,
+    }
 
 
 class _ProviderOpenAIAdapter:
@@ -374,6 +538,8 @@ def can_use_native_tool_calling(*, binding: str, model: str | None) -> bool:
     spec = find_by_name(binding)
     if spec and spec.backend in _NATIVE_TOOL_BACKENDS:
         return True
+    if spec and spec.name in _NATIVE_TOOL_PROVIDER_NAMES:
+        return supports_tools(binding, model)
     if binding in _NATIVE_TOOL_BLOCKED_BINDINGS or (spec and spec.is_local):
         return False
     if supports_tools(binding, model):

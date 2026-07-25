@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -75,6 +76,40 @@ def test_mastery_plugin_system_prompt_uses_localized_fallback(
     assert "精通导师模式" in zh_prompt
     assert "## mastery_tutor" in en_prompt
     assert "Mastery Tutor mode" in en_prompt
+
+
+def test_cognisphere_mastery_prompt_binds_to_local_pack(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FakeRegistry:
+        def build_prompt_text(self, *_args, **_kwargs) -> str:
+            return "- tool"
+
+    monkeypatch.setattr(
+        "cognispheretutor.agents.chat.agentic_pipeline.get_tool_registry",
+        lambda: FakeRegistry(),
+    )
+    fixture_root = (
+        Path(__file__).resolve().parents[2] / "fixtures" / "cognisphere_learning_plugins"
+    )
+    monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(fixture_root))
+
+    from cognispheretutor.core.context import UnifiedContext
+
+    ctx = UnifiedContext(
+        metadata={"mastery_mode": True, "mastery_path_id": "csphere-aws_certification"}
+    )
+    zh_prompt = AgenticChatPipeline(language="zh")._build_system_prompt([], ctx)
+    en_prompt = AgenticChatPipeline(language="en")._build_system_prompt([], ctx)
+
+    assert "Cognisphere 学习插件绑定" in zh_prompt
+    assert "csphere-aws_certification" in zh_prompt
+    assert "不要另建 `unified_*`" in zh_prompt
+    assert "AWS fixture policy: use local pack objectives." in zh_prompt
+    assert "Cognisphere Learning Plugin Binding" in en_prompt
+    assert "csphere-aws_certification" in en_prompt
+    assert "do not create a new `unified_*`" in en_prompt
+    assert "AWS fixture policy: use local pack objectives." in en_prompt
 
 
 def test_legacy_chat_agent_system_prompt_uses_selected_language() -> None:

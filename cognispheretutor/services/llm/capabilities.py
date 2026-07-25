@@ -246,6 +246,10 @@ DEFAULT_CAPABILITIES: dict[str, object] = {
 # Format: {model_pattern: {capability: value}}
 # Patterns are matched with case-insensitive startswith
 MODEL_OVERRIDES: dict[str, dict[str, object]] = {
+    "gemma4": {
+        "supports_tools": True,
+        "has_thinking_tags": True,
+    },
     "deepseek": {
         "supports_response_format": False,
         "has_thinking_tags": True,

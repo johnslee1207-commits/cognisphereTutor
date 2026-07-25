@@ -9,6 +9,10 @@ const webRoot = path.resolve(__dirname, "..");
 const distRoot = path.join(webRoot, "dist", "node-tests");
 const testRoot = path.join(distRoot, "tests");
 
+function nodeModuleBin(...segments) {
+  return path.join(webRoot, "node_modules", ...segments);
+}
+
 function run(cmd, args) {
   const result = spawnSync(cmd, args, {
     cwd: webRoot,
@@ -40,7 +44,8 @@ function collectTests(dir) {
 
 rmSync(distRoot, { recursive: true, force: true });
 
-run(path.join(webRoot, "node_modules", ".bin", "tsc"), [
+run(process.execPath, [
+  nodeModuleBin("typescript", "bin", "tsc"),
   "-p",
   "tsconfig.node-tests.json",
 ]);

@@ -339,6 +339,45 @@ export default function MasteryPathPage() {
     }
   }, [selectedDomains, loadList, tr]);
 
+  const handleImportAvailableDomains = useCallback(async () => {
+    const domains = (csphere?.plugins || [])
+      .filter((plugin) => plugin.valid)
+      .map((plugin) => plugin.domain);
+    if (domains.length === 0) {
+      setCsphereError(
+        tr("没有可导入的有效插件域", "No valid plugin domains to import"),
+      );
+      return;
+    }
+    setCsphereBusy(true);
+    setCsphereError(null);
+    setCsphereNote(null);
+    try {
+      const result = await composeAndSeedCognisphere({ domains });
+      setCsphereNote(
+        tr(
+          `已导入可用域：成功 ${result.seeded_count}，失败 ${result.failed_count}`,
+          `Imported available domains: ${result.seeded_count} seeded, ${result.failed_count} failed`,
+        ),
+      );
+      await loadList();
+      const firstPath = result.seeds?.find(
+        (s) => "mastery_path" in s && s.mastery_path?.path_id,
+      );
+      if (firstPath && "mastery_path" in firstPath) {
+        setSelected(firstPath.mastery_path!.path_id);
+      }
+    } catch (err) {
+      setCsphereError(
+        err instanceof Error
+          ? err.message
+          : tr("导入可用域失败", "Import available domains failed"),
+      );
+    } finally {
+      setCsphereBusy(false);
+    }
+  }, [csphere?.plugins, loadList, tr]);
+
   const handleRecommendGoal = useCallback(async () => {
     const goal = goalText.trim();
     if (!goal) {
@@ -471,6 +510,10 @@ export default function MasteryPathPage() {
       setTutorBusy(false);
     }
   }, [selected, detail, router, tr]);
+
+  const validPluginCount = (csphere?.plugins || []).filter(
+    (plugin) => plugin.valid,
+  ).length;
 
   return (
     <div className="flex h-full">
@@ -606,6 +649,109 @@ export default function MasteryPathPage() {
                 ? ` · ${csphere.gates.trusted_context.blocker.code}`
                 : ""}
             </p>
+          )}
+          {(csphere?.plugins || []).length > 0 && (
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between px-1">
+                <div className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
+                  {tr("三域学习入口", "Domain launchpad")}
+                </div>
+                <button
+                  type="button"
+                  disabled={csphereBusy || validPluginCount === 0}
+                  onClick={handleImportAvailableDomains}
+                  className="text-[10px] text-[var(--primary)] hover:underline disabled:opacity-50 cursor-pointer"
+                >
+                  {tr("导入全部", "Import all")}
+                </button>
+              </div>
+              {(csphere.plugins || []).map((plugin) => {
+                const path = plugin.path_id
+                  ? paths.find((item) => item.book_id === plugin.path_id)
+                  : null;
+                const packageName =
+                  typeof plugin.distribution?.package_name === "string"
+                    ? plugin.distribution.package_name
+                    : typeof plugin.distribution?.package === "string"
+                      ? plugin.distribution.package
+                      : plugin.plugin_id;
+                const checkCommand =
+                  typeof plugin.tutor_pack?.check_command === "string"
+                    ? plugin.tutor_pack.check_command
+                    : null;
+                const label =
+                  plugin.display_name || plugin.plugin_id || plugin.domain;
+                return (
+                  <div
+                    key={`launch-${plugin.domain}`}
+                    className="rounded-md border border-[var(--border)] px-2 py-2"
+                    title={checkCommand || packageName || plugin.domain}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="truncate text-xs font-medium text-[var(--foreground)]">
+                          {label}
+                        </div>
+                        <div className="mt-0.5 text-[10px] text-[var(--muted-foreground)] truncate">
+                          {path
+                            ? tr(
+                                `${path.kp_count} 个知识点 · ${path.avg_mastery_pct}%`,
+                                `${path.kp_count} objectives · ${path.avg_mastery_pct}%`,
+                              )
+                            : packageName || plugin.domain}
+                        </div>
+                      </div>
+                      <span
+                        className={`shrink-0 text-[10px] ${
+                          path
+                            ? "text-[var(--primary)]"
+                            : plugin.valid
+                              ? "text-green-600"
+                              : "text-[var(--muted-foreground)]"
+                        }`}
+                      >
+                        {path
+                          ? tr("已导入", "Ready")
+                          : plugin.valid
+                            ? tr("可导入", "Valid")
+                            : tr("需修复", "Invalid")}
+                      </span>
+                    </div>
+                    <div className="mt-2 flex gap-1">
+                      <button
+                        type="button"
+                        disabled={csphereBusy || !plugin.valid}
+                        onClick={() =>
+                          path?.book_id
+                            ? setSelected(path.book_id)
+                            : handleImportDomain(plugin.domain)
+                        }
+                        className="flex-1 flex items-center justify-center gap-1 px-2 py-1 text-[11px] rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50 cursor-pointer"
+                      >
+                        {csphereBusy ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <GraduationCap className="w-3 h-3" />
+                        )}
+                        {path ? tr("查看路径", "View path") : tr("开始", "Start")}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={!path?.book_id}
+                        onClick={() =>
+                          path?.book_id &&
+                          router.push(masteryChatHref(path.book_id))
+                        }
+                        className="px-2 py-1 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
+                        title={tr("进入 Mastery 对话", "Open Mastery Chat")}
+                      >
+                        <MessageSquare className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           )}
           <div className="space-y-1">
             {(csphere?.plugins || []).map((plugin) => (
