@@ -70,10 +70,18 @@ class MasteryLoopCapability:
         if lesson_contract:
             context.metadata["mastery_lesson_contract_injected"] = True
         context.metadata["mastery_status_injected"] = True
+        orphan_answer = _orphan_quiz_answer_guard(context)
         directive = _mastery_turn_directive(context)
         return "\n\n".join(
             block
-            for block in (auto_advance, status, grounding, lesson_contract, directive)
+            for block in (
+                auto_advance,
+                status,
+                grounding,
+                lesson_contract,
+                orphan_answer,
+                directive,
+            )
             if block
         )
 
@@ -294,6 +302,48 @@ def _deterministic_lesson_contract(context: UnifiedContext) -> str:
         )
     except Exception:
         return ""
+
+
+def _orphan_quiz_answer_guard(context: UnifiedContext) -> str:
+    path_id = str(context.metadata.get("mastery_path_id") or "").strip()
+    if not path_id or not _looks_like_quiz_answer(context.user_message):
+        return ""
+    try:
+        from cognispheretutor.learning.policy import next_objective
+        from cognispheretutor.learning.service import LearningService
+        from cognispheretutor.learning.storage import LearningStore
+
+        progress = LearningService(LearningStore()).get_or_create(path_id)
+        step = next_objective(progress).to_dict()
+    except Exception:
+        return ""
+    if step.get("action") == "answer_pending":
+        return ""
+    payload = {
+        "status": "orphan_quiz_answer",
+        "learner_answer": str(context.user_message or "").strip(),
+        "next": step,
+        "required_repair": [
+            "Do not treat this answer as correct or incorrect because no pending mastery question is registered.",
+            "Do not advance to the next lesson.",
+            "Briefly say the previous quiz was not registered as an interactive mastery card.",
+            "Re-register one equivalent quick check for the same current objective using mastery_quiz, then present it with ask_user.",
+        ],
+    }
+    return (
+        "### Mastery Orphan Quiz Answer Guard\n"
+        "The learner appears to be answering a multiple-choice or true/false quiz, "
+        "but the local mastery engine has no pending question to grade. This means "
+        "the prior question was likely written as plain text instead of being "
+        "registered with mastery_quiz + ask_user. Follow the repair instructions; "
+        "never advance on an ungraded orphan answer.\n"
+        f"```json\n{json.dumps(payload, ensure_ascii=False)}\n```"
+    )
+
+
+def _looks_like_quiz_answer(message: str) -> bool:
+    text = str(message or "").strip()
+    return bool(re.fullmatch(r"(?i)([a-d]|true|false|t|f|yes|no|对|错|正确|错误)", text))
 
 
 def _auto_advance_overview_if_ready(context: UnifiedContext) -> str:

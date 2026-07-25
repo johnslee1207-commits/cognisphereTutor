@@ -1067,6 +1067,53 @@ def test_mastery_loop_pre_loop_seed_injects_deterministic_status(monkeypatch) ->
     assert context.metadata["mastery_lesson_contract_injected"] is True
 
 
+def test_mastery_loop_pre_loop_seed_guards_orphan_choice_answer(monkeypatch) -> None:
+    from cognispheretutor.capabilities.mastery import loop as mastery_loop
+
+    monkeypatch.setattr(mastery_loop, "_auto_advance_overview_if_ready", lambda _context: "")
+    monkeypatch.setattr(
+        mastery_loop,
+        "_deterministic_mastery_status",
+        lambda _context: "### Deterministic Mastery Status\n{}",
+    )
+    monkeypatch.setattr(mastery_loop, "_deterministic_plugin_grounding", lambda _context: "")
+    monkeypatch.setattr(mastery_loop, "_deterministic_lesson_contract", lambda _context: "")
+
+    class FakeService:
+        def __init__(self, _store):
+            pass
+
+        def get_or_create(self, _path_id):
+            return object()
+
+    class FakeStep:
+        def to_dict(self):
+            return {
+                "action": "probe",
+                "knowledge_point_id": "sk-aws-clf-c02",
+                "knowledge_point_name": "Cloud Practitioner",
+            }
+
+    monkeypatch.setattr("cognispheretutor.learning.service.LearningService", FakeService)
+    monkeypatch.setattr(
+        "cognispheretutor.learning.policy.next_objective",
+        lambda _progress: FakeStep(),
+    )
+
+    context = UnifiedContext(
+        user_message="A",
+        metadata={"mastery_mode": True, "mastery_path_id": "csphere-aws_certification"},
+    )
+
+    seed = mastery_loop.MasteryLoopCapability().pre_loop_seed(context)
+
+    assert "Mastery Orphan Quiz Answer Guard" in seed
+    assert "orphan_quiz_answer" in seed
+    assert "Do not advance to the next lesson" in seed
+    assert "mastery_quiz" in seed
+    assert "ask_user" in seed
+
+
 def test_mastery_overview_auto_advance_records_qualitative_pass(tmp_path, monkeypatch) -> None:
     from cognispheretutor.capabilities.mastery import loop as mastery_loop
     from cognispheretutor.learning.models import (
