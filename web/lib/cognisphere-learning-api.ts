@@ -169,6 +169,52 @@ export async function composeCognisphereContexts(opts: {
   return res.json() as Promise<ComposeResult>;
 }
 
+export interface RecommendFromGoalResult {
+  ok: boolean;
+  goal?: string;
+  recommended_domains: string[];
+  match_count: number;
+  matches?: Array<{ domain?: string; plugin_id?: string; available?: string[] }>;
+  compose_seed?: ComposeAndSeedResult | null;
+  continue_in_chat?: string | null;
+  seeded_count?: number;
+  failed_count?: number;
+  [key: string]: unknown;
+}
+
+export async function recommendCognisphereFromGoal(opts: {
+  goal: string;
+  requiredCapabilities?: string[];
+  composeAndSeed?: boolean;
+}): Promise<RecommendFromGoalResult> {
+  const res = await apiFetch(
+    apiUrl("/api/v1/learning/cognisphere/recommend-from-goal"),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        goal: opts.goal,
+        required_capabilities: opts.requiredCapabilities ?? ["deeptutor_export"],
+        compose_and_seed: opts.composeAndSeed ?? false,
+      }),
+    },
+  );
+  if (!res.ok) {
+    let message = `Recommend failed: ${res.status}`;
+    try {
+      const body = await res.json();
+      message =
+        body?.detail?.message ||
+        body?.detail?.code ||
+        (typeof body?.detail === "string" ? body.detail : message);
+    } catch {
+      /* ignore */
+    }
+    throw new Error(message);
+  }
+  return res.json() as Promise<RecommendFromGoalResult>;
+}
+
 export async function composeAndSeedCognisphere(opts: {
   domains: string[];
   requiredCapabilities?: string[];

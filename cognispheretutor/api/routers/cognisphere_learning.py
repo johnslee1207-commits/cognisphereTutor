@@ -121,6 +121,24 @@ class ComposeAndSeedRequest(BaseModel):
     stop_on_error: bool = False
 
 
+class RecommendFromGoalRequest(BaseModel):
+    goal: str = Field(
+        ...,
+        min_length=1,
+        max_length=2000,
+        description="Natural-language learning goal (domain-agnostic)",
+    )
+    required_capabilities: list[str] = Field(
+        default_factory=lambda: ["deeptutor_export"],
+        description="Capability filter for recommendations (default: Tutor handoff export)",
+    )
+    compose_and_seed: bool = Field(
+        False,
+        description="When true, immediately compose+seed all recommended domains",
+    )
+    stop_on_error: bool = False
+
+
 def _validate_path_id(path_id: str) -> None:
     if "/" in path_id or "\\" in path_id or ".." in path_id or ":" in path_id:
         raise HTTPException(status_code=400, detail="Invalid path_id")
@@ -348,6 +366,80 @@ async def compose_and_seed(body: ComposeAndSeedRequest):
             None,
         ),
     }
+
+
+@router.post("/recommend-from-goal")
+async def recommend_from_goal(body: RecommendFromGoalRequest):
+    """NL learning goal → cross-domain plugin matches → optional one-click seed.
+
+    Domain-agnostic: Tutor never hardcodes which domains to recommend; the
+    negotiator/registry (and Cognisphere SDK when present) decide matches.
+    """
+    from cognispheretutor.integrations.cognisphere import query_cross_domain
+
+    goal = body.goal.strip()
+    if not goal:
+        raise HTTPException(status_code=422, detail="goal is required")
+
+    cross = query_cross_domain(
+        {
+            "required_capabilities": list(body.required_capabilities),
+            "goal": goal,
+        }
+    )
+    domains = [
+        str(m.get("domain"))
+        for m in (cross.get("matches") or [])
+        if m.get("domain")
+    ]
+    # De-dupe while preserving order
+    seen: set[str] = set()
+    recommended: list[str] = []
+    for domain in domains:
+        if domain not in seen:
+            seen.add(domain)
+            recommended.append(domain)
+
+    payload: dict[str, Any] = {
+        "ok": bool(recommended),
+        "phase": "DT-P6",
+        "goal": goal,
+        "required_capabilities": list(body.required_capabilities),
+        "recommended_domains": recommended,
+        "match_count": len(recommended),
+        "matches": list(cross.get("matches") or []),
+        "cross_domain": cross,
+        "compose_seed": None,
+        "continue_in_chat": None,
+    }
+
+    if body.compose_and_seed:
+        if not recommended:
+            raise HTTPException(
+                status_code=422,
+                detail={
+                    "ok": False,
+                    "code": "no_plugin_matches",
+                    "message": "No plugins matched this goal; adjust the goal or install plugins",
+                    "goal": goal,
+                },
+            )
+        seeded = await compose_and_seed(
+            ComposeAndSeedRequest(
+                domains=recommended,
+                required_capabilities=list(body.required_capabilities),
+                seed_mastery_path=True,
+                persist_import=True,
+                stop_on_error=body.stop_on_error,
+            )
+        )
+        payload["compose_seed"] = seeded
+        payload["ok"] = bool(seeded.get("ok"))
+        payload["continue_in_chat"] = seeded.get("continue_in_chat")
+        payload["seeded_count"] = seeded.get("seeded_count")
+        payload["failed_count"] = seeded.get("failed_count")
+
+    return payload
 
 
 def _load_imported_knowledge(domain: str, receipt: dict[str, Any]) -> dict[str, Any]:

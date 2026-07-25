@@ -482,11 +482,12 @@ Guided Learning (Learning Space / Mastery Path) can import a domain pack into a 
 - `POST /api/v1/learning/cognisphere/cross-domain` — capability / optional NL-goal plugin match (DT-P6)
 - `POST /api/v1/learning/cognisphere/compose` — multi-domain context composition (no seed)
 - `POST /api/v1/learning/cognisphere/compose-and-seed` — compose then import-and-seed each domain
+- `POST /api/v1/learning/cognisphere/recommend-from-goal` — NL goal → plugin matches; optional one-click `compose_and_seed`
 - `POST /api/v1/learning/cognisphere/trusted-context/import`
 - `POST /api/v1/learning/cognisphere/tutor/start` / `suggest-focus` / `plan-path`
 - `GET /api/v1/learning/cognisphere/tutor/events?session_id=` (SSE)
 
-Learning Space UI: multi-select discovered domains → **Compose & seed**, or single-domain **Import**. Cognisphere paths show suggested focus + skill-path hints from `suggest-focus` / `plan-path`.
+Learning Space UI: enter a natural-language goal → **Recommend** / one-click **Compose & seed**; or multi-select discovered domains → **Compose & seed**; or single-domain **Import**. Cognisphere paths show suggested focus + skill-path hints from `suggest-focus` / `plan-path`.
 
 Integration code lives under `cognispheretutor/integrations/cognisphere/` (registry, negotiate, validate, bundle import → Assessment/Plan/Mastery mapping, trusted-context offline/live import, runtime callbacks + **runtime bridge** to plugin P2–P5 offline runtimes, cross-domain compose). Live trusted-context kit fetch requires `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`. Runtime adapters declare capability → callable contracts only; modules resolve per domain via plugin manifest `runtime_modules` or `module_template` (`cognisphere_plugins.{domain}.{module_key}`) — no hard-coded domain package paths in Tutor.
 

@@ -131,6 +131,53 @@ def test_cross_domain_and_compose_api(
     )
 
 
+def test_recommend_from_goal_api(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(FIXTURE_ROOT))
+    monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
+
+    store_root = tmp_path / "learning"
+    monkeypatch.setattr(
+        cognisphere_learning,
+        "_service",
+        lambda: __import__(
+            "cognispheretutor.learning.service", fromlist=["LearningService"]
+        ).LearningService(LearningStore(store_root)),
+    )
+
+    app = FastAPI()
+    app.include_router(cognisphere_learning.router, prefix="/api/v1/learning/cognisphere")
+    client = TestClient(app)
+
+    preview = client.post(
+        "/api/v1/learning/cognisphere/recommend-from-goal",
+        json={
+            "goal": "practice algorithms with Tutor export packs",
+            "required_capabilities": ["deeptutor_export"],
+            "compose_and_seed": False,
+        },
+    )
+    assert preview.status_code == 200, preview.text
+    body = preview.json()
+    assert body["match_count"] >= 1
+    assert "leetcode" in body["recommended_domains"]
+
+    seeded = client.post(
+        "/api/v1/learning/cognisphere/recommend-from-goal",
+        json={
+            "goal": "practice algorithms with Tutor export packs",
+            "required_capabilities": ["deeptutor_export"],
+            "compose_and_seed": True,
+        },
+    )
+    assert seeded.status_code == 200, seeded.text
+    seeded_body = seeded.json()
+    assert seeded_body["compose_seed"] is not None
+    assert seeded_body["compose_seed"]["seeded_count"] >= 1
+    assert (store_root / "csphere-leetcode.json").exists()
+
+
 def test_compose_and_seed_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(FIXTURE_ROOT))
     monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))

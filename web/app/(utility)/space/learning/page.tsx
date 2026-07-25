@@ -33,6 +33,7 @@ import {
   isCognispherePathId,
   masteryChatHref,
   planCognispherePath,
+  recommendCognisphereFromGoal,
   startCognisphereTutor,
   suggestCognisphereFocus,
   type CognisphereLearningStatus,
@@ -63,6 +64,8 @@ export default function MasteryPathPage() {
   const [focusHint, setFocusHint] = useState<string | null>(null);
   const [planHint, setPlanHint] = useState<string | null>(null);
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
+  const [goalText, setGoalText] = useState("");
+  const [recommendedDomains, setRecommendedDomains] = useState<string[]>([]);
   const [tutorBusy, setTutorBusy] = useState(false);
 
   const loadList = useCallback(async () => {
@@ -301,6 +304,94 @@ export default function MasteryPathPage() {
     }
   }, [selectedDomains, loadList, tr]);
 
+  const handleRecommendGoal = useCallback(async () => {
+    const goal = goalText.trim();
+    if (!goal) {
+      setCsphereError(
+        tr("请先输入学习目标", "Enter a learning goal first"),
+      );
+      return;
+    }
+    setCsphereBusy(true);
+    setCsphereError(null);
+    setCsphereNote(null);
+    try {
+      const result = await recommendCognisphereFromGoal({ goal });
+      const domains = result.recommended_domains || [];
+      setRecommendedDomains(domains);
+      setSelectedDomains(domains);
+      if (domains.length === 0) {
+        setCsphereError(
+          tr(
+            "没有匹配的插件域，请调整目标或安装插件",
+            "No matching plugin domains; adjust the goal or install plugins",
+          ),
+        );
+      } else {
+        setCsphereNote(
+          tr(
+            `推荐域：${domains.join(", ")}`,
+            `Recommended: ${domains.join(", ")}`,
+          ),
+        );
+      }
+    } catch (err) {
+      setCsphereError(
+        err instanceof Error
+          ? err.message
+          : tr("推荐失败", "Recommend failed"),
+      );
+    } finally {
+      setCsphereBusy(false);
+    }
+  }, [goalText, tr]);
+
+  const handleGoalComposeAndSeed = useCallback(async () => {
+    const goal = goalText.trim();
+    if (!goal) {
+      setCsphereError(
+        tr("请先输入学习目标", "Enter a learning goal first"),
+      );
+      return;
+    }
+    setCsphereBusy(true);
+    setCsphereError(null);
+    setCsphereNote(null);
+    try {
+      const result = await recommendCognisphereFromGoal({
+        goal,
+        composeAndSeed: true,
+      });
+      const domains = result.recommended_domains || [];
+      setRecommendedDomains(domains);
+      setSelectedDomains(domains);
+      const seeded = result.compose_seed;
+      setCsphereNote(
+        tr(
+          `目标「${goal}」→ 推荐 ${domains.length} 域；导入成功 ${seeded?.seeded_count ?? result.seeded_count ?? 0}`,
+          `Goal “${goal}” → ${domains.length} domains; seeded ${seeded?.seeded_count ?? result.seeded_count ?? 0}`,
+        ),
+      );
+      await loadList();
+      const firstPath = seeded?.seeds?.find(
+        (s) => "mastery_path" in s && s.mastery_path?.path_id,
+      );
+      if (firstPath && "mastery_path" in firstPath) {
+        setSelected(firstPath.mastery_path!.path_id);
+      } else if (result.continue_in_chat) {
+        /* keep list refresh only */
+      }
+    } catch (err) {
+      setCsphereError(
+        err instanceof Error
+          ? err.message
+          : tr("目标导入失败", "Goal compose-and-seed failed"),
+      );
+    } finally {
+      setCsphereBusy(false);
+    }
+  }, [goalText, loadList, tr]);
+
   const handleSocraticPractice = useCallback(async () => {
     const domain = selected ? domainFromCognispherePathId(selected) : null;
     if (!selected || !domain) return;
@@ -405,6 +496,48 @@ export default function MasteryPathPage() {
           <div className="flex items-center gap-1.5 px-1 text-xs font-medium text-[var(--foreground)]">
             <Package className="w-3.5 h-3.5" />
             {tr("Cognisphere 插件", "Cognisphere plugins")}
+          </div>
+          <div className="space-y-1.5 px-0.5">
+            <label className="block text-[10px] text-[var(--muted-foreground)] leading-relaxed">
+              {tr(
+                "用自然语言描述学习目标（示例：练习算法与微积分）",
+                "Describe a learning goal in natural language (e.g. practice algorithms and calculus)",
+              )}
+            </label>
+            <textarea
+              value={goalText}
+              onChange={(e) => setGoalText(e.target.value)}
+              rows={2}
+              disabled={csphereBusy}
+              placeholder={tr(
+                "例如：我想系统练习面试算法…",
+                "e.g. I want a structured path for interview algorithms…",
+              )}
+              className="w-full resize-none rounded-md border border-[var(--border)] bg-transparent px-2 py-1.5 text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
+            />
+            <div className="flex gap-1">
+              <button
+                type="button"
+                disabled={csphereBusy || !goalText.trim()}
+                onClick={handleRecommendGoal}
+                className="flex-1 px-2 py-1 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
+              >
+                {tr("推荐插件", "Recommend")}
+              </button>
+              <button
+                type="button"
+                disabled={csphereBusy || !goalText.trim()}
+                onClick={handleGoalComposeAndSeed}
+                className="flex-1 px-2 py-1 text-[11px] rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50 cursor-pointer"
+              >
+                {tr("一键组合导入", "Compose & seed")}
+              </button>
+            </div>
+            {recommendedDomains.length > 0 && (
+              <p className="text-[10px] text-[var(--muted-foreground)]">
+                {tr("已推荐", "Recommended")}: {recommendedDomains.join(", ")}
+              </p>
+            )}
           </div>
           {csphereError && (
             <p className="px-1 text-[10px] leading-relaxed text-red-500/90">
