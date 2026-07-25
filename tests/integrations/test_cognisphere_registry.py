@@ -233,10 +233,88 @@ def test_tutor_session_and_mastery_callbacks(tmp_path: Path, monkeypatch: pytest
     mem = sync_mistake_memory({"slug": "two-sum", "error": "TLE"})
     assert mem["ok"] is True
     assert "two-sum" in mem["suggest_tutor_focus"]
+    assert mem["learning_store"]["status"] == "skipped_no_path"
 
     mastery = apply_mastery_update({"skill_ids": ["skill:array"], "passed": True, "path_id": "p1"})
     assert mastery["ok"] is True
     assert mastery["learning_store"]["mastery_path_id"] == "p1"
+    assert mastery["learning_store"]["status"] == "path_not_found"
+
+
+def test_runtime_feedback_updates_learning_service(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Sandbox fail with domain+slug lowers mastery on a seeded Cognisphere path."""
+    from cognispheretutor.integrations.cognisphere.runtime_callbacks import (
+        bind_runtime_feedback_to_learning,
+    )
+    from cognispheretutor.learning.cognisphere_seed import (
+        mastery_path_id_for_domain,
+        modules_from_knowledge,
+    )
+    from cognispheretutor.learning.service import LearningService
+    from cognispheretutor.learning.storage import LearningStore
+
+    store_root = tmp_path / "learning"
+    monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
+    monkeypatch.setattr(
+        "cognispheretutor.learning.service.LearningService",
+        lambda store=None: LearningService(LearningStore(store_root)),
+    )
+
+    path_id = mastery_path_id_for_domain("fixture_domain")
+    service = LearningService(LearningStore(store_root))
+    modules = modules_from_knowledge(
+        {
+            "problems": [{"slug": "two-sum", "title": "Two Sum"}],
+            "skills": [{"skill_id": "array", "name": "Array"}],
+        },
+        domain="fixture_domain",
+        path_id=path_id,
+    )
+    progress = service.get_or_create(path_id)
+    service.init_modules(progress, modules)
+    for module in modules:
+        for kp in module.knowledge_points:
+            progress.mastery_levels[kp.id] = 0.8
+    service.save(progress)
+
+    fail = ingest_sandbox_result(
+        {
+            "passed": False,
+            "offline_simulated": True,
+            "session_id": "fb1",
+            "slug": "two-sum",
+            "domain": "fixture_domain",
+            "error": "WA",
+        }
+    )
+    assert fail["mistake_memory"]["ok"] is True
+    bind = fail["learning_store"]
+    assert bind["status"] == "applied"
+    assert any("two-sum" in kid for kid in bind["updated_kp_ids"])
+
+    reloaded = LearningService(LearningStore(store_root))._store.load(path_id)
+    assert reloaded is not None
+    updated_levels = [
+        reloaded.mastery_levels[kid]
+        for kid in bind["updated_kp_ids"]
+        if kid in reloaded.mastery_levels
+    ]
+    assert updated_levels
+    assert all(level <= 0.35 for level in updated_levels)
+
+    pass_bind = bind_runtime_feedback_to_learning(
+        {"domain": "fixture_domain", "slug": "two-sum", "passed": True},
+        passed=True,
+        source="test_pass",
+    )
+    assert pass_bind["status"] == "applied"
+    reloaded2 = LearningService(LearningStore(store_root))._store.load(path_id)
+    assert reloaded2 is not None
+    assert any(
+        reloaded2.mastery_levels.get(kid, 0) >= 1.0 for kid in pass_bind["updated_kp_ids"]
+    )
 
 
 def test_trusted_context_offline_import(tmp_path: Path) -> None:

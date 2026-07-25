@@ -346,6 +346,8 @@ Learning Space：多选发现域 → **组合并导入**，或单域 **导入**�
 
 集成代码位于 `cognispheretutor/integrations/cognisphere/`（发现 / 协商 / 校验 / Bundle 导入到 Assessment·Plan·Mastery / trusted-context 离线导入 / 运行时回调 + 离线 runtime bridge / 跨域组合）。在线 trusted-context 需配置 `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`。`runtime_adapters.json` 只声明能力→可调用契约；模块路径按域从插件 manifest `runtime_modules` 或 `module_template`（`cognisphere_plugins.{domain}.{module_key}`）解析，Tutor 内不硬编码任何域包路径。
 
+**反馈闭环（DT-P5）：** `ingest_sandbox_result` / `sync_mistake_memory` / `apply_mastery_update` 在 `path_id` 或 `domain` 能解析到已导入精通之路且匹配到知识点时，写入 `LearningService`。缺路径 → `skipped_no_path` / `path_not_found`（失败即停，不静默改掌握度）。
+
 </details>
 
 ## 📖 探索 cognisphereTutor

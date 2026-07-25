@@ -490,6 +490,8 @@ Learning Space UI: multi-select discovered domains → **Compose & seed**, or si
 
 Integration code lives under `cognispheretutor/integrations/cognisphere/` (registry, negotiate, validate, bundle import → Assessment/Plan/Mastery mapping, trusted-context offline/live import, runtime callbacks + **runtime bridge** to plugin P2–P5 offline runtimes, cross-domain compose). Live trusted-context kit fetch requires `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`. Runtime adapters declare capability → callable contracts only; modules resolve per domain via plugin manifest `runtime_modules` or `module_template` (`cognisphere_plugins.{domain}.{module_key}`) — no hard-coded domain package paths in Tutor.
 
+**Feedback loop (DT-P5):** `ingest_sandbox_result` / `sync_mistake_memory` / `apply_mastery_update` bind to `LearningService` when `path_id` or `domain` resolves to a seeded Mastery Path and a knowledge-point match is found. Missing path → `skipped_no_path` / `path_not_found` (fail-closed; no silent mastery mutation).
+
 </details>
 
 ## 📖 Explore cognisphereTutor
