@@ -1,0 +1,1003 @@
+{
+  "bundle_id": "deeptutor.ap_calculus.import.v1",
+  "domain": "ap_calculus",
+  "plugin_id": "cognisphere.domain.ap_calculus.plugin.v1",
+  "exported_at": "2026-07-26T05:10:31+00:00",
+  "generated_at": "2026-07-26T05:10:31.681890+00:00",
+  "payload_kind": "ap_calculus_knowledge_bundle",
+  "consumer": "DeepTutor AP Calculus Tutor",
+  "project_id": "ap-calculus-learning-context",
+  "learning_loop": [
+    "Assessment",
+    "Knowledge Gap",
+    "Learning Plan",
+    "Practice",
+    "Mistake Memory",
+    "Mastery Update"
+  ],
+  "forbidden_in_export": [
+    "exam_answer_keys",
+    "scoring_guideline_full_text",
+    "copyrighted_textbook_full_text"
+  ],
+  "knowledge": {
+    "concepts": [
+      {
+        "concept_id": "limit",
+        "label": "Limit"
+      },
+      {
+        "concept_id": "derivative",
+        "label": "Derivative"
+      },
+      {
+        "concept_id": "integral",
+        "label": "Integral"
+      },
+      {
+        "concept_id": "series",
+        "label": "Series"
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "compute_derivative",
+        "label": "Compute derivative"
+      },
+      {
+        "skill_id": "interpret_graph",
+        "label": "Interpret graph"
+      },
+      {
+        "skill_id": "apply_ftc",
+        "label": "Apply FTC"
+      },
+      {
+        "skill_id": "solve_optimization",
+        "label": "Solve optimization"
+      }
+    ],
+    "theorems": [
+      {
+        "theorem_id": "ftc",
+        "label": "Fundamental Theorem of Calculus"
+      },
+      {
+        "theorem_id": "mvt",
+        "label": "Mean Value Theorem"
+      },
+      {
+        "theorem_id": "ivt",
+        "label": "Intermediate Value Theorem"
+      }
+    ],
+    "problem_patterns": [
+      {
+        "pattern_id": "related_rate",
+        "label": "Related Rate"
+      },
+      {
+        "pattern_id": "area_accumulation",
+        "label": "Area Accumulation"
+      },
+      {
+        "pattern_id": "motion",
+        "label": "Motion"
+      },
+      {
+        "pattern_id": "optimization",
+        "label": "Optimization"
+      },
+      {
+        "pattern_id": "series_problems",
+        "label": "Series"
+      }
+    ],
+    "assessments": [
+      {
+        "assessment_id": "apcalc.assess.related_rates",
+        "kind_id": "frq",
+        "pattern_hint": "Related Rate",
+        "concept_ids": [
+          "derivative"
+        ],
+        "skill_hints": [
+          "related_rates",
+          "implicit_differentiation"
+        ]
+      },
+      {
+        "assessment_id": "apcalc.assess.optimization",
+        "kind_id": "frq",
+        "pattern_hint": "Optimization",
+        "concept_ids": [
+          "derivative"
+        ],
+        "skill_hints": [
+          "critical_points",
+          "justify_extrema"
+        ]
+      },
+      {
+        "assessment_id": "apcalc.assess.ftc_accumulation",
+        "kind_id": "frq",
+        "pattern_hint": "Area Accumulation / FTC",
+        "concept_ids": [
+          "integral"
+        ],
+        "skill_hints": [
+          "ftc",
+          "accumulation_functions"
+        ]
+      },
+      {
+        "assessment_id": "apcalc.assess.limits_continuity",
+        "kind_id": "mcq",
+        "pattern_hint": "Limits and Continuity",
+        "concept_ids": [
+          "limit"
+        ],
+        "skill_hints": [
+          "limit_evaluation",
+          "continuity_checks"
+        ]
+      },
+      {
+        "assessment_id": "apcalc.assess.series_convergence",
+        "kind_id": "mcq",
+        "pattern_hint": "Series Convergence (BC)",
+        "concept_ids": [
+          "series"
+        ],
+        "skill_hints": [
+          "convergence_tests"
+        ]
+      }
+    ],
+    "ontology_classes": [
+      {
+        "class_id": "ApCalculusTrustedContextTopic",
+        "purpose": "Root topic for AP Calculus learning trusted context."
+      },
+      {
+        "class_id": "ApCalculusCoursePackage",
+        "purpose": "AB or BC course package with CED / exam structure mapping."
+      },
+      {
+        "class_id": "ApCalculusConcept",
+        "purpose": "Normalized concept such as Limit, Derivative, Integral, Series."
+      },
+      {
+        "class_id": "ApCalculusSkill",
+        "purpose": "Learner skill such as compute derivative, interpret graph, apply FTC."
+      },
+      {
+        "class_id": "ApCalculusProblemPattern",
+        "purpose": "Problem pattern such as Related Rate, Optimization, Area Accumulation."
+      },
+      {
+        "class_id": "ApCalculusSolutionStrategy",
+        "purpose": "Reusable solution strategy linked from a problem pattern."
+      },
+      {
+        "class_id": "ApCalculusAssessmentItem",
+        "purpose": "Assessment metadata for FRQ/MCQ items without storing answer keys."
+      },
+      {
+        "class_id": "ApCalculusTheorem",
+        "purpose": "Named theorem or result (e.g. Fundamental Theorem of Calculus)."
+      },
+      {
+        "class_id": "ApCalculusSourceCitation",
+        "purpose": "Evidence citation linking claims to College Board / OpenStax / Khan sources."
+      }
+    ],
+    "assessment_runtime": {
+      "status": "ready",
+      "enabled": true,
+      "implementation": "runtime",
+      "profile_version": "2",
+      "assessment_count": 5,
+      "session_stage_count": 5,
+      "scoring_axis_count": 4,
+      "no_answer_keys": true,
+      "exposes": [
+        "list_assessments",
+        "plan_assessment_session",
+        "start_assessment_session",
+        "advance_assessment_session",
+        "record_learner_turn",
+        "score_assessment_session",
+        "evaluate_assessment_runtime"
+      ],
+      "evaluability": {
+        "ok": true,
+        "score": 1.0,
+        "passed": true
+      },
+      "guidance": [
+        "plan_assessment_session(assessment_id) builds a no-key tutoring/assessment outline",
+        "start_assessment_session / advance_assessment_session / record_learner_turn form the offline assessment loop",
+        "score_assessment_session uses concept/skill coverage heuristics — never answer keys",
+        "evaluate_assessment_runtime exposes pack-local benchmark evaluability for the AP assessment surface",
+        "Catalog facts live in manifests/domain/assessment_catalog.json"
+      ]
+    },
+    "assessment_evaluability": {
+      "status": "ok",
+      "ok": true,
+      "score": 1.0,
+      "passed": true,
+      "assessment_count": 5,
+      "session_stage_count": 5,
+      "scoring_axis_count": 4,
+      "smoke": {
+        "assessment_id": "apcalc.assess.related_rates",
+        "ok": true,
+        "turn_count": 5
+      },
+      "issues": [],
+      "contract": "cognisphere.ap_calculus.assessment_evaluability.v1",
+      "evaluated_at": "2026-07-26T05:10:31+00:00"
+    },
+    "sample_session_outline": {
+      "assessment_id": "apcalc.assess.related_rates",
+      "turn_count": 5,
+      "stages": [
+        "orient",
+        "concept_probe",
+        "skill_probe",
+        "justify",
+        "reflect"
+      ],
+      "safety": {
+        "exam_answer_keys_included": false,
+        "scoring_guideline_full_text_included": false,
+        "no_answer_keys": true,
+        "catalog_safety": {
+          "exam_answer_keys_included": false,
+          "scoring_guideline_full_text_included": false
+        }
+      }
+    }
+  },
+  "course_framework": {
+    "generated_at": "2026-07-26T05:10:31.666558+00:00",
+    "framework_id": "cognisphere.domain.ap_calculus.course_framework.v1",
+    "source": "domain_course_framework_seed",
+    "authority_note": "College Board AP Calculus Course and Exam Description (unit titles summarized for mapping)",
+    "unit_count": 10,
+    "covers_unit_count": 12,
+    "units": [
+      {
+        "unit_id": "ab.u1",
+        "unit_number": 1,
+        "label": "Limits and Continuity",
+        "course_id": "AP-Calculus-AB",
+        "package_id": "AP_CALCULUS_AB_PACKAGE",
+        "source_id": "src:apcalc:cb-ab-course",
+        "concept_ids": [
+          "limit"
+        ],
+        "bc_extension": false,
+        "raw_heading_hits": []
+      },
+      {
+        "unit_id": "ab.u2",
+        "unit_number": 2,
+        "label": "Differentiation: Definition and Fundamental Properties",
+        "course_id": "AP-Calculus-AB",
+        "package_id": "AP_CALCULUS_AB_PACKAGE",
+        "source_id": "src:apcalc:cb-ab-course",
+        "concept_ids": [
+          "derivative"
+        ],
+        "bc_extension": false,
+        "raw_heading_hits": []
+      },
+      {
+        "unit_id": "ab.u3",
+        "unit_number": 3,
+        "label": "Differentiation: Composite, Implicit, and Inverse Functions",
+        "course_id": "AP-Calculus-AB",
+        "package_id": "AP_CALCULUS_AB_PACKAGE",
+        "source_id": "src:apcalc:cb-ab-course",
+        "concept_ids": [
+          "derivative"
+        ],
+        "bc_extension": false,
+        "raw_heading_hits": []
+      },
+      {
+        "unit_id": "ab.u4",
+        "unit_number": 4,
+        "label": "Contextual Applications of Differentiation",
+        "course_id": "AP-Calculus-AB",
+        "package_id": "AP_CALCULUS_AB_PACKAGE",
+        "source_id": "src:apcalc:cb-ab-course",
+        "concept_ids": [
+          "derivative"
+        ],
+        "bc_extension": false,
+        "raw_heading_hits": []
+      },
+      {
+        "unit_id": "ab.u5",
+        "unit_number": 5,
+        "label": "Analytical Applications of Differentiation",
+        "course_id": "AP-Calculus-AB",
+        "package_id": "AP_CALCULUS_AB_PACKAGE",
+        "source_id": "src:apcalc:cb-ab-course",
+        "concept_ids": [
+          "derivative"
+        ],
+        "bc_extension": false,
+        "raw_heading_hits": []
+      },
+      {
+        "unit_id": "ab.u6",
+        "unit_number": 6,
+        "label": "Integration and Accumulation of Change",
+        "course_id": "AP-Calculus-AB",
+        "package_id": "AP_CALCULUS_AB_PACKAGE",
+        "source_id": "src:apcalc:cb-ab-course",
+        "concept_ids": [
+          "integral"
+        ],
+        "bc_extension": false,
+        "raw_heading_hits": []
+      },
+      {
+        "unit_id": "ab.u7",
+        "unit_number": 7,
+        "label": "Differential Equations",
+        "course_id": "AP-Calculus-AB",
+        "package_id": "AP_CALCULUS_AB_PACKAGE",
+        "source_id": "src:apcalc:cb-ab-course",
+        "concept_ids": [
+          "derivative",
+          "integral"
+        ],
+        "bc_extension": false,
+        "raw_heading_hits": []
+      },
+      {
+        "unit_id": "ab.u8",
+        "unit_number": 8,
+        "label": "Applications of Integration",
+        "course_id": "AP-Calculus-AB",
+        "package_id": "AP_CALCULUS_AB_PACKAGE",
+        "source_id": "src:apcalc:cb-ab-course",
+        "concept_ids": [
+          "integral"
+        ],
+        "bc_extension": false,
+        "raw_heading_hits": []
+      },
+      {
+        "unit_id": "bc.u9",
+        "unit_number": 9,
+        "label": "Parametric Equations, Polar Coordinates, and Vector-Valued Functions",
+        "course_id": "AP-Calculus-BC",
+        "package_id": "AP_CALCULUS_BC_PACKAGE",
+        "source_id": "src:apcalc:cb-bc-course",
+        "concept_ids": [
+          "derivative",
+          "integral"
+        ],
+        "bc_extension": true,
+        "raw_heading_hits": []
+      },
+      {
+        "unit_id": "bc.u10",
+        "unit_number": 10,
+        "label": "Infinite Sequences and Series",
+        "course_id": "AP-Calculus-BC",
+        "package_id": "AP_CALCULUS_BC_PACKAGE",
+        "source_id": "src:apcalc:cb-bc-course",
+        "concept_ids": [
+          "series"
+        ],
+        "bc_extension": true,
+        "raw_heading_hits": []
+      }
+    ],
+    "covers_unit": [
+      {
+        "subject_id": "limit",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u1",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u2",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u3",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u4",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u5",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "integral",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u6",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u7",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "integral",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u7",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "integral",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u8",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "bc.u9",
+        "course_id": "AP-Calculus-BC"
+      },
+      {
+        "subject_id": "integral",
+        "predicate": "COVERS_UNIT",
+        "object_id": "bc.u9",
+        "course_id": "AP-Calculus-BC"
+      },
+      {
+        "subject_id": "series",
+        "predicate": "COVERS_UNIT",
+        "object_id": "bc.u10",
+        "course_id": "AP-Calculus-BC"
+      }
+    ]
+  },
+  "calculus_graph": {
+    "generated_at": "2026-07-26T05:10:31.641310+00:00",
+    "source": "ontology_seed",
+    "ontology_id": "cognisphere.domain.ap_calculus.ontology.v1",
+    "chain": [
+      "Concept",
+      "Skill",
+      "ProblemPattern",
+      "SolutionStrategy",
+      "Assessment"
+    ],
+    "nodes": [
+      {
+        "id": "limit",
+        "kind": "concept",
+        "label": "Limit"
+      },
+      {
+        "id": "derivative",
+        "kind": "concept",
+        "label": "Derivative"
+      },
+      {
+        "id": "integral",
+        "kind": "concept",
+        "label": "Integral"
+      },
+      {
+        "id": "series",
+        "kind": "concept",
+        "label": "Series"
+      },
+      {
+        "id": "compute_derivative",
+        "kind": "skill",
+        "label": "Compute derivative"
+      },
+      {
+        "id": "interpret_graph",
+        "kind": "skill",
+        "label": "Interpret graph"
+      },
+      {
+        "id": "apply_ftc",
+        "kind": "skill",
+        "label": "Apply FTC"
+      },
+      {
+        "id": "solve_optimization",
+        "kind": "skill",
+        "label": "Solve optimization"
+      },
+      {
+        "id": "ftc",
+        "kind": "theorem",
+        "label": "Fundamental Theorem of Calculus"
+      },
+      {
+        "id": "mvt",
+        "kind": "theorem",
+        "label": "Mean Value Theorem"
+      },
+      {
+        "id": "ivt",
+        "kind": "theorem",
+        "label": "Intermediate Value Theorem"
+      },
+      {
+        "id": "related_rate",
+        "kind": "problem_pattern",
+        "label": "Related Rate"
+      },
+      {
+        "id": "area_accumulation",
+        "kind": "problem_pattern",
+        "label": "Area Accumulation"
+      },
+      {
+        "id": "motion",
+        "kind": "problem_pattern",
+        "label": "Motion"
+      },
+      {
+        "id": "optimization",
+        "kind": "problem_pattern",
+        "label": "Optimization"
+      },
+      {
+        "id": "series_problems",
+        "kind": "problem_pattern",
+        "label": "Series"
+      },
+      {
+        "id": "ab.u1",
+        "kind": "unit",
+        "label": "Limits and Continuity",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "id": "ab.u2",
+        "kind": "unit",
+        "label": "Differentiation: Definition and Fundamental Properties",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "id": "ab.u3",
+        "kind": "unit",
+        "label": "Differentiation: Composite, Implicit, and Inverse Functions",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "id": "ab.u4",
+        "kind": "unit",
+        "label": "Contextual Applications of Differentiation",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "id": "ab.u5",
+        "kind": "unit",
+        "label": "Analytical Applications of Differentiation",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "id": "ab.u6",
+        "kind": "unit",
+        "label": "Integration and Accumulation of Change",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "id": "ab.u7",
+        "kind": "unit",
+        "label": "Differential Equations",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "id": "ab.u8",
+        "kind": "unit",
+        "label": "Applications of Integration",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "id": "bc.u9",
+        "kind": "unit",
+        "label": "Parametric Equations, Polar Coordinates, and Vector-Valued Functions",
+        "course_id": "AP-Calculus-BC"
+      },
+      {
+        "id": "bc.u10",
+        "kind": "unit",
+        "label": "Infinite Sequences and Series",
+        "course_id": "AP-Calculus-BC"
+      }
+    ],
+    "edges": [
+      {
+        "subject_id": "compute_derivative",
+        "predicate": "REQUIRES_CONCEPT",
+        "object_id": "derivative"
+      },
+      {
+        "subject_id": "interpret_graph",
+        "predicate": "REQUIRES_CONCEPT",
+        "object_id": "derivative"
+      },
+      {
+        "subject_id": "apply_ftc",
+        "predicate": "REQUIRES_CONCEPT",
+        "object_id": "integral"
+      },
+      {
+        "subject_id": "apply_ftc",
+        "predicate": "RELATED_THEOREM",
+        "object_id": "ftc"
+      },
+      {
+        "subject_id": "solve_optimization",
+        "predicate": "REQUIRES_CONCEPT",
+        "object_id": "derivative"
+      },
+      {
+        "subject_id": "related_rate",
+        "predicate": "DEVELOPS_SKILL",
+        "object_id": "compute_derivative"
+      },
+      {
+        "subject_id": "related_rate",
+        "predicate": "REQUIRES_CONCEPT",
+        "object_id": "derivative"
+      },
+      {
+        "subject_id": "optimization",
+        "predicate": "DEVELOPS_SKILL",
+        "object_id": "solve_optimization"
+      },
+      {
+        "subject_id": "optimization",
+        "predicate": "REQUIRES_CONCEPT",
+        "object_id": "derivative"
+      },
+      {
+        "subject_id": "area_accumulation",
+        "predicate": "DEVELOPS_SKILL",
+        "object_id": "apply_ftc"
+      },
+      {
+        "subject_id": "area_accumulation",
+        "predicate": "REQUIRES_CONCEPT",
+        "object_id": "integral"
+      },
+      {
+        "subject_id": "motion",
+        "predicate": "REQUIRES_CONCEPT",
+        "object_id": "derivative"
+      },
+      {
+        "subject_id": "motion",
+        "predicate": "DEVELOPS_SKILL",
+        "object_id": "interpret_graph"
+      },
+      {
+        "subject_id": "series_problems",
+        "predicate": "REQUIRES_CONCEPT",
+        "object_id": "series"
+      },
+      {
+        "subject_id": "limit",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u1",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u2",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u3",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u4",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u5",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "integral",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u6",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u7",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "integral",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u7",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "integral",
+        "predicate": "COVERS_UNIT",
+        "object_id": "ab.u8",
+        "course_id": "AP-Calculus-AB"
+      },
+      {
+        "subject_id": "derivative",
+        "predicate": "COVERS_UNIT",
+        "object_id": "bc.u9",
+        "course_id": "AP-Calculus-BC"
+      },
+      {
+        "subject_id": "integral",
+        "predicate": "COVERS_UNIT",
+        "object_id": "bc.u9",
+        "course_id": "AP-Calculus-BC"
+      },
+      {
+        "subject_id": "series",
+        "predicate": "COVERS_UNIT",
+        "object_id": "bc.u10",
+        "course_id": "AP-Calculus-BC"
+      }
+    ],
+    "updated_at": "2026-07-26T05:10:31.666558+00:00"
+  },
+  "raw_mentions": null,
+  "sources": [
+    {
+      "source_id": "src:apcalc:operator-spec",
+      "authority": "Operator supplied AP Calculus Knowledge Corpus Data Source Specification v1.0",
+      "official_url": "internal:operator-supplied/AP_Calculus_Knowledge_Corpus_Data_Source_Specification_v1.0.md",
+      "priority": "P0",
+      "tier": null,
+      "downloadable": false
+    },
+    {
+      "source_id": "src:apcalc:cb-ab-course",
+      "authority": "College Board AP Calculus AB",
+      "official_url": "https://apcentral.collegeboard.org/courses/ap-calculus-ab",
+      "priority": "P0",
+      "tier": "tier0_official",
+      "downloadable": true
+    },
+    {
+      "source_id": "src:apcalc:cb-bc-course",
+      "authority": "College Board AP Calculus BC",
+      "official_url": "https://apcentral.collegeboard.org/courses/ap-calculus-bc",
+      "priority": "P0",
+      "tier": "tier0_official",
+      "downloadable": true
+    },
+    {
+      "source_id": "src:apcalc:apstudents-ab",
+      "authority": "AP Students Calculus AB",
+      "official_url": "https://apstudents.collegeboard.org/courses/ap-calculus-ab",
+      "priority": "P0",
+      "tier": "tier0_official",
+      "downloadable": true
+    },
+    {
+      "source_id": "src:apcalc:apstudents-bc",
+      "authority": "AP Students Calculus BC",
+      "official_url": "https://apstudents.collegeboard.org/courses/ap-calculus-bc",
+      "priority": "P0",
+      "tier": "tier0_official",
+      "downloadable": true
+    },
+    {
+      "source_id": "src:apcalc:cb-ab-frq",
+      "authority": "College Board AP Calculus AB Past Exam Questions",
+      "official_url": "https://apcentral.collegeboard.org/courses/ap-calculus-ab/exam/past-exam-questions",
+      "priority": "P0",
+      "tier": "official_questions",
+      "downloadable": true
+    },
+    {
+      "source_id": "src:apcalc:cb-bc-frq",
+      "authority": "College Board AP Calculus BC Past Exam Questions",
+      "official_url": "https://apcentral.collegeboard.org/courses/ap-calculus-bc/exam/past-exam-questions",
+      "priority": "P0",
+      "tier": "official_questions",
+      "downloadable": true
+    },
+    {
+      "source_id": "src:apcalc:khan-ab",
+      "authority": "Khan Academy AP Calculus AB",
+      "official_url": "https://www.khanacademy.org/math/ap-calculus-ab",
+      "priority": "P0",
+      "tier": "learning_resources",
+      "downloadable": true
+    },
+    {
+      "source_id": "src:apcalc:khan-bc",
+      "authority": "Khan Academy AP Calculus BC",
+      "official_url": "https://www.khanacademy.org/math/ap-calculus-bc",
+      "priority": "P0",
+      "tier": "learning_resources",
+      "downloadable": true
+    },
+    {
+      "source_id": "src:apcalc:openstax-calculus",
+      "authority": "OpenStax Calculus",
+      "official_url": "https://openstax.org/subjects/math",
+      "priority": "P0",
+      "tier": "open_textbook",
+      "downloadable": true
+    },
+    {
+      "source_id": "src:apcalc:albert-ref",
+      "authority": "Albert AP Calculus",
+      "official_url": "https://www.albert.io/ap-calculus",
+      "priority": "P1",
+      "tier": "practice_resources",
+      "downloadable": false
+    },
+    {
+      "source_id": "src:apcalc:crackap-ab",
+      "authority": "CrackAP Calculus AB",
+      "official_url": "https://www.crackap.com/ap/calculus-ab/",
+      "priority": "P1",
+      "tier": "practice_resources",
+      "downloadable": false
+    },
+    {
+      "source_id": "src:apcalc:crackap-bc",
+      "authority": "CrackAP Calculus BC",
+      "official_url": "https://www.crackap.com/ap/calculus-bc/",
+      "priority": "P1",
+      "tier": "practice_resources",
+      "downloadable": false
+    },
+    {
+      "source_id": "src:apcalc:stewart-ref",
+      "authority": "Stewart Calculus: Early Transcendentals",
+      "official_url": "bibliographic:Stewart_Calculus_Early_Transcendentals",
+      "priority": "P1",
+      "tier": "textbook_references",
+      "downloadable": false
+    },
+    {
+      "source_id": "src:apcalc:barrons-ref",
+      "authority": "Barron's AP Calculus AB/BC",
+      "official_url": "bibliographic:Barrons_AP_Calculus",
+      "priority": "P1",
+      "tier": "textbook_references",
+      "downloadable": false
+    },
+    {
+      "source_id": "src:apcalc:princeton-ref",
+      "authority": "Princeton Review AP Calculus",
+      "official_url": "bibliographic:Princeton_Review_AP_Calculus",
+      "priority": "P1",
+      "tier": "textbook_references",
+      "downloadable": false
+    }
+  ],
+  "assessment_catalog": {
+    "catalog_id": "cognisphere.domain.ap_calculus.assessment_catalog.v1",
+    "item_kinds": [
+      {
+        "kind_id": "mcq",
+        "label": "Multiple Choice",
+        "stores_answer_key": false
+      },
+      {
+        "kind_id": "frq",
+        "label": "Free Response",
+        "stores_answer_key": false
+      }
+    ],
+    "pattern_assessments": [
+      {
+        "assessment_id": "apcalc.assess.related_rates",
+        "kind_id": "frq",
+        "pattern_hint": "Related Rate",
+        "concept_ids": [
+          "derivative"
+        ],
+        "skill_hints": [
+          "related_rates",
+          "implicit_differentiation"
+        ]
+      },
+      {
+        "assessment_id": "apcalc.assess.optimization",
+        "kind_id": "frq",
+        "pattern_hint": "Optimization",
+        "concept_ids": [
+          "derivative"
+        ],
+        "skill_hints": [
+          "critical_points",
+          "justify_extrema"
+        ]
+      },
+      {
+        "assessment_id": "apcalc.assess.ftc_accumulation",
+        "kind_id": "frq",
+        "pattern_hint": "Area Accumulation / FTC",
+        "concept_ids": [
+          "integral"
+        ],
+        "skill_hints": [
+          "ftc",
+          "accumulation_functions"
+        ]
+      },
+      {
+        "assessment_id": "apcalc.assess.limits_continuity",
+        "kind_id": "mcq",
+        "pattern_hint": "Limits and Continuity",
+        "concept_ids": [
+          "limit"
+        ],
+        "skill_hints": [
+          "limit_evaluation",
+          "continuity_checks"
+        ]
+      },
+      {
+        "assessment_id": "apcalc.assess.series_convergence",
+        "kind_id": "mcq",
+        "pattern_hint": "Series Convergence (BC)",
+        "concept_ids": [
+          "series"
+        ],
+        "skill_hints": [
+          "convergence_tests"
+        ]
+      }
+    ],
+    "safety": {
+      "exam_answer_keys_included": false,
+      "scoring_guideline_full_text_included": false
+    }
+  },
+  "safety": {
+    "exam_answer_keys_included": false,
+    "copyrighted_textbook_full_text_included": false,
+    "no_answer_keys": true,
+    "no_full_solution_dump": true,
+    "source_of_truth": "cognisphere_plugin_pack",
+    "derived_from": [
+      "ontology_seed",
+      "ced_unit_map_seed",
+      "assessment_catalog",
+      "optional_raw_keyword_scan"
+    ]
+  }
+}

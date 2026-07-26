@@ -158,6 +158,7 @@ async def _import_and_seed_domain(
 ) -> dict[str, Any]:
     """Shared import+seed used by single-domain and compose-and-seed endpoints."""
     from cognispheretutor.integrations.cognisphere import export_and_import
+    from cognispheretutor.integrations.cognisphere.pack_distribution import import_bundled_pack
 
     resolved_path = path_id or mastery_path_id_for_domain(domain)
     _validate_path_id(resolved_path)
@@ -168,7 +169,9 @@ async def _import_and_seed_domain(
             {"persist": persist_import},
         )
     except CognisphereIntegrationError as exc:
-        raise _http_error(exc) from exc
+        receipt = import_bundled_pack(domain, persist=persist_import)
+        if receipt is None:
+            raise _http_error(exc) from exc
 
     if not receipt.get("ok"):
         raise HTTPException(status_code=400, detail=receipt)
@@ -240,6 +243,7 @@ async def _import_and_seed_domain(
             "phase": receipt.get("phase"),
             "knowledge_summary": receipt.get("knowledge_summary"),
             "artifact_path": receipt.get("artifact_path"),
+            "distribution_source": receipt.get("distribution_source") or "external_plugin",
         },
         "mastery_path": seed_info,
         "is_cognisphere_path": is_cognisphere_path_id(resolved_path),
@@ -281,6 +285,9 @@ async def ability_radar(
 async def cognisphere_learning_status():
     """Discovery + gate snapshot for the Guided Learning UI."""
     from cognispheretutor.integrations.cognisphere import gate_status, list_plugins
+    from cognispheretutor.integrations.cognisphere.pack_distribution import (
+        merge_external_and_bundled_discovery,
+    )
     from cognispheretutor.integrations.cognisphere.security_gates import is_sandbox_authorized
     from cognispheretutor.integrations.cognisphere.trusted_context_client import (
         trusted_context_status,
@@ -290,6 +297,7 @@ async def cognisphere_learning_status():
         discovery = list_plugins()
     except CognisphereIntegrationError as exc:
         raise _http_error(exc) from exc
+    discovery = merge_external_and_bundled_discovery(discovery)
 
     plugins = []
     for item in discovery.get("plugins") or []:
@@ -308,6 +316,7 @@ async def cognisphere_learning_status():
                 "tutor_pack": item.get("tutor_pack") or {},
                 "path_id": mastery_path_id_for_domain(domain) if domain else None,
                 "valid": bool((item.get("validation") or {}).get("ok")),
+                "source": (item.get("distribution") or {}).get("source") or "external_plugin",
             }
         )
 
@@ -324,6 +333,7 @@ async def cognisphere_learning_status():
         "plugins": plugins,
         "tutor_pack": discovery.get("tutor_pack") or {},
         "distribution_catalog": discovery.get("distribution_catalog") or {},
+        "bundled_distribution": discovery.get("bundled_distribution") or {},
         "defaults": {
             "chat_capability": _MASTERY_CAPABILITY,
         },

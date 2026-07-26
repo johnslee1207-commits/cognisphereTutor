@@ -7,6 +7,9 @@ from typing import Any
 
 from cognispheretutor.integrations.cognisphere._contract import load_plugin_contract
 from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+from cognispheretutor.integrations.cognisphere.pack_distribution import (
+    merge_external_and_bundled_discovery,
+)
 from cognispheretutor.integrations.cognisphere.registry_client import PluginRegistryClient
 
 
@@ -121,7 +124,7 @@ def query_cross_domain(
     except Exception:  # noqa: BLE001 — fall back to local discovery
         sdk_payload = None
 
-    discovery = registry.list_plugins(root)
+    discovery = merge_external_and_bundled_discovery(registry.list_plugins(root))
     manifests_by_domain: dict[str, dict[str, Any]] = {}
     local_matches: list[dict[str, Any]] = []
     for item in discovery.get("plugins") or []:
@@ -169,7 +172,8 @@ def query_cross_domain(
         sdk_payload["goal"] = goal
         sdk_payload["goal_filtered"] = bool(goal.strip())
         sdk_payload.setdefault("required_capabilities", required)
-        return sdk_payload
+        if cleaned or not local_matches:
+            return sdk_payload
 
     filtered_local = filter_matches_by_goal(
         local_matches,
@@ -231,6 +235,12 @@ def compose_contexts(
         sdk_error = None
 
     # Local composition: negotiate each domain and assemble a thin context envelope.
+    discovery = merge_external_and_bundled_discovery(registry.list_plugins(root))
+    bundled_by_domain = {
+        str(item.get("domain")): item
+        for item in discovery.get("plugins") or []
+        if (item.get("distribution") or {}).get("source") == "bundled_pack"
+    }
     selected: list[dict[str, Any]] = []
     issues: list[str] = []
     if not domain_list and caps:
@@ -239,13 +249,22 @@ def compose_contexts(
 
     for domain in domain_list:
         try:
-            negotiation = negotiate(
-                domain,
-                {"required_capabilities": caps} if caps else {},
-                root=root,
-                client=registry,
-            )
-            info = registry.get_plugin(domain, root)
+            bundled = bundled_by_domain.get(domain)
+            if bundled:
+                manifest = bundled.get("manifest") or {}
+                negotiation = negotiate_from_manifest(
+                    manifest,
+                    {"required_capabilities": caps} if caps else {},
+                )
+                info = {"plugin": bundled}
+            else:
+                negotiation = negotiate(
+                    domain,
+                    {"required_capabilities": caps} if caps else {},
+                    root=root,
+                    client=registry,
+                )
+                info = registry.get_plugin(domain, root)
             selected.append(
                 {
                     "domain": domain,

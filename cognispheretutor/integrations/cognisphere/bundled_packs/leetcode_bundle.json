@@ -1,0 +1,85 @@
+{
+  "bundle_id": "leetcode.deeptutor_handoff",
+  "domain": "leetcode",
+  "plugin_id": "cognisphere.domain.leetcode.plugin.v1",
+  "exported_at": "2026-07-26T05:10:32+00:00",
+  "bundle_schema_version": "1",
+  "knowledge": {
+    "export_result": {
+      "status": "failed",
+      "error": "lc003_ontology_missing",
+      "spec_task": "LC-004",
+      "artifact_dir": "runtime\\artifacts\\leetcode"
+    },
+    "mastery_modules": [
+      {
+        "id": "csphere-leetcode-overview",
+        "name": "Cognisphere · leetcode",
+        "order": 0,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "ov-overview",
+            "name": "Cognisphere · leetcode",
+            "type": "concept",
+            "module_id": "csphere-leetcode-overview"
+          }
+        ]
+      },
+      {
+        "id": "csphere-leetcode-runtime-plan",
+        "name": "Plugin runtime plan",
+        "order": 1,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "rt-skill-basic-data-structures",
+            "name": "Basic Data Structures",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-runtime-plan"
+          },
+          {
+            "id": "rt-skill-queue",
+            "name": "Queue",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-runtime-plan"
+          },
+          {
+            "id": "rt-skill-graph",
+            "name": "Graph",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-runtime-plan"
+          },
+          {
+            "id": "rt-skill-bfs",
+            "name": "BFS",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-runtime-plan"
+          },
+          {
+            "id": "rt-skill-array-basics",
+            "name": "Array Basics",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-runtime-plan"
+          },
+          {
+            "id": "rt-skill-big-o-analysis",
+            "name": "Big O Analysis",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-runtime-plan"
+          }
+        ]
+      }
+    ],
+    "pack_metadata": {
+      "source": "tutor_cached_runtime_plan",
+      "objective_count": 7,
+      "note": "Tutor-ready Mastery Path modules distributed for offline installs when plugin runtime is unavailable."
+    }
+  },
+  "safety": {
+    "no_answer_keys": true,
+    "no_full_solution_dump": true,
+    "source_of_truth": "cognisphere_plugin_pack"
+  }
+}

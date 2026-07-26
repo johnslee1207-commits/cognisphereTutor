@@ -13,6 +13,12 @@ from cognispheretutor.integrations.cognisphere.plugin_importer import (
     summarize_knowledge,
     validate_bundle_safety,
 )
+from cognispheretutor.integrations.cognisphere.pack_distribution import (
+    get_bundled_pack,
+    import_bundled_pack,
+    list_bundled_packs,
+    merge_external_and_bundled_discovery,
+)
 from cognispheretutor.integrations.cognisphere.registry_client import (
     PluginRegistryClient,
     get_plugin,
@@ -61,7 +67,9 @@ __all__ = [
     "fetch_and_import_trusted_context",
     "fetch_trusted_context_package",
     "gate_status",
+    "get_bundled_pack",
     "get_plugin",
+    "import_bundled_pack",
     "import_benchmark_case",
     "import_bundle_json",
     "import_trusted_context_into_workspace",
@@ -69,10 +77,12 @@ __all__ = [
     "is_sandbox_authorized",
     "kit_configured",
     "list_benchmark_cases",
+    "list_bundled_packs",
     "list_plugins",
     "load_cognisphere_entrypoint",
     "load_deeptutor_entrypoint",
     "map_learning_loop",
+    "merge_external_and_bundled_discovery",
     "negotiate",
     "on_tutor_session_event",
     "plan_skill_path",

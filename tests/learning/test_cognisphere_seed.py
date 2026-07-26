@@ -215,6 +215,37 @@ def test_modules_from_knowledge_orders_foundational_tracks_first() -> None:
     ]
 
 
+def test_modules_from_knowledge_prefers_tutor_ready_modules() -> None:
+    modules = modules_from_knowledge(
+        {
+            "mastery_modules": [
+                {
+                    "id": "csphere-leetcode-runtime",
+                    "name": "Plugin runtime plan",
+                    "order": 0,
+                    "pass_threshold": 0.7,
+                    "knowledge_points": [
+                        {
+                            "id": "lc-p2",
+                            "name": "Two pointers",
+                            "type": "procedure",
+                            "module_id": "csphere-leetcode-runtime",
+                        }
+                    ],
+                }
+            ],
+            "skills": [{"skill_id": "ignored", "name": "Ignored"}],
+        },
+        domain="leetcode",
+        path_id="csphere-custom",
+    )
+
+    assert len(modules) == 1
+    assert modules[0].id == "csphere-custom-runtime"
+    assert modules[0].knowledge_points[0].module_id == "csphere-custom-runtime"
+    assert modules[0].knowledge_points[0].name == "Two pointers"
+
+
 def test_import_and_seed_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(FIXTURE_ROOT))
     monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
@@ -257,6 +288,59 @@ def test_import_and_seed_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     assert payload["mastery_path"]["kp_count"] >= 1
     assert "capability=mastery_path" in (payload.get("continue_in_chat") or "")
     assert (store_root / "csphere-leetcode.json").exists()
+
+
+def test_bundled_pack_status_and_import_without_external_plugins(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    missing_root = tmp_path / "missing_plugins"
+    monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(missing_root))
+    monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
+
+    store_root = tmp_path / "learning"
+    monkeypatch.setattr(
+        cognisphere_learning,
+        "_service",
+        lambda: __import__(
+            "cognispheretutor.learning.service", fromlist=["LearningService"]
+        ).LearningService(LearningStore(store_root)),
+    )
+
+    app = FastAPI()
+    app.include_router(cognisphere_learning.router, prefix="/api/v1/learning/cognisphere")
+    client = TestClient(app)
+
+    status = client.get("/api/v1/learning/cognisphere/status")
+    assert status.status_code == 200, status.text
+    status_body = status.json()
+    assert status_body["ok"] is True
+    assert status_body["bundled_distribution"]["available"] >= 3
+    bundled = {p["domain"]: p for p in status_body["plugins"]}
+    assert bundled["aws_certification"]["source"] == "bundled_pack"
+    assert bundled["aws_certification"]["valid"] is True
+
+    seeded = client.post(
+        "/api/v1/learning/cognisphere/import-and-seed",
+        json={"domain": "aws_certification", "seed_mastery_path": True},
+    )
+    assert seeded.status_code == 200, seeded.text
+    payload = seeded.json()
+    assert payload["import"]["distribution_source"] == "bundled_pack"
+    assert payload["mastery_path"]["path_id"] == "csphere-aws_certification"
+    assert payload["mastery_path"]["kp_count"] == 46
+    assert (store_root / "csphere-aws_certification.json").exists()
+
+    recommended = client.post(
+        "/api/v1/learning/cognisphere/recommend-from-goal",
+        json={
+            "goal": "I want to learn AWS certification from scratch",
+            "required_capabilities": ["deeptutor_export"],
+            "compose_and_seed": False,
+        },
+    )
+    assert recommended.status_code == 200, recommended.text
+    assert "aws_certification" in recommended.json()["recommended_domains"]
 
 
 def test_runtime_plan_fallback_seeds_sparse_domain(

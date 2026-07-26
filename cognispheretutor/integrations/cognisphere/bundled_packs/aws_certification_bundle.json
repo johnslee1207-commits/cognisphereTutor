@@ -1,0 +1,637 @@
+{
+  "bundle_id": "aws_certification.deeptutor_handoff",
+  "domain": "aws_certification",
+  "plugin_id": "cognisphere.domain.aws_certification.plugin.v1",
+  "exported_at": "2026-07-25T08:55:28+00:00",
+  "bundle_schema_version": "1",
+  "knowledge": {
+    "status": "thin_complete_learning_surface",
+    "learning_loop": [
+      "plan",
+      "teach",
+      "assess",
+      "memory"
+    ],
+    "certification_tracks": [
+      {
+        "track_id": "aws.saa-c03",
+        "label": "Solutions Architect Associate",
+        "level": "associate",
+        "topic_family_ids": [
+          "architecting",
+          "security",
+          "networking",
+          "cost"
+        ]
+      },
+      {
+        "track_id": "aws.clf-c02",
+        "label": "Cloud Practitioner",
+        "level": "foundational",
+        "topic_family_ids": [
+          "cloud_concepts",
+          "security",
+          "billing"
+        ]
+      },
+      {
+        "track_id": "aws.dva-c02",
+        "label": "Developer Associate",
+        "level": "associate",
+        "topic_family_ids": [
+          "compute",
+          "devtools",
+          "security"
+        ]
+      }
+    ],
+    "topic_families": [
+      {
+        "topic_family_id": "architecting",
+        "label": "Architecting on AWS",
+        "pattern_hints": [
+          "multi_az",
+          "loosely_coupled",
+          "well_architected"
+        ]
+      },
+      {
+        "topic_family_id": "security",
+        "label": "Security and Identity",
+        "pattern_hints": [
+          "least_privilege",
+          "encryption_at_rest",
+          "shared_responsibility"
+        ]
+      },
+      {
+        "topic_family_id": "networking",
+        "label": "Networking and Content Delivery",
+        "pattern_hints": [
+          "vpc_isolation",
+          "edge_caching"
+        ]
+      },
+      {
+        "topic_family_id": "cost",
+        "label": "Cost Optimization",
+        "pattern_hints": [
+          "right_sizing",
+          "reserved_capacity"
+        ]
+      },
+      {
+        "topic_family_id": "cloud_concepts",
+        "label": "Cloud Concepts",
+        "pattern_hints": [
+          "elasticity",
+          "global_infrastructure"
+        ]
+      },
+      {
+        "topic_family_id": "billing",
+        "label": "Billing and Pricing",
+        "pattern_hints": [
+          "free_tier",
+          "tco"
+        ]
+      },
+      {
+        "topic_family_id": "compute",
+        "label": "Compute Services",
+        "pattern_hints": [
+          "ec2",
+          "lambda",
+          "containers"
+        ]
+      },
+      {
+        "topic_family_id": "devtools",
+        "label": "Developer Tools",
+        "pattern_hints": [
+          "ci_cd",
+          "infrastructure_as_code"
+        ]
+      }
+    ],
+    "benchmark_hooks": {
+      "status": "hybrid",
+      "pack_local": "evaluate_learning_surface_benchmark",
+      "host_delegated": [
+        "rag_benchmarks",
+        "chapter_benchmarks"
+      ],
+      "note": "Pack-local surface evaluability is offline here; RAG / chapter benchmarks remain Cognisphere-hosted."
+    },
+    "host_bridge": {
+      "runtime_artifacts_hint": "runtime/aws-knowledge (Cognisphere host)",
+      "plugin_owns": [
+        "learning_surface_manifests",
+        "deeptutor_export_knowledge",
+        "capability_negotiation",
+        "track_learning_path",
+        "pack_local_surface_benchmark",
+        "learning_fixture_excerpts"
+      ],
+      "host_owns": [
+        "raw_repository",
+        "collectors",
+        "rag_benchmarks",
+        "pageindex_core",
+        "trusted_context_retrieval",
+        "chapter_retrieval"
+      ],
+      "service_catalog": [
+        {
+          "service_id": "learning_surface_manifests",
+          "owner": "plugin",
+          "description": "Declarative tracks / topic families / safety"
+        },
+        {
+          "service_id": "deeptutor_export_knowledge",
+          "owner": "plugin",
+          "description": "DeepTutor-safe knowledge export"
+        },
+        {
+          "service_id": "capability_negotiation",
+          "owner": "plugin",
+          "description": "Manifest-backed capability negotiate"
+        },
+        {
+          "service_id": "track_learning_path",
+          "owner": "plugin",
+          "description": "Offline track→topic learning path outline"
+        },
+        {
+          "service_id": "pack_local_surface_benchmark",
+          "owner": "plugin",
+          "description": "Pack-local evaluability of thin learning surface"
+        },
+        {
+          "service_id": "learning_fixture_excerpts",
+          "owner": "plugin",
+          "description": "Policy-safe chapter excerpts for DeepTutor export"
+        },
+        {
+          "service_id": "raw_repository",
+          "owner": "host",
+          "description": "AWS raw knowledge repository"
+        },
+        {
+          "service_id": "collectors",
+          "owner": "host",
+          "description": "AWS collectors / pipelines"
+        },
+        {
+          "service_id": "rag_benchmarks",
+          "owner": "host",
+          "description": "Host RAG / chapter benchmarks"
+        },
+        {
+          "service_id": "pageindex_core",
+          "owner": "host",
+          "description": "PageIndex core (forbidden in plugin)"
+        },
+        {
+          "service_id": "trusted_context_retrieval",
+          "owner": "host",
+          "description": "Trusted context chapter retrieval"
+        },
+        {
+          "service_id": "chapter_retrieval",
+          "owner": "host",
+          "description": "Chapter retrieval APIs"
+        }
+      ],
+      "note": "Full trusted-context / chapter retrieval / raw repository stay in Cognisphere. Thin pack only exports learning-surface knowledge and pack-local path/evaluability."
+    },
+    "surface_evaluability": {
+      "status": "ok",
+      "ok": true,
+      "score": 1.0,
+      "passed": true,
+      "track_count": 3,
+      "topic_family_count": 8,
+      "learning_path_stage_count": 5,
+      "fixture_excerpt_count": 3,
+      "smoke": {
+        "track_id": "aws.saa-c03",
+        "ok": true,
+        "stage_count": 5
+      },
+      "issues": [],
+      "host_delegated_benchmarks": [
+        "rag_benchmarks",
+        "chapter_benchmarks"
+      ],
+      "contract": "cognisphere.aws.learning_surface_evaluability.v1",
+      "evaluated_at": "2026-07-25T08:55:28+00:00"
+    },
+    "sample_learning_path": {
+      "track_id": "aws.saa-c03",
+      "stage_count": 5,
+      "topic_family_ids": [
+        "architecting",
+        "security",
+        "networking",
+        "cost"
+      ],
+      "safety": {
+        "exam_answer_keys_included": false,
+        "proprietary_exam_dumps_included": false,
+        "no_answer_keys": true
+      }
+    },
+    "pack_metadata": {
+      "pack_id": "aws-certification",
+      "display_name": "AWS Certification thin-complete learning surface",
+      "implementation": "thin_complete_learning_surface",
+      "host_modules_retained": [
+        "aws_trusted_context_bundle",
+        "aws_chapter_retrieval",
+        "aws_raw_repository",
+        "aws_knowledge_pipeline"
+      ]
+    },
+    "knowledge_content_form": "original_uncompressed",
+    "original_knowledge": {
+      "document_id": "aws.learning.original.host_materialized.v1",
+      "title": "AWS Certification — Cognisphere-materialized pack knowledge",
+      "knowledge_content_form": "original_uncompressed",
+      "unit_count": 27,
+      "units": [
+        {
+          "unit_id": "aws.concept.src-aws-cert-certification-home",
+          "title": "src:aws-cert:certification-home",
+          "body": "src:aws-cert:certification-home is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://aws.amazon.com/certification/",
+          "teaching_points": [
+            "Recognize where src:aws-cert:certification-home fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-cert-clf-c02-exam-guide",
+          "title": "src:aws-cert:clf-c02-exam-guide",
+          "body": "src:aws-cert:clf-c02-exam-guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: CLF-C02. Reference URL (do not scrape from plugin): https://d1.awsstatic.com/training-and-certification/docs-cloud-practitioner/AWS-Certified-Cloud-Practitioner_Exam-Guide.pdf",
+          "teaching_points": [
+            "Recognize where src:aws-cert:clf-c02-exam-guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "clf_c02"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-cert-docs",
+          "title": "src:aws-cert:docs",
+          "body": "src:aws-cert:docs is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/",
+          "teaching_points": [
+            "Recognize where src:aws-cert:docs fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-cert-dva-c02-exam-guide",
+          "title": "src:aws-cert:dva-c02-exam-guide",
+          "body": "src:aws-cert:dva-c02-exam-guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: DVA-C02. Reference URL (do not scrape from plugin): https://d1.awsstatic.com/training-and-certification/docs-dev-associate/AWS-Certified-Developer-Associate_Exam-Guide.pdf",
+          "teaching_points": [
+            "Recognize where src:aws-cert:dva-c02-exam-guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "dva_c02"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-cert-saa-c03-exam-guide",
+          "title": "src:aws-cert:saa-c03-exam-guide",
+          "body": "src:aws-cert:saa-c03-exam-guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: SAA-C03. Reference URL (do not scrape from plugin): https://d1.awsstatic.com/training-and-certification/docs-sa-assoc/AWS-Certified-Solutions-Architect-Associate_Exam-Guide.pdf",
+          "teaching_points": [
+            "Recognize where src:aws-cert:saa-c03-exam-guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "saa_c03"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-cert-saa-c03",
+          "title": "src:aws-cert:saa-c03",
+          "body": "src:aws-cert:saa-c03 is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: SAA-C03. Reference URL (do not scrape from plugin): https://aws.amazon.com/certification/certified-solutions-architect-associate/",
+          "teaching_points": [
+            "Recognize where src:aws-cert:saa-c03 fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "saa_c03"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-cert-sap-c02-exam-guide",
+          "title": "src:aws-cert:sap-c02-exam-guide",
+          "body": "src:aws-cert:sap-c02-exam-guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: SAP-C02. Reference URL (do not scrape from plugin): https://d1.awsstatic.com/training-and-certification/docs-sa-pro/AWS-Certified-Solutions-Architect-Professional_Exam-Guide.pdf",
+          "teaching_points": [
+            "Recognize where src:aws-cert:sap-c02-exam-guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "sap_c02"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-cert-skill-builder",
+          "title": "src:aws-cert:skill-builder",
+          "body": "src:aws-cert:skill-builder is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://skillbuilder.aws/",
+          "teaching_points": [
+            "Recognize where src:aws-cert:skill-builder fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-cert-soa-c02-exam-guide",
+          "title": "src:aws-cert:soa-c02-exam-guide",
+          "body": "src:aws-cert:soa-c02-exam-guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: SOA-C02. Reference URL (do not scrape from plugin): https://d1.awsstatic.com/training-and-certification/docs-sysops-associate/AWS-Certified-SysOps-Administrator-Associate_Exam-Guide.pdf",
+          "teaching_points": [
+            "Recognize where src:aws-cert:soa-c02-exam-guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "soa_c02"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-cert-well-architected-framework-pdf",
+          "title": "src:aws-cert:well-architected-framework-pdf",
+          "body": "src:aws-cert:well-architected-framework-pdf is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/pdfs/wellarchitected/latest/framework/wellarchitected-framework.pdf",
+          "teaching_points": [
+            "Recognize where src:aws-cert:well-architected-framework-pdf fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-cert-well-architected",
+          "title": "src:aws-cert:well-architected",
+          "body": "src:aws-cert:well-architected is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://aws.amazon.com/architecture/well-architected/",
+          "teaching_points": [
+            "Recognize where src:aws-cert:well-architected fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-architecture-center",
+          "title": "AWS Architecture Center",
+          "body": "AWS Architecture Center is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://aws.amazon.com/architecture/",
+          "teaching_points": [
+            "Recognize where AWS Architecture Center fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-aurora",
+          "title": "Amazon Aurora User Guide",
+          "body": "Amazon Aurora User Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html",
+          "teaching_points": [
+            "Recognize where Amazon Aurora User Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-auto-scaling",
+          "title": "Amazon EC2 Auto Scaling User Guide",
+          "body": "Amazon EC2 Auto Scaling User Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html",
+          "teaching_points": [
+            "Recognize where Amazon EC2 Auto Scaling User Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-cloudfront",
+          "title": "Amazon CloudFront Developer Guide",
+          "body": "Amazon CloudFront Developer Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html",
+          "teaching_points": [
+            "Recognize where Amazon CloudFront Developer Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-dynamodb",
+          "title": "Amazon DynamoDB Developer Guide",
+          "body": "Amazon DynamoDB Developer Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html",
+          "teaching_points": [
+            "Recognize where Amazon DynamoDB Developer Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-ebs",
+          "title": "Amazon EBS User Guide",
+          "body": "Amazon EBS User Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/ebs/latest/userguide/what-is-ebs.html",
+          "teaching_points": [
+            "Recognize where Amazon EBS User Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-ec2",
+          "title": "Amazon EC2 User Guide",
+          "body": "Amazon EC2 User Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html",
+          "teaching_points": [
+            "Recognize where Amazon EC2 User Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-ecs",
+          "title": "Amazon ECS Developer Guide",
+          "body": "Amazon ECS Developer Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html",
+          "teaching_points": [
+            "Recognize where Amazon ECS Developer Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-efs",
+          "title": "Amazon EFS User Guide",
+          "body": "Amazon EFS User Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/efs/latest/ug/what-is-efs.html",
+          "teaching_points": [
+            "Recognize where Amazon EFS User Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-eks",
+          "title": "Amazon EKS User Guide",
+          "body": "Amazon EKS User Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html",
+          "teaching_points": [
+            "Recognize where Amazon EKS User Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-elasticache",
+          "title": "Amazon ElastiCache User Guide",
+          "body": "Amazon ElastiCache User Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html",
+          "teaching_points": [
+            "Recognize where Amazon ElastiCache User Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-elb",
+          "title": "Elastic Load Balancing User Guide",
+          "body": "Elastic Load Balancing User Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html",
+          "teaching_points": [
+            "Recognize where Elastic Load Balancing User Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.concept.src-aws-doc-fsx",
+          "title": "Amazon FSx User Guide",
+          "body": "Amazon FSx User Guide is a pack-local learning unit materialized from Cognisphere host resources. This cleartext body is original uncompressed pack knowledge for DeepTutor import. It is not a copyrighted textbook dump and does not include exam answer keys. Host extraction_mode was metadata_only; pack stores teaching cleartext, not raw PDF/HTML. Related certifications: general AWS certification tracks. Reference URL (do not scrape from plugin): https://docs.aws.amazon.com/fsx/latest/WindowsGuide/what-is.html",
+          "teaching_points": [
+            "Recognize where Amazon FSx User Guide fits in AWS certification study plans.",
+            "Prefer host-acquired official docs; keep pack text educational and key-free.",
+            "Map services and exam domains without storing proprietary dumps."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.orig.multi_az_rds",
+          "title": "Multi-AZ database reliability",
+          "body": "Production relational workloads on Amazon RDS should prefer Multi-AZ deployments so a standby replica in another Availability Zone can take over after a primary failure. Single-AZ deployments keep storage and compute in one zone and therefore create a single point of failure for availability. Multi-AZ is about high availability and failover, not a substitute for read scaling (read replicas serve a different purpose).",
+          "teaching_points": [
+            "Multi-AZ targets failover/HA; read replicas target read scale-out.",
+            "Application connection handling must tolerate brief failover reconnects.",
+            "Backup and restore remain necessary even with Multi-AZ."
+          ],
+          "topic_family_id": "architecting"
+        },
+        {
+          "unit_id": "aws.orig.iam_roles",
+          "title": "IAM roles for compute access",
+          "body": "EC2 and other compute should obtain AWS API credentials from an instance profile / IAM role rather than embedding long-term access keys in images or environment files. Role credentials are temporary and rotated by the platform. Policies attached to the role should follow least privilege, granting only the actions and resources the workload needs (for example S3 GetObject on a specific bucket prefix).",
+          "teaching_points": [
+            "Prefer roles over long-term access keys on servers.",
+            "Least privilege still applies to role policies.",
+            "Shared responsibility: AWS secures the credential delivery mechanism; you design the policy."
+          ],
+          "topic_family_id": "security"
+        },
+        {
+          "unit_id": "aws.orig.alb_targets",
+          "title": "Load balancing and target health",
+          "body": "An Application Load Balancer distributes HTTP/HTTPS traffic across healthy targets such as EC2 instances in multiple Availability Zones. Health checks remove failing targets from rotation. Combining Multi-AZ target placement with an ALB reduces the blast radius of a single instance or AZ issue for user-facing traffic.",
+          "teaching_points": [
+            "Health checks drive traffic away from failed targets.",
+            "Multi-AZ targets improve availability under AZ impairment.",
+            "ALB decouples clients from individual instance lifecycles."
+          ],
+          "topic_family_id": "networking"
+        }
+      ]
+    },
+    "learning_fixture": {
+      "package_id": "aws_learning_fixture_seed_v1",
+      "fixture_id": "aws.learning.fixture.well_architected_reliability.v1",
+      "excerpt_count": 3,
+      "excerpts": [
+        {
+          "excerpt_id": "rel.high_availability",
+          "title": "High Availability",
+          "topic_family_id": "architecting",
+          "summary": "High availability designs reduce downtime. Production databases should consider Multi-AZ deployments.",
+          "teaching_points": [
+            "Prefer Multi-AZ for production RDS workloads to improve availability via standby replication.",
+            "Single-AZ RDS introduces a single point of failure for production databases."
+          ],
+          "pattern_hints": [
+            "multi_az",
+            "loosely_coupled"
+          ]
+        },
+        {
+          "excerpt_id": "rel.iam_roles_s3",
+          "title": "IAM roles instead of long-term credentials",
+          "topic_family_id": "security",
+          "summary": "EC2 instances use IAM roles to access S3 instead of long-term credentials.",
+          "teaching_points": [
+            "Prefer instance/profile roles over embedded access keys.",
+            "Least privilege still applies to role policies."
+          ],
+          "pattern_hints": [
+            "least_privilege",
+            "shared_responsibility"
+          ]
+        },
+        {
+          "excerpt_id": "rel.alb_routing",
+          "title": "Load balancing to compute",
+          "topic_family_id": "networking",
+          "summary": "An Application Load Balancer routes traffic to EC2 targets.",
+          "teaching_points": [
+            "Edge and load-balancer tiers decouple clients from instance lifecycle.",
+            "Health checks and Multi-AZ placement improve reliability."
+          ],
+          "pattern_hints": [
+            "edge_caching",
+            "multi_az"
+          ]
+        }
+      ],
+      "safety": {
+        "exam_answer_keys_included": false,
+        "proprietary_exam_dumps_included": false,
+        "raw_repository_blobs_included": false
+      },
+      "not_exam_dump": true,
+      "supplements_original_knowledge": true
+    }
+  },
+  "safety": {
+    "no_answer_keys": true,
+    "no_full_solution_dump": true,
+    "source_of_truth": "cognisphere_plugin_pack",
+    "forbidden_in_export": [
+      "exam_answer_keys",
+      "proprietary_exam_dumps",
+      "raw_repository_blobs"
+    ]
+  },
+  "payload_kind": "aws_certification_learning_surface_bundle",
+  "learning_loop": [
+    "plan",
+    "teach",
+    "assess",
+    "memory"
+  ],
+  "implementation": "thin_complete_learning_surface"
+}

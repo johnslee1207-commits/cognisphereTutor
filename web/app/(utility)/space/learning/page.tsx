@@ -725,6 +725,7 @@ function MasteryPathPageInner() {
                     : null;
                 const label =
                   plugin.display_name || plugin.plugin_id || plugin.domain;
+                const bundled = plugin.source === "bundled_pack";
                 return (
                   <div
                     key={`launch-${plugin.domain}`}
@@ -742,7 +743,9 @@ function MasteryPathPageInner() {
                                 `${path.kp_count} 个知识点 · ${path.avg_mastery_pct}%`,
                                 `${path.kp_count} objectives · ${path.avg_mastery_pct}%`,
                               )
-                            : packageName || plugin.domain}
+                            : bundled
+                              ? tr("Tutor 内置学习包", "Bundled Tutor pack")
+                              : packageName || plugin.domain}
                         </div>
                       </div>
                       <span

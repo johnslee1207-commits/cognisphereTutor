@@ -11,6 +11,7 @@ export interface CognispherePluginInfo {
   distribution?: Record<string, unknown>;
   tutor_pack?: Record<string, unknown>;
   path_id?: string;
+  source?: string;
   valid: boolean;
 }
 
@@ -32,6 +33,10 @@ export interface CognisphereLearningStatus {
   plugins: CognispherePluginInfo[];
   tutor_pack?: Record<string, unknown>;
   distribution_catalog?: Record<string, unknown>;
+  bundled_distribution?: {
+    available?: number;
+    domains?: string[];
+  };
   defaults?: { chat_capability?: string };
 }
 
@@ -43,6 +48,7 @@ export interface ImportAndSeedResult {
     phase?: string;
     knowledge_summary?: unknown;
     artifact_path?: string;
+    distribution_source?: string;
   };
   mastery_path?: {
     path_id: string;

@@ -140,6 +140,9 @@ def modules_from_knowledge(
     """Map Cognisphere bundle.knowledge → LearningModule list for Mastery Path."""
     data = knowledge if isinstance(knowledge, dict) else {}
     bid = path_id or mastery_path_id_for_domain(domain)
+    ready_modules = _modules_from_ready_payload(data.get("mastery_modules"), bid=bid)
+    if ready_modules:
+        return ready_modules
     modules: list[LearningModule] = []
     order = 0
 
@@ -216,6 +219,53 @@ def modules_from_knowledge(
     # If the pack was empty, keep a single overview module so the path is visible.
     if len(modules) == 1:
         return modules
+    return modules
+
+
+def _modules_from_ready_payload(raw: Any, *, bid: str) -> list[LearningModule]:
+    """Parse Tutor-ready module data from a distributed pack.
+
+    Domain packs may ship precomputed Mastery Path modules when their runnable
+    learning surface is richer than the generic knowledge-key mapping. This is
+    still data-driven: Tutor validates and normalizes the module envelope, but
+    the domain decides the objective list.
+    """
+    if not isinstance(raw, list) or not raw:
+        return []
+    modules: list[LearningModule] = []
+    replace_from = ""
+    for item in raw:
+        if isinstance(item, dict) and str(item.get("id") or "").startswith(_PATH_PREFIX):
+            parts = str(item["id"]).split("-", 2)
+            if len(parts) >= 2:
+                replace_from = "-".join(parts[:2])
+            break
+    for index, item in enumerate(raw):
+        if not isinstance(item, dict):
+            continue
+        payload = dict(item)
+        if replace_from and bid != replace_from:
+            module_id = str(payload.get("id") or "")
+            if module_id.startswith(replace_from):
+                payload["id"] = bid + module_id[len(replace_from) :]
+            points = []
+            for kp in list(payload.get("knowledge_points") or []):
+                if not isinstance(kp, dict):
+                    continue
+                point = dict(kp)
+                point_module = str(point.get("module_id") or "")
+                if point_module.startswith(replace_from):
+                    point["module_id"] = bid + point_module[len(replace_from) :]
+                points.append(point)
+            payload["knowledge_points"] = points
+        payload.setdefault("order", index)
+        try:
+            module = LearningModule(**payload)
+        except Exception:
+            continue
+        if module.knowledge_points:
+            modules.append(module)
+    modules.sort(key=lambda module: module.order)
     return modules
 
 

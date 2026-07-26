@@ -490,6 +490,19 @@ Guided Learning (Learning Space / Mastery Path) can import a domain pack into a 
 
 Learning Space UI: enter a natural-language goal → **Recommend** / one-click **Compose & seed**; or multi-select discovered domains → **Compose & seed**; or single-domain **Import**. Cognisphere paths show suggested focus + skill-path hints from `suggest-focus` / `plan-path`. The path detail view renders an **ability radar** (module axes + weak KP list) from mastery maps.
 
+### Bundled pack distribution
+
+Public Tutor installs also ship a small offline pack distribution under
+`cognispheretutor/integrations/cognisphere/bundled_packs/`. If
+`COGNISPHERE_LEARNING_PLUGINS_ROOT` is missing or an external domain plugin is
+not discoverable, `/api/v1/learning/cognisphere/status` lists the bundled AWS,
+AP Calculus, and LeetCode packs and `import-and-seed` imports those packaged
+handoff bundles. External `CognisphereLearningPlugins` still take precedence
+when available, so developers can test the latest plugin repo without changing
+the ordinary user path. Bundled packs are data only: Tutor remains responsible
+for generic import, Mastery Path seeding, reset/restore, and chat orchestration;
+domain ontology/runtime ownership remains in the plugin pack source.
+
 Integration code lives under `cognispheretutor/integrations/cognisphere/` (registry, negotiate, validate, bundle import → Assessment/Plan/Mastery mapping, trusted-context offline/live import, runtime callbacks + **runtime bridge** to plugin P2–P5 offline runtimes, cross-domain compose). Live trusted-context kit fetch requires `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`. Runtime adapters declare capability → callable contracts only; modules resolve per domain via plugin manifest `runtime_modules` or `module_template` (`cognisphere_plugins.{domain}.{module_key}`) — no hard-coded domain package paths in Tutor.
 
 **Feedback loop (DT-P5):** `ingest_sandbox_result` / `sync_mistake_memory` / `apply_mastery_update` bind to `LearningService` when `path_id` or `domain` resolves to a seeded Mastery Path and a knowledge-point match is found. Missing path → `skipped_no_path` / `path_not_found` (fail-closed; no silent mastery mutation).
