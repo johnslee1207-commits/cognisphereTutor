@@ -187,6 +187,28 @@ cognisphereTutor is an agent-native learning workspace that connects tutoring, p
 
 cognisphereTutor ships four installation paths. They all share one workspace layout: settings live in `data/user/settings/` under the directory you launch from (or under `COGNISPHERETUTOR_HOME` / `cognispheretutor start --home` if you set one explicitly). For the full app, the recommended flow is **pick a workspace directory → install → `cognispheretutor init` → `cognispheretutor start`**.
 
+### AWS Learning Quick Start
+
+This implementation includes bundled Cognisphere learning packs for **AWS
+Certification**, **AP Calculus**, and **LeetCode**. A regular user can clone
+this repo, install Tutor, and start the AWS beginner learning path without downloading
+Cognisphere, CognisphereLearningPlugins, or separate AWS source materials.
+
+```bash
+git clone https://github.com/johnslee1207-commits/cognisphereTutor.git
+cd cognisphereTutor
+python -m pip install -e .
+cognispheretutor init
+cognispheretutor start
+```
+
+Open [http://127.0.0.1:3782/space/learning](http://127.0.0.1:3782/space/learning),
+find **Course Library**, add **AWS Certification**, then continue the generated
+learning path. The bundled AWS pack currently seeds **6 modules / 46 learning
+objectives** and uses the Mastery Path chat loop with lesson + quick-quiz flow.
+For a learner-facing walkthrough, see
+[guides/AWS_BEGINNER_USER_GUIDE_ZH.md](guides/AWS_BEGINNER_USER_GUIDE_ZH.md).
+
 <details>
 <summary><b>Option 1 — Install From PyPI</b> · full local Web app + CLI, no clone required</summary>
 
@@ -439,23 +461,28 @@ Project-root `.env` is **not** read as an application config file. For a minimal
 
 #### Cognisphere Learning Plugins (DT-P1…P6)
 
-**Architecture boundary (do not drift):** Domain-specific learning (ontology, knowledge graphs, benchmarks, domain runtimes such as LeetCode / AP Calculus / AWS) is owned by **Cognisphere Learning Plugins**. cognisphereTutor owns **generic** orchestration only — discover / negotiate / validate / import / trusted-context / runtime callbacks + bridge / compose, plus the teaching loop (Learning Space, Mastery Path, chat capabilities). Do **not** embed domain-exclusive logic in Tutor core (`capabilities/`, `agents/`, `runtime/`); put it in plugins or thin data-driven adapters under `integrations/cognisphere/`.
+**Architecture boundary (do not drift):** Domain-specific learning (ontology, knowledge graphs, benchmarks, domain runtimes such as LeetCode / AP Calculus / AWS) is owned by **Cognisphere Learning Plugins** and their exported pack data. cognisphereTutor owns **generic** orchestration only — discover / negotiate / validate / import / trusted-context / runtime callbacks + bridge / compose, plus the teaching loop (Learning Space, Mastery Path, chat capabilities). Do **not** embed domain-exclusive lesson logic in Tutor core (`capabilities/`, `agents/`, `runtime/`); keep domain content in external plugins or packaged data-driven handoff bundles under `integrations/cognisphere/bundled_packs/`.
 
-cognisphereTutor can discover, negotiate, validate, and import domain learning packs from the CognisphereLearningPlugins monorepo (in-process path). Set process environment variables (not project `.env` files — those are ignored):
+cognisphereTutor now supports two distribution paths:
+
+1. **Ordinary user path:** bundled packs ship inside this repo/package. A user can open Learning Space, add AWS / AP Calculus / LeetCode from the **Course Library**, and start a generated Mastery Path without cloning Cognisphere or CognisphereLearningPlugins.
+2. **Developer / latest-pack path:** Tutor can still discover, negotiate, validate, and import domain learning packs from the CognisphereLearningPlugins monorepo. External plugins take precedence over bundled packs when present.
+
+Optional process environment variables (not project `.env` files — those are ignored):
 
 | Variable | Required | Purpose |
 |:---|:---|:---|
-| `COGNISPHERE_LEARNING_PLUGINS_ROOT` | **Yes** (production) | Absolute path to the Learning Plugins monorepo root |
+| `COGNISPHERE_LEARNING_PLUGINS_ROOT` | Optional | Absolute path to the Learning Plugins monorepo root. If unset/missing, Tutor uses bundled packs. |
 | `COGNISPHERE_IMPORT_CACHE_DIR` | Optional | Override workspace cache for imported bundles |
 | `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL` | For live DT-P3 fetch | Cognisphere trusted-context kit base URL; unset → **offline-only** (fail-closed on live fetch) |
 | `COGNISPHERE_SANDBOX_AUTHORIZED` | Before live sandbox | Must be `1` to allow real sandbox execution; default fail-closed. Legacy alias for one release: `COGNISPHERE_LEETCODE_SANDBOX_AUTHORIZED` |
 | `COGNISPHERE_ARTIFACT_DIR` | Optional | Domain plugin artifact / export directory on the host. Legacy alias: `COGNISPHERE_LEETCODE_ARTIFACT_DIR` |
 
-**No default domain:** Tutor never assumes `leetcode` / `ap_calculus` / `aws_certification`. CLI runtime commands require `--domain`; API bodies require `domain`. Examples below may use `leetcode` as a fixture domain only.
+**No hidden default domain:** Runtime/API calls still identify the target domain explicitly. The user-facing Course Library labels this as a course selection; internal CLI examples may use `leetcode` as a fixture domain only.
 
 **DT-P3 dual path:** offline packages go through `POST /api/v1/learning/cognisphere/trusted-context/import` with a `package` body (or CLI offline import). Live kit fetch uses the same endpoint without `package` when `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL` is set (`fetch_and_import_trusted_context`). Status exposes `gates.trusted_context.mode` (`live` | `offline_only`).
 
-**Guided Learning → Chat:** Learning Space deep-links open `/home/{path_id}?capability=mastery_path` so Chat auto-selects Mastery Path. Tutor start returns `continue_in_chat` plus `events_url` (SSE) for DT-P4 session events. Chat home (empty state) also exposes an NL learning-goal entry: recommend plugins → continue to `/space/learning?goal=…&domains=…` or one-click compose/seed then Mastery Chat.
+**Guided Learning → Chat:** Learning Space deep-links open `/home/{path_id}?capability=mastery_path` so Chat auto-selects Mastery Path. Tutor start returns `continue_in_chat` plus `events_url` (SSE) for DT-P4 session events. The Course Library lets users add a single course, add selected courses, add all available courses, or type a natural-language goal and create a learning path. Internal API names still use import/seed/compose, but the Web UI uses learner-facing wording.
 
 ```bash
 # Windows PowerShell example
@@ -488,20 +515,39 @@ Guided Learning (Learning Space / Mastery Path) can import a domain pack into a 
 - `POST /api/v1/learning/cognisphere/tutor/start` / `suggest-focus` / `plan-path`
 - `GET /api/v1/learning/cognisphere/tutor/events?session_id=` (SSE)
 
-Learning Space UI: enter a natural-language goal → **Recommend** / one-click **Compose & seed**; or multi-select discovered domains → **Compose & seed**; or single-domain **Import**. Cognisphere paths show suggested focus + skill-path hints from `suggest-focus` / `plan-path`. The path detail view renders an **ability radar** (module axes + weak KP list) from mastery maps.
+Learning Space UI: enter a natural-language goal → **Find courses** / **Create path**; or use **Course Library** cards to **Add course**, **Continue**, **Add selected courses**, or **Add all**. Cognisphere paths show suggested focus + skill-path hints from `suggest-focus` / `plan-path`. The path detail view renders an **ability radar** (module axes + weak KP list) from mastery maps.
 
 ### Bundled pack distribution
 
-Public Tutor installs also ship a small offline pack distribution under
-`cognispheretutor/integrations/cognisphere/bundled_packs/`. If
-`COGNISPHERE_LEARNING_PLUGINS_ROOT` is missing or an external domain plugin is
-not discoverable, `/api/v1/learning/cognisphere/status` lists the bundled AWS,
-AP Calculus, and LeetCode packs and `import-and-seed` imports those packaged
-handoff bundles. External `CognisphereLearningPlugins` still take precedence
-when available, so developers can test the latest plugin repo without changing
-the ordinary user path. Bundled packs are data only: Tutor remains responsible
-for generic import, Mastery Path seeding, reset/restore, and chat orchestration;
-domain ontology/runtime ownership remains in the plugin pack source.
+Tutor ships a small offline pack distribution under
+`cognispheretutor/integrations/cognisphere/bundled_packs/`:
+
+| Course | Bundled file | Current seed size |
+|:---|:---|:---|
+| AWS Certification | `aws_certification_bundle.json` | 6 modules / 46 objectives |
+| AP Calculus | `ap_calculus_bundle.json` | 22 objectives |
+| LeetCode | `leetcode_bundle.json` | 7 objectives |
+
+If `COGNISPHERE_LEARNING_PLUGINS_ROOT` is missing or an external domain plugin
+is not discoverable, `/api/v1/learning/cognisphere/status` lists these bundled
+packs and `import-and-seed` imports the packaged handoff bundles. External
+`CognisphereLearningPlugins` still take precedence when available, so developers
+can test the latest plugin repo without changing the ordinary user path.
+Bundled packs are data only: Tutor remains responsible for generic import,
+Mastery Path seeding, reset/restore, and chat orchestration; domain
+ontology/runtime ownership remains in the plugin pack source.
+
+For ordinary users, the practical flow is:
+
+1. Clone/install Tutor.
+2. Run `cognispheretutor start`.
+3. Open `/space/learning`.
+4. Add **AWS Certification** from **Course Library**.
+5. Continue the generated Mastery Path in chat.
+
+No separate AWS raw-material download is required for the bundled learning
+experience. A Chinese learner-facing guide is available at
+[`guides/AWS_BEGINNER_USER_GUIDE_ZH.md`](guides/AWS_BEGINNER_USER_GUIDE_ZH.md).
 
 Integration code lives under `cognispheretutor/integrations/cognisphere/` (registry, negotiate, validate, bundle import → Assessment/Plan/Mastery mapping, trusted-context offline/live import, runtime callbacks + **runtime bridge** to plugin P2–P5 offline runtimes, cross-domain compose). Live trusted-context kit fetch requires `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`. Runtime adapters declare capability → callable contracts only; modules resolve per domain via plugin manifest `runtime_modules` or `module_template` (`cognisphere_plugins.{domain}.{module_key}`) — no hard-coded domain package paths in Tutor.
 
