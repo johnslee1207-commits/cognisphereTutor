@@ -1837,6 +1837,124 @@ def test_mastery_loop_pre_loop_seed_guards_orphan_choice_answer(monkeypatch) -> 
     assert "ask_user" in seed
 
 
+def test_mastery_loop_extracts_choice_answer_from_chat_text() -> None:
+    from cognispheretutor.capabilities.mastery import loop as mastery_loop
+
+    assert mastery_loop._extract_quiz_answer(
+        "the answer for the above question is A, then continue the next class"
+    ) == "A"
+    assert mastery_loop._extract_quiz_answer("option b is my answer") == "B"
+    assert mastery_loop._extract_quiz_answer("answer is true") == "true"
+
+
+def test_mastery_loop_pre_loop_seed_grades_pending_text_answer(monkeypatch) -> None:
+    from cognispheretutor.capabilities.mastery import loop as mastery_loop
+
+    monkeypatch.setattr(mastery_loop, "_auto_advance_overview_if_ready", lambda _context: "")
+    monkeypatch.setattr(
+        mastery_loop,
+        "_deterministic_mastery_status",
+        lambda _context: "### Deterministic Mastery Status\n{}",
+    )
+    monkeypatch.setattr(mastery_loop, "_deterministic_plugin_grounding", lambda _context: "")
+    monkeypatch.setattr(mastery_loop, "_deterministic_lesson_contract", lambda _context: "")
+
+    class FakeService:
+        def __init__(self, _store):
+            pass
+
+        def get_or_create(self, _path_id):
+            return object()
+
+    class FakeStep:
+        def to_dict(self):
+            return {
+                "action": "answer_pending",
+                "knowledge_point_id": "sk-aws-clf-c02",
+                "knowledge_point_name": "Cloud Practitioner",
+                "pending_prompt": "Which option is correct?",
+            }
+
+    monkeypatch.setattr("cognispheretutor.learning.service.LearningService", FakeService)
+    monkeypatch.setattr(
+        "cognispheretutor.learning.policy.next_objective",
+        lambda _progress: FakeStep(),
+    )
+
+    context = UnifiedContext(
+        user_message="the answer for the above question is A, then continue the next class",
+        metadata={"mastery_mode": True, "mastery_path_id": "csphere-aws_certification"},
+    )
+
+    seed = mastery_loop.MasteryLoopCapability().pre_loop_seed(context)
+
+    assert "Mastery Pending Text Answer Guard" in seed
+    assert "pending_text_answer" in seed
+    assert "answer='A'" in seed
+    assert "Do not ask the learner to answer the same question again" in seed
+
+
+def test_mastery_loop_clears_unpresented_pending_after_failed_turn(tmp_path, monkeypatch) -> None:
+    import sqlite3
+
+    from cognispheretutor.capabilities.mastery import loop as mastery_loop
+    from cognispheretutor.learning.models import LearningProgress, PendingQuestion
+    import cognispheretutor.learning.storage as storage_mod
+
+    real_store_cls = storage_mod.LearningStore
+    store = real_store_cls(tmp_path / "learning")
+    progress = LearningProgress(
+        book_id="csphere-aws_certification",
+        pending_question=PendingQuestion(
+            question_id="q-hidden",
+            knowledge_point_id="sk-aws-clf-c02",
+            prompt="Hidden question",
+            expected_answer="B",
+            created_at=20.0,
+        ),
+    )
+    store.save(progress)
+    monkeypatch.setattr(storage_mod, "LearningStore", lambda: real_store_cls(tmp_path / "learning"))
+
+    db_path = tmp_path / "chat_history.sqlite"
+    with sqlite3.connect(db_path) as conn:
+        conn.execute(
+            "CREATE TABLE messages (session_id TEXT, role TEXT, created_at REAL)"
+        )
+        conn.execute(
+            "CREATE TABLE turns (session_id TEXT, status TEXT, error TEXT, created_at REAL)"
+        )
+        conn.execute(
+            "INSERT INTO messages VALUES (?, ?, ?)",
+            ("unified_1", "assistant", 10.0),
+        )
+        conn.execute(
+            "INSERT INTO turns VALUES (?, ?, ?, ?)",
+            ("unified_1", "failed", "Turn interrupted by server restart.", 30.0),
+        )
+
+    class FakePathService:
+        def get_chat_history_db(self):
+            return db_path
+
+    monkeypatch.setattr(
+        "cognispheretutor.services.path_service.get_path_service",
+        lambda: FakePathService(),
+    )
+    context = UnifiedContext(
+        session_id="unified_1",
+        user_message="continue",
+        metadata={"mastery_mode": True, "mastery_path_id": "csphere-aws_certification"},
+    )
+
+    seed = mastery_loop._clear_unpresented_pending_after_failed_turn(context)
+    updated = store.load("csphere-aws_certification")
+
+    assert "Mastery Stale Pending Cleanup" in seed
+    assert updated is not None
+    assert updated.pending_question is None
+
+
 def test_mastery_overview_auto_advance_records_qualitative_pass(tmp_path, monkeypatch) -> None:
     from cognispheretutor.capabilities.mastery import loop as mastery_loop
     from cognispheretutor.learning.models import (

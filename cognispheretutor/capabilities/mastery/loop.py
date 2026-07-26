@@ -5,6 +5,7 @@ from __future__ import annotations
 from importlib import resources
 import json
 import re
+import sqlite3
 from typing import Any
 
 from cognispheretutor.capabilities.mastery.tools import MASTERY_TOOL_NAMES
@@ -60,6 +61,7 @@ class MasteryLoopCapability:
         if not self.is_active(context):
             return ""
         auto_advance = _auto_advance_overview_if_ready(context)
+        stale_pending = _clear_unpresented_pending_after_failed_turn(context)
         status = _deterministic_mastery_status(context)
         if not status:
             return ""
@@ -71,15 +73,18 @@ class MasteryLoopCapability:
             context.metadata["mastery_lesson_contract_injected"] = True
         context.metadata["mastery_status_injected"] = True
         orphan_answer = _orphan_quiz_answer_guard(context)
+        pending_answer = _pending_text_answer_guard(context)
         directive = _mastery_turn_directive(context)
         return "\n\n".join(
             block
             for block in (
                 auto_advance,
+                stale_pending,
                 status,
                 grounding,
                 lesson_contract,
                 orphan_answer,
+                pending_answer,
                 directive,
             )
             if block
@@ -341,9 +346,138 @@ def _orphan_quiz_answer_guard(context: UnifiedContext) -> str:
     )
 
 
+def _pending_text_answer_guard(context: UnifiedContext) -> str:
+    path_id = str(context.metadata.get("mastery_path_id") or "").strip()
+    if not path_id:
+        return ""
+    answer = _extract_quiz_answer(context.user_message)
+    if not answer:
+        return ""
+    try:
+        from cognispheretutor.learning.policy import next_objective
+        from cognispheretutor.learning.service import LearningService
+        from cognispheretutor.learning.storage import LearningStore
+
+        progress = LearningService(LearningStore()).get_or_create(path_id)
+        step = next_objective(progress).to_dict()
+    except Exception:
+        return ""
+    if step.get("action") != "answer_pending":
+        return ""
+    payload = {
+        "status": "pending_text_answer",
+        "extracted_answer": answer,
+        "next": step,
+        "required_action": [
+            f"First call mastery_grade with answer={answer!r}.",
+            "Do not ask the learner to answer the same question again.",
+            "If mastery_grade.mastered is true, teach the next mini-lesson before any new quiz.",
+            "If mastery_grade.mastered is false, give brief feedback and ask one replacement quick check.",
+        ],
+    }
+    return (
+        "### Mastery Pending Text Answer Guard\n"
+        "The learner answered a pending mastery question in ordinary chat text. "
+        "Treat the extracted answer as the learner's answer and grade it before "
+        "doing anything else.\n"
+        f"```json\n{json.dumps(payload, ensure_ascii=False)}\n```"
+    )
+
+
 def _looks_like_quiz_answer(message: str) -> bool:
+    return bool(_extract_quiz_answer(message))
+
+
+def _extract_quiz_answer(message: str) -> str:
     text = str(message or "").strip()
-    return bool(re.fullmatch(r"(?i)([a-d]|true|false|t|f|yes|no|对|错|正确|错误)", text))
+    if not text:
+        return ""
+    exact = re.fullmatch(r"(?i)([a-d]|true|false|t|f|yes|no|对|错|正确|错误)", text)
+    if exact:
+        return _normalize_quiz_answer(exact.group(1))
+    patterns = (
+        r"(?i)\b(?:answer|option|choice|选项|答案)\s*(?:is|=|:|：)?\s*([a-d])\b",
+        r"(?i)\b(?:answer|option|choice)\b.{0,80}?\b(?:is|=|:)\s*([a-d])\b",
+        r"(?i)\bmy\s+(?:answer|option|choice)\s*(?:is|=|:)?\s*([a-d])\b",
+        r"(?i)\b([a-d])\s*(?:is my answer|is correct|should be correct)\b",
+        r"(?i)\b(?:answer|option|choice)\s*(?:is|=|:)?\s*(true|false|yes|no)\b",
+        r"(?:答案|选项)\s*(?:是|为|=|:|：)?\s*(对|错|正确|错误)",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, text)
+        if match:
+            return _normalize_quiz_answer(match.group(1))
+    return ""
+
+
+def _normalize_quiz_answer(value: str) -> str:
+    text = str(value or "").strip()
+    lowered = text.lower()
+    if lowered in {"t", "true", "yes"} or text in {"对", "正确"}:
+        return "true"
+    if lowered in {"f", "false", "no"} or text in {"错", "错误"}:
+        return "false"
+    if re.fullmatch(r"(?i)[a-d]", text):
+        return text.upper()
+    return text
+
+
+def _clear_unpresented_pending_after_failed_turn(context: UnifiedContext) -> str:
+    path_id = str(context.metadata.get("mastery_path_id") or "").strip()
+    session_id = str(context.session_id or "").strip()
+    if not path_id or not session_id:
+        return ""
+    try:
+        from cognispheretutor.learning.service import LearningService
+        from cognispheretutor.learning.storage import LearningStore
+        from cognispheretutor.services.path_service import get_path_service
+
+        service = LearningService(LearningStore())
+        progress = service.get_or_create(path_id)
+        pending = progress.pending_question
+        if pending is None:
+            return ""
+        db_path = get_path_service().get_chat_history_db()
+        with sqlite3.connect(db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            last_assistant = conn.execute(
+                """
+                SELECT created_at FROM messages
+                WHERE session_id = ? AND role = 'assistant'
+                ORDER BY created_at DESC LIMIT 1
+                """,
+                (session_id,),
+            ).fetchone()
+            last_turn = conn.execute(
+                """
+                SELECT status, error FROM turns
+                WHERE session_id = ?
+                ORDER BY created_at DESC LIMIT 1
+                """,
+                (session_id,),
+            ).fetchone()
+        last_assistant_at = float(last_assistant["created_at"]) if last_assistant else 0.0
+        latest_failed = bool(last_turn and str(last_turn["status"] or "") == "failed")
+        if not latest_failed or float(pending.created_at or 0.0) <= last_assistant_at:
+            return ""
+        cleared = {
+            "question": pending.prompt,
+            "knowledge_point_id": pending.knowledge_point_id,
+            "created_at": pending.created_at,
+            "last_assistant_at": last_assistant_at,
+            "failed_turn_error": str(last_turn["error"] or "") if last_turn else "",
+        }
+        service.clear_pending_question(progress)
+    except Exception:
+        return ""
+    return (
+        "### Mastery Stale Pending Cleanup\n"
+        "Tutor cleared a pending mastery question that was created after the last "
+        "successful assistant message by a failed/interrupted turn, so it was never "
+        "shown as an answerable card. Continue from the current objective in "
+        "lesson-first order.\n"
+        f"```json\n{json.dumps(cleared, ensure_ascii=False)}\n```"
+    )
 
 
 def _auto_advance_overview_if_ready(context: UnifiedContext) -> str:
