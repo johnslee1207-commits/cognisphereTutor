@@ -334,7 +334,7 @@ function MasteryPathPageInner() {
   const handleComposeAndSeed = useCallback(async () => {
     if (selectedDomains.length === 0) {
       setCsphereError(
-        tr("请先勾选至少一个域", "Select at least one domain"),
+        tr("请先选择至少一门课程", "Select at least one course"),
       );
       return;
     }
@@ -347,8 +347,8 @@ function MasteryPathPageInner() {
       });
       const notes = [
         tr(
-          `组合完成：成功 ${result.seeded_count}，失败 ${result.failed_count}`,
-          `Compose done: ${result.seeded_count} seeded, ${result.failed_count} failed`,
+          `已添加 ${result.seeded_count} 门课程，${result.failed_count} 门未完成`,
+          `Added ${result.seeded_count} courses; ${result.failed_count} not completed`,
         ),
         ...(result.seeds || [])
           .filter((s) => "mastery_path" in s && s.mastery_path?.note)
@@ -360,7 +360,7 @@ function MasteryPathPageInner() {
       setCsphereNote(notes.join(" · "));
       if (result.failed_count > 0 && result.seeded_count === 0) {
         setCsphereError(
-          tr("组合导入全部失败", "Compose-and-seed failed for all domains"),
+          tr("所选课程暂时无法添加", "Selected courses could not be added"),
         );
       }
       await loadList();
@@ -374,7 +374,7 @@ function MasteryPathPageInner() {
       setCsphereError(
         err instanceof Error
           ? err.message
-          : tr("组合导入失败", "Compose-and-seed failed"),
+          : tr("添加课程失败", "Could not add courses"),
       );
     } finally {
       setCsphereBusy(false);
@@ -387,7 +387,7 @@ function MasteryPathPageInner() {
       .map((plugin) => plugin.domain);
     if (domains.length === 0) {
       setCsphereError(
-        tr("没有可导入的有效插件域", "No valid plugin domains to import"),
+        tr("暂时没有可添加的课程", "No courses are available to add"),
       );
       return;
     }
@@ -398,8 +398,8 @@ function MasteryPathPageInner() {
       const result = await composeAndSeedCognisphere({ domains });
       setCsphereNote(
         tr(
-          `已导入可用域：成功 ${result.seeded_count}，失败 ${result.failed_count}`,
-          `Imported available domains: ${result.seeded_count} seeded, ${result.failed_count} failed`,
+          `已添加 ${result.seeded_count} 门课程，${result.failed_count} 门未完成`,
+          `Added ${result.seeded_count} courses; ${result.failed_count} not completed`,
         ),
       );
       await loadList();
@@ -413,7 +413,7 @@ function MasteryPathPageInner() {
       setCsphereError(
         err instanceof Error
           ? err.message
-          : tr("导入可用域失败", "Import available domains failed"),
+          : tr("添加全部课程失败", "Could not add all courses"),
       );
     } finally {
       setCsphereBusy(false);
@@ -439,15 +439,15 @@ function MasteryPathPageInner() {
       if (domains.length === 0) {
         setCsphereError(
           tr(
-            "没有匹配的插件域，请调整目标或安装插件",
-            "No matching plugin domains; adjust the goal or install plugins",
+            "没有找到匹配课程，请换一种说法试试",
+            "No matching courses found. Try rephrasing your goal.",
           ),
         );
       } else {
         setCsphereNote(
           tr(
-            `推荐域：${domains.join(", ")}`,
-            `Recommended: ${domains.join(", ")}`,
+            `已匹配 ${domains.length} 门课程`,
+            `Matched ${domains.length} courses`,
           ),
         );
       }
@@ -455,7 +455,7 @@ function MasteryPathPageInner() {
       setCsphereError(
         err instanceof Error
           ? err.message
-          : tr("推荐失败", "Recommend failed"),
+          : tr("推荐课程失败", "Could not find courses"),
       );
     } finally {
       setCsphereBusy(false);
@@ -484,8 +484,8 @@ function MasteryPathPageInner() {
       const seeded = result.compose_seed;
       setCsphereNote(
         tr(
-          `目标「${goal}」→ 推荐 ${domains.length} 域；导入成功 ${seeded?.seeded_count ?? result.seeded_count ?? 0}`,
-          `Goal “${goal}” → ${domains.length} domains; seeded ${seeded?.seeded_count ?? result.seeded_count ?? 0}`,
+          `已根据你的目标添加 ${seeded?.seeded_count ?? result.seeded_count ?? 0} 门课程`,
+          `Added ${seeded?.seeded_count ?? result.seeded_count ?? 0} courses for your goal`,
         ),
       );
       await loadList();
@@ -501,7 +501,7 @@ function MasteryPathPageInner() {
       setCsphereError(
         err instanceof Error
           ? err.message
-          : tr("目标导入失败", "Goal compose-and-seed failed"),
+          : tr("生成学习路径失败", "Could not create the learning path"),
       );
     } finally {
       setCsphereBusy(false);
@@ -556,6 +556,13 @@ function MasteryPathPageInner() {
   const validPluginCount = (csphere?.plugins || []).filter(
     (plugin) => plugin.valid,
   ).length;
+  const coursePacks = csphere?.plugins || [];
+  const hasBundledCourses = coursePacks.some(
+    (plugin) => plugin.source === "bundled_pack",
+  );
+  const hasExternalCourses = coursePacks.some(
+    (plugin) => plugin.source !== "bundled_pack",
+  );
 
   return (
     <div className="flex h-full">
@@ -564,13 +571,13 @@ function MasteryPathPageInner() {
           <div className="flex items-center gap-2 text-[var(--foreground)]">
             <GraduationCap className="w-4 h-4" />
             <h1 className="text-sm font-semibold">
-              {tr("精通之路", "Mastery Path")}
+              {tr("学习路径", "Learning Paths")}
             </h1>
           </div>
           <p className="mt-1 text-xs text-[var(--muted-foreground)]">
             {tr(
-              "掌握式学习：硬门槛 + 间隔复习",
-              "Mastery-based learning: hard gate + spaced review",
+              "按课程进度继续学习和复习",
+              "Continue courses and review progress",
             )}
           </p>
         </header>
@@ -582,8 +589,8 @@ function MasteryPathPageInner() {
           ) : paths.length === 0 ? (
             <p className="px-2 py-3 text-xs text-[var(--muted-foreground)] leading-relaxed">
               {tr(
-                "还没有精通之路。可从下方 Cognisphere 导入，或去「对话」选择 Mastery Path 模式。",
-                "No paths yet. Import from Cognisphere below, or open Chat in Mastery Path mode.",
+                "还没有课程。请从下方课程库添加一门课程开始学习。",
+                "No courses yet. Add a course from the library below to start learning.",
               )}
             </p>
           ) : (
@@ -603,7 +610,7 @@ function MasteryPathPageInner() {
                 <div className="mt-0.5 text-xs text-[var(--muted-foreground)]">
                   {isCognispherePathId(path.book_id) && (
                     <span className="mr-1 text-[var(--primary)]">
-                      {tr("CS ·", "CS ·")}
+                      {tr("课程 ·", "Course ·")}
                     </span>
                   )}
                   {path.kp_count} {tr("个知识点", "objectives")} ·{" "}
@@ -615,15 +622,25 @@ function MasteryPathPageInner() {
         </div>
 
         <div className="border-t border-[var(--border)] p-2 space-y-2">
-          <div className="flex items-center gap-1.5 px-1 text-xs font-medium text-[var(--foreground)]">
+          <div className="flex items-center justify-between px-1">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-[var(--foreground)]">
             <Package className="w-3.5 h-3.5" />
-            {tr("Cognisphere 插件", "Cognisphere plugins")}
+              {tr("课程库", "Course Library")}
+            </div>
+            <button
+              type="button"
+              disabled={csphereBusy || validPluginCount === 0}
+              onClick={handleImportAvailableDomains}
+              className="text-[10px] text-[var(--primary)] hover:underline disabled:opacity-50 cursor-pointer"
+            >
+              {tr("添加全部", "Add all")}
+            </button>
           </div>
           <div className="space-y-1.5 px-0.5">
-            <label className="block text-[10px] text-[var(--muted-foreground)] leading-relaxed">
+            <label className="block text-[11px] font-medium text-[var(--foreground)] leading-relaxed">
               {tr(
-                "用自然语言描述学习目标（示例：练习算法与微积分）",
-                "Describe a learning goal in natural language (e.g. practice algorithms and calculus)",
+                "告诉 Tutor 你想学什么",
+                "Tell Tutor what you want to learn",
               )}
             </label>
             <textarea
@@ -632,8 +649,8 @@ function MasteryPathPageInner() {
               rows={2}
               disabled={csphereBusy}
               placeholder={tr(
-                "例如：我想系统练习面试算法…",
-                "e.g. I want a structured path for interview algorithms…",
+                "例如：我是 AWS 新手，想从零开始准备初级认证…",
+                "e.g. I am new to AWS and want to prepare from the beginning…",
               )}
               className="w-full resize-none rounded-md border border-[var(--border)] bg-transparent px-2 py-1.5 text-xs text-[var(--foreground)] placeholder:text-[var(--muted-foreground)]"
             />
@@ -644,7 +661,7 @@ function MasteryPathPageInner() {
                 onClick={handleRecommendGoal}
                 className="flex-1 px-2 py-1 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
               >
-                {tr("推荐插件", "Recommend")}
+                {tr("推荐课程", "Find courses")}
               </button>
               <button
                 type="button"
@@ -652,12 +669,13 @@ function MasteryPathPageInner() {
                 onClick={handleGoalComposeAndSeed}
                 className="flex-1 px-2 py-1 text-[11px] rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50 cursor-pointer"
               >
-                {tr("一键组合导入", "Compose & seed")}
+                {tr("生成学习路径", "Create path")}
               </button>
             </div>
             {recommendedDomains.length > 0 && (
               <p className="text-[10px] text-[var(--muted-foreground)]">
-                {tr("已推荐", "Recommended")}: {recommendedDomains.join(", ")}
+                {tr("已为你匹配课程", "Matched courses")}:{" "}
+                {recommendedDomains.join(", ")}
               </p>
             )}
           </div>
@@ -674,68 +692,57 @@ function MasteryPathPageInner() {
           {csphere && !csphere.ok && (
             <p className="px-1 text-[10px] leading-relaxed text-[var(--muted-foreground)]">
               {tr(
-                "未找到插件根目录。请设置 COGNISPHERE_LEARNING_PLUGINS_ROOT。",
-                "Plugins root missing. Set COGNISPHERE_LEARNING_PLUGINS_ROOT.",
+                "课程库暂时不可用，请稍后重试。",
+                "The course library is not available right now. Please try again later.",
               )}
             </p>
           )}
-          {csphere?.gates?.trusted_context && (
+          {coursePacks.length > 0 && (
             <p className="px-1 text-[10px] leading-relaxed text-[var(--muted-foreground)]">
-              {tr("可信上下文", "Trusted context")}:{" "}
-              {csphere.gates.trusted_context.kit_configured
-                ? tr("在线 kit 已配置", "live kit configured")
-                : tr("仅离线导入", "offline import only")}
-              {csphere.gates.trusted_context.mode
-                ? ` · ${csphere.gates.trusted_context.mode}`
-                : ""}
-              {!csphere.gates.trusted_context.kit_configured &&
-              csphere.gates.trusted_context.blocker?.code
-                ? ` · ${csphere.gates.trusted_context.blocker.code}`
-                : ""}
+              {tr("课程来源", "Course source")}:{" "}
+              {hasExternalCourses
+                ? tr("本地知识包", "local course packs")
+                : hasBundledCourses
+                  ? tr("随 Tutor 安装", "included with Tutor")
+                  : tr("已连接课程库", "connected course library")}
             </p>
           )}
-          {(csphere?.plugins || []).length > 0 && (
+          {coursePacks.length > 0 && (
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between px-1">
-                <div className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
-                  {tr("三域学习入口", "Domain launchpad")}
-                </div>
-                <button
-                  type="button"
-                  disabled={csphereBusy || validPluginCount === 0}
-                  onClick={handleImportAvailableDomains}
-                  className="text-[10px] text-[var(--primary)] hover:underline disabled:opacity-50 cursor-pointer"
-                >
-                  {tr("导入全部", "Import all")}
-                </button>
-              </div>
-              {(csphere?.plugins || []).map((plugin) => {
+              {coursePacks.map((plugin) => {
                 const path = plugin.path_id
                   ? paths.find((item) => item.book_id === plugin.path_id)
                   : null;
-                const packageName =
-                  typeof plugin.distribution?.package_name === "string"
-                    ? plugin.distribution.package_name
-                    : typeof plugin.distribution?.package === "string"
-                      ? plugin.distribution.package
-                      : plugin.plugin_id;
-                const checkCommand =
-                  typeof plugin.tutor_pack?.check_command === "string"
-                    ? plugin.tutor_pack.check_command
-                    : null;
                 const label =
                   plugin.display_name || plugin.plugin_id || plugin.domain;
+                const courseTitle = label
+                  .replace(/\s*Domain Learning Plugin\b/i, "")
+                  .replace(/\s*Learning Pack\b.*$/i, "")
+                  .replace(/\s*\(thin-complete\)\s*/i, "")
+                  .trim();
                 const bundled = plugin.source === "bundled_pack";
                 return (
                   <div
                     key={`launch-${plugin.domain}`}
-                    className="rounded-md border border-[var(--border)] px-2 py-2"
-                    title={checkCommand || packageName || plugin.domain}
+                    className={`rounded-md border px-2 py-2 ${
+                      selectedDomains.includes(plugin.domain)
+                        ? "border-[var(--primary)]/50 bg-[var(--primary)]/5"
+                        : "border-[var(--border)]"
+                    }`}
+                    title={plugin.description || courseTitle || plugin.domain}
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
+                      <label className="min-w-0 flex items-start gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={selectedDomains.includes(plugin.domain)}
+                          disabled={!plugin.valid || csphereBusy}
+                          onChange={() => toggleDomain(plugin.domain)}
+                          className="mt-0.5 shrink-0"
+                        />
+                        <div className="min-w-0">
                         <div className="truncate text-xs font-medium text-[var(--foreground)]">
-                          {label}
+                            {courseTitle || plugin.domain}
                         </div>
                         <div className="mt-0.5 text-[10px] text-[var(--muted-foreground)] truncate">
                           {path
@@ -744,10 +751,11 @@ function MasteryPathPageInner() {
                                 `${path.kp_count} objectives · ${path.avg_mastery_pct}%`,
                               )
                             : bundled
-                              ? tr("Tutor 内置学习包", "Bundled Tutor pack")
-                              : packageName || plugin.domain}
+                              ? tr("随 Tutor 安装", "Included with Tutor")
+                              : tr("本地课程包", "Local course pack")}
                         </div>
                       </div>
+                      </label>
                       <span
                         className={`shrink-0 text-[10px] ${
                           path
@@ -758,10 +766,10 @@ function MasteryPathPageInner() {
                         }`}
                       >
                         {path
-                          ? tr("已导入", "Ready")
+                          ? tr("学习中", "Active")
                           : plugin.valid
-                            ? tr("可导入", "Valid")
-                            : tr("需修复", "Invalid")}
+                            ? tr("可添加", "Available")
+                            : tr("不可用", "Unavailable")}
                       </span>
                     </div>
                     <div className="mt-2 flex gap-1">
@@ -780,7 +788,7 @@ function MasteryPathPageInner() {
                         ) : (
                           <GraduationCap className="w-3 h-3" />
                         )}
-                        {path ? tr("查看路径", "View path") : tr("开始", "Start")}
+                        {path ? tr("继续学习", "Continue") : tr("添加课程", "Add course")}
                       </button>
                       <button
                         type="button"
@@ -800,52 +808,11 @@ function MasteryPathPageInner() {
               })}
             </div>
           )}
-          <div className="space-y-1">
-            <div className="px-1 pt-1">
-              <p className="text-[11px] font-medium text-[var(--foreground)]">
-                {tr("添加学习课程", "Add courses")}
-              </p>
-              <p className="text-[10px] text-[var(--muted-foreground)]">
-                {tr("选择一个或多个领域，生成可继续学习的路径。", "Select one or more domains to create learning paths.")}
-              </p>
-            </div>
-            {(csphere?.plugins || []).map((plugin) => (
-              <div
-                key={plugin.domain}
-                className="flex items-center gap-1.5 px-1 py-1 rounded-md text-xs border border-[var(--border)]"
-              >
-                <label className="flex items-center gap-1.5 flex-1 min-w-0 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={selectedDomains.includes(plugin.domain)}
-                    disabled={!plugin.valid || csphereBusy}
-                    onChange={() => toggleDomain(plugin.domain)}
-                    className="shrink-0"
-                  />
-                  <span className="truncate text-[var(--foreground)]">
-                    {plugin.domain}
-                  </span>
-                </label>
-                <button
-                  type="button"
-                  disabled={csphereBusy || !plugin.valid}
-                  onClick={() => handleImportDomain(plugin.domain)}
-                  className="shrink-0 text-[var(--muted-foreground)] hover:text-[var(--primary)] disabled:opacity-50 cursor-pointer px-1"
-                >
-                  {csphereBusy ? (
-                    <Loader2 className="w-3 h-3 animate-spin" />
-                  ) : (
-                    tr("添加", "Add")
-                  )}
-                </button>
-              </div>
-            ))}
-            {!csphere?.plugins?.length && !csphereError && (
-              <p className="px-1 text-[10px] text-[var(--muted-foreground)]">
-                {tr("暂无可用域", "No domains available")}
-              </p>
-            )}
-          </div>
+          {!coursePacks.length && !csphereError && (
+            <p className="px-1 text-[10px] text-[var(--muted-foreground)]">
+              {tr("暂无可添加课程", "No courses available")}
+            </p>
+          )}
           <button
             type="button"
             disabled={csphereBusy || selectedDomains.length === 0}
@@ -876,7 +843,7 @@ function MasteryPathPageInner() {
             className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-sm rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-opacity cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            {tr("在对话中继续（Mastery）", "Continue in Chat (Mastery)")}
+            {tr("进入学习对话", "Open learning chat")}
           </button>
         </footer>
       </aside>
