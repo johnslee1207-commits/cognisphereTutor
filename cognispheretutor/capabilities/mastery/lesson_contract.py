@@ -71,6 +71,7 @@ def build_lesson_contract_seed(
             "plugin_runtime_tools",
         ],
         "advance_rule": _advance_rule(next_step),
+        "post_grade_policy": _post_grade_policy(next_step),
         "interaction_policy": _interaction_policy(next_step, learner_profile),
     }
     return (
@@ -192,6 +193,28 @@ def _advance_rule(next_step: NextStep) -> str:
     return "Advance only after a later mastery_assess call records passed true."
 
 
+def _post_grade_policy(next_step: NextStep) -> dict[str, Any]:
+    if next_step.action == "answer_pending":
+        return {
+            "when_mastery_grade_mastered_true": (
+                "Give concise feedback, then teach the next objective before any "
+                "new mastery_quiz. Do not chain quiz cards without intervening "
+                "lesson content."
+            ),
+            "when_mastery_grade_mastered_false": (
+                "Explain the mistake, reteach the same objective briefly, then "
+                "register one replacement quick check."
+            ),
+        }
+    return {
+        "lesson_first": (
+            "For every new objective, the order is mini-lesson -> one quick check "
+            "card -> grade. Never start an objective with a quiz unless the "
+            "current lesson contract explicitly says review."
+        )
+    }
+
+
 def _check_options(next_step: NextStep) -> list[dict[str, str]]:
     if next_step.action in {"answer_pending", "complete"}:
         return []
@@ -278,7 +301,9 @@ def _interaction_policy(next_step: NextStep, learner_profile: dict[str, Any]) ->
         "Do not end the turn by asking the learner to choose a topic from a menu.",
         "Do not ask the learner to choose the assessment format; use the default quick multiple-choice check.",
         "Do not create a new unified_* path.",
-        "After each mini-lesson, immediately register and present one quick multiple-choice check.",
+        "For each objective, teach a substantive mini-lesson before registering its quick check.",
+        "After the mini-lesson, immediately register and present one quick multiple-choice check.",
+        "After grading a previous objective as mastered, do not chain directly into another quiz; teach the next mini-lesson first.",
         "Free response is optional unless free_response_policy.required_now is true.",
         "Do not mark qualitative mastery in the same turn as the initial explanation.",
     ]

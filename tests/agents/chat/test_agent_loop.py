@@ -1440,6 +1440,111 @@ async def test_mastery_answered_card_requires_grade_before_final(
 
 
 @pytest.mark.asyncio
+async def test_mastery_blocks_back_to_back_quiz_after_mastered_grade(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _PostGradeRegistry(_Registry):
+        def build_openai_schemas(self, _enabled):
+            return [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "mastery_grade",
+                        "description": "Grade answer",
+                        "parameters": {"type": "object", "properties": {}},
+                    },
+                },
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "mastery_quiz",
+                        "description": "Register quiz",
+                        "parameters": {"type": "object", "properties": {}},
+                    },
+                },
+            ]
+
+        async def execute(self, name: str, **kwargs):
+            self.executed.append({"name": name, "kwargs": kwargs})
+            if name == "mastery_grade":
+                return ToolResult(
+                    content=json.dumps({"is_correct": True, "mastered": True}),
+                    success=True,
+                    metadata={"mastery_grade": {"is_correct": True, "mastered": True}},
+                )
+            return ToolResult(content="registered", success=True)
+
+    registry = _PostGradeRegistry()
+    client = _ScriptedChatClient(
+        [
+            [
+                _llm_chunk(
+                    tool_calls=[
+                        {
+                            "id": "call-grade",
+                            "name": "mastery_grade",
+                            "arguments": json.dumps({"answer": "A"}),
+                        }
+                    ]
+                )
+            ],
+            [
+                _llm_chunk(
+                    content="Correct. Next question:",
+                    tool_calls=[
+                        {
+                            "id": "call-next-quiz",
+                            "name": "mastery_quiz",
+                            "arguments": json.dumps({"knowledge_point_id": "kp2"}),
+                        }
+                    ],
+                )
+            ],
+            [
+                _llm_chunk(
+                    content=(
+                        "Great, that check is cleared. Now let's actually learn the next "
+                        "objective before another question. In AWS, this next idea means "
+                        "understanding what the service is responsible for and what you, "
+                        "as the customer, still control. For example, AWS operates the "
+                        "cloud infrastructure, but you configure your own workloads, "
+                        "identity rules, and data choices. The key idea is that cloud "
+                        "learning is not just memorizing service names; it is learning "
+                        "where responsibility sits and why that changes design decisions."
+                    )
+                )
+            ],
+        ]
+    )
+    pipeline = AgenticChatPipeline(language="en")
+    pipeline.registry = registry
+    monkeypatch.setattr(
+        pipeline,
+        "_compose_enabled_tools",
+        lambda _context: ["mastery_grade", "mastery_quiz"],
+    )
+    monkeypatch.setattr(pipeline, "_build_openai_client", lambda: client)
+
+    events = await _run(
+        pipeline,
+        UnifiedContext(
+            session_id="s1",
+            user_message="A",
+            enabled_tools=["mastery_grade", "mastery_quiz"],
+            metadata={"mastery_mode": True, "mastery_path_id": "csphere-aws_certification"},
+        ),
+    )
+
+    assert client.call_count == 3
+    repair_instruction = client.calls[2]["messages"][-1]["content"]
+    assert "attempted to register the next quiz before teaching" in repair_instruction
+    assert [call["name"] for call in registry.executed] == ["mastery_grade"]
+    result = _result(events)
+    assert result.metadata["completed"] is True
+    assert "actually learn the next objective" in result.metadata["response"]
+
+
+@pytest.mark.asyncio
 async def test_round_budget_forces_tool_less_finish(monkeypatch: pytest.MonkeyPatch) -> None:
     registry = _Registry()
     client = _ScriptedChatClient(

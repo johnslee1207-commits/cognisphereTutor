@@ -127,6 +127,7 @@ class AgentLoopState:
     tool_steps: int = 0
     tools_used: list[str] = field(default_factory=list)
     sources: list[dict[str, Any]] = field(default_factory=list)
+    mastery_gate_cleared: bool = False
 
 
 @dataclass(slots=True)
@@ -260,6 +261,7 @@ class AgentLoop:
         mastery_quiz_repair_attempts = 0
         mastery_ask_registration_repair_attempts = 0
         mastery_grade_repair_attempts = 0
+        mastery_post_grade_lesson_repair_attempts = 0
         for _round in range(max(1, self.pipeline.effective_max_rounds(self.context))):
             try:
                 result = await self._call_llm(
@@ -457,6 +459,56 @@ class AgentLoop:
                 )
                 continue
 
+            if _needs_mastery_post_grade_lesson_repair(
+                context=self.context,
+                tool_calls=result.tool_calls,
+                enabled_tools=self.enabled_tools,
+                gate_cleared_this_turn=state.mastery_gate_cleared,
+                pre_tool_text=result.text,
+            ):
+                if mastery_post_grade_lesson_repair_attempts >= 2:
+                    return await self._finalize_finish(
+                        self.pipeline._t(
+                            "notices.mastery_lesson_before_quiz_required",
+                            default=(
+                                "We just cleared a mastery check. I should teach "
+                                "the next mini-lesson before asking another quiz. "
+                                "Please retry this turn so the learning flow can "
+                                "continue in lesson-first order."
+                            ),
+                        )
+                    )
+                mastery_post_grade_lesson_repair_attempts += 1
+                await self.stream.progress(
+                    self.pipeline._t(
+                        "notices.mastery_lesson_before_quiz_repaired",
+                        default=(
+                            "Detected a next quiz before the next mini-lesson; "
+                            "asking the model to teach first."
+                        ),
+                    ),
+                    source="chat",
+                    stage=LOOP_STAGE,
+                    metadata={
+                        "trace_kind": "warning",
+                        "mastery_lesson_before_quiz_repair": True,
+                    },
+                )
+                messages.append(
+                    {
+                        "role": "assistant",
+                        "content": result.text
+                        or "I attempted to start the next mastery check immediately.",
+                    }
+                )
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": _mastery_lesson_before_quiz_instruction(),
+                    }
+                )
+                continue
+
             messages.append(assistant_message_with_tool_calls(result.text, result.tool_calls))
             dispatch = await self.pipeline._dispatch_tool_calls(
                 tool_calls=result.tool_calls,
@@ -466,6 +518,8 @@ class AgentLoop:
                 stage=LOOP_STAGE,
             )
             state.tool_steps += 1
+            if _dispatch_cleared_mastery_gate(dispatch):
+                state.mastery_gate_cleared = True
             state.tools_used.extend(
                 tool_name
                 for tool_name in (
@@ -864,6 +918,14 @@ _QUIZ_FORMAT_NEGOTIATION_RE = re.compile(
     r"provide .*knowledge point|provide .*question|provide .*options)\b"
     r"|是否.*(选择题|判断题|自由回答)|选择.*(题型|形式)|请.*提供.*(题目|选项|知识点)"
 )
+_SENTENCE_BOUNDARY_RE = re.compile(r"[.!?。！？]\s+|[。！？]")
+
+
+def _tool_call_names(tool_calls: list[dict[str, Any]]) -> set[str]:
+    return {
+        str(call.get("function", {}).get("name") or call.get("name") or "").strip()
+        for call in tool_calls
+    }
 
 
 def _needs_mastery_quiz_card_repair(
@@ -905,10 +967,7 @@ def _needs_mastery_ask_user_registration_repair(
         return False
     if "mastery_quiz" not in enabled_tools or "ask_user" not in enabled_tools:
         return False
-    call_names = {
-        str(call.get("function", {}).get("name") or call.get("name") or "").strip()
-        for call in tool_calls
-    }
+    call_names = _tool_call_names(tool_calls)
     if "ask_user" not in call_names:
         return False
     if "mastery_quiz" in call_names or "mastery_grade" in call_names:
@@ -933,6 +992,49 @@ def _needs_mastery_grade_repair(
     if "mastery_grade" in tools_used:
         return False
     return _has_pending_mastery_question(context)
+
+
+def _needs_mastery_post_grade_lesson_repair(
+    *,
+    context: UnifiedContext,
+    tool_calls: list[dict[str, Any]],
+    enabled_tools: list[str],
+    gate_cleared_this_turn: bool,
+    pre_tool_text: str,
+) -> bool:
+    if not context.metadata.get("mastery_mode"):
+        return False
+    if not gate_cleared_this_turn:
+        return False
+    if "mastery_quiz" not in enabled_tools:
+        return False
+    if "mastery_quiz" not in _tool_call_names(tool_calls):
+        return False
+    return not _looks_like_mini_lesson(pre_tool_text)
+
+
+def _looks_like_mini_lesson(text: str) -> bool:
+    compact = re.sub(r"\s+", " ", str(text or "")).strip()
+    if len(compact) < 420:
+        return False
+    sentence_count = len([part for part in _SENTENCE_BOUNDARY_RE.split(compact) if part.strip()])
+    has_structure = bool(re.search(r"(?m)^\s*(#{1,3}\s+|[-*]\s+|\d+[.)]\s+)", text))
+    has_teaching_signal = bool(
+        re.search(
+            r"(?i)\b(means|because|for example|think of|key idea|in aws|"
+            r"lesson|mini-lesson|what|why|how)\b|例如|意思是|关键|为什么|怎么|课程|学习",
+            compact,
+        )
+    )
+    return sentence_count >= 3 and (has_structure or has_teaching_signal)
+
+
+def _dispatch_cleared_mastery_gate(dispatch: DispatchOutcome) -> bool:
+    for meta in dispatch.tool_metadata_by_id.values():
+        grade = meta.get("mastery_grade") if isinstance(meta, dict) else None
+        if isinstance(grade, dict) and grade.get("mastered") is True:
+            return True
+    return False
 
 
 def _has_pending_mastery_question(context: UnifiedContext) -> bool:
@@ -981,9 +1083,30 @@ def _mastery_grade_repair_instruction() -> str:
         "this conversation.\n"
         "2. Call mastery_grade with that answer verbatim.\n"
         "3. Give feedback based on mastery_grade.is_correct and mastery_grade.mastered.\n"
-        "4. Continue to the next objective only if mastery_grade.mastered is true; "
-        "otherwise reteach the same objective briefly and ask another registered "
-        "mastery_quiz + ask_user check."
+        "4. If mastery_grade.mastered is false, reteach the same objective briefly "
+        "and ask another registered mastery_quiz + ask_user check.\n"
+        "5. If mastery_grade.mastered is true, do not immediately ask another "
+        "question. First teach the next objective as a real mini-lesson; only "
+        "after that lesson may you register the next quick-check card."
+    )
+
+
+def _mastery_lesson_before_quiz_instruction() -> str:
+    return (
+        "You just cleared the previous mastery gate and then attempted to register "
+        "the next quiz before teaching the next objective. That turns learning into "
+        "a chain of questions.\n\n"
+        "Repair this now:\n"
+        "1. Do not call mastery_quiz or ask_user until you have taught the next "
+        "objective with a substantive mini-lesson.\n"
+        "2. Start from the next objective reported by mastery_grade.next or the "
+        "latest mastery_status result.\n"
+        "3. Teach the next objective in beginner-friendly terms using the local "
+        "plugin grounding; include enough explanation, examples, and key terms "
+        "for the learner to actually learn before being checked.\n"
+        "4. After that mini-lesson, you may register exactly one quick multiple-"
+        "choice check with mastery_quiz and present it with ask_user. If you are "
+        "not ready to teach the mini-lesson, finish with the lesson only."
     )
 
 
@@ -1015,6 +1138,7 @@ __all__ = [
     "_has_pending_mastery_question",
     "_needs_mastery_ask_user_registration_repair",
     "_needs_mastery_grade_repair",
+    "_needs_mastery_post_grade_lesson_repair",
     "_needs_mastery_quiz_card_repair",
     "_source_provenance_for_turn",
 ]
