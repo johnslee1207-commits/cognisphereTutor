@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import {
@@ -52,6 +52,20 @@ import {
  * Plugins can seed a ``csphere-{domain}`` path via import-and-seed.
  */
 export default function MasteryPathPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-full items-center justify-center text-[var(--muted-foreground)]">
+          <Loader2 className="h-5 w-5 animate-spin" />
+        </div>
+      }
+    >
+      <MasteryPathPageInner />
+    </Suspense>
+  );
+}
+
+function MasteryPathPageInner() {
   const { i18n } = useTranslation();
   const zh = i18n.language?.toLowerCase().startsWith("zh");
   const tr = useCallback((cn: string, en: string) => (zh ? cn : en), [zh]);
