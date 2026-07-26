@@ -43,13 +43,16 @@ def test_lesson_contract_guides_absolute_beginner_concept_flow() -> None:
     assert payload["learner_profile"]["level"] == "absolute_beginner"
     assert payload["learner_profile"]["requested_scope"] == "systematic_full_path"
     assert payload["lesson_mode"] == "teach_then_quick_check"
-    assert "multiple-choice or true/false" in payload["must_ask"]
+    assert "immediately register one quick multiple-choice" in payload["must_ask"]
+    assert "Do not ask whether the learner wants a quiz" in payload["must_ask"]
     assert [item["mode"] for item in payload["check_options"]] == [
         "multiple_choice",
         "true_false",
         "free_response",
     ]
     assert payload["required_check"]["mode"] == "quick_check"
+    assert payload["required_check"]["allowed_modes"] == ["multiple_choice"]
+    assert payload["required_check"]["default_mode"] == "multiple_choice"
     assert payload["free_response_policy"]["optional_now"] is True
     assert payload["free_response_policy"]["required_now"] is False
     assert any("Do not end the turn" in item for item in payload["interaction_policy"])
@@ -95,6 +98,7 @@ def test_lesson_contract_teaches_before_quizzing_beginner_probe() -> None:
     assert payload["lesson_mode"] == "teach_then_quick_check"
     assert "After the mini-lesson" in payload["must_ask"]
     assert "mastery_quiz(question_type='choice')" in payload["must_ask"]
+    assert "Do not ask the learner to choose the quiz format" in payload["must_ask"]
     assert payload["check_options"][0]["mode"] == "multiple_choice"
     assert payload["required_check"]["mode"] == "quick_check"
     assert payload["free_response_policy"]["optional_now"] is True
@@ -118,7 +122,7 @@ def test_lesson_contract_masks_materialized_overview_name() -> None:
 
     assert payload["current_objective"]["display_name"] == "the learning path overview"
     assert "the learning path overview" in payload["must_ask"]
-    assert "multiple-choice or true/false" in payload["must_ask"]
+    assert "immediately register one quick multiple-choice" in payload["must_ask"]
 
 
 def test_lesson_contract_requires_free_response_after_foundation_ramp() -> None:

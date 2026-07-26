@@ -858,6 +858,12 @@ _GENERIC_LEARNING_MENU_RE = re.compile(
     r"(?i)\b(what subject|what topic|would you like to learn|tell me what .*learn)\b"
     r"|想学.*什么|学习.*主题"
 )
+_QUIZ_FORMAT_NEGOTIATION_RE = re.compile(
+    r"(?i)\b(would you prefer|do you prefer|prefer to answer|choose .*format|"
+    r"multiple choice.*true\s*/\s*false|true\s*/\s*false.*multiple choice|"
+    r"provide .*knowledge point|provide .*question|provide .*options)\b"
+    r"|是否.*(选择题|判断题|自由回答)|选择.*(题型|形式)|请.*提供.*(题目|选项|知识点)"
+)
 
 
 def _needs_mastery_quiz_card_repair(
@@ -884,6 +890,7 @@ def _needs_mastery_quiz_card_repair(
         has_choice_check
         or _PLAIN_TRUE_FALSE_RE.search(text)
         or _GENERIC_LEARNING_MENU_RE.search(text)
+        or _QUIZ_FORMAT_NEGOTIATION_RE.search(text)
     )
 
 
@@ -951,7 +958,8 @@ def _mastery_quiz_card_repair_instruction(final_text: str) -> str:
         "mastery mode because it cannot be graded deterministically.\n\n"
         "Repair this now without teaching a new lesson:\n"
         "1. Register the same check with mastery_quiz, including the current "
-        "knowledge_point_id from the deterministic mastery status.\n"
+        "knowledge_point_id from the deterministic mastery status. Do not ask "
+        "the learner to provide it.\n"
         "2. For choice questions, set question_type='choice', pass full option "
         "bodies such as ['A: ...', 'B: ...'], and set expected_answer to the "
         "correct label.\n"
@@ -986,7 +994,8 @@ def _mastery_ask_user_registration_repair_instruction() -> str:
         "card and is not allowed.\n\n"
         "Repair this now without teaching new content:\n"
         "1. Call mastery_quiz for the current objective from Deterministic "
-        "Mastery Status.\n"
+        "Mastery Status. Do not ask the learner for the knowledge_point_id, "
+        "question, options, or preferred quiz format.\n"
         "2. Use question_type='choice' for multiple-choice checks.\n"
         "3. Pass full option bodies like ['A: ...', 'B: ...'] and set "
         "expected_answer to the correct label.\n"

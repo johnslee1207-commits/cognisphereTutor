@@ -161,18 +161,22 @@ def _must_ask(next_step: NextStep) -> str:
     name = _objective_label(next_step, "")
     if next_step.action == "probe" and "procedure" == next_step.knowledge_point_type:
         return (
-            f"After the mini-lesson, register one quick multiple-choice or true/false "
+            f"After the mini-lesson, immediately register one quick multiple-choice "
             f"check about {name} with mastery_quiz(question_type='choice'), then "
-            "present it with ask_user. Mention that the learner may also answer in "
-            "free text if they prefer."
+            "present it with ask_user. Do not ask the learner to choose the quiz "
+            "format, scope, question content, or options."
         )
     if next_step.knowledge_point_type in {"memory", "procedure"}:
-        return f"Create one focused question for {name} with mastery_quiz, then present it via ask_user."
+        return (
+            f"Create one focused default multiple-choice question for {name} with "
+            "mastery_quiz, then present it via ask_user. Do not negotiate the "
+            "assessment format with the learner."
+        )
     return (
-        f"After the mini-lesson, register one quick multiple-choice or true/false "
+        f"After the mini-lesson, immediately register one quick multiple-choice "
         f"check about {name} with mastery_quiz(question_type='choice'), then "
-        "present it with ask_user. Also allow a free-response explanation for a "
-        "deeper mastery check on the next turn."
+        "present it with ask_user. Do not ask whether the learner wants a quiz. "
+        "Free response can be offered after the quick check, not before it."
     )
 
 
@@ -232,8 +236,12 @@ def _required_check(next_step: NextStep, summary: dict[str, Any]) -> dict[str, A
         }
     return {
         "mode": "quick_check",
-        "allowed_modes": ["multiple_choice", "true_false"],
-        "reason": "During early learning, prefer certification-style quick checks after each mini-lesson.",
+        "allowed_modes": ["multiple_choice"],
+        "default_mode": "multiple_choice",
+        "reason": (
+            "During early learning, automatically run a certification-style "
+            "multiple-choice quick check after each mini-lesson."
+        ),
     }
 
 
@@ -268,8 +276,9 @@ def _free_response_required(summary: dict[str, Any]) -> bool:
 def _interaction_policy(next_step: NextStep, learner_profile: dict[str, Any]) -> list[str]:
     policy = [
         "Do not end the turn by asking the learner to choose a topic from a menu.",
+        "Do not ask the learner to choose the assessment format; use the default quick multiple-choice check.",
         "Do not create a new unified_* path.",
-        "After each mini-lesson, provide a quick check path: multiple choice or true/false, with free response as an alternative.",
+        "After each mini-lesson, immediately register and present one quick multiple-choice check.",
         "Free response is optional unless free_response_policy.required_now is true.",
         "Do not mark qualitative mastery in the same turn as the initial explanation.",
     ]
