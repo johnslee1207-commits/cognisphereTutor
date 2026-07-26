@@ -801,6 +801,14 @@ function MasteryPathPageInner() {
             </div>
           )}
           <div className="space-y-1">
+            <div className="px-1 pt-1">
+              <p className="text-[11px] font-medium text-[var(--foreground)]">
+                {tr("添加学习课程", "Add courses")}
+              </p>
+              <p className="text-[10px] text-[var(--muted-foreground)]">
+                {tr("选择一个或多个领域，生成可继续学习的路径。", "Select one or more domains to create learning paths.")}
+              </p>
+            </div>
             {(csphere?.plugins || []).map((plugin) => (
               <div
                 key={plugin.domain}
@@ -827,7 +835,7 @@ function MasteryPathPageInner() {
                   {csphereBusy ? (
                     <Loader2 className="w-3 h-3 animate-spin" />
                   ) : (
-                    tr("导入", "Import")
+                    tr("添加", "Add")
                   )}
                 </button>
               </div>
@@ -850,8 +858,8 @@ function MasteryPathPageInner() {
               <Package className="w-3 h-3" />
             )}
             {tr(
-              `组合并导入 (${selectedDomains.length})`,
-              `Compose & seed (${selectedDomains.length})`,
+              `添加所选课程 (${selectedDomains.length})`,
+              `Add selected courses (${selectedDomains.length})`,
             )}
           </button>
         </div>
