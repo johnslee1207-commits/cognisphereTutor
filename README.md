@@ -2,47 +2,54 @@
 
 <p align="center"><img src="assets/figs/logo/logo.png" alt="cognisphereTutor logo" height="56" style="vertical-align: middle;">&nbsp;<img src="assets/figs/logo/banner.png" alt="cognisphereTutor" height="48" style="vertical-align: middle;"></p>
 
-# cognisphereTutor: Lifelong Personalized Tutoring
+# cognisphereTutor Learning Packs Starter
 
 <p align="center">
-  <a href="https://cognispheretutor.info" target="_blank"><img alt="Docs — cognispheretutor.info" src="https://img.shields.io/badge/Docs-cognispheretutor.info%20%E2%86%97-0A0A0A?style=for-the-badge&labelColor=F5F5F4" height="36"></a>
+  A learner-first fork that bundles AWS Certification, AP Calculus, and LeetCode course packs on top of the upstream cognisphereTutor platform.
 </p>
 
 <p align="center">
-  <a href="https://trendshift.io/repositories/17099?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-17099" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/17099" alt="HKUDS%2FcognisphereTutor | Trendshift" width="250" height="55"/></a>&nbsp;
-  <a href="https://trendshift.io/repositories/17099?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-17099" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/17099/daily" alt="HKUDS%2FcognisphereTutor | Trendshift" width="250" height="55"/></a>&nbsp;
-  <a href="https://trendshift.io/repositories/17099?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-17099" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/17099/weekly?language=Python" alt="HKUDS%2FcognisphereTutor | Trendshift" width="250" height="55"/></a>
-</p>
-
-<p align="center">
-  <a href="README.md"><img alt="English" height="40" src="https://img.shields.io/badge/English-BCDCF7"></a>&nbsp;
-  <a href="assets/README/README_CN.md"><img alt="简体中文" height="40" src="https://img.shields.io/badge/简体中文-CDCFD4"></a>&nbsp;
-  <a href="assets/README/README_JA.md"><img alt="日本語" height="40" src="https://img.shields.io/badge/日本語-CDCFD4"></a>&nbsp;
-  <a href="assets/README/README_ES.md"><img alt="Español" height="40" src="https://img.shields.io/badge/Español-CDCFD4"></a>&nbsp;
-  <a href="assets/README/README_FR.md"><img alt="Français" height="40" src="https://img.shields.io/badge/Français-CDCFD4"></a>&nbsp;
-  <a href="assets/README/README_AR.md"><img alt="Arabic" height="40" src="https://img.shields.io/badge/Arabic-CDCFD4"></a>&nbsp;
-  <a href="assets/README/README_RU.md"><img alt="Русский" height="40" src="https://img.shields.io/badge/Русский-CDCFD4"></a>&nbsp;
-  <a href="assets/README/README_HI.md"><img alt="Hindi" height="40" src="https://img.shields.io/badge/Hindi-CDCFD4"></a>&nbsp;
-  <a href="assets/README/README_PT.md"><img alt="Português" height="40" src="https://img.shields.io/badge/Português-CDCFD4"></a>&nbsp;
-  <a href="assets/README/README_TH.md"><img alt="Thai" height="40" src="https://img.shields.io/badge/Thai-CDCFD4"></a>&nbsp;
-  <a href="assets/README/README_PL.md"><img alt="Polski" height="40" src="https://img.shields.io/badge/Polski-CDCFD4"></a>
+  <a href="guides/AWS_BEGINNER_USER_GUIDE_ZH.md">AWS Beginner User Guide</a> ·
+  <a href="https://github.com/HKUDS/cognisphereTutor">Upstream Project</a> ·
+  <a href="https://cognispheretutor.info">Upstream Docs</a>
 </p>
 
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square)](LICENSE)
-[![GitHub release](https://img.shields.io/github/v/release/HKUDS/cognisphereTutor?style=flat-square&color=brightgreen)](https://github.com/HKUDS/cognisphereTutor/releases)
-[![arXiv](https://img.shields.io/badge/arXiv-2604.26962-b31b1b?style=flat-square&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2604.26962)
 
-[![Discord](https://img.shields.io/badge/Discord-Community-5865F2?style=flat-square&logo=discord&logoColor=white)](https://discord.gg/eRsjPgMU4t)
-[![Feishu](https://img.shields.io/badge/Feishu-Group-00D4AA?style=flat-square&logo=feishu&logoColor=white)](./Communication.md)
-[![WeChat](https://img.shields.io/badge/WeChat-Group-07C160?style=flat-square&logo=wechat&logoColor=white)](https://github.com/HKUDS/cognisphereTutor/issues/78)
-
-[Features](#-key-features) · [Get Started](#-get-started) · [Explore](#-explore-cognispheretutor) · [CLI](#%EF%B8%8F-cognispheretutor-cli--agent-native-interface) · [Ecosystem](#-ecosystem--eduhub--the-skills-community) · [Community](#-community)
+[Project Start](#-project-starting-point) · [Get Started](#-get-started) · [AWS User Guide](guides/AWS_BEGINNER_USER_GUIDE_ZH.md) · [Upstream Background](#upstream-cognispheretutor-background) · [Explore](#-explore-cognispheretutor)
 
 </div>
 
 ---
+
+## 🧭 Project Starting Point
+
+This repository starts from the upstream
+[cognisphereTutor](https://github.com/HKUDS/cognisphereTutor) learning
+workspace, then adds a concrete ordinary-user learning experience:
+
+- **Bundled domain packs:** AWS Certification, AP Calculus, and LeetCode ship
+  with this repo under `cognispheretutor/integrations/cognisphere/bundled_packs/`.
+- **No extra learning-material download for AWS:** a user can clone this repo,
+  install Tutor, open Learning Space, add **AWS Certification**, and begin the
+  generated Mastery Path.
+- **Course Library UI:** the user sees courses and learning actions, not
+  plugin/import/seed terminology.
+- **Mastery learning loop:** lessons flow into Quick Quiz checks and continue
+  through the chat-based Mastery Path agent.
+- **Developer escape hatch:** external CognisphereLearningPlugins still take
+  precedence when present, so pack authors can test newer plugin exports while
+  ordinary users keep the bundled path.
+
+For the first AWS learner workflow, use the Chinese guide:
+[`guides/AWS_BEGINNER_USER_GUIDE_ZH.md`](guides/AWS_BEGINNER_USER_GUIDE_ZH.md).
+
+<details>
+<summary><b>Upstream cognisphereTutor background</b> — original project links, releases, news, and general feature overview</summary>
+
+### Upstream cognisphereTutor Background
 
 > 🤝 **We welcome any kinds of contributing!** Vote on roadmap items or propose new ones at [`Roadmap`](https://github.com/HKUDS/cognisphereTutor/issues/498), and see our [Contributing Guide](CONTRIBUTING.md) for branching strategy, coding standards, and how to get started.
 
@@ -180,6 +187,8 @@ cognisphereTutor is an agent-native learning workspace that connects tutoring, p
 - **Multi-engine knowledge** — versioned RAG libraries across LlamaIndex, PageIndex, GraphRAG, LightRAG, or a linked Obsidian vault, with pluggable document parsing.
 - **Extensible tools and skills** — built-in tools, MCP servers, image / video / voice generation models, and installable community skills from EduHub.
 - **Inspectable memory** — L1 traces, L2 surface summaries, and L3 synthesis make personalization visible and editable, with a Memory Graph that traces every claim back to its evidence.
+
+</details>
 
 ---
 
