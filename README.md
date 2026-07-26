@@ -1,17 +1,12 @@
 # cognisphereTutor Learning Packs Starter
 
-一个面向普通学习者的本地 AI 学习项目：在上游
-[cognisphereTutor](https://github.com/HKUDS/cognisphereTutor) 平台基础上，
-内置 **AWS Certification**、**AP Calculus**、**LeetCode** 三个学习包，让用户
+一个面向普通学习者的本地 AI 学习项目：内置 **AWS Certification**、
+**AP Calculus**、**LeetCode** 三个学习包，让用户
 下载本仓库后即可进入课程学习、Mastery Path、Quick Quiz 和学习进度追踪。
-
-> 上游平台文档：<https://cognispheretutor.info>  
-> 上游项目 README：<https://github.com/HKUDS/cognisphereTutor>
 
 ## 项目起点
 
-本仓的目标不是展示上游平台的全部能力，而是把 DeepTutor /
-cognisphereTutor 的 agent-native 学习架构落到一个可直接使用的学习体验：
+本仓的目标是提供一个可直接使用的本地 AI 学习体验：
 
 - 普通用户只下载本仓库即可开始 AWS 初级认证学习。
 - AWS/AP/LeetCode 学习包随项目分发，不需要额外下载 Cognisphere 或
@@ -175,11 +170,7 @@ guides/
   AWS_BEGINNER_USER_GUIDE_ZH.md # 普通用户 AWS 学习指南
 ```
 
-## 与上游项目的关系
-
-本仓基于上游 cognisphereTutor，并聚焦“内置课程包 + 普通用户学习体验”。
-如果你需要了解完整平台能力，例如 RAG、Book、Co-Writer、Partners、Memory、
-CLI、Docker、多用户部署等，请阅读上游资料：
+## 上游参考
 
 - 上游项目：<https://github.com/HKUDS/cognisphereTutor>
 - 上游文档：<https://cognispheretutor.info>
