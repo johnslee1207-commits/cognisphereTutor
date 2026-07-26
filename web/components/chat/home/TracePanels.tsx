@@ -2415,6 +2415,7 @@ export function AssistantActivity({
   agentName,
   showMark = true,
   headerClassName = "",
+  defaultOpen,
 }: {
   events: StreamEvent[];
   isStreaming?: boolean;
@@ -2427,6 +2428,8 @@ export function AssistantActivity({
   /** Extra classes on the status header row (e.g. a min-height so the row
    *  vertically centers against an adjacent avatar). */
   headerClassName?: string;
+  /** Optional initial trace disclosure state; leaves manual toggles intact. */
+  defaultOpen?: boolean;
 }) {
   const hasTrace = useMemo(() => hasRenderableCallTrace(events), [events]);
   const hasFinalContent = Boolean(content && content.trim().length > 0);
@@ -2437,7 +2440,7 @@ export function AssistantActivity({
   // null = follow the phase automatically (open while working, collapsed
   // once answered). A click pins the user's choice for this message.
   const [userOpen, setUserOpen] = useState<boolean | null>(null);
-  const open = hasTrace && (userOpen ?? !finalPhase);
+  const open = hasTrace && (userOpen ?? defaultOpen ?? !finalPhase);
 
   // Match StreamingStatus's own null-guard: nothing to show for an empty,
   // non-streaming shell with no trace either.

@@ -375,9 +375,15 @@ const AssistantMessage = memo(function AssistantMessage({
     !mathAnimatorResult &&
     !visualizeResult &&
     !(quizQuestions && quizQuestions.length > 0);
+  const isMasteryMessage = msg.capability === "mastery_path";
   const messageSegments = useMemo(
-    () => (useInlineAskUserSegments ? extractMessageSegments(msg.events) : []),
-    [useInlineAskUserSegments, msg.events],
+    () =>
+      useInlineAskUserSegments
+        ? extractMessageSegments(msg.events, {
+            includeNarrationText: isMasteryMessage,
+          })
+        : [],
+    [useInlineAskUserSegments, isMasteryMessage, msg.events],
   );
   const hasInlineAskUser =
     useInlineAskUserSegments &&
@@ -398,6 +404,7 @@ const AssistantMessage = memo(function AssistantMessage({
         events={events}
         isStreaming={isStreaming}
         content={msg.content}
+        defaultOpen={isMasteryMessage ? false : undefined}
         className="mb-3"
       />
       {outlinePreview && outlinePreview.sub_topics.length > 0 ? (
@@ -480,6 +487,11 @@ const AssistantMessage = memo(function AssistantMessage({
               key={seg.key}
               content={seg.text}
               isStreaming={isStreaming}
+              className={
+                isMasteryMessage
+                  ? "dt-learning-lesson text-[17px] leading-[1.8]"
+                  : undefined
+              }
             />
           ) : (
             <AskUserOptions
@@ -493,7 +505,15 @@ const AssistantMessage = memo(function AssistantMessage({
           ),
         )
       ) : (
-        <AssistantResponse content={msg.content} isStreaming={isStreaming} />
+        <AssistantResponse
+          content={msg.content}
+          isStreaming={isStreaming}
+          className={
+            isMasteryMessage
+              ? "dt-learning-lesson text-[17px] leading-[1.8]"
+              : undefined
+          }
+        />
       )}
       {/* Non-default branches (quiz, math animator, visualize) keep
           ask_user below the body. The default branch inlines the card

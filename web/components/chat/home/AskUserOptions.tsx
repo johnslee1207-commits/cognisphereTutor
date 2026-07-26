@@ -187,6 +187,7 @@ export type MessageSegment =
 
 export function extractMessageSegments(
   events: StreamEvent[] | undefined,
+  options: { includeNarrationText?: boolean } = {},
 ): MessageSegment[] {
   if (!events || events.length === 0) return [];
 
@@ -214,7 +215,13 @@ export function extractMessageSegments(
   for (const event of events) {
     if (shouldAppendEventContent(event)) {
       const callId = ((event.metadata ?? {}) as { call_id?: string }).call_id;
-      if (callId && narrationCallIds.has(callId)) continue;
+      if (
+        callId &&
+        narrationCallIds.has(callId) &&
+        !options.includeNarrationText
+      ) {
+        continue;
+      }
       const idx = ensureTextSegment();
       const seg = segments[idx];
       if (seg.kind === "text") {
