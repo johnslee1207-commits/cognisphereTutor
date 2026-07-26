@@ -8,6 +8,7 @@ import {
   Loader2,
   RotateCcw,
   Trash2,
+  Undo2,
   CircleCheck,
   CircleDot,
   Circle,
@@ -20,7 +21,9 @@ import {
   fetchAllProgress,
   fetchMasteryMap,
   deleteProgress,
+  listProgressBackups,
   redoProgress,
+  restoreProgress,
   type ProgressSummary,
   type MasteryMapResult,
   type ObjectiveStatus,
@@ -244,13 +247,38 @@ export default function MasteryPathPage() {
       if (
         !window.confirm(
           tr(
-            "重置进度？知识点保留，但掌握度与复习计划清空。",
-            "Reset progress? Objectives are kept, but mastery and reviews are cleared.",
+            "从头开始这条精通之路？系统会先保存当前进度备份，可稍后恢复。",
+            "Start this mastery path from the beginning? Tutor will save a backup first so you can restore it later.",
           ),
         )
       )
         return;
       await redoProgress(pathId);
+      const result = await fetchMasteryMap(pathId);
+      setDetail(result);
+    },
+    [tr],
+  );
+
+  const handleRestore = useCallback(
+    async (pathId: string) => {
+      const backups = await listProgressBackups(pathId);
+      if (!backups.backups.length) {
+        window.alert(
+          tr("还没有可恢复的进度备份。", "No restorable progress backup yet."),
+        );
+        return;
+      }
+      if (
+        !window.confirm(
+          tr(
+            "恢复最近一次备份？当前进度会被备份内容替换。",
+            "Restore the latest backup? Current progress will be replaced.",
+          ),
+        )
+      )
+        return;
+      await restoreProgress(pathId);
       const result = await fetchMasteryMap(pathId);
       setDetail(result);
     },
@@ -560,7 +588,9 @@ export default function MasteryPathPage() {
                 </div>
                 <div className="mt-0.5 text-xs text-[var(--muted-foreground)]">
                   {isCognispherePathId(path.book_id) && (
-                    <span className="mr-1 text-[var(--primary)]">CS · </span>
+                    <span className="mr-1 text-[var(--primary)]">
+                      {tr("CS ·", "CS ·")}
+                    </span>
                   )}
                   {path.kp_count} {tr("个知识点", "objectives")} ·{" "}
                   {path.avg_mastery_pct}%
@@ -665,7 +695,7 @@ export default function MasteryPathPage() {
                   {tr("导入全部", "Import all")}
                 </button>
               </div>
-              {(csphere.plugins || []).map((plugin) => {
+              {(csphere?.plugins || []).map((plugin) => {
                 const path = plugin.path_id
                   ? paths.find((item) => item.book_id === plugin.path_id)
                   : null;
@@ -856,6 +886,7 @@ export default function MasteryPathPage() {
             }
             onSocratic={handleSocraticPractice}
             onRedo={() => selected && handleRedo(selected)}
+            onRestore={() => selected && handleRestore(selected)}
             onDelete={() => selected && handleDelete(selected)}
           />
         )}
@@ -1008,6 +1039,7 @@ function MapView({
   onContinue,
   onSocratic,
   onRedo,
+  onRestore,
   onDelete,
 }: {
   result: MasteryMapResult;
@@ -1021,6 +1053,7 @@ function MapView({
   onContinue: () => void;
   onSocratic: () => void;
   onRedo: () => void;
+  onRestore: () => void;
   onDelete: () => void;
 }) {
   const { map, next } = result;
@@ -1056,7 +1089,9 @@ function MapView({
               </span>
             )}
             {cognisphere && (
-              <span className="text-[var(--primary)]">· Cognisphere</span>
+              <span className="text-[var(--primary)]">
+                {tr("· Cognisphere", "· Cognisphere")}
+              </span>
             )}
           </div>
           <div className="mt-1.5 h-1.5 w-full rounded-full bg-[var(--accent)] overflow-hidden">
@@ -1073,6 +1108,13 @@ function MapView({
             className="p-1.5 rounded-md text-[var(--muted-foreground)] hover:bg-[var(--accent)] cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
+          </button>
+          <button
+            onClick={onRestore}
+            title={tr("恢复最近备份", "Restore latest backup")}
+            className="p-1.5 rounded-md text-[var(--muted-foreground)] hover:bg-[var(--accent)] cursor-pointer"
+          >
+            <Undo2 className="w-4 h-4" />
           </button>
           <button
             onClick={onDelete}

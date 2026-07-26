@@ -125,6 +125,13 @@ export interface ProgressListResult {
   errors: { book_id: string; error: string }[];
 }
 
+export interface ProgressBackup {
+  backup_id: string;
+  book_id: string;
+  reason: string;
+  created_at: number;
+}
+
 export async function fetchAllProgress(): Promise<ProgressListResult> {
   const res = await apiFetch(apiUrl("/api/v1/learning/progress"));
   if (!res.ok) throw new Error(`Failed to fetch all progress: ${res.status}`);
@@ -146,7 +153,30 @@ export async function redoProgress(bookId: string) {
     { method: "POST" },
   );
   if (!res.ok) throw new Error(`Failed to redo progress: ${res.status}`);
-  return res.json();
+  return res.json() as Promise<{ status: string; backup?: ProgressBackup }>;
+}
+
+export async function listProgressBackups(bookId: string) {
+  const res = await apiFetch(
+    apiUrl(
+      `/api/v1/learning/progress/${encodeURIComponent(bookId)}/backups`,
+    ),
+  );
+  if (!res.ok) throw new Error(`Failed to list progress backups: ${res.status}`);
+  return res.json() as Promise<{ book_id: string; backups: ProgressBackup[] }>;
+}
+
+export async function restoreProgress(bookId: string, backupId = "latest") {
+  const res = await apiFetch(
+    apiUrl(
+      `/api/v1/learning/progress/${encodeURIComponent(bookId)}/restore?backup_id=${encodeURIComponent(
+        backupId,
+      )}`,
+    ),
+    { method: "POST" },
+  );
+  if (!res.ok) throw new Error(`Failed to restore progress: ${res.status}`);
+  return res.json() as Promise<{ status: string; backup?: ProgressBackup }>;
 }
 
 export async function importFromBook(

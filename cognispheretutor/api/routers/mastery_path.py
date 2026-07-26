@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import html
 import json
+from pathlib import Path
+import time
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -15,10 +17,13 @@ from cognispheretutor.learning.models import (
     KnowledgePoint,
     KnowledgeType,
     LearningModule,
+    LearningProgress,
     LearningStage,
 )
 from cognispheretutor.learning.service import LearningService
 from cognispheretutor.learning.storage import LearningStore
+from cognispheretutor.services.file_io import atomic_write_text
+from cognispheretutor.services.path_service import get_path_service
 from cognispheretutor.services.settings.interface_settings import get_ui_language
 from cognispheretutor.utils.json_parser import parse_json_response
 
@@ -72,6 +77,64 @@ def _validate_runnable_modules(modules: list[LearningModule], *, status_code: in
                 status_code=status_code,
                 detail=f"Module {mod.id!r} must contain at least one knowledge point",
             )
+
+
+def _progress_backup_dir(book_id: str) -> Path:
+    path = get_path_service().get_workspace_dir() / "learning_backups" / book_id
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def _progress_backup_path(book_id: str, backup_id: str) -> Path:
+    if not backup_id or ".." in backup_id or "/" in backup_id or "\\" in backup_id or ":" in backup_id:
+        raise HTTPException(status_code=400, detail="Invalid backup_id")
+    path = _progress_backup_dir(book_id) / f"{backup_id}.json"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="Progress backup not found")
+    return path
+
+
+def _create_progress_backup(progress: LearningProgress, *, reason: str) -> dict:
+    timestamp = int(time.time() * 1000)
+    backup_id = f"{timestamp}"
+    payload = {
+        "backup_id": backup_id,
+        "book_id": progress.book_id,
+        "reason": reason,
+        "created_at": time.time(),
+        "progress": progress.model_dump(mode="json"),
+    }
+    atomic_write_text(
+        _progress_backup_dir(progress.book_id) / f"{backup_id}.json",
+        json.dumps(payload, ensure_ascii=False, indent=2),
+    )
+    return {
+        "backup_id": backup_id,
+        "book_id": progress.book_id,
+        "reason": reason,
+        "created_at": payload["created_at"],
+    }
+
+
+def _list_progress_backups(book_id: str) -> list[dict]:
+    backups: list[dict] = []
+    for path in _progress_backup_dir(book_id).glob("*.json"):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if data.get("book_id") != book_id:
+            continue
+        backups.append(
+            {
+                "backup_id": str(data.get("backup_id") or path.stem),
+                "book_id": book_id,
+                "reason": str(data.get("reason") or ""),
+                "created_at": float(data.get("created_at") or 0.0),
+            }
+        )
+    backups.sort(key=lambda item: item["created_at"], reverse=True)
+    return backups
 
 
 async def _cancel_active_learning_turn(book_id: str) -> None:
@@ -193,10 +256,12 @@ async def delete_progress(book_id: str):
 @router.post("/progress/{book_id}/redo")
 async def redo_progress(book_id: str):
     _validate_book_id(book_id)
+    await _cancel_active_learning_turn(book_id)
     store = LearningStore()
     progress = store.load(book_id)
     if progress is None:
         raise HTTPException(status_code=404, detail="Progress not found")
+    backup = _create_progress_backup(progress, reason="redo")
     progress.current_stage = LearningStage.DIAGNOSTIC
     progress.mastery_levels = {}
     progress.qualitative_mastery = {}
@@ -213,7 +278,39 @@ async def redo_progress(book_id: str):
     progress.current_kp_index = 0
     progress.current_module_id = progress.modules[0].id if progress.modules else ""
     store.save(progress)
-    return {"status": "ok"}
+    return {"status": "ok", "backup": backup}
+
+
+@router.get("/progress/{book_id}/backups")
+async def list_progress_backups(book_id: str):
+    _validate_book_id(book_id)
+    return {"book_id": book_id, "backups": _list_progress_backups(book_id)}
+
+
+@router.post("/progress/{book_id}/restore")
+async def restore_progress(book_id: str, backup_id: str = "latest"):
+    _validate_book_id(book_id)
+    backups = _list_progress_backups(book_id)
+    if not backups:
+        raise HTTPException(status_code=404, detail="Progress backup not found")
+    resolved_backup_id = backups[0]["backup_id"] if backup_id == "latest" else backup_id
+    path = _progress_backup_path(book_id, resolved_backup_id)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    progress_data = data.get("progress")
+    if not isinstance(progress_data, dict) or progress_data.get("book_id") != book_id:
+        raise HTTPException(status_code=422, detail="Invalid progress backup")
+    await _cancel_active_learning_turn(book_id)
+    progress = LearningProgress.model_validate(progress_data)
+    LearningStore().save(progress)
+    return {
+        "status": "ok",
+        "backup": {
+            "backup_id": resolved_backup_id,
+            "book_id": book_id,
+            "reason": str(data.get("reason") or ""),
+            "created_at": float(data.get("created_at") or 0.0),
+        },
+    }
 
 
 class NotebookRecordInput(BaseModel):

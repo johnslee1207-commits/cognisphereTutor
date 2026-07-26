@@ -23,10 +23,13 @@ import {
   GraduationCap,
   Image as ImageIcon,
   Lightbulb,
+  MessageCirclePlus,
   MessageSquare,
   Microscope,
   PenLine,
+  RotateCcw,
   Sparkles,
+  Undo2,
   type LucideIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -111,6 +114,11 @@ import {
   type SelectedBookReference,
 } from "@/lib/book-references";
 import { isCognispherePathId, masteryChatHref } from "@/lib/cognisphere-learning-api";
+import {
+  listProgressBackups,
+  redoProgress,
+  restoreProgress,
+} from "@/lib/learning-api";
 
 const NotebookRecordPicker = dynamic(
   () => import("@/components/notebook/NotebookRecordPicker"),
@@ -578,6 +586,9 @@ export default function ChatPage() {
   // context (state.personaSelection) so it follows the session.
   const [personaSelectorOpen, setPersonaSelectorOpen] = useState(false);
   const [showMemoryPicker, setShowMemoryPicker] = useState(false);
+  const [masteryProgressBusy, setMasteryProgressBusy] = useState(false);
+  const [masteryProgressNotice, setMasteryProgressNotice] = useState<string | null>(null);
+  const [masteryProgressError, setMasteryProgressError] = useState<string | null>(null);
   const [spaceMenuOpen, setSpaceMenuOpen] = useState(false);
   const [selectedNotebookRecords, setSelectedNotebookRecords] = useState<
     SelectedRecord[]
@@ -690,6 +701,127 @@ export default function ChatPage() {
     }
   }, [capabilityNeedsConfig, ensureActivityPanelOpen]);
   const hasMessages = state.messages.length > 0;
+  const handleResetMasteryProgress = useCallback(async () => {
+    if (!masteryPathParam || masteryProgressBusy) return;
+    const ok = window.confirm(
+      goalTr(
+        "是否从头开始这条学习路径？系统会先保存当前进度备份，你之后可以恢复。",
+        "Start this learning path from the beginning? Tutor will save a backup first so you can restore it later.",
+      ),
+    );
+    if (!ok) return;
+    setMasteryProgressBusy(true);
+    setMasteryProgressError(null);
+    setMasteryProgressNotice(null);
+    try {
+      const result = await redoProgress(masteryPathParam);
+      setCapability("mastery_path");
+      setMasteryProgressNotice(
+        result.backup?.backup_id
+          ? goalTr(
+              "已从头开始，并已保存可恢复备份。",
+              "Started from the beginning. A restorable backup was saved.",
+            )
+          : goalTr("已从头开始。", "Started from the beginning."),
+      );
+    } catch (err) {
+      setMasteryProgressError(
+        err instanceof Error
+          ? err.message
+          : goalTr("重置失败", "Failed to reset progress"),
+      );
+    } finally {
+      setMasteryProgressBusy(false);
+    }
+  }, [goalTr, masteryPathParam, masteryProgressBusy, setCapability]);
+
+  const handleRestoreMasteryProgress = useCallback(async () => {
+    if (!masteryPathParam || masteryProgressBusy) return;
+    setMasteryProgressBusy(true);
+    setMasteryProgressError(null);
+    setMasteryProgressNotice(null);
+    try {
+      const backups = await listProgressBackups(masteryPathParam);
+      if (!backups.backups.length) {
+        setMasteryProgressError(
+          goalTr("还没有可恢复的进度备份。", "No restorable progress backup yet."),
+        );
+        return;
+      }
+      const ok = window.confirm(
+        goalTr(
+          "恢复最近一次备份？当前进度会被备份内容替换。",
+          "Restore the latest backup? Current progress will be replaced.",
+        ),
+      );
+      if (!ok) return;
+      await restoreProgress(masteryPathParam);
+      setCapability("mastery_path");
+      setMasteryProgressNotice(
+        goalTr("已恢复最近一次学习进度。", "Restored the latest learning progress."),
+      );
+    } catch (err) {
+      setMasteryProgressError(
+        err instanceof Error
+          ? err.message
+          : goalTr("恢复失败", "Failed to restore progress"),
+      );
+    } finally {
+      setMasteryProgressBusy(false);
+    }
+  }, [goalTr, masteryPathParam, masteryProgressBusy, setCapability]);
+
+  const handleNewMasterySession = useCallback(
+    async (mode: "continue" | "restart") => {
+      if (!masteryPathParam || masteryProgressBusy) return;
+      setMasteryProgressBusy(true);
+      setMasteryProgressError(null);
+      setMasteryProgressNotice(null);
+      try {
+        if (mode === "restart") {
+          const ok = window.confirm(
+            goalTr(
+              "新会话将从第 1 课重新开始。系统会先保存当前进度备份。",
+              "The new session will start from lesson 1. Tutor will save your current progress first.",
+            ),
+          );
+          if (!ok) return;
+          await redoProgress(masteryPathParam);
+        }
+        newSession();
+        setCapability("mastery_path");
+        pendingMasteryPathRef.current = masteryPathParam;
+        router.replace(masteryChatHref(masteryPathParam), { scroll: false });
+        setMasteryProgressNotice(
+          mode === "restart"
+            ? goalTr(
+                "新学习会话已准备好：从头开始。",
+                "New learning session is ready from the beginning.",
+              )
+            : goalTr(
+                "新学习会话已准备好：继续当前进度。",
+                "New learning session is ready at your current progress.",
+              ),
+        );
+      } catch (err) {
+        setMasteryProgressError(
+          err instanceof Error
+            ? err.message
+            : goalTr("无法创建新学习会话", "Could not create a new learning session"),
+        );
+      } finally {
+        setMasteryProgressBusy(false);
+      }
+    },
+    [
+      goalTr,
+      masteryPathParam,
+      masteryProgressBusy,
+      newSession,
+      router,
+      setCapability,
+    ],
+  );
   // Time-of-day greeting: seeded once on mount from the user's local clock so
   // the heading stays stable while they're on the page. State (not useMemo)
   // because the random pick would otherwise mismatch SSR ↔ client hydration.
@@ -1019,10 +1151,10 @@ export default function ChatPage() {
 
   // When a new session_id is assigned by the server, update the URL
   useEffect(() => {
-    if (state.sessionId && !chatSessionIdParam) {
+    if (state.sessionId && !chatSessionIdParam && !masteryPathParam) {
       router.replace(`/home/${state.sessionId}`, { scroll: false });
     }
-  }, [state.sessionId, chatSessionIdParam, router]);
+  }, [state.sessionId, chatSessionIdParam, masteryPathParam, router]);
 
   useEffect(() => {
     setActiveSessionId(state.sessionId || chatSessionIdParam || masteryPathParam || null);
@@ -1951,6 +2083,40 @@ export default function ChatPage() {
               ) : null}
             </div>
             <div className="flex shrink-0 items-center gap-0.5">
+              {masteryPathParam ? (
+                <>
+                  <HeaderActionButton
+                    onClick={() => void handleNewMasterySession("continue")}
+                    disabled={masteryProgressBusy}
+                    icon={MessageCirclePlus}
+                    label={t("New learning session")}
+                    title={goalTr(
+                      "新会话：继续当前进度",
+                      "New session: continue current progress",
+                    )}
+                  />
+                  <HeaderActionButton
+                    onClick={handleResetMasteryProgress}
+                    disabled={masteryProgressBusy}
+                    icon={RotateCcw}
+                    label={t("Restart path")}
+                    title={goalTr(
+                      "从头开始此学习路径",
+                      "Restart this learning path",
+                    )}
+                  />
+                  <HeaderActionButton
+                    onClick={handleRestoreMasteryProgress}
+                    disabled={masteryProgressBusy}
+                    icon={Undo2}
+                    label={t("Restore progress")}
+                    title={goalTr(
+                      "恢复最近一次重置前进度",
+                      "Restore the latest pre-reset progress",
+                    )}
+                  />
+                </>
+              ) : null}
               <HeaderActionButton
                 onClick={() => setShowSaveModal(true)}
                 disabled={!chatSavePayload}
@@ -1973,6 +2139,19 @@ export default function ChatPage() {
               />
             </div>
           </div>
+          {masteryPathParam && (masteryProgressNotice || masteryProgressError) ? (
+            <div className="border-b border-[var(--border)] px-6 py-2">
+              <div
+                className={`mx-auto max-w-[960px] rounded-md px-3 py-2 text-xs ${
+                  masteryProgressError
+                    ? "bg-red-500/10 text-red-600"
+                    : "bg-green-500/10 text-green-700"
+                }`}
+              >
+                {masteryProgressError || masteryProgressNotice}
+              </div>
+            </div>
+          ) : null}
           <div className="flex w-full flex-1 min-h-0 flex-col">
             {sessionLoading ? (
               <div className="flex w-full flex-1 min-h-0 justify-center px-6">
@@ -1996,6 +2175,56 @@ export default function ChatPage() {
                       {masteryPathTitle || t(welcomeGreeting)}
                     </h1>
                   </div>
+                  {masteryPathParam && (
+                    <div className="mx-auto flex w-full max-w-[560px] flex-col items-stretch gap-2 rounded-lg border border-[var(--border)] bg-[var(--card)]/70 p-3">
+                      <div className="flex flex-col gap-2 sm:flex-row">
+                        <button
+                          type="button"
+                          disabled={masteryProgressBusy}
+                          onClick={() => void handleNewMasterySession("continue")}
+                          className="inline-flex flex-1 items-center justify-center gap-2 rounded-md border border-[var(--border)] px-3 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <MessageCirclePlus className="h-4 w-4" />
+                          {goalTr("新会话继续当前进度", "New session, continue")}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={masteryProgressBusy}
+                          onClick={() => void handleNewMasterySession("restart")}
+                          className="inline-flex flex-1 items-center justify-center gap-2 rounded-md bg-[var(--primary)] px-3 py-2 text-sm text-[var(--primary-foreground)] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <RotateCcw className="h-4 w-4" />
+                          {goalTr("新会话从头开始", "New session, restart")}
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-center gap-3 text-xs">
+                        <button
+                          type="button"
+                          disabled={masteryProgressBusy}
+                          onClick={handleRestoreMasteryProgress}
+                          className="inline-flex items-center gap-1 text-[var(--primary)] hover:underline disabled:opacity-50"
+                        >
+                          <Undo2 className="h-3.5 w-3.5" />
+                          {goalTr("恢复最近备份", "Restore latest backup")}
+                        </button>
+                        {masteryProgressBusy && (
+                          <span className="text-[var(--muted-foreground)]">
+                            {goalTr("处理中…", "Working...")}
+                          </span>
+                        )}
+                      </div>
+                      {masteryProgressNotice && (
+                        <p className="text-center text-xs text-green-600">
+                          {masteryProgressNotice}
+                        </p>
+                      )}
+                      {masteryProgressError && (
+                        <p className="text-center text-xs text-red-500">
+                          {masteryProgressError}
+                        </p>
+                      )}
+                    </div>
+                  )}
                   {!masteryPathParam && <LearningGoalEntry tr={goalTr} />}
                 </div>
               </div>
