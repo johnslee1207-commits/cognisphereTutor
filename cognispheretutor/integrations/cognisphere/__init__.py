@@ -80,6 +80,12 @@ from cognispheretutor.integrations.cognisphere.cp_socratic_tutor_client import (
     request_cp_tutor_llm_turn,
     start_cp_tutor_session as start_cp_socratic_tutor_session,
 )
+from cognispheretutor.integrations.cognisphere.cp_product_ux_client import (
+    consume_cp_visualization_advert,
+    cp_product_ux_status,
+    get_cp_ux_contract_bundle,
+    run_cp_product_ux_smoke,
+)
 
 __all__ = [
     "PluginRegistryClient",
@@ -89,14 +95,17 @@ __all__ = [
     "assert_sandbox_authorized",
     "bind_context_api",
     "compose_contexts",
+    "consume_cp_visualization_advert",
     "consume_visualization_advert",
     "context_api_status",
+    "cp_product_ux_status",
     "cp_socratic_tutor_status",
     "export_and_import",
     "fetch_and_import_trusted_context",
     "fetch_trusted_context_package",
     "gate_status",
     "get_bundled_pack",
+    "get_cp_ux_contract_bundle",
     "get_plugin",
     "handshake",
     "learning_twin_flow",
@@ -125,6 +134,7 @@ __all__ = [
     "request_cp_tutor_llm_turn",
     "reset_context_api",
     "resolve_plugins_root",
+    "run_cp_product_ux_smoke",
     "run_interview_session",
     "run_visualization_advert_smoke",
     "start_cp_socratic_tutor_session",

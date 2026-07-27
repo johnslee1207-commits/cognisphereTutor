@@ -105,6 +105,25 @@
     "llm": "host_llm_caller_fail_closed_n02",
     "note": "Thin CP-06 Socratic consume — fixture trees in twin; optional llm_caller; no Tutor UI / CT-08 write-back."
   },
+  "cp_product_ux_sot": {
+    "contract_id": "cognisphere.tutor.aws_cp_product_ux.v1",
+    "roadmap_id": "CP-08",
+    "twin_module": "cognisphere_plugins.aws_certification_twin.cp_product_ux",
+    "tutor_thin_client": "cognispheretutor.integrations.cognisphere.cp_product_ux_client",
+    "preferred_api": [
+      "cp_product_ux_status",
+      "get_cp_ux_contract_bundle",
+      "consume_cp_visualization_advert",
+      "run_cp_product_ux_smoke"
+    ],
+    "reuses_n15": "cognisphere.tutor.twin_visualization_advert.v1",
+    "mode": "contract_stub",
+    "renders_ui": false,
+    "lp_ui": false,
+    "marketplace_ui": false,
+    "visualization_ui": false,
+    "note": "Thin CP-08 Product UX contracts + N-15 viz advert payloads — Tutor owns UI; LP ships data only."
+  },
   "context_api_sot": {
     "contract_id": "cognisphere.ops.context_api_boundary.v1",
     "boundary_relative": "CognisphereLearningPlugins/manifests/ops/context_api_boundary.json",

@@ -151,6 +151,8 @@ Handshake SoT（勿在 Tutor 双活协议）：见 `docs/LEARNING_PLUGINS_HANDSH
 Learning→twin 组合流：`learning_twin_flow` / `list_learning_twin_pairs`（SDK SoT；twin stub 默认可容忍；`composition_intent` 透传 `learn_then_practice` \| `failure_drill`）。
 Context API 可选绑定：`bind_context_api` / `context_api_status`（SDK SoT；无 `COGNISPHERE_CONTEXT_API_BASE_URL` 时 fail-closed）。
 Twin `visualization` 广告薄消费（N-15）：`consume_visualization_advert` / `run_visualization_advert_smoke`（`visualization_advert_client`；仅 status/smoke，无 twin UI）。
+AWS CP Product UX 合约（CP-08）：`cp_product_ux_status` / `get_cp_ux_contract_bundle` / `consume_cp_visualization_advert` / `run_cp_product_ux_smoke`（`cp_product_ux_client`；复用 N-15；无 LP/Tutor twin UI）。
+AWS CP Socratic（CP-06）：`cp_socratic_tutor_status` / `start_cp_socratic_tutor_session`（`cp_socratic_tutor_client`）。
 Guided Learning 薄路由：`GET|POST /api/v1/learning/cognisphere/handshake`（及 `/handshake/learning-twin*`）；无 packs root 时 fail-closed。CLI：`cognispheretutor cognisphere handshake` / `learning-twin [--intent …]`。
 
 常用检查命令：
