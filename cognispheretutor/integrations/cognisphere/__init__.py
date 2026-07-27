@@ -68,6 +68,12 @@ from cognispheretutor.integrations.cognisphere.trusted_context_client import (
     trusted_context_status,
     validate_trusted_context_package,
 )
+from cognispheretutor.integrations.cognisphere.visualization_advert_client import (
+    consume_visualization_advert,
+    list_visualization_adverts,
+    run_visualization_advert_smoke,
+    visualization_advert_status,
+)
 
 __all__ = [
     "PluginRegistryClient",
@@ -76,6 +82,7 @@ __all__ = [
     "assert_sandbox_authorized",
     "bind_context_api",
     "compose_contexts",
+    "consume_visualization_advert",
     "context_api_status",
     "export_and_import",
     "fetch_and_import_trusted_context",
@@ -97,6 +104,7 @@ __all__ = [
     "list_handshake_domains",
     "list_learning_twin_pairs",
     "list_plugins",
+    "list_visualization_adverts",
     "require_packs_root",
     "load_cognisphere_entrypoint",
     "load_deeptutor_entrypoint",
@@ -109,6 +117,7 @@ __all__ = [
     "reset_context_api",
     "resolve_plugins_root",
     "run_interview_session",
+    "run_visualization_advert_smoke",
     "start_tutor_session",
     "suggest_tutor_focus",
     "summarize_knowledge",
@@ -118,4 +127,5 @@ __all__ = [
     "validate_bundle_safety",
     "validate_trusted_context_package",
     "verify_submission",
+    "visualization_advert_status",
 ]

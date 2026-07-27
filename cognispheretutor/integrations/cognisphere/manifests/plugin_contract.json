@@ -72,6 +72,21 @@
       "sot": "CognisphereLearningPlugins SDK / digital_twin_pack_profile + twin packs"
     }
   },
+  "visualization_advert_sot": {
+    "contract_id": "cognisphere.tutor.twin_visualization_advert.v1",
+    "roadmap_id": "N-15",
+    "sdk_module": "cognisphere_plugin_sdk.digital_twin",
+    "tutor_thin_client": "cognispheretutor.integrations.cognisphere.visualization_advert_client",
+    "preferred_api": [
+      "consume_visualization_advert",
+      "list_visualization_adverts",
+      "run_visualization_advert_smoke",
+      "visualization_advert_status"
+    ],
+    "mode": "advert_only",
+    "renders_ui": false,
+    "note": "Thin status/handshake/smoke of twin visualization advert — no twin UI in LP or Tutor client."
+  },
   "context_api_sot": {
     "contract_id": "cognisphere.ops.context_api_boundary.v1",
     "boundary_relative": "CognisphereLearningPlugins/manifests/ops/context_api_boundary.json",
