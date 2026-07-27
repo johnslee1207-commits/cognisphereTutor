@@ -144,6 +144,33 @@ class RecommendFromGoalRequest(BaseModel):
     stop_on_error: bool = False
 
 
+class HandshakeRequest(BaseModel):
+    domain: str = Field(..., min_length=1, max_length=64)
+    required_capabilities: list[str] = Field(
+        default_factory=lambda: ["deeptutor_export"],
+    )
+    goal: str | None = Field(default=None, max_length=2000)
+    topic: str | None = Field(default=None, max_length=200)
+    check_mode: str = Field(default="full", max_length=32)
+
+
+class LearningTwinFlowRequest(BaseModel):
+    learning_domain: str = Field(..., min_length=1, max_length=64)
+    goal: str | None = Field(default=None, max_length=2000)
+    topic: str | None = Field(default=None, max_length=200)
+    accept_twin_stubs: bool = True
+
+
+def _require_handshake_packs_root() -> Path:
+    """Fail-closed: Guided Learning handshake needs a real LearningPlugins root."""
+    from cognispheretutor.integrations.cognisphere.handshake_client import require_packs_root
+
+    try:
+        return require_packs_root()
+    except CognisphereIntegrationError as exc:
+        raise _http_error(exc) from exc
+
+
 def _validate_path_id(path_id: str) -> None:
     if "/" in path_id or "\\" in path_id or ".." in path_id or ":" in path_id:
         raise HTTPException(status_code=400, detail="Invalid path_id")
@@ -278,6 +305,57 @@ async def ability_radar(
         path_id=path_id,
         weak_limit=weak_limit,
         include_skill_graph=include_skill_graph,
+    )
+
+
+@router.get("/handshake")
+async def guided_learning_handshake_list():
+    """List handshake domains (thin SDK/client). Fail-closed without packs root."""
+    from cognispheretutor.integrations.cognisphere.handshake_client import list_domains
+
+    packs_root = _require_handshake_packs_root()
+    return list_domains(root=packs_root)
+
+
+@router.post("/handshake")
+async def guided_learning_handshake(body: HandshakeRequest):
+    """Run LearningPlugins handshake for one domain (thin client; no protocol dual-live)."""
+    from cognispheretutor.integrations.cognisphere.handshake_client import handshake
+
+    packs_root = _require_handshake_packs_root()
+    return handshake(
+        body.domain,
+        root=packs_root,
+        required_capabilities=list(body.required_capabilities),
+        goal=body.goal,
+        topic=body.topic,
+        check_mode=body.check_mode,
+    )
+
+
+@router.get("/handshake/learning-twin/pairs")
+async def guided_learning_twin_pairs():
+    """List learning↔twin pairs (SDK SoT). Fail-closed without packs root."""
+    from cognispheretutor.integrations.cognisphere.handshake_client import (
+        list_learning_twin_pairs,
+    )
+
+    packs_root = _require_handshake_packs_root()
+    return list_learning_twin_pairs(root=packs_root)
+
+
+@router.post("/handshake/learning-twin")
+async def guided_learning_twin_flow(body: LearningTwinFlowRequest):
+    """Combined learning→twin flow (thin client). Fail-closed without packs root."""
+    from cognispheretutor.integrations.cognisphere.handshake_client import learning_twin_flow
+
+    packs_root = _require_handshake_packs_root()
+    return learning_twin_flow(
+        body.learning_domain,
+        root=packs_root,
+        goal=body.goal,
+        topic=body.topic,
+        accept_twin_stubs=body.accept_twin_stubs,
     )
 
 

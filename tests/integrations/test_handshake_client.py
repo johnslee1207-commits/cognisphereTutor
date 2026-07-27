@@ -54,3 +54,20 @@ def test_learning_twin_flow_envelope(plugins_root: Path) -> None:
     assert result.get("flow") == "learning_then_twin"
     assert "summary" in result
     assert result.get("source") in {"cognisphere_plugin_sdk", "tutor_local_fallback"}
+
+
+def test_require_packs_root_ok(plugins_root: Path) -> None:
+    from cognispheretutor.integrations.cognisphere.handshake_client import require_packs_root
+
+    assert require_packs_root(plugins_root) == plugins_root.resolve()
+
+
+def test_require_packs_root_fail_closed(tmp_path: Path) -> None:
+    from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+    from cognispheretutor.integrations.cognisphere.handshake_client import require_packs_root
+
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    with pytest.raises(CognisphereIntegrationError) as exc:
+        require_packs_root(empty)
+    assert exc.value.code == "plugins_root_missing"

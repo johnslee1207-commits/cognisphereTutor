@@ -10,6 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from cognispheretutor.integrations.cognisphere._contract import load_plugin_contract
 from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
 from cognispheretutor.integrations.cognisphere.registry_client import PluginRegistryClient
 
@@ -20,6 +21,39 @@ SOT_DOCS = (
     "CognisphereLearningPlugins/docs/"
     "CognisphereTutor_Learning_Plugin_Contract_Handshake_Protocol_v1.0.md"
 )
+
+
+def require_packs_root(
+    root: str | Path | None = None,
+    *,
+    client: PluginRegistryClient | None = None,
+) -> Path:
+    """Fail-closed gate: LearningPlugins packs root must be present and complete.
+
+    Guided Learning ``/handshake`` and CLI refuse to invent protocol when the
+    packs tree (``plugins/`` + install registry) is missing.
+    """
+    registry = client or PluginRegistryClient(root)
+    plugins_root = registry.resolve_plugins_root(root)
+    contract = load_plugin_contract()
+    registry_rel = str(contract["install_registry_relative_path"])
+    has_plugins = (plugins_root / "plugins").is_dir()
+    has_registry = (plugins_root / registry_rel).is_file()
+    if not plugins_root.exists() or not has_plugins or not has_registry:
+        raise CognisphereIntegrationError(
+            "plugins_root_missing",
+            message=(
+                "LearningPlugins packs root missing or incomplete; "
+                "handshake is fail-closed without packs root"
+            ),
+            details={
+                "plugins_root": str(plugins_root),
+                "has_plugins_dir": has_plugins,
+                "has_install_registry": has_registry,
+                "env": str(contract["plugins_root_env"]),
+            },
+        )
+    return plugins_root
 
 
 def _try_sdk_handshake(

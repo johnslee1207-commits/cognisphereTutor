@@ -16,6 +16,7 @@ from cognispheretutor.integrations.cognisphere.handshake_client import (
     learning_twin_flow,
     list_domains as list_handshake_domains,
     list_learning_twin_pairs,
+    require_packs_root,
 )
 from cognispheretutor.integrations.cognisphere.plugin_importer import (
     export_and_import,
@@ -96,6 +97,7 @@ __all__ = [
     "list_handshake_domains",
     "list_learning_twin_pairs",
     "list_plugins",
+    "require_packs_root",
     "load_cognisphere_entrypoint",
     "load_deeptutor_entrypoint",
     "map_learning_loop",

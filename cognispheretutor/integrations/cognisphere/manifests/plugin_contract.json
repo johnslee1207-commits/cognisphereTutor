@@ -54,7 +54,18 @@
     "docs_relative": "CognisphereLearningPlugins/docs/CognisphereTutor_Learning_Plugin_Contract_Handshake_Protocol_v1.0.md",
     "sdk_module": "cognisphere_plugin_sdk.handshake",
     "tutor_thin_client": "cognispheretutor.integrations.cognisphere.handshake_client",
-    "preferred_api": ["handshake_plugin", "list_handshake_domains", "pack_for_tutor"]
+    "preferred_api": ["handshake_plugin", "list_handshake_domains", "pack_for_tutor"],
+    "fail_closed_without_packs_root": true,
+    "guided_learning_routes": {
+      "list_or_run": "/api/v1/learning/cognisphere/handshake",
+      "learning_twin": "/api/v1/learning/cognisphere/handshake/learning-twin",
+      "learning_twin_pairs": "/api/v1/learning/cognisphere/handshake/learning-twin/pairs"
+    },
+    "cli": {
+      "handshake": "cognispheretutor cognisphere handshake",
+      "learning_twin": "cognispheretutor cognisphere learning-twin",
+      "learning_twin_pairs": "cognispheretutor cognisphere learning-twin-pairs"
+    }
   },
   "context_api_sot": {
     "contract_id": "cognisphere.ops.context_api_boundary.v1",

@@ -382,3 +382,104 @@ def register(app: typer.Typer) -> None:
         console.print_json(json.dumps(result, indent=2, ensure_ascii=False))
         if not result.get("ok"):
             raise typer.Exit(code=1)
+
+    @app.command("handshake")
+    def cognisphere_handshake(
+        domain: Optional[str] = typer.Argument(
+            None,
+            help="Domain id to handshake; omit to list domains",
+        ),
+        capability: list[str] = typer.Option(
+            ["deeptutor_export"],
+            "--capability",
+            "-c",
+            help="Required capability (repeatable).",
+        ),
+        goal: str = typer.Option("", "--goal", help="Optional handshake goal."),
+        topic: str = typer.Option("", "--topic", help="Optional topic hint."),
+        check_mode: str = typer.Option("full", "--mode", help="SDK check mode."),
+        root: Optional[Path] = typer.Option(None, "--root"),
+    ) -> None:
+        """Thin LearningPlugins handshake (fail-closed without packs root)."""
+        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.handshake_client import (
+            handshake,
+            list_domains,
+            require_packs_root,
+        )
+
+        try:
+            packs_root = require_packs_root(root)
+            if domain:
+                result = handshake(
+                    domain,
+                    root=packs_root,
+                    required_capabilities=list(capability),
+                    goal=goal or None,
+                    topic=topic or None,
+                    check_mode=check_mode,
+                )
+            else:
+                result = list_domains(root=packs_root)
+        except CognisphereIntegrationError as exc:
+            console.print_json(json.dumps(exc.to_dict(), indent=2, ensure_ascii=False))
+            raise typer.Exit(code=1) from exc
+        console.print_json(json.dumps(result, indent=2, ensure_ascii=False))
+        if not result.get("ok"):
+            raise typer.Exit(code=1)
+
+    @app.command("learning-twin-pairs")
+    def cognisphere_learning_twin_pairs(
+        root: Optional[Path] = typer.Option(None, "--root"),
+    ) -> None:
+        """List learning↔twin pairs (SDK SoT; fail-closed without packs root)."""
+        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.handshake_client import (
+            list_learning_twin_pairs,
+            require_packs_root,
+        )
+
+        try:
+            packs_root = require_packs_root(root)
+            result = list_learning_twin_pairs(root=packs_root)
+        except CognisphereIntegrationError as exc:
+            console.print_json(json.dumps(exc.to_dict(), indent=2, ensure_ascii=False))
+            raise typer.Exit(code=1) from exc
+        console.print_json(json.dumps(result, indent=2, ensure_ascii=False))
+        if not result.get("ok"):
+            raise typer.Exit(code=1)
+
+    @app.command("learning-twin")
+    def cognisphere_learning_twin(
+        learning_domain: str = typer.Argument(..., help="Learning domain id"),
+        goal: str = typer.Option("", "--goal"),
+        topic: str = typer.Option("", "--topic"),
+        reject_twin_stubs: bool = typer.Option(
+            False,
+            "--reject-twin-stubs",
+            help="Do not tolerate DT-1/DT-2 twin stubs",
+        ),
+        root: Optional[Path] = typer.Option(None, "--root"),
+    ) -> None:
+        """Run learning→twin combined flow (fail-closed without packs root)."""
+        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.handshake_client import (
+            learning_twin_flow,
+            require_packs_root,
+        )
+
+        try:
+            packs_root = require_packs_root(root)
+            result = learning_twin_flow(
+                learning_domain,
+                root=packs_root,
+                goal=goal or None,
+                topic=topic or None,
+                accept_twin_stubs=not reject_twin_stubs,
+            )
+        except CognisphereIntegrationError as exc:
+            console.print_json(json.dumps(exc.to_dict(), indent=2, ensure_ascii=False))
+            raise typer.Exit(code=1) from exc
+        console.print_json(json.dumps(result, indent=2, ensure_ascii=False))
+        if not result.get("ok"):
+            raise typer.Exit(code=1)
