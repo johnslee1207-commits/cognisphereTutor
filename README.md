@@ -146,6 +146,11 @@ $env:COGNISPHERE_LEARNING_PLUGINS_ROOT = "D:\Projects\CognisphereLearningPlugins
 
 当外部插件仓库存在时，Tutor 会优先使用外部插件；否则自动使用本仓内置 pack。
 
+Handshake SoT（勿在 Tutor 双活协议）：见 `docs/LEARNING_PLUGINS_HANDSHAKE_SOT.md`。
+薄客户端：`from cognispheretutor.integrations.cognisphere import handshake`。
+Learning→twin 组合流：`learning_twin_flow` / `list_learning_twin_pairs`（SDK SoT；twin stub 默认可容忍）。
+Context API 可选绑定：`bind_context_api` / `context_api_status`（SDK SoT；无 `COGNISPHERE_CONTEXT_API_BASE_URL` 时 fail-closed）。
+
 常用检查命令：
 
 ```powershell

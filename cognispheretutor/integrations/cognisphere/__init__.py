@@ -6,6 +6,17 @@ from cognispheretutor.integrations.cognisphere.capability_negotiator import (
     negotiate,
     query_cross_domain,
 )
+from cognispheretutor.integrations.cognisphere.context_api_client import (
+    bind_context_api,
+    context_api_status,
+    reset_context_api,
+)
+from cognispheretutor.integrations.cognisphere.handshake_client import (
+    handshake,
+    learning_twin_flow,
+    list_domains as list_handshake_domains,
+    list_learning_twin_pairs,
+)
 from cognispheretutor.integrations.cognisphere.plugin_importer import (
     export_and_import,
     import_bundle_json,
@@ -62,13 +73,17 @@ __all__ = [
     "advance_tutor_session",
     "apply_mastery_update",
     "assert_sandbox_authorized",
+    "bind_context_api",
     "compose_contexts",
+    "context_api_status",
     "export_and_import",
     "fetch_and_import_trusted_context",
     "fetch_trusted_context_package",
     "gate_status",
     "get_bundled_pack",
     "get_plugin",
+    "handshake",
+    "learning_twin_flow",
     "import_bundled_pack",
     "import_benchmark_case",
     "import_bundle_json",
@@ -78,6 +93,8 @@ __all__ = [
     "kit_configured",
     "list_benchmark_cases",
     "list_bundled_packs",
+    "list_handshake_domains",
+    "list_learning_twin_pairs",
     "list_plugins",
     "load_cognisphere_entrypoint",
     "load_deeptutor_entrypoint",
@@ -87,6 +104,7 @@ __all__ = [
     "on_tutor_session_event",
     "plan_skill_path",
     "query_cross_domain",
+    "reset_context_api",
     "resolve_plugins_root",
     "run_interview_session",
     "start_tutor_session",

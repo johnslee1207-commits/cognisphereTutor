@@ -44,8 +44,32 @@
     "ui",
     "user_management",
     "pageindex_core",
-    "tenant_security_core"
+    "tenant_security_core",
+    "knowledge_source_download",
+    "live_corpus_fetch",
+    "independent_knowledge_mirror"
   ],
+  "handshake_sot": {
+    "contract_id": "cognisphere.tutor.learning_plugin_handshake.v1",
+    "docs_relative": "CognisphereLearningPlugins/docs/CognisphereTutor_Learning_Plugin_Contract_Handshake_Protocol_v1.0.md",
+    "sdk_module": "cognisphere_plugin_sdk.handshake",
+    "tutor_thin_client": "cognispheretutor.integrations.cognisphere.handshake_client",
+    "preferred_api": ["handshake_plugin", "list_handshake_domains", "pack_for_tutor"]
+  },
+  "context_api_sot": {
+    "contract_id": "cognisphere.ops.context_api_boundary.v1",
+    "boundary_relative": "CognisphereLearningPlugins/manifests/ops/context_api_boundary.json",
+    "sdk_module": "cognisphere_plugin_sdk.context_api",
+    "tutor_thin_client": "cognispheretutor.integrations.cognisphere.context_api_client",
+    "preferred_api": [
+      "try_bind_cognisphere_context_api_client",
+      "context_api_status",
+      "reset_context_api_client"
+    ],
+    "base_url_env": "COGNISPHERE_CONTEXT_API_BASE_URL",
+    "default_mode": "fail_closed",
+    "live_graphql": false
+  },
   "required_deeptutor_funcs": [
     "export_deeptutor_package",
     "validate_adapter",
