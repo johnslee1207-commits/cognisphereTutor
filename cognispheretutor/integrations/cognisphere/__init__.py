@@ -74,9 +74,16 @@ from cognispheretutor.integrations.cognisphere.visualization_advert_client impor
     run_visualization_advert_smoke,
     visualization_advert_status,
 )
+from cognispheretutor.integrations.cognisphere.cp_socratic_tutor_client import (
+    advance_cp_tutor_turn,
+    cp_socratic_tutor_status,
+    request_cp_tutor_llm_turn,
+    start_cp_tutor_session as start_cp_socratic_tutor_session,
+)
 
 __all__ = [
     "PluginRegistryClient",
+    "advance_cp_tutor_turn",
     "advance_tutor_session",
     "apply_mastery_update",
     "assert_sandbox_authorized",
@@ -84,6 +91,7 @@ __all__ = [
     "compose_contexts",
     "consume_visualization_advert",
     "context_api_status",
+    "cp_socratic_tutor_status",
     "export_and_import",
     "fetch_and_import_trusted_context",
     "fetch_trusted_context_package",
@@ -114,10 +122,12 @@ __all__ = [
     "on_tutor_session_event",
     "plan_skill_path",
     "query_cross_domain",
+    "request_cp_tutor_llm_turn",
     "reset_context_api",
     "resolve_plugins_root",
     "run_interview_session",
     "run_visualization_advert_smoke",
+    "start_cp_socratic_tutor_session",
     "start_tutor_session",
     "suggest_tutor_focus",
     "summarize_knowledge",

@@ -87,6 +87,24 @@
     "renders_ui": false,
     "note": "Thin status/handshake/smoke of twin visualization advert — no twin UI in LP or Tutor client."
   },
+  "cp_socratic_tutor_sot": {
+    "contract_id": "cognisphere.tutor.aws_cp_socratic_tutor.v1",
+    "roadmap_id": "CP-06",
+    "twin_module": "cognisphere_plugins.aws_certification_twin.cp_socratic_tutor",
+    "tutor_thin_client": "cognispheretutor.integrations.cognisphere.cp_socratic_tutor_client",
+    "preferred_api": [
+      "cp_socratic_tutor_status",
+      "start_cp_tutor_session",
+      "advance_cp_tutor_turn",
+      "request_cp_tutor_llm_turn"
+    ],
+    "mode": "contract_stub",
+    "renders_ui": false,
+    "mastery_writeback": false,
+    "ct08_write_back": false,
+    "llm": "host_llm_caller_fail_closed_n02",
+    "note": "Thin CP-06 Socratic consume — fixture trees in twin; optional llm_caller; no Tutor UI / CT-08 write-back."
+  },
   "context_api_sot": {
     "contract_id": "cognisphere.ops.context_api_boundary.v1",
     "boundary_relative": "CognisphereLearningPlugins/manifests/ops/context_api_boundary.json",
