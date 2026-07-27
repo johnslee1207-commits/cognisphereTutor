@@ -65,6 +65,11 @@
       "handshake": "cognispheretutor cognisphere handshake",
       "learning_twin": "cognispheretutor cognisphere learning-twin",
       "learning_twin_pairs": "cognispheretutor cognisphere learning-twin-pairs"
+    },
+    "composition_intents": {
+      "pass_through": true,
+      "wired": ["learn_then_practice", "failure_drill"],
+      "sot": "CognisphereLearningPlugins SDK / digital_twin_pack_profile + twin packs"
     }
   },
   "context_api_sot": {

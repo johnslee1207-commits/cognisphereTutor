@@ -56,6 +56,84 @@ def test_learning_twin_flow_envelope(plugins_root: Path) -> None:
     assert result.get("source") in {"cognisphere_plugin_sdk", "tutor_local_fallback"}
 
 
+def test_learning_twin_flow_forwards_composition_intent(
+    plugins_root: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Thin client must pass composition_intent into SDK run_learning_twin_flow."""
+    import sys
+    import types
+
+    import cognispheretutor.integrations.cognisphere.handshake_client as hc
+    from cognispheretutor.integrations.cognisphere.handshake_client import learning_twin_flow
+
+    captured: dict[str, object] = {}
+
+    def _fake_run(learning_domain, **kwargs):  # noqa: ANN001
+        captured["learning_domain"] = learning_domain
+        captured.update(kwargs)
+        return {
+            "ok": True,
+            "flow": "learning_then_twin",
+            "learning_domain": learning_domain,
+            "composition_intent": kwargs.get("composition_intent"),
+            "summary": {"ok": True, "composition_intent": kwargs.get("composition_intent")},
+        }
+
+    if "cognisphere_plugin_sdk" not in sys.modules:
+        pkg = types.ModuleType("cognisphere_plugin_sdk")
+        pkg.__path__ = []  # type: ignore[attr-defined]
+        monkeypatch.setitem(sys.modules, "cognisphere_plugin_sdk", pkg)
+
+    fake_mod = types.ModuleType("cognisphere_plugin_sdk.learning_twin_flow")
+    fake_mod.run_learning_twin_flow = _fake_run  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "cognisphere_plugin_sdk.learning_twin_flow", fake_mod)
+    monkeypatch.setattr(
+        hc.PluginRegistryClient,
+        "ensure_import_paths",
+        lambda self, **kwargs: None,  # noqa: ARG005
+    )
+
+    result = learning_twin_flow(
+        "aws_certification",
+        root=plugins_root,
+        composition_intent="failure_drill",
+    )
+    assert result["ok"] is True
+    assert result["composition_intent"] == "failure_drill"
+    assert captured.get("composition_intent") == "failure_drill"
+    assert captured.get("learning_domain") == "aws_certification"
+
+
+def test_learning_twin_flow_fallback_keeps_composition_intent(
+    plugins_root: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import builtins
+
+    from cognispheretutor.integrations.cognisphere.handshake_client import learning_twin_flow
+
+    real_import = builtins.__import__
+
+    def _block_sdk(name, globals=None, locals=None, fromlist=(), level=0):  # noqa: A002,ANN001
+        if name == "cognisphere_plugin_sdk.learning_twin_flow" or (
+            name == "cognisphere_plugin_sdk" and fromlist and "learning_twin_flow" in fromlist
+        ):
+            raise ImportError("sdk_learning_twin_flow_unavailable")
+        if name.startswith("cognisphere_plugin_sdk.learning_twin_flow"):
+            raise ImportError("sdk_learning_twin_flow_unavailable")
+        return real_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr(builtins, "__import__", _block_sdk)
+    result = learning_twin_flow(
+        "leetcode",
+        root=plugins_root,
+        composition_intent="learn_then_practice",
+    )
+    assert result.get("source") == "tutor_local_fallback"
+    assert result.get("composition_intent") == "learn_then_practice"
+    assert result["summary"].get("composition_intent") == "learn_then_practice"
+
 def test_require_packs_root_ok(plugins_root: Path) -> None:
     from cognispheretutor.integrations.cognisphere.handshake_client import require_packs_root
 

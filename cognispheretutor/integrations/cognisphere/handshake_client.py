@@ -307,6 +307,7 @@ def learning_twin_flow(
     root: str | Path | None = None,
     goal: str | None = None,
     topic: str | None = None,
+    composition_intent: str | None = None,
     accept_twin_stubs: bool = True,
     client: PluginRegistryClient | None = None,
 ) -> dict[str, Any]:
@@ -314,9 +315,14 @@ def learning_twin_flow(
 
     Prefers SDK ``run_learning_twin_flow``. Twin DT-1/DT-2 stubs are fail-closed
     but tolerated when ``accept_twin_stubs`` is true (default).
+
+    ``composition_intent`` is forwarded thinly to the SDK (wired:
+    ``learn_then_practice`` | ``failure_drill``). Tutor does not resolve
+    twin scenario/eval policy locally.
     """
     registry = client or PluginRegistryClient(root)
     plugins_root = registry.resolve_plugins_root(root)
+    intent = (composition_intent or "").strip() or None
     try:
         registry.ensure_import_paths(domain=learning_domain, root=plugins_root)
         from cognisphere_plugin_sdk.learning_twin_flow import (  # type: ignore[import-not-found]
@@ -328,6 +334,7 @@ def learning_twin_flow(
             root=plugins_root,
             goal=goal,
             topic=topic,
+            composition_intent=intent,
             accept_twin_stubs=accept_twin_stubs,
         )
         if not isinstance(payload, dict):
@@ -350,6 +357,7 @@ def learning_twin_flow(
             "contract": COMBINED_FLOW_CONTRACT,
             "learning_domain": learning_domain,
             "twin_domain": None,
+            "composition_intent": intent,
             "learning": {"handshake": learning},
             "twin": {
                 "discovery": None,
@@ -369,6 +377,7 @@ def learning_twin_flow(
                 "twin_runtime_ready": False,
                 "twin_skipped": True,
                 "accept_twin_stubs": accept_twin_stubs,
+                "composition_intent": intent,
                 "primary_issue": "sdk_learning_twin_flow_unavailable",
             },
             "source": "tutor_local_fallback",

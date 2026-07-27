@@ -454,6 +454,12 @@ def register(app: typer.Typer) -> None:
         learning_domain: str = typer.Argument(..., help="Learning domain id"),
         goal: str = typer.Option("", "--goal"),
         topic: str = typer.Option("", "--topic"),
+        intent: Optional[str] = typer.Option(
+            None,
+            "--intent",
+            "--composition-intent",
+            help="Composition intent: learn_then_practice | failure_drill (SDK SoT)",
+        ),
         reject_twin_stubs: bool = typer.Option(
             False,
             "--reject-twin-stubs",
@@ -475,6 +481,7 @@ def register(app: typer.Typer) -> None:
                 root=packs_root,
                 goal=goal or None,
                 topic=topic or None,
+                composition_intent=intent,
                 accept_twin_stubs=not reject_twin_stubs,
             )
         except CognisphereIntegrationError as exc:

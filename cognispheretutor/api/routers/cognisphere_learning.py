@@ -158,6 +158,14 @@ class LearningTwinFlowRequest(BaseModel):
     learning_domain: str = Field(..., min_length=1, max_length=64)
     goal: str | None = Field(default=None, max_length=2000)
     topic: str | None = Field(default=None, max_length=200)
+    composition_intent: str | None = Field(
+        default=None,
+        max_length=64,
+        description=(
+            "SDK composition intent (pass-through). Wired: "
+            "learn_then_practice | failure_drill"
+        ),
+    )
     accept_twin_stubs: bool = True
 
 
@@ -355,6 +363,7 @@ async def guided_learning_twin_flow(body: LearningTwinFlowRequest):
         root=packs_root,
         goal=body.goal,
         topic=body.topic,
+        composition_intent=body.composition_intent,
         accept_twin_stubs=body.accept_twin_stubs,
     )
 

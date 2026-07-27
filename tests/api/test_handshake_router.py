@@ -63,6 +63,42 @@ def test_learning_twin_routes_envelope(client: TestClient) -> None:
     assert "summary" in body
 
 
+def test_learning_twin_route_forwards_composition_intent(
+    client: TestClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, object] = {}
+
+    def _fake_flow(learning_domain, **kwargs):  # noqa: ANN001
+        captured["learning_domain"] = learning_domain
+        captured.update(kwargs)
+        return {
+            "ok": True,
+            "flow": "learning_then_twin",
+            "composition_intent": kwargs.get("composition_intent"),
+            "summary": {"ok": True},
+        }
+
+    monkeypatch.setattr(
+        "cognispheretutor.integrations.cognisphere.handshake_client.learning_twin_flow",
+        _fake_flow,
+    )
+    resp = client.post(
+        f"{PREFIX}/handshake/learning-twin",
+        json={
+            "learning_domain": "aws_certification",
+            "composition_intent": "failure_drill",
+            "goal": "practice Multi-AZ",
+        },
+    )
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body["composition_intent"] == "failure_drill"
+    assert captured.get("composition_intent") == "failure_drill"
+    assert captured.get("learning_domain") == "aws_certification"
+    assert captured.get("goal") == "practice Multi-AZ"
+
+
 def test_handshake_fail_closed_without_packs_root(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
