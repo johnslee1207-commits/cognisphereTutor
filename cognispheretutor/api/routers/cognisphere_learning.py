@@ -169,6 +169,14 @@ class LearningTwinFlowRequest(BaseModel):
     accept_twin_stubs: bool = True
 
 
+class AwsTwinMasteryRequest(BaseModel):
+    package_id: str | None = Field(default=None, max_length=128)
+    choice_id: str | None = Field(default=None, max_length=128)
+    include_tutor: bool = True
+    include_acceptance: bool = True
+    include_mvp_product: bool = False
+
+
 def _require_handshake_packs_root() -> Path:
     """Fail-closed: Guided Learning handshake needs a real LearningPlugins root."""
     from cognispheretutor.integrations.cognisphere.handshake_client import require_packs_root
@@ -365,6 +373,35 @@ async def guided_learning_twin_flow(body: LearningTwinFlowRequest):
         topic=body.topic,
         composition_intent=body.composition_intent,
         accept_twin_stubs=body.accept_twin_stubs,
+    )
+
+
+@router.get("/aws-twin-mastery")
+async def guided_aws_twin_mastery_status():
+    """Offline AWS digital twin mastery status (thin client). Fail-closed without packs root."""
+    from cognispheretutor.integrations.cognisphere.aws_digital_twin_mastery_client import (
+        aws_digital_twin_mastery_status,
+    )
+
+    packs_root = _require_handshake_packs_root()
+    return aws_digital_twin_mastery_status(root=packs_root)
+
+
+@router.post("/aws-twin-mastery")
+async def guided_aws_twin_mastery_run(body: AwsTwinMasteryRequest):
+    """Run offline AWS digital twin Practitioner mastery (no Tutor UI ceremony)."""
+    from cognispheretutor.integrations.cognisphere.aws_digital_twin_mastery_client import (
+        run_aws_digital_twin_mastery,
+    )
+
+    packs_root = _require_handshake_packs_root()
+    return run_aws_digital_twin_mastery(
+        package_id=body.package_id,
+        choice_id=body.choice_id,
+        include_tutor=body.include_tutor,
+        include_acceptance=body.include_acceptance,
+        include_mvp_product=body.include_mvp_product,
+        root=packs_root,
     )
 
 

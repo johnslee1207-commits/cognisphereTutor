@@ -153,7 +153,10 @@ Context API 可选绑定：`bind_context_api` / `context_api_status`（SDK SoT�
 Twin `visualization` 广告薄消费（N-15）：`consume_visualization_advert` / `run_visualization_advert_smoke`（`visualization_advert_client`；仅 status/smoke，无 twin UI）。
 AWS CP Product UX 合约（CP-08）：`cp_product_ux_status` / `get_cp_ux_contract_bundle` / `consume_cp_visualization_advert` / `run_cp_product_ux_smoke`（`cp_product_ux_client`；复用 N-15；无 LP/Tutor twin UI）。
 AWS CP Socratic（CP-06）：`cp_socratic_tutor_status` / `start_cp_socratic_tutor_session`（`cp_socratic_tutor_client`）。
-Guided Learning 薄路由：`GET|POST /api/v1/learning/cognisphere/handshake`（及 `/handshake/learning-twin*`）；无 packs root 时 fail-closed。CLI：`cognispheretutor cognisphere handshake` / `learning-twin [--intent …]`。
+AWS CP Runtime Interaction（CP-04）：`runtime_interaction_status` / `run_cp_package_experience`（`cp_runtime_interaction_client`）。
+AWS twin MVP-2：`mvp_product_status` / `run_mvp_product_flow`（`cp_mvp_product_client`）。
+AWS Digital Twin 离线 Mastery：`aws_digital_twin_mastery_status` / `run_aws_digital_twin_mastery`（`aws_digital_twin_mastery_client`；CP-04→可选 CP-06/12；无 Tutor UI 仪式）。
+Guided Learning 薄路由：`GET|POST /api/v1/learning/cognisphere/handshake`（及 `/handshake/learning-twin*`）；`GET|POST /api/v1/learning/cognisphere/aws-twin-mastery`；无 packs root 时 fail-closed。CLI：`cognispheretutor cognisphere handshake` / `learning-twin [--intent …]` / `aws-twin-mastery`。
 
 常用检查命令：
 

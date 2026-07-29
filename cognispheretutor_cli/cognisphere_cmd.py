@@ -490,3 +490,55 @@ def register(app: typer.Typer) -> None:
         console.print_json(json.dumps(result, indent=2, ensure_ascii=False))
         if not result.get("ok"):
             raise typer.Exit(code=1)
+
+    @app.command("aws-twin-mastery")
+    def cognisphere_aws_twin_mastery(
+        package_id: Optional[str] = typer.Option(
+            None,
+            "--package-id",
+            help="Override profile smoke_package_id",
+        ),
+        choice_id: Optional[str] = typer.Option(
+            None,
+            "--choice-id",
+            help="Override profile smoke_choice_id",
+        ),
+        skip_tutor: bool = typer.Option(False, "--skip-tutor", help="Skip CP-06"),
+        skip_acceptance: bool = typer.Option(
+            False, "--skip-acceptance", help="Skip CP-12 acceptance"
+        ),
+        include_mvp: bool = typer.Option(
+            False, "--include-mvp", help="Also run MVP-2 product flow"
+        ),
+        status_only: bool = typer.Option(
+            False, "--status", help="Print mastery status only"
+        ),
+        root: Optional[Path] = typer.Option(None, "--root"),
+    ) -> None:
+        """Offline AWS digital twin Practitioner mastery (CP-04→optional CP-06/12)."""
+        from cognispheretutor.integrations.cognisphere.aws_digital_twin_mastery_client import (
+            aws_digital_twin_mastery_status,
+            run_aws_digital_twin_mastery,
+        )
+        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.handshake_client import require_packs_root
+
+        try:
+            packs_root = require_packs_root(root)
+            if status_only:
+                result = aws_digital_twin_mastery_status(root=packs_root)
+            else:
+                result = run_aws_digital_twin_mastery(
+                    package_id=package_id,
+                    choice_id=choice_id,
+                    include_tutor=not skip_tutor,
+                    include_acceptance=not skip_acceptance,
+                    include_mvp_product=include_mvp,
+                    root=packs_root,
+                )
+        except CognisphereIntegrationError as exc:
+            console.print_json(json.dumps(exc.to_dict(), indent=2, ensure_ascii=False))
+            raise typer.Exit(code=1) from exc
+        console.print_json(json.dumps(result, indent=2, ensure_ascii=False))
+        if not result.get("ok"):
+            raise typer.Exit(code=1)

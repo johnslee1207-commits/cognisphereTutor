@@ -86,6 +86,20 @@ from cognispheretutor.integrations.cognisphere.cp_product_ux_client import (
     get_cp_ux_contract_bundle,
     run_cp_product_ux_smoke,
 )
+from cognispheretutor.integrations.cognisphere.cp_runtime_interaction_client import (
+    run_package_experience as run_cp_package_experience,
+    runtime_interaction_status,
+    start_package_experience as start_cp_package_experience,
+    step_package_experience as step_cp_package_experience,
+)
+from cognispheretutor.integrations.cognisphere.cp_mvp_product_client import (
+    mvp_product_status,
+    run_mvp_product_flow,
+)
+from cognispheretutor.integrations.cognisphere.aws_digital_twin_mastery_client import (
+    aws_digital_twin_mastery_status,
+    run_aws_digital_twin_mastery,
+)
 
 __all__ = [
     "PluginRegistryClient",
@@ -93,6 +107,7 @@ __all__ = [
     "advance_tutor_session",
     "apply_mastery_update",
     "assert_sandbox_authorized",
+    "aws_digital_twin_mastery_status",
     "bind_context_api",
     "compose_contexts",
     "consume_cp_visualization_advert",
@@ -127,6 +142,7 @@ __all__ = [
     "load_deeptutor_entrypoint",
     "map_learning_loop",
     "merge_external_and_bundled_discovery",
+    "mvp_product_status",
     "negotiate",
     "on_tutor_session_event",
     "plan_skill_path",
@@ -134,11 +150,17 @@ __all__ = [
     "request_cp_tutor_llm_turn",
     "reset_context_api",
     "resolve_plugins_root",
+    "run_aws_digital_twin_mastery",
+    "run_cp_package_experience",
     "run_cp_product_ux_smoke",
     "run_interview_session",
+    "run_mvp_product_flow",
     "run_visualization_advert_smoke",
+    "runtime_interaction_status",
+    "start_cp_package_experience",
     "start_cp_socratic_tutor_session",
     "start_tutor_session",
+    "step_cp_package_experience",
     "suggest_tutor_focus",
     "summarize_knowledge",
     "sync_mistake_memory",
