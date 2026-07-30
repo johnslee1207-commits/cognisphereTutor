@@ -40,6 +40,8 @@ import {
   planCognispherePath,
   recommendCognisphereFromGoal,
   runAwsTwinMastery,
+  runCognisphereHandshake,
+  runLearningTwinFlow,
   startCognisphereTutor,
   suggestCognisphereFocus,
   type AbilityRadarResult,
@@ -419,6 +421,54 @@ function MasteryPathPageInner() {
     router,
     tr,
   ]);
+
+  const handleAwsLearningTwinHandshake = useCallback(async () => {
+    setAwsTwinBusy(true);
+    setCsphereError(null);
+    setCsphereNote(null);
+    try {
+      const handshake = await runCognisphereHandshake({
+        domain: awsLearningDomain,
+        goal: goalText.trim() || undefined,
+      });
+      if (!handshake.ok) {
+        throw new Error(
+          handshake.error ||
+            (handshake.issues || []).join("; ") ||
+            tr("Handshake 未通过", "Handshake did not pass"),
+        );
+      }
+      const flow = await runLearningTwinFlow({
+        learningDomain: awsLearningDomain,
+        goal: goalText.trim() || undefined,
+        compositionIntent: "learn_then_practice",
+      });
+      const summaryOk =
+        flow.ok !== false &&
+        (flow.summary == null || flow.summary.ok !== false);
+      if (!summaryOk) {
+        throw new Error(
+          flow.error ||
+            (flow.issues || []).join("; ") ||
+            tr("Learning→Twin 流程未通过", "Learning→Twin flow did not pass"),
+        );
+      }
+      setCsphereNote(
+        tr(
+          `Handshake + Learning→Twin 完成（intent=learn_then_practice）。可继续跑离线 twin 练习或进入 Mastery 对话。`,
+          `Handshake + Learning→Twin complete (intent=learn_then_practice). Run offline twin practice or open Mastery chat.`,
+        ),
+      );
+    } catch (err) {
+      setCsphereError(
+        err instanceof Error
+          ? err.message
+          : tr("Handshake 失败", "Handshake failed"),
+      );
+    } finally {
+      setAwsTwinBusy(false);
+    }
+  }, [awsLearningDomain, goalText, tr]);
 
   const toggleDomain = useCallback((domain: string) => {
     setSelectedDomains((prev) =>
@@ -856,6 +906,18 @@ function MasteryPathPageInner() {
               <button
                 type="button"
                 disabled={awsTwinBusy || csphereBusy}
+                onClick={() => void handleAwsLearningTwinHandshake()}
+                className="px-2 py-1 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
+                title={tr(
+                  "Handshake + Learning→Twin（learn_then_practice）",
+                  "Handshake + Learning→Twin (learn_then_practice)",
+                )}
+              >
+                <Package className="w-3 h-3" />
+              </button>
+              <button
+                type="button"
+                disabled={awsTwinBusy || csphereBusy}
                 onClick={() => void handleContinueAwsMasteryPath()}
                 className="px-2 py-1 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
                 title={tr(
@@ -1040,6 +1102,11 @@ function MasteryPathPageInner() {
             zh={!!zh}
             tr={tr}
             cognisphere={selected ? isCognispherePathId(selected) : false}
+            showAwsTwin={
+              domainFromCognispherePathId(selected || "") === "aws_certification"
+            }
+            awsTwinBusy={awsTwinBusy}
+            twinReady={twinReady}
             focusHint={focusHint}
             planHint={planHint}
             tutorBusy={tutorBusy}
@@ -1047,6 +1114,8 @@ function MasteryPathPageInner() {
               selected && router.push(masteryChatHref(selected))
             }
             onSocratic={handleSocraticPractice}
+            onAwsTwinPractice={() => void handleRunAwsTwinMastery()}
+            onAwsHandshake={() => void handleAwsLearningTwinHandshake()}
             onRedo={() => selected && handleRedo(selected)}
             onRestore={() => selected && handleRestore(selected)}
             onDelete={() => selected && handleDelete(selected)}
@@ -1195,11 +1264,16 @@ function MapView({
   zh,
   tr,
   cognisphere,
+  showAwsTwin,
+  awsTwinBusy,
+  twinReady,
   focusHint,
   planHint,
   tutorBusy,
   onContinue,
   onSocratic,
+  onAwsTwinPractice,
+  onAwsHandshake,
   onRedo,
   onRestore,
   onDelete,
@@ -1209,11 +1283,16 @@ function MapView({
   zh: boolean;
   tr: (cn: string, en: string) => string;
   cognisphere: boolean;
+  showAwsTwin?: boolean;
+  awsTwinBusy?: boolean;
+  twinReady?: boolean;
   focusHint: string | null;
   planHint: string | null;
   tutorBusy: boolean;
   onContinue: () => void;
   onSocratic: () => void;
+  onAwsTwinPractice?: () => void;
+  onAwsHandshake?: () => void;
   onRedo: () => void;
   onRestore: () => void;
   onDelete: () => void;
@@ -1401,6 +1480,35 @@ function MapView({
               "Start offline Socratic session & open Chat",
             )}
           </button>
+          {showAwsTwin && (
+            <div className="flex gap-1 pt-1">
+              <button
+                type="button"
+                onClick={onAwsTwinPractice}
+                disabled={Boolean(awsTwinBusy) || !twinReady}
+                className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 text-[11px] rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50 cursor-pointer"
+              >
+                {awsTwinBusy ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3 h-3" />
+                )}
+                {tr("AWS Twin 离线练习", "AWS Twin offline practice")}
+              </button>
+              <button
+                type="button"
+                onClick={onAwsHandshake}
+                disabled={Boolean(awsTwinBusy)}
+                className="px-2 py-1.5 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
+                title={tr(
+                  "Handshake + Learning→Twin",
+                  "Handshake + Learning→Twin",
+                )}
+              >
+                <Package className="w-3 h-3" />
+              </button>
+            </div>
+          )}
         </div>
       )}
 

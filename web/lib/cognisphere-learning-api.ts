@@ -497,6 +497,86 @@ export async function runAwsTwinMastery(opts?: {
   return res.json() as Promise<AwsTwinMasteryResult>;
 }
 
+export interface HandshakeResult {
+  ok: boolean;
+  domain?: string;
+  source?: string;
+  contract?: string;
+  sot_docs?: string;
+  issues?: string[];
+  error?: string;
+  [key: string]: unknown;
+}
+
+export interface LearningTwinFlowResult {
+  ok?: boolean;
+  flow?: string;
+  composition_intent?: string | null;
+  summary?: Record<string, unknown>;
+  learning?: Record<string, unknown>;
+  twin?: Record<string, unknown>;
+  contract?: string;
+  issues?: string[];
+  error?: string;
+  [key: string]: unknown;
+}
+
+/** Guided Learning thin handshake for a learning-domain pack. */
+export async function runCognisphereHandshake(opts: {
+  domain: string;
+  goal?: string;
+  topic?: string;
+  checkMode?: string;
+}): Promise<HandshakeResult> {
+  const res = await apiFetch(
+    apiUrl("/api/v1/learning/cognisphere/handshake"),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        domain: opts.domain,
+        goal: opts.goal,
+        topic: opts.topic,
+        check_mode: opts.checkMode ?? "full",
+      }),
+    },
+  );
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(detail || `Handshake failed: ${res.status}`);
+  }
+  return res.json() as Promise<HandshakeResult>;
+}
+
+/** Learning → twin combined flow (composition_intent pass-through). */
+export async function runLearningTwinFlow(opts: {
+  learningDomain: string;
+  goal?: string;
+  topic?: string;
+  compositionIntent?: "learn_then_practice" | "failure_drill" | string;
+  acceptTwinStubs?: boolean;
+}): Promise<LearningTwinFlowResult> {
+  const res = await apiFetch(
+    apiUrl("/api/v1/learning/cognisphere/handshake/learning-twin"),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        learning_domain: opts.learningDomain,
+        goal: opts.goal,
+        topic: opts.topic,
+        composition_intent: opts.compositionIntent,
+        accept_twin_stubs: opts.acceptTwinStubs ?? true,
+      }),
+    },
+  );
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(detail || `Learning-twin flow failed: ${res.status}`);
+  }
+  return res.json() as Promise<LearningTwinFlowResult>;
+}
+
 /** Learning Space deep-link carrying an NL goal (+ optional recommended domains). */
 export function learningSpaceGoalHref(
   goal: string,
