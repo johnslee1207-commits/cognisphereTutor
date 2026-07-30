@@ -270,10 +270,13 @@ def test_import_and_seed_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     assert body["defaults"]["chat_capability"] == "mastery_path"
     assert "trusted_context" in body["gates"]
     assert body["gates"]["trusted_context"]["phase"] == "DT-P3"
+    assert "aws_twin_mastery" in body["gates"]
+    assert body["gates"]["aws_twin_mastery"]["path"] == "aws_digital_twin_mastery"
     assert body["tutor_pack"]["defaults"]["check_command"]
     domains = {p["domain"] for p in body["plugins"]}
     assert "leetcode" in domains
     leetcode = next(p for p in body["plugins"] if p["domain"] == "leetcode")
+    assert leetcode.get("kind") == "learning"
     assert leetcode["distribution"]["package_name"] == "cognisphere-plugins-leetcode"
     assert leetcode["tutor_pack"]["check_command"]
 

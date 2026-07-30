@@ -2,6 +2,8 @@ import { apiFetch, apiUrl } from "./api";
 
 export interface CognispherePluginInfo {
   domain: string;
+  /** learning = import-and-seed packs; twin = digital-twin runtime packs */
+  kind?: "learning" | "twin" | string;
   plugin_id?: string;
   display_name?: string;
   description?: string;
@@ -15,11 +17,26 @@ export interface CognispherePluginInfo {
   valid: boolean;
 }
 
+export interface AwsTwinMasteryGate {
+  ok?: boolean;
+  status?: string;
+  path?: string;
+  domain?: string;
+  learning_domain?: string;
+  runtime_mode?: string;
+  package_id?: string;
+  choice_id?: string;
+  mastery_path_id?: string;
+  continue_in_chat?: string;
+  error?: string;
+}
+
 export interface CognisphereLearningStatus {
   ok: boolean;
   plugins_root?: string;
   plugin_count?: number;
   issues: string[];
+  twin_issues?: string[];
   gates: {
     sandbox?: { authorized?: boolean; env?: string };
     sandbox_authorized?: boolean;
@@ -29,6 +46,7 @@ export interface CognisphereLearningStatus {
       mode?: string;
       blocker?: { code?: string; meaning?: string } | null;
     };
+    aws_twin_mastery?: AwsTwinMasteryGate;
   };
   plugins: CognispherePluginInfo[];
   tutor_pack?: Record<string, unknown>;
@@ -421,6 +439,62 @@ export function masteryChatHref(
     params.set("tutor_session", opts.tutorSessionId);
   }
   return `/home/${encodeURIComponent(pathId)}?${params.toString()}`;
+}
+
+export interface AwsTwinMasteryResult {
+  ok: boolean;
+  status?: string;
+  path?: string;
+  domain?: string;
+  runtime_mode?: string;
+  package_id?: string;
+  choice_id?: string;
+  steps?: unknown;
+  step_results?: unknown;
+  issues?: string[];
+  error?: string;
+  [key: string]: unknown;
+}
+
+/** Offline AWS digital twin mastery readiness (CP-04→06→12 façade). */
+export async function fetchAwsTwinMasteryStatus(): Promise<AwsTwinMasteryResult> {
+  const res = await apiFetch(
+    apiUrl("/api/v1/learning/cognisphere/aws-twin-mastery"),
+  );
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(detail || `AWS twin mastery status failed: ${res.status}`);
+  }
+  return res.json() as Promise<AwsTwinMasteryResult>;
+}
+
+/** Run offline AWS digital twin Practitioner mastery (fixture by default). */
+export async function runAwsTwinMastery(opts?: {
+  packageId?: string;
+  choiceId?: string;
+  includeTutor?: boolean;
+  includeAcceptance?: boolean;
+  includeMvpProduct?: boolean;
+}): Promise<AwsTwinMasteryResult> {
+  const res = await apiFetch(
+    apiUrl("/api/v1/learning/cognisphere/aws-twin-mastery"),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        package_id: opts?.packageId,
+        choice_id: opts?.choiceId,
+        include_tutor: opts?.includeTutor ?? true,
+        include_acceptance: opts?.includeAcceptance ?? true,
+        include_mvp_product: opts?.includeMvpProduct ?? false,
+      }),
+    },
+  );
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(detail || `AWS twin mastery run failed: ${res.status}`);
+  }
+  return res.json() as Promise<AwsTwinMasteryResult>;
 }
 
 /** Learning Space deep-link carrying an NL goal (+ optional recommended domains). */

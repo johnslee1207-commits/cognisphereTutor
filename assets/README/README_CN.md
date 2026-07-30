@@ -343,8 +343,9 @@ Guided Learning（学习空间 / 精通之路）可通过以下 API 将域包导
 - `POST /api/v1/learning/cognisphere/compose-and-seed` — 组合后逐域 import-and-seed
 - `POST /api/v1/learning/cognisphere/recommend-from-goal` — NL 学习目标 → 推荐插件；可一键 `compose_and_seed`
 - `POST /api/v1/learning/cognisphere/tutor/start` / `suggest-focus` / `plan-path`
+- `GET|POST /api/v1/learning/cognisphere/aws-twin-mastery` — AWS Digital Twin 离线 Mastery（fixture；需进程环境 `COGNISPHERE_LEARNING_PLUGINS_ROOT`）
 
-Learning Space：输入自然语言目标 → **推荐插件** / 一键 **组合导入**；或手动多选域 → **组合并导入**；或单域 **导入**。Cognisphere 路径展示 `suggest-focus` / `plan-path` 的焦点与技能路径提示。路径详情展示**能力雷达**（模块轴 + 薄弱知识点），数据来自 Mastery 地图。
+Learning Space：输入自然语言目标 → **推荐插件** / 一键 **组合导入**；或手动多选域 → **组合并导入**；或单域 **导入**。侧栏 **AWS Digital Twin Mastery** 可跑离线练习，并导入 `aws_certification` 进入 Mastery Path 对话。Twin 包（`kind=twin`）不进入课程库 import 列表。Cognisphere 路径展示 `suggest-focus` / `plan-path` 的焦点与技能路径提示。路径详情展示**能力雷达**（模块轴 + 薄弱知识点），数据来自 Mastery 地图。
 
 集成代码位于 `cognispheretutor/integrations/cognisphere/`（发现 / 协商 / 校验 / Bundle 导入到 Assessment·Plan·Mastery / trusted-context 离线导入 / 运行时回调 + 离线 runtime bridge / 跨域组合）。在线 trusted-context 需配置 `COGNISPHERE_TRUSTED_CONTEXT_BASE_URL`。`runtime_adapters.json` 只声明能力→可调用契约；模块路径按域从插件 manifest `runtime_modules` 或 `module_template`（`cognisphere_plugins.{domain}.{module_key}`）解析，Tutor 内不硬编码任何域包路径。
 

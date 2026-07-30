@@ -157,6 +157,7 @@ AWS CP Runtime Interaction（CP-04）：`runtime_interaction_status` / `run_cp_p
 AWS twin MVP-2：`mvp_product_status` / `run_mvp_product_flow`（`cp_mvp_product_client`）。
 AWS Digital Twin 离线 Mastery：`aws_digital_twin_mastery_status` / `run_aws_digital_twin_mastery`（`aws_digital_twin_mastery_client`；CP-04→可选 CP-06/12；无 Tutor UI 仪式）。
 Guided Learning 薄路由：`GET|POST /api/v1/learning/cognisphere/handshake`（及 `/handshake/learning-twin*`）；`GET|POST /api/v1/learning/cognisphere/aws-twin-mastery`；无 packs root 时 fail-closed。CLI：`cognispheretutor cognisphere handshake` / `learning-twin [--intent …]` / `aws-twin-mastery`。
+Learning Space（`/space/learning`）侧栏提供 **AWS Digital Twin Mastery** 入口：显示 `gates.aws_twin_mastery` 就绪态、一键跑离线 fixture 练习，并可将 `aws_certification` 导入为 Mastery Path 后进入 Chat（`?capability=mastery_path`）。Twin 包不走 import-and-seed 课程库（`kind=twin`）。
 
 常用检查命令：
 

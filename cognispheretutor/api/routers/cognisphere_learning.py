@@ -427,9 +427,11 @@ async def cognisphere_learning_status():
     for item in discovery.get("plugins") or []:
         manifest = item.get("manifest") or {}
         domain = str(item.get("domain") or "")
+        kind = "twin" if domain.endswith("_twin") else "learning"
         plugins.append(
             {
                 "domain": domain,
+                "kind": kind,
                 "plugin_id": manifest.get("plugin_id"),
                 "display_name": manifest.get("display_name") or manifest.get("name"),
                 "description": manifest.get("description"),
@@ -444,15 +446,71 @@ async def cognisphere_learning_status():
             }
         )
 
+    # Twin packs use a different capability model; their validation noise must not
+    # mark the Guided Learning course library unavailable when learning packs are OK.
+    learning_plugins = [p for p in plugins if p.get("kind") != "twin"]
+    learning_ok = any(bool(p.get("valid")) for p in learning_plugins)
+    learning_issues = [
+        issue
+        for issue in list(discovery.get("issues") or [])
+        if "_twin:" not in str(issue)
+    ]
+
+    aws_twin_gate: dict[str, Any] = {
+        "ok": False,
+        "status": "unavailable",
+        "path": "aws_digital_twin_mastery",
+        "domain": "aws_certification_twin",
+    }
+    try:
+        from cognispheretutor.integrations.cognisphere.aws_digital_twin_mastery_client import (
+            aws_digital_twin_mastery_status,
+        )
+        from cognispheretutor.integrations.cognisphere.handshake_client import (
+            require_packs_root,
+        )
+
+        packs_root = require_packs_root()
+        twin_status = aws_digital_twin_mastery_status(root=packs_root)
+        if isinstance(twin_status, dict):
+            aws_twin_gate = {
+                "ok": bool(twin_status.get("ok")),
+                "status": twin_status.get("status") or ("ready" if twin_status.get("ok") else "blocked"),
+                "path": twin_status.get("path") or "aws_digital_twin_mastery",
+                "domain": twin_status.get("domain") or "aws_certification_twin",
+                "runtime_mode": twin_status.get("runtime_mode"),
+                "package_id": twin_status.get("package_id"),
+                "choice_id": twin_status.get("choice_id"),
+                "learning_domain": "aws_certification",
+                "mastery_path_id": mastery_path_id_for_domain("aws_certification"),
+                "continue_in_chat": (
+                    f"/home/{mastery_path_id_for_domain('aws_certification')}"
+                    "?capability=mastery_path"
+                ),
+                "error": twin_status.get("error"),
+            }
+    except Exception as exc:  # noqa: BLE001 — gate is best-effort for UI
+        aws_twin_gate = {
+            **aws_twin_gate,
+            "status": "blocked",
+            "error": str(exc),
+        }
+
     return {
-        "ok": bool(discovery.get("ok")),
+        "ok": bool(discovery.get("ok")) or learning_ok,
         "plugins_root": discovery.get("plugins_root"),
         "plugin_count": discovery.get("plugin_count"),
-        "issues": list(discovery.get("issues") or []),
+        "issues": learning_issues,
+        "twin_issues": [
+            issue
+            for issue in list(discovery.get("issues") or [])
+            if "_twin:" in str(issue)
+        ],
         "gates": {
             **gate_status(),
             "sandbox_authorized": is_sandbox_authorized(),
             "trusted_context": trusted_context_status(),
+            "aws_twin_mastery": aws_twin_gate,
         },
         "plugins": plugins,
         "tutor_pack": discovery.get("tutor_pack") or {},

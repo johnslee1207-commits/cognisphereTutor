@@ -32,15 +32,18 @@ import {
   composeAndSeedCognisphere,
   domainFromCognispherePathId,
   fetchAbilityRadar,
+  fetchAwsTwinMasteryStatus,
   fetchCognisphereLearningStatus,
   importAndSeedCognisphere,
   isCognispherePathId,
   masteryChatHref,
   planCognispherePath,
   recommendCognisphereFromGoal,
+  runAwsTwinMastery,
   startCognisphereTutor,
   suggestCognisphereFocus,
   type AbilityRadarResult,
+  type AwsTwinMasteryResult,
   type CognisphereLearningStatus,
 } from "@/lib/cognisphere-learning-api";
 
@@ -94,6 +97,10 @@ function MasteryPathPageInner() {
   const [tutorBusy, setTutorBusy] = useState(false);
   const [radar, setRadar] = useState<AbilityRadarResult | null>(null);
   const [urlGoalApplied, setUrlGoalApplied] = useState(false);
+  const [awsTwinBusy, setAwsTwinBusy] = useState(false);
+  const [awsTwinResult, setAwsTwinResult] = useState<AwsTwinMasteryResult | null>(
+    null,
+  );
 
   const loadList = useCallback(async () => {
     setLoadingList(true);
@@ -323,6 +330,96 @@ function MasteryPathPageInner() {
     [loadList, tr],
   );
 
+  const awsTwinGate = csphere?.gates?.aws_twin_mastery;
+  const awsLearningDomain =
+    awsTwinGate?.learning_domain || "aws_certification";
+  const awsMasteryPathId =
+    awsTwinGate?.mastery_path_id || `csphere-${awsLearningDomain}`;
+
+  const handleRunAwsTwinMastery = useCallback(async () => {
+    setAwsTwinBusy(true);
+    setCsphereError(null);
+    setCsphereNote(null);
+    try {
+      // Prefer status gate when already known; refresh if missing.
+      if (!awsTwinGate?.ok) {
+        const status = await fetchAwsTwinMasteryStatus();
+        if (!status.ok) {
+          throw new Error(
+            status.error ||
+              tr(
+                "AWS Digital Twin Mastery 不可用（需 COGNISPHERE_LEARNING_PLUGINS_ROOT）",
+                "AWS Digital Twin Mastery unavailable (needs COGNISPHERE_LEARNING_PLUGINS_ROOT)",
+              ),
+          );
+        }
+      }
+      const result = await runAwsTwinMastery();
+      setAwsTwinResult(result);
+      if (result.ok) {
+        setCsphereNote(
+          tr(
+            `AWS Digital Twin 离线练习完成（${result.runtime_mode || "fixture"}）。可继续进入 Mastery Path 对话。`,
+            `AWS Digital Twin offline practice complete (${result.runtime_mode || "fixture"}). Continue in Mastery Path chat.`,
+          ),
+        );
+      } else {
+        setCsphereError(
+          result.error ||
+            (result.issues || []).join("; ") ||
+            tr("AWS twin mastery 未完成", "AWS twin mastery did not complete"),
+        );
+      }
+    } catch (err) {
+      setCsphereError(
+        err instanceof Error
+          ? err.message
+          : tr("无法运行 AWS twin mastery", "Could not run AWS twin mastery"),
+      );
+    } finally {
+      setAwsTwinBusy(false);
+    }
+  }, [awsTwinGate?.ok, tr]);
+
+  const handleContinueAwsMasteryPath = useCallback(async () => {
+    setAwsTwinBusy(true);
+    setCsphereError(null);
+    try {
+      const existing = paths.find((p) => p.book_id === awsMasteryPathId);
+      if (!existing) {
+        const seeded = await importAndSeedCognisphere(awsLearningDomain);
+        const pathId = seeded.mastery_path?.path_id || awsMasteryPathId;
+        await loadList();
+        setSelected(pathId);
+        router.push(masteryChatHref(pathId));
+        return;
+      }
+      setSelected(awsMasteryPathId);
+      router.push(
+        awsTwinGate?.continue_in_chat || masteryChatHref(awsMasteryPathId),
+      );
+    } catch (err) {
+      setCsphereError(
+        err instanceof Error
+          ? err.message
+          : tr(
+              "无法打开 AWS Mastery Path",
+              "Could not open AWS Mastery Path",
+            ),
+      );
+    } finally {
+      setAwsTwinBusy(false);
+    }
+  }, [
+    awsLearningDomain,
+    awsMasteryPathId,
+    awsTwinGate?.continue_in_chat,
+    loadList,
+    paths,
+    router,
+    tr,
+  ]);
+
   const toggleDomain = useCallback((domain: string) => {
     setSelectedDomains((prev) =>
       prev.includes(domain)
@@ -383,7 +480,12 @@ function MasteryPathPageInner() {
 
   const handleImportAvailableDomains = useCallback(async () => {
     const domains = (csphere?.plugins || [])
-      .filter((plugin) => plugin.valid)
+      .filter(
+        (plugin) =>
+          plugin.valid &&
+          plugin.kind !== "twin" &&
+          !plugin.domain.endsWith("_twin"),
+      )
       .map((plugin) => plugin.domain);
     if (domains.length === 0) {
       setCsphereError(
@@ -554,15 +656,19 @@ function MasteryPathPageInner() {
   }, [selected, detail, router, tr]);
 
   const validPluginCount = (csphere?.plugins || []).filter(
-    (plugin) => plugin.valid,
+    (plugin) => plugin.valid && plugin.kind !== "twin",
   ).length;
-  const coursePacks = csphere?.plugins || [];
+  // Twin packs are runtime façades, not import-and-seed course packs.
+  const coursePacks = (csphere?.plugins || []).filter(
+    (plugin) => plugin.kind !== "twin" && !plugin.domain.endsWith("_twin"),
+  );
   const hasBundledCourses = coursePacks.some(
     (plugin) => plugin.source === "bundled_pack",
   );
   const hasExternalCourses = coursePacks.some(
     (plugin) => plugin.source !== "bundled_pack",
   );
+  const twinReady = Boolean(awsTwinGate?.ok);
 
   return (
     <div className="flex h-full">
@@ -689,7 +795,7 @@ function MasteryPathPageInner() {
               {csphereNote}
             </p>
           )}
-          {csphere && !csphere.ok && (
+          {csphere && !csphere.ok && validPluginCount === 0 && (
             <p className="px-1 text-[10px] leading-relaxed text-[var(--muted-foreground)]">
               {tr(
                 "课程库暂时不可用，请稍后重试。",
@@ -697,6 +803,70 @@ function MasteryPathPageInner() {
               )}
             </p>
           )}
+          <div className="rounded-md border border-[var(--border)] px-2 py-2 space-y-2">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <div className="text-xs font-medium text-[var(--foreground)]">
+                  {tr("AWS Digital Twin Mastery", "AWS Digital Twin Mastery")}
+                </div>
+                <div className="mt-0.5 text-[10px] text-[var(--muted-foreground)] leading-relaxed">
+                  {twinReady
+                    ? tr(
+                        `离线 fixture 就绪（${awsTwinGate?.runtime_mode || "fixture"}）· 不需 live AWS/LLM`,
+                        `Offline fixture ready (${awsTwinGate?.runtime_mode || "fixture"}) · no live AWS/LLM`,
+                      )
+                    : tr(
+                        "需服务进程设置 COGNISPHERE_LEARNING_PLUGINS_ROOT",
+                        "Requires COGNISPHERE_LEARNING_PLUGINS_ROOT on the Tutor process",
+                      )}
+                </div>
+              </div>
+              <span
+                className={`shrink-0 text-[10px] ${
+                  twinReady ? "text-green-600" : "text-[var(--muted-foreground)]"
+                }`}
+              >
+                {twinReady
+                  ? tr("就绪", "Ready")
+                  : tr("未就绪", "Not ready")}
+              </span>
+            </div>
+            {awsTwinResult?.ok && (
+              <p className="text-[10px] text-green-700/90 leading-relaxed">
+                {tr(
+                  `最近一次练习：${awsTwinResult.status || "complete"}`,
+                  `Last practice: ${awsTwinResult.status || "complete"}`,
+                )}
+              </p>
+            )}
+            <div className="flex gap-1">
+              <button
+                type="button"
+                disabled={awsTwinBusy || csphereBusy || !twinReady}
+                onClick={() => void handleRunAwsTwinMastery()}
+                className="flex-1 flex items-center justify-center gap-1 px-2 py-1 text-[11px] rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50 cursor-pointer"
+              >
+                {awsTwinBusy ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <Sparkles className="w-3 h-3" />
+                )}
+                {tr("跑离线练习", "Run offline practice")}
+              </button>
+              <button
+                type="button"
+                disabled={awsTwinBusy || csphereBusy}
+                onClick={() => void handleContinueAwsMasteryPath()}
+                className="px-2 py-1 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
+                title={tr(
+                  "导入 AWS 认证课程并进入 Mastery Path 对话",
+                  "Import AWS certification path and open Mastery Chat",
+                )}
+              >
+                <MessageSquare className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
           {coursePacks.length > 0 && (
             <p className="px-1 text-[10px] leading-relaxed text-[var(--muted-foreground)]">
               {tr("课程来源", "Course source")}:{" "}
