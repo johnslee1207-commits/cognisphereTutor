@@ -45,6 +45,7 @@ import {
   startCognisphereTutor,
   suggestCognisphereFocus,
   type AbilityRadarResult,
+  type AwsTwinMasteryGate,
   type AwsTwinMasteryResult,
   type CognisphereLearningStatus,
 } from "@/lib/cognisphere-learning-api";
@@ -103,6 +104,8 @@ function MasteryPathPageInner() {
   const [awsTwinResult, setAwsTwinResult] = useState<AwsTwinMasteryResult | null>(
     null,
   );
+  /** Main pane: mastery map vs AWS Digital Twin practice results. */
+  const [mainPanel, setMainPanel] = useState<"map" | "aws-twin">("map");
 
   const loadList = useCallback(async () => {
     setLoadingList(true);
@@ -342,6 +345,7 @@ function MasteryPathPageInner() {
     setAwsTwinBusy(true);
     setCsphereError(null);
     setCsphereNote(null);
+    setMainPanel("aws-twin");
     try {
       // Prefer status gate when already known; refresh if missing.
       if (!awsTwinGate?.ok) {
@@ -382,6 +386,11 @@ function MasteryPathPageInner() {
       setAwsTwinBusy(false);
     }
   }, [awsTwinGate?.ok, tr]);
+
+  const openAwsTwinPanel = useCallback(() => {
+    setMainPanel("aws-twin");
+    setCsphereError(null);
+  }, []);
 
   const handleContinueAwsMasteryPath = useCallback(async () => {
     setAwsTwinBusy(true);
@@ -753,9 +762,12 @@ function MasteryPathPageInner() {
             paths.map((path) => (
               <button
                 key={path.book_id}
-                onClick={() => setSelected(path.book_id)}
+                onClick={() => {
+                  setMainPanel("map");
+                  setSelected(path.book_id);
+                }}
                 className={`w-full text-left px-3 py-2 rounded-md transition-colors cursor-pointer ${
-                  selected === path.book_id
+                  mainPanel === "map" && selected === path.book_id
                     ? "bg-[var(--primary)]/10 ring-1 ring-[var(--primary)]/30"
                     : "hover:bg-[var(--accent)]"
                 }`}
@@ -853,8 +865,22 @@ function MasteryPathPageInner() {
               )}
             </p>
           )}
-          <div className="rounded-md border border-[var(--border)] px-2 py-2 space-y-2">
-            <div className="flex items-start justify-between gap-2">
+          <div
+            className={`rounded-md border px-2 py-2 space-y-2 ${
+              mainPanel === "aws-twin"
+                ? "border-[var(--primary)]/50 bg-[var(--primary)]/5"
+                : "border-[var(--border)]"
+            }`}
+          >
+            <button
+              type="button"
+              onClick={openAwsTwinPanel}
+              className="w-full flex items-start justify-between gap-2 text-left cursor-pointer"
+              title={tr(
+                "在右侧查看 AWS Digital Twin 练习面板",
+                "Open AWS Digital Twin practice panel on the right",
+              )}
+            >
               <div className="min-w-0">
                 <div className="text-xs font-medium text-[var(--foreground)]">
                   {tr("AWS Digital Twin Mastery", "AWS Digital Twin Mastery")}
@@ -880,7 +906,7 @@ function MasteryPathPageInner() {
                   ? tr("就绪", "Ready")
                   : tr("未就绪", "Not ready")}
               </span>
-            </div>
+            </button>
             {awsTwinResult?.ok && (
               <p className="text-[10px] text-green-700/90 leading-relaxed">
                 {tr(
@@ -906,7 +932,10 @@ function MasteryPathPageInner() {
               <button
                 type="button"
                 disabled={awsTwinBusy || csphereBusy}
-                onClick={() => void handleAwsLearningTwinHandshake()}
+                onClick={() => {
+                  openAwsTwinPanel();
+                  void handleAwsLearningTwinHandshake();
+                }}
                 className="px-2 py-1 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
                 title={tr(
                   "Handshake + Learning→Twin（learn_then_practice）",
@@ -1081,7 +1110,21 @@ function MasteryPathPageInner() {
       </aside>
 
       <section className="flex-1 overflow-y-auto">
-        {loadingDetail ? (
+        {mainPanel === "aws-twin" ? (
+          <AwsTwinPracticeView
+            tr={tr}
+            busy={awsTwinBusy}
+            ready={twinReady}
+            gate={awsTwinGate}
+            result={awsTwinResult}
+            note={csphereNote}
+            error={csphereError}
+            onRun={() => void handleRunAwsTwinMastery()}
+            onHandshake={() => void handleAwsLearningTwinHandshake()}
+            onContinueChat={() => void handleContinueAwsMasteryPath()}
+            onBackToMap={() => setMainPanel("map")}
+          />
+        ) : loadingDetail ? (
           <div className="flex items-center justify-center h-full text-[var(--muted-foreground)]">
             <Loader2 className="w-5 h-5 animate-spin" />
           </div>
@@ -1115,7 +1158,10 @@ function MasteryPathPageInner() {
             }
             onSocratic={handleSocraticPractice}
             onAwsTwinPractice={() => void handleRunAwsTwinMastery()}
-            onAwsHandshake={() => void handleAwsLearningTwinHandshake()}
+            onAwsHandshake={() => {
+              openAwsTwinPanel();
+              void handleAwsLearningTwinHandshake();
+            }}
             onRedo={() => selected && handleRedo(selected)}
             onRestore={() => selected && handleRestore(selected)}
             onDelete={() => selected && handleDelete(selected)}
@@ -1547,6 +1593,221 @@ function MapView({
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function AwsTwinPracticeView({
+  tr,
+  busy,
+  ready,
+  gate,
+  result,
+  note,
+  error,
+  onRun,
+  onHandshake,
+  onContinueChat,
+  onBackToMap,
+}: {
+  tr: (cn: string, en: string) => string;
+  busy: boolean;
+  ready: boolean;
+  gate?: AwsTwinMasteryGate;
+  result: AwsTwinMasteryResult | null;
+  note: string | null;
+  error: string | null;
+  onRun: () => void;
+  onHandshake: () => void;
+  onContinueChat: () => void;
+  onBackToMap: () => void;
+}) {
+  const steps = result?.steps;
+  const stepEntries: { id: string; row: Record<string, unknown> }[] = [];
+  if (steps && typeof steps === "object" && !Array.isArray(steps)) {
+    for (const [id, row] of Object.entries(steps as Record<string, unknown>)) {
+      if (row && typeof row === "object") {
+        stepEntries.push({ id, row: row as Record<string, unknown> });
+      }
+    }
+  } else if (Array.isArray(steps)) {
+    for (const row of steps) {
+      if (row && typeof row === "object") {
+        const obj = row as Record<string, unknown>;
+        stepEntries.push({
+          id: String(obj.step_id || obj.capability || stepEntries.length),
+          row: obj,
+        });
+      }
+    }
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto px-6 py-5 space-y-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-xs text-[var(--muted-foreground)]">
+            Cognisphere · AWS Digital Twin
+          </div>
+          <h2 className="mt-1 text-lg font-semibold text-[var(--foreground)]">
+            {tr("AWS Digital Twin Mastery", "AWS Digital Twin Mastery")}
+          </h2>
+          <p className="mt-1 text-xs text-[var(--muted-foreground)] leading-relaxed">
+            {tr(
+              "离线 fixture 练习（CP-04 → CP-06 → CP-12）。不打开独立 twin UI，结果在此面板展示。",
+              "Offline fixture practice (CP-04 → CP-06 → CP-12). No separate twin UI — results show here.",
+            )}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onBackToMap}
+          className="shrink-0 text-[11px] px-2 py-1 rounded-md border border-[var(--border)] hover:bg-[var(--accent)] cursor-pointer"
+        >
+          {tr("返回地图", "Back to map")}
+        </button>
+      </div>
+
+      <div className="rounded-lg border border-[var(--border)] p-3 space-y-2 text-xs">
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-[var(--muted-foreground)]">
+          <span>
+            {tr("状态", "Status")}:{" "}
+            <span className="text-[var(--foreground)]">
+              {result?.status || gate?.status || (ready ? "ready" : "blocked")}
+            </span>
+          </span>
+          <span>
+            {tr("模式", "Mode")}:{" "}
+            <span className="text-[var(--foreground)]">
+              {result?.runtime_mode || gate?.runtime_mode || "—"}
+            </span>
+          </span>
+          <span>
+            package:{" "}
+            <span className="text-[var(--foreground)]">
+              {result?.package_id || gate?.package_id || "—"}
+            </span>
+          </span>
+          <span>
+            choice:{" "}
+            <span className="text-[var(--foreground)]">
+              {result?.choice_id || gate?.choice_id || "—"}
+            </span>
+          </span>
+        </div>
+        {error && (
+          <p className="text-red-500/90 leading-relaxed">{error}</p>
+        )}
+        {note && !error && (
+          <p className="text-yellow-700 dark:text-yellow-500/90 leading-relaxed">
+            {note}
+          </p>
+        )}
+        <div className="flex flex-wrap gap-2 pt-1">
+          <button
+            type="button"
+            disabled={busy || !ready}
+            onClick={onRun}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50 cursor-pointer"
+          >
+            {busy ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            ) : (
+              <Sparkles className="w-3.5 h-3.5" />
+            )}
+            {tr("跑离线练习", "Run offline practice")}
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={onHandshake}
+            className="px-3 py-1.5 text-sm rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
+          >
+            {tr("Handshake", "Handshake")}
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={onContinueChat}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 disabled:opacity-50 cursor-pointer"
+          >
+            <MessageSquare className="w-3.5 h-3.5" />
+            {tr("进入 Mastery 对话", "Open Mastery chat")}
+          </button>
+        </div>
+      </div>
+
+      {busy && !result && (
+        <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)] py-8 justify-center">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          {tr("正在运行离线练习…", "Running offline practice…")}
+        </div>
+      )}
+
+      {!busy && !result && (
+        <div className="rounded-lg border border-dashed border-[var(--border)] p-6 text-center text-sm text-[var(--muted-foreground)]">
+          {tr(
+            "点击「跑离线练习」后，CP-04 / CP-06 / CP-12 步骤结果会显示在这里。",
+            "Click “Run offline practice” to show CP-04 / CP-06 / CP-12 step results here.",
+          )}
+        </div>
+      )}
+
+      {stepEntries.length > 0 && (
+        <div className="space-y-2">
+          <div className="text-xs font-medium text-[var(--foreground)]">
+            {tr("步骤结果", "Step results")}
+          </div>
+          {stepEntries.map(({ id, row }) => {
+            const ok = row.ok !== false;
+            const capability = String(row.capability || "");
+            const detailBits = [
+              row.choice_correct != null
+                ? `choice_correct=${String(row.choice_correct)}`
+                : null,
+              row.status != null ? `status=${String(row.status)}` : null,
+              Array.isArray(row.phases)
+                ? `phases=${(row.phases as unknown[]).length}`
+                : null,
+              Array.isArray(row.completed_steps)
+                ? `completed=${(row.completed_steps as unknown[]).length}`
+                : null,
+              Array.isArray(row.issues) && (row.issues as unknown[]).length
+                ? `issues=${(row.issues as unknown[]).join(", ")}`
+                : null,
+            ].filter(Boolean);
+            return (
+              <div
+                key={id}
+                className="rounded-md border border-[var(--border)] px-3 py-2"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="text-sm font-medium text-[var(--foreground)]">
+                    {id}
+                    {capability ? (
+                      <span className="ml-2 text-[10px] text-[var(--muted-foreground)]">
+                        {capability}
+                      </span>
+                    ) : null}
+                  </div>
+                  <span
+                    className={`text-[11px] ${
+                      ok ? "text-green-600" : "text-red-500"
+                    }`}
+                  >
+                    {ok ? tr("通过", "ok") : tr("失败", "failed")}
+                  </span>
+                </div>
+                {detailBits.length > 0 && (
+                  <p className="mt-1 text-[11px] text-[var(--muted-foreground)] leading-relaxed">
+                    {detailBits.join(" · ")}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
