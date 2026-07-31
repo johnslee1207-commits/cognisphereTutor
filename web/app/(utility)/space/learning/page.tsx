@@ -341,6 +341,25 @@ function MasteryPathPageInner() {
   const awsMasteryPathId =
     awsTwinGate?.mastery_path_id || `csphere-${awsLearningDomain}`;
 
+  const twinModeLabel = useCallback(
+    (mode?: string | null) => {
+      const m = String(mode || "").toLowerCase();
+      if (!m || m.includes("fixture") || m.includes("stub") || m === "offline") {
+        return tr("本地模拟（无需真实 AWS）", "Local simulation (no live AWS)");
+      }
+      if (m.includes("live")) {
+        return tr("在线模式", "Live mode");
+      }
+      return mode || tr("本地模拟", "Local simulation");
+    },
+    [tr],
+  );
+
+  const openAwsTwinPanel = useCallback(() => {
+    setMainPanel("aws-twin");
+    setCsphereError(null);
+  }, []);
+
   const handleRunAwsTwinMastery = useCallback(async () => {
     setAwsTwinBusy(true);
     setCsphereError(null);
@@ -365,8 +384,8 @@ function MasteryPathPageInner() {
       if (result.ok) {
         setCsphereNote(
           tr(
-            `AWS Digital Twin 离线练习完成（${result.runtime_mode || "fixture"}）。可继续进入 Mastery Path 对话。`,
-            `AWS Digital Twin offline practice complete (${result.runtime_mode || "fixture"}). Continue in Mastery Path chat.`,
+            `离线练习已完成（${twinModeLabel(result.runtime_mode)}）。右侧已显示步骤结果，可进入 Mastery 对话继续。`,
+            `Offline practice complete (${twinModeLabel(result.runtime_mode)}). Step results are on the right; continue in Mastery chat when ready.`,
           ),
         );
       } else {
@@ -385,12 +404,7 @@ function MasteryPathPageInner() {
     } finally {
       setAwsTwinBusy(false);
     }
-  }, [awsTwinGate?.ok, tr]);
-
-  const openAwsTwinPanel = useCallback(() => {
-    setMainPanel("aws-twin");
-    setCsphereError(null);
-  }, []);
+  }, [awsTwinGate?.ok, tr, twinModeLabel]);
 
   const handleContinueAwsMasteryPath = useCallback(async () => {
     setAwsTwinBusy(true);
@@ -853,7 +867,7 @@ function MasteryPathPageInner() {
             </p>
           )}
           {csphereNote && (
-            <p className="px-1 text-[10px] leading-relaxed text-yellow-600">
+            <p className="px-1 text-[10px] leading-relaxed text-[var(--muted-foreground)]">
               {csphereNote}
             </p>
           )}
@@ -888,8 +902,8 @@ function MasteryPathPageInner() {
                 <div className="mt-0.5 text-[10px] text-[var(--muted-foreground)] leading-relaxed">
                   {twinReady
                     ? tr(
-                        `离线 fixture 就绪（${awsTwinGate?.runtime_mode || "fixture"}）· 不需 live AWS/LLM`,
-                        `Offline fixture ready (${awsTwinGate?.runtime_mode || "fixture"}) · no live AWS/LLM`,
+                        `${twinModeLabel(awsTwinGate?.runtime_mode)} · 点击标题或「跑离线练习」在右侧查看`,
+                        `${twinModeLabel(awsTwinGate?.runtime_mode)} · click title or Run to open the right panel`,
                       )
                     : tr(
                         "需服务进程设置 COGNISPHERE_LEARNING_PLUGINS_ROOT",
@@ -1117,6 +1131,9 @@ function MasteryPathPageInner() {
             ready={twinReady}
             gate={awsTwinGate}
             result={awsTwinResult}
+            modeLabel={twinModeLabel(
+              awsTwinResult?.runtime_mode || awsTwinGate?.runtime_mode,
+            )}
             note={csphereNote}
             error={csphereError}
             onRun={() => void handleRunAwsTwinMastery()}
@@ -1603,6 +1620,7 @@ function AwsTwinPracticeView({
   ready,
   gate,
   result,
+  modeLabel,
   note,
   error,
   onRun,
@@ -1615,6 +1633,7 @@ function AwsTwinPracticeView({
   ready: boolean;
   gate?: AwsTwinMasteryGate;
   result: AwsTwinMasteryResult | null;
+  modeLabel: string;
   note: string | null;
   error: string | null;
   onRun: () => void;
@@ -1654,8 +1673,8 @@ function AwsTwinPracticeView({
           </h2>
           <p className="mt-1 text-xs text-[var(--muted-foreground)] leading-relaxed">
             {tr(
-              "离线 fixture 练习（CP-04 → CP-06 → CP-12）。不打开独立 twin UI，结果在此面板展示。",
-              "Offline fixture practice (CP-04 → CP-06 → CP-12). No separate twin UI — results show here.",
+              "本地模拟练习（CP-04 → CP-06 → CP-12），不连接真实 AWS / LLM。结果在此面板展示。",
+              "Local simulation practice (CP-04 → CP-06 → CP-12); no live AWS / LLM. Results appear in this panel.",
             )}
           </p>
         </div>
@@ -1678,9 +1697,7 @@ function AwsTwinPracticeView({
           </span>
           <span>
             {tr("模式", "Mode")}:{" "}
-            <span className="text-[var(--foreground)]">
-              {result?.runtime_mode || gate?.runtime_mode || "—"}
-            </span>
+            <span className="text-[var(--foreground)]">{modeLabel}</span>
           </span>
           <span>
             package:{" "}
@@ -1699,9 +1716,7 @@ function AwsTwinPracticeView({
           <p className="text-red-500/90 leading-relaxed">{error}</p>
         )}
         {note && !error && (
-          <p className="text-yellow-700 dark:text-yellow-500/90 leading-relaxed">
-            {note}
-          </p>
+          <p className="text-[var(--muted-foreground)] leading-relaxed">{note}</p>
         )}
         <div className="flex flex-wrap gap-2 pt-1">
           <button
