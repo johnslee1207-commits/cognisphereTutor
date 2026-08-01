@@ -146,6 +146,19 @@ $env:COGNISPHERE_LEARNING_PLUGINS_ROOT = "D:\Projects\CognisphereLearningPlugins
 
 当外部插件仓库存在时，Tutor 会优先使用外部插件；否则自动使用本仓内置 pack。
 
+**AWS DT 演示包（推荐 wheel，无引擎拷贝）：** 先在 LP 仓构建 `dist/aws_dt_tutor_demo/`，再安装并设置 packs root：
+
+```powershell
+# LP
+python scripts/build_aws_dt_tutor_demo_package.py
+powershell -File dist/aws_dt_tutor_demo/install.ps1
+# Tutor
+powershell -File scripts/verify_aws_dt_demo_load.ps1
+cognispheretutor cognisphere aws-twin-mastery
+```
+
+详见 `docs/AWS_DT_TUTOR_DEMO_PACK.md` 与 `env/aws_dt_demo.env.example`（进程环境；项目 `.env` 仍被忽略）。
+
 Handshake SoT（勿在 Tutor 双活协议）：见 `docs/LEARNING_PLUGINS_HANDSHAKE_SOT.md`。
 薄客户端：`from cognispheretutor.integrations.cognisphere import handshake`。
 Learning→twin 组合流：`learning_twin_flow` / `list_learning_twin_pairs`（SDK SoT；twin stub 默认可容忍；`composition_intent` 透传 `learn_then_practice` \| `failure_drill`）。

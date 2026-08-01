@@ -100,6 +100,9 @@ from cognispheretutor.integrations.cognisphere.aws_digital_twin_mastery_client i
     aws_digital_twin_mastery_status,
     run_aws_digital_twin_mastery,
 )
+from cognispheretutor.integrations.cognisphere.aws_dt_demo_pack import (
+    verify_aws_dt_demo_pack,
+)
 
 __all__ = [
     "PluginRegistryClient",
@@ -168,6 +171,7 @@ __all__ = [
     "validate_adapter",
     "validate_bundle_safety",
     "validate_trusted_context_package",
+    "verify_aws_dt_demo_pack",
     "verify_submission",
     "visualization_advert_status",
 ]
