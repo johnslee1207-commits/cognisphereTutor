@@ -177,6 +177,22 @@ class AwsTwinMasteryRequest(BaseModel):
     include_mvp_product: bool = False
 
 
+class MasteryPathStartRequest(BaseModel):
+    path_id: str = Field(
+        ...,
+        min_length=1,
+        max_length=64,
+        description=(
+            "leetcode|ap_calculus|aws_certification|aws_digital_twin_mastery "
+            "(aliases: aws_digital_twin)"
+        ),
+    )
+    status_only: bool = False
+    include_tutor: bool = True
+    include_acceptance: bool = True
+    include_mvp_product: bool = False
+
+
 def _require_handshake_packs_root() -> Path:
     """Fail-closed: Guided Learning handshake needs a real LearningPlugins root."""
     from cognispheretutor.integrations.cognisphere.handshake_client import require_packs_root
@@ -376,6 +392,41 @@ async def guided_learning_twin_flow(body: LearningTwinFlowRequest):
     )
 
 
+@router.get("/paths")
+async def guided_learning_mastery_paths():
+    """List learning mastery entry points (3 domains + AWS DT). Fail-closed without packs root."""
+    from cognispheretutor.integrations.cognisphere.learning_mastery_paths_client import (
+        list_learning_mastery_paths,
+    )
+
+    packs_root = _require_handshake_packs_root()
+    try:
+        return list_learning_mastery_paths(root=packs_root)
+    except CognisphereIntegrationError as exc:
+        raise _http_error(exc) from exc
+
+
+@router.post("/paths/start")
+async def guided_learning_mastery_path_start(body: MasteryPathStartRequest):
+    """Start a catalog mastery path (AWS DT aliases aws-twin-mastery)."""
+    from cognispheretutor.integrations.cognisphere.learning_mastery_paths_client import (
+        start_learning_mastery_path,
+    )
+
+    packs_root = _require_handshake_packs_root()
+    try:
+        return start_learning_mastery_path(
+            body.path_id,
+            root=packs_root,
+            status_only=body.status_only,
+            skip_tutor=not body.include_tutor,
+            skip_acceptance=not body.include_acceptance,
+            include_mvp=body.include_mvp_product,
+        )
+    except CognisphereIntegrationError as exc:
+        raise _http_error(exc) from exc
+
+
 @router.get("/aws-twin-mastery")
 async def guided_aws_twin_mastery_status():
     """Offline AWS digital twin mastery status (thin client). Fail-closed without packs root."""
@@ -496,6 +547,23 @@ async def cognisphere_learning_status():
             "error": str(exc),
         }
 
+    learning_entry_points: dict[str, Any] = {
+        "ok": False,
+        "learning_entry_points": [],
+        "path_ids": [],
+    }
+    try:
+        from cognispheretutor.integrations.cognisphere.learning_mastery_paths_client import (
+            list_learning_mastery_paths,
+        )
+        from cognispheretutor.integrations.cognisphere.handshake_client import (
+            require_packs_root as _require_paths_root,
+        )
+
+        learning_entry_points = list_learning_mastery_paths(root=_require_paths_root())
+    except Exception:  # noqa: BLE001 — optional enrichment for UI
+        pass
+
     return {
         "ok": bool(discovery.get("ok")) or learning_ok,
         "plugins_root": discovery.get("plugins_root"),
@@ -513,11 +581,16 @@ async def cognisphere_learning_status():
             "aws_twin_mastery": aws_twin_gate,
         },
         "plugins": plugins,
+        "learning_entry_points": learning_entry_points.get("learning_entry_points") or [],
+        "learning_path_ids": learning_entry_points.get("path_ids") or [],
         "tutor_pack": discovery.get("tutor_pack") or {},
         "distribution_catalog": discovery.get("distribution_catalog") or {},
         "bundled_distribution": discovery.get("bundled_distribution") or {},
         "defaults": {
             "chat_capability": _MASTERY_CAPABILITY,
+            "guided_learning_url": "/space/learning",
+            "aws_twin_ui": "/space/learning?panel=aws-twin",
+            "paths_api": "GET /api/v1/learning/cognisphere/paths",
         },
     }
 

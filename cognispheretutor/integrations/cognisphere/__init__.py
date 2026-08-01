@@ -103,6 +103,10 @@ from cognispheretutor.integrations.cognisphere.aws_digital_twin_mastery_client i
 from cognispheretutor.integrations.cognisphere.aws_dt_demo_pack import (
     verify_aws_dt_demo_pack,
 )
+from cognispheretutor.integrations.cognisphere.learning_mastery_paths_client import (
+    list_learning_mastery_paths,
+    start_learning_mastery_path,
+)
 
 __all__ = [
     "PluginRegistryClient",
@@ -137,8 +141,10 @@ __all__ = [
     "list_benchmark_cases",
     "list_bundled_packs",
     "list_handshake_domains",
+    "list_learning_mastery_paths",
     "list_learning_twin_pairs",
     "list_plugins",
+    "start_learning_mastery_path",
     "list_visualization_adverts",
     "require_packs_root",
     "load_cognisphere_entrypoint",

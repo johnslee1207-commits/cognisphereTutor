@@ -1,0 +1,76 @@
+{
+  "catalog_id": "cognisphere.ops.learning_mastery_paths.v1",
+  "as_of": "2026-08-01",
+  "description": "Fixture catalog for Tutor paths API tests.",
+  "paths": [
+    {
+      "path_id": "leetcode",
+      "kind": "learning_domain",
+      "domain": "leetcode",
+      "display_name": "LeetCode",
+      "discovery_channel": "discover_plugins",
+      "in_learning_discover_plugins": true,
+      "start": {
+        "cognisphere_cli": "cognisphere learning-plugins start --path leetcode",
+        "tutor_cli": "cognispheretutor cognisphere handshake leetcode",
+        "tutor_api": "POST /api/v1/learning/cognisphere/handshake",
+        "guided_learning_url": "/space/learning"
+      }
+    },
+    {
+      "path_id": "ap_calculus",
+      "kind": "learning_domain",
+      "domain": "ap_calculus",
+      "display_name": "AP Calculus",
+      "discovery_channel": "discover_plugins",
+      "in_learning_discover_plugins": true,
+      "start": {
+        "cognisphere_cli": "cognisphere learning-plugins start --path ap_calculus",
+        "tutor_cli": "cognispheretutor cognisphere handshake ap_calculus",
+        "tutor_api": "POST /api/v1/learning/cognisphere/handshake",
+        "guided_learning_url": "/space/learning"
+      }
+    },
+    {
+      "path_id": "aws_certification",
+      "kind": "learning_domain",
+      "domain": "aws_certification",
+      "display_name": "AWS Certification",
+      "discovery_channel": "discover_plugins",
+      "in_learning_discover_plugins": true,
+      "start": {
+        "cognisphere_cli": "cognisphere learning-plugins start --path aws_certification",
+        "tutor_cli": "cognispheretutor cognisphere handshake aws_certification",
+        "tutor_api": "POST /api/v1/learning/cognisphere/handshake",
+        "guided_learning_url": "/space/learning"
+      }
+    },
+    {
+      "path_id": "aws_digital_twin_mastery",
+      "aliases": ["aws_digital_twin"],
+      "kind": "digital_twin_mastery",
+      "display_name": "AWS Digital Twin",
+      "discovery_channel": "learning_mastery_paths",
+      "in_learning_discover_plugins": false,
+      "twin_domain": "aws_certification_twin",
+      "paired_learning_domain": "aws_certification",
+      "composition_roles_ref": "plugins/aws_certification_twin/manifests/domain/composition_roles.json",
+      "fail_closed_composition_roles": [
+        "scenario_runtime",
+        "evaluation",
+        "certification_package"
+      ],
+      "start": {
+        "cognisphere_cli": "cognisphere learning-plugins start --path aws_digital_twin_mastery",
+        "alias_cli": "cognisphere learning-plugins aws-twin-mastery",
+        "tutor_cli": "cognispheretutor cognisphere aws-twin-mastery",
+        "tutor_api": "GET|POST /api/v1/learning/cognisphere/aws-twin-mastery",
+        "tutor_paths_api": "GET /api/v1/learning/cognisphere/paths",
+        "guided_learning_url": "/space/learning?panel=aws-twin"
+      }
+    }
+  ],
+  "data_layer": "legacy_or_sample",
+  "data_kind": "fixture_catalog",
+  "review_gate": "sample_review"
+}

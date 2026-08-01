@@ -154,7 +154,10 @@ python scripts/build_aws_dt_tutor_demo_package.py
 powershell -File dist/aws_dt_tutor_demo/install.ps1
 # Tutor
 powershell -File scripts/verify_aws_dt_demo_load.ps1
+cognispheretutor cognisphere paths
+cognispheretutor cognisphere start --path aws_digital_twin_mastery
 cognispheretutor cognisphere aws-twin-mastery
+# Guided Learning UI: /space/learning?panel=aws-twin
 ```
 
 详见 `docs/AWS_DT_TUTOR_DEMO_PACK.md` 与 `env/aws_dt_demo.env.example`（进程环境；项目 `.env` 仍被忽略）。
@@ -169,7 +172,7 @@ AWS CP Socratic（CP-06）：`cp_socratic_tutor_status` / `start_cp_socratic_tut
 AWS CP Runtime Interaction（CP-04）：`runtime_interaction_status` / `run_cp_package_experience`（`cp_runtime_interaction_client`）。
 AWS twin MVP-2：`mvp_product_status` / `run_mvp_product_flow`（`cp_mvp_product_client`）。
 AWS Digital Twin 离线 Mastery：`aws_digital_twin_mastery_status` / `run_aws_digital_twin_mastery`（`aws_digital_twin_mastery_client`；CP-04→可选 CP-06/12；无 Tutor UI 仪式）。
-Guided Learning 薄路由：`GET|POST /api/v1/learning/cognisphere/handshake`（及 `/handshake/learning-twin*`）；`GET|POST /api/v1/learning/cognisphere/aws-twin-mastery`；无 packs root 时 fail-closed。CLI：`cognispheretutor cognisphere handshake` / `learning-twin [--intent …]` / `aws-twin-mastery`。
+Guided Learning 薄路由：`GET /api/v1/learning/cognisphere/paths`（leetcode / ap_calculus / aws_certification / **aws_digital_twin_mastery**）；`POST /api/v1/learning/cognisphere/paths/start`；`GET|POST /api/v1/learning/cognisphere/handshake`（及 `/handshake/learning-twin*`）；`GET|POST /api/v1/learning/cognisphere/aws-twin-mastery`；无 packs root 时 fail-closed。CLI：`cognispheretutor cognisphere paths` / `start --path …` / `handshake` / `learning-twin [--intent …]` / `aws-twin-mastery`。UI：`/space/learning?panel=aws-twin`。
 Learning Space（`/space/learning`）侧栏提供 **AWS Digital Twin Mastery** 入口：显示 `gates.aws_twin_mastery` 就绪态、一键跑离线 fixture 练习、**Handshake + Learning→Twin**（`learn_then_practice`），并可将 `aws_certification` 导入为 Mastery Path 后进入 Chat（`?capability=mastery_path`）。在 `csphere-aws_certification` 地图视图中同样可触发 twin 练习 / handshake。Twin 包不走 import-and-seed 课程库（`kind=twin`）。
 
 常用检查命令：

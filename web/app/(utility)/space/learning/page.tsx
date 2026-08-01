@@ -78,6 +78,7 @@ function MasteryPathPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const goalFromUrl = (searchParams.get("goal") || "").trim();
+  const panelFromUrl = (searchParams.get("panel") || "").trim().toLowerCase();
   const domainsFromUrl = (searchParams.get("domains") || "")
     .split(",")
     .map((d) => d.trim())
@@ -105,7 +106,9 @@ function MasteryPathPageInner() {
     null,
   );
   /** Main pane: mastery map vs AWS Digital Twin practice results. */
-  const [mainPanel, setMainPanel] = useState<"map" | "aws-twin">("map");
+  const [mainPanel, setMainPanel] = useState<"map" | "aws-twin">(
+    panelFromUrl === "aws-twin" ? "aws-twin" : "map",
+  );
 
   const loadList = useCallback(async () => {
     setLoadingList(true);

@@ -1,0 +1,8 @@
+{
+  "catalog_id": "cognisphere.digital_twin.aws_certification_twin.composition_roles.fixture.v1",
+  "fail_closed_composition_roles": {
+    "scenario_runtime": {"role": "scenario_runtime", "required": true},
+    "evaluation": {"role": "evaluation", "required": true},
+    "certification_package": {"role": "certification_package", "required": true}
+  }
+}

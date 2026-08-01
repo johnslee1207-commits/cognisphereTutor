@@ -99,6 +99,20 @@ def test_learning_twin_route_forwards_composition_intent(
     assert captured.get("goal") == "practice Multi-AZ"
 
 
+def test_paths_lists_aws_digital_twin_entry(client: TestClient) -> None:
+    resp = client.get(f"{PREFIX}/paths")
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body.get("ok") is True, body.get("issues")
+    path_ids = set(body.get("path_ids") or [])
+    assert "aws_digital_twin_mastery" in path_ids
+    assert {"leetcode", "ap_calculus", "aws_certification"} <= path_ids
+    entries = body.get("learning_entry_points") or []
+    twin = next(e for e in entries if e.get("path_id") == "aws_digital_twin_mastery")
+    assert twin.get("in_learning_discover_plugins") is False
+    assert "aws-twin" in str(twin.get("guided_learning_url") or "")
+
+
 def test_handshake_fail_closed_without_packs_root(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

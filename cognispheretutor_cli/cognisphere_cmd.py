@@ -24,6 +24,12 @@ def register(app: typer.Typer) -> None:
     ) -> None:
         """Discover domain learning plugins from the Cognisphere plugins monorepo."""
         from cognispheretutor.integrations.cognisphere import list_plugins
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
+        from cognispheretutor.integrations.cognisphere.learning_mastery_paths_client import (
+            list_learning_mastery_paths,
+        )
 
         result = list_plugins(root)
         table = Table(title="Cognisphere Learning Plugins")
@@ -46,8 +52,81 @@ def register(app: typer.Typer) -> None:
 
         console.print(table)
         console.print(f"plugins_root: {result.get('plugins_root')}")
+        try:
+            paths = list_learning_mastery_paths(root=root)
+            entry_table = Table(title="Learning entry points")
+            entry_table.add_column("path_id", style="bold")
+            entry_table.add_column("kind")
+            entry_table.add_column("start / tutor CLI")
+            for item in paths.get("learning_entry_points") or []:
+                entry_table.add_row(
+                    str(item.get("path_id") or ""),
+                    str(item.get("kind") or ""),
+                    str(item.get("tutor_cli") or item.get("start_cli") or "")[:72],
+                )
+            console.print(entry_table)
+        except CognisphereIntegrationError:
+            pass
         if result.get("issues"):
             console.print(f"[yellow]issues:[/] {result['issues']}")
+        if not result.get("ok"):
+            raise typer.Exit(code=1)
+
+    @app.command("paths")
+    def cognisphere_paths(
+        root: Optional[Path] = typer.Option(None, "--root"),
+    ) -> None:
+        """List learning mastery entry points (3 domains + AWS Digital Twin)."""
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
+        from cognispheretutor.integrations.cognisphere.learning_mastery_paths_client import (
+            list_learning_mastery_paths,
+        )
+
+        try:
+            result = list_learning_mastery_paths(root=root)
+        except CognisphereIntegrationError as exc:
+            console.print_json(json.dumps(exc.to_dict(), indent=2, ensure_ascii=False))
+            raise typer.Exit(code=1) from exc
+        console.print_json(json.dumps(result, indent=2, ensure_ascii=False))
+        if not result.get("ok"):
+            raise typer.Exit(code=1)
+
+    @app.command("start")
+    def cognisphere_start(
+        path: str = typer.Option(
+            ...,
+            "--path",
+            help="leetcode|ap_calculus|aws_certification|aws_digital_twin_mastery",
+        ),
+        status_only: bool = typer.Option(False, "--status", help="Status only (AWS DT)"),
+        skip_tutor: bool = typer.Option(False, "--skip-tutor"),
+        skip_acceptance: bool = typer.Option(False, "--skip-acceptance"),
+        include_mvp: bool = typer.Option(False, "--include-mvp"),
+        root: Optional[Path] = typer.Option(None, "--root"),
+    ) -> None:
+        """Start a learning mastery path (AWS DT aliases aws-twin-mastery)."""
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
+        from cognispheretutor.integrations.cognisphere.learning_mastery_paths_client import (
+            start_learning_mastery_path,
+        )
+
+        try:
+            result = start_learning_mastery_path(
+                path,
+                root=root,
+                status_only=status_only,
+                skip_tutor=skip_tutor,
+                skip_acceptance=skip_acceptance,
+                include_mvp=include_mvp,
+            )
+        except CognisphereIntegrationError as exc:
+            console.print_json(json.dumps(exc.to_dict(), indent=2, ensure_ascii=False))
+            raise typer.Exit(code=1) from exc
+        console.print_json(json.dumps(result, indent=2, ensure_ascii=False))
         if not result.get("ok"):
             raise typer.Exit(code=1)
 
