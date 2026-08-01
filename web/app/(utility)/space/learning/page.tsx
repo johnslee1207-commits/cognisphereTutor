@@ -1765,43 +1765,54 @@ function AwsTwinPracticeView({
       {!busy && !result && (
         <div className="rounded-lg border border-dashed border-[var(--border)] p-6 text-center text-sm text-[var(--muted-foreground)]">
           {tr(
-            "点击「跑离线练习」后，CP-04 / CP-06 / CP-12 步骤结果会显示在这里。",
-            "Click “Run offline practice” to show CP-04 / CP-06 / CP-12 step results here.",
+            "点击「跑离线练习」后，这里会显示场景、服务对比、反馈与辅导回合等学习内容。",
+            "Click “Run offline practice” to show the scenario, service comparison, feedback, and tutor turns.",
           )}
         </div>
       )}
 
       {stepEntries.length > 0 && (
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="text-xs font-medium text-[var(--foreground)]">
-            {tr("步骤结果", "Step results")}
+            {tr("学习内容", "Learning content")}
           </div>
           {stepEntries.map(({ id, row }) => {
             const ok = row.ok !== false;
             const capability = String(row.capability || "");
-            const detailBits = [
-              row.choice_correct != null
-                ? `choice_correct=${String(row.choice_correct)}`
-                : null,
-              row.status != null ? `status=${String(row.status)}` : null,
-              Array.isArray(row.phases)
-                ? `phases=${(row.phases as unknown[]).length}`
-                : null,
-              Array.isArray(row.completed_steps)
-                ? `completed=${(row.completed_steps as unknown[]).length}`
-                : null,
-              Array.isArray(row.issues) && (row.issues as unknown[]).length
-                ? `issues=${(row.issues as unknown[]).join(", ")}`
-                : null,
-            ].filter(Boolean);
+            const learner =
+              row.learner && typeof row.learner === "object"
+                ? (row.learner as Record<string, unknown>)
+                : null;
+            const services = Array.isArray(learner?.services)
+              ? (learner!.services as Record<string, unknown>[])
+              : [];
+            const turns = Array.isArray(learner?.turns)
+              ? (learner!.turns as Record<string, unknown>[])
+              : [];
+            const choice =
+              learner?.choice && typeof learner.choice === "object"
+                ? (learner.choice as Record<string, unknown>)
+                : null;
+            const mistakes = Array.isArray(learner?.common_mistakes)
+              ? (learner!.common_mistakes as unknown[]).map(String)
+              : [];
+            const title = String(
+              learner?.title || learner?.package_title || id,
+            );
+            const problem = String(learner?.user_problem || "");
+            const objective = String(learner?.learning_objective || "");
+            const feedback = String(
+              learner?.feedback_message || row.feedback_message || "",
+            );
+            const summary = String(learner?.summary || "");
             return (
               <div
                 key={id}
-                className="rounded-md border border-[var(--border)] px-3 py-2"
+                className="rounded-md border border-[var(--border)] px-3 py-3 space-y-2"
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="text-sm font-medium text-[var(--foreground)]">
-                    {id}
+                    {title}
                     {capability ? (
                       <span className="ml-2 text-[10px] text-[var(--muted-foreground)]">
                         {capability}
@@ -1816,14 +1827,167 @@ function AwsTwinPracticeView({
                     {ok ? tr("通过", "ok") : tr("失败", "failed")}
                   </span>
                 </div>
-                {detailBits.length > 0 && (
-                  <p className="mt-1 text-[11px] text-[var(--muted-foreground)] leading-relaxed">
-                    {detailBits.join(" · ")}
+
+                {problem && (
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
+                      {tr("场景", "Scenario")}
+                    </div>
+                    <p className="mt-0.5 text-sm text-[var(--foreground)] leading-relaxed">
+                      {problem}
+                    </p>
+                  </div>
+                )}
+
+                {objective && (
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
+                      {tr("学习目标", "Objective")}
+                    </div>
+                    <p className="mt-0.5 text-xs text-[var(--muted-foreground)] leading-relaxed">
+                      {objective}
+                    </p>
+                  </div>
+                )}
+
+                {services.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
+                      {tr("服务对比", "Services")}
+                    </div>
+                    {services.map((svc, idx) => (
+                      <div
+                        key={String(svc.service_id || svc.service_code || idx)}
+                        className="rounded border border-[var(--border)]/70 px-2.5 py-2"
+                      >
+                        <div className="text-xs font-medium text-[var(--foreground)]">
+                          {String(
+                            svc.display_name ||
+                              svc.service_code ||
+                              svc.service_id ||
+                              "Service",
+                          )}
+                        </div>
+                        {svc.what ? (
+                          <p className="mt-1 text-[11px] text-[var(--muted-foreground)] leading-relaxed">
+                            <span className="text-[var(--foreground)]">What: </span>
+                            {String(svc.what)}
+                          </p>
+                        ) : null}
+                        {svc.why ? (
+                          <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)] leading-relaxed">
+                            <span className="text-[var(--foreground)]">Why: </span>
+                            {String(svc.why)}
+                          </p>
+                        ) : null}
+                        {svc.when ? (
+                          <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)] leading-relaxed">
+                            <span className="text-[var(--foreground)]">When: </span>
+                            {String(svc.when)}
+                          </p>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {choice && (choice.label || choice.choice_why) && (
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
+                      {tr("选择与理由", "Choice & rationale")}
+                    </div>
+                    <p className="mt-0.5 text-xs text-[var(--foreground)] leading-relaxed">
+                      {String(choice.label || choice.choice_id || "")}
+                      {choice.correct != null
+                        ? ` · ${choice.correct ? tr("正确", "correct") : tr("不正确", "incorrect")}`
+                        : ""}
+                    </p>
+                    {choice.choice_why ? (
+                      <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)] leading-relaxed">
+                        {String(choice.choice_why)}
+                      </p>
+                    ) : null}
+                  </div>
+                )}
+
+                {feedback && (
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
+                      {tr("反馈", "Feedback")}
+                    </div>
+                    <p className="mt-0.5 text-xs text-[var(--foreground)] leading-relaxed">
+                      {feedback}
+                    </p>
+                  </div>
+                )}
+
+                {mistakes.length > 0 && (
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
+                      {tr("常见误区", "Common mistakes")}
+                    </div>
+                    <ul className="mt-0.5 list-disc pl-4 text-[11px] text-[var(--muted-foreground)] space-y-0.5">
+                      {mistakes.map((m) => (
+                        <li key={m}>{m}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {turns.length > 0 && (
+                  <div className="space-y-1.5">
+                    <div className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
+                      {tr("苏格拉底辅导回合", "Socratic tutor turns")}
+                    </div>
+                    {turns.map((turn, idx) => (
+                      <div
+                        key={`${String(turn.phase_id || "phase")}-${idx}`}
+                        className="rounded border border-[var(--border)]/70 px-2.5 py-2"
+                      >
+                        <div className="text-[11px] font-medium text-[var(--foreground)]">
+                          {String(turn.phase_id || `turn ${idx + 1}`)}
+                        </div>
+                        {turn.offline_utterance ? (
+                          <p className="mt-0.5 text-xs text-[var(--foreground)] leading-relaxed">
+                            {String(turn.offline_utterance)}
+                          </p>
+                        ) : null}
+                        {turn.tutor_prompt ? (
+                          <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)] leading-relaxed">
+                            {String(turn.tutor_prompt)}
+                          </p>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {summary && (
+                  <p className="text-xs text-[var(--muted-foreground)] leading-relaxed">
+                    {summary}
+                  </p>
+                )}
+
+                {!learner && (
+                  <p className="text-[11px] text-[var(--muted-foreground)]">
+                    {tr(
+                      "此步骤暂无学习者正文（仅状态元数据）。请确认 API 已加载最新 LearningPlugins。",
+                      "No learner body for this step (status metadata only). Ensure the API loads the latest LearningPlugins.",
+                    )}
                   </p>
                 )}
               </div>
             );
           })}
+        </div>
+      )}
+
+      {result && stepEntries.length === 0 && (
+        <div className="rounded-lg border border-dashed border-[var(--border)] p-4 text-sm text-[var(--muted-foreground)]">
+          {tr(
+            "练习已返回，但没有可展示的步骤内容。请检查 API 是否挂载 COGNISPHERE_LEARNING_PLUGINS_ROOT。",
+            "Practice returned without step content. Check that the API has COGNISPHERE_LEARNING_PLUGINS_ROOT mounted.",
+          )}
         </div>
       )}
     </div>
