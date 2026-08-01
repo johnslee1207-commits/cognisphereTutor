@@ -316,7 +316,7 @@ cognisphereTutor 可通过进程环境变量对接 CognisphereLearningPlugins mo
 
 **精通之路 → 对话：** Learning Space 深链 `/home/{path_id}?capability=mastery_path` 自动切 Mastery Path；`tutor/start` 返回 `continue_in_chat` 与 SSE `events_url`。Chat 首页空态也提供 NL 学习目标入口：推荐插件 → 跳转 `/space/learning?goal=…&domains=…`，或一键组合导入后进入 Mastery 对话。
 
-AWS DT 演示包（wheel，无引擎拷贝进 Tutor）：见 `docs/AWS_DT_TUTOR_DEMO_PACK.md`。LP 构建 `dist/aws_dt_tutor_demo/` 后：
+AWS DT 演示包（wheel，无引擎拷贝进 Tutor）：见 `assets/README/AWS_DT_TUTOR_DEMO_PACK.md`。LP 构建 `dist/aws_dt_tutor_demo/` 后：
 
 ```powershell
 powershell -File D:\Projects\CognisphereLearningPlugins\dist\aws_dt_tutor_demo\install.ps1

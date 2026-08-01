@@ -160,7 +160,7 @@ cognispheretutor cognisphere aws-twin-mastery
 # Guided Learning UI: /space/learning?panel=aws-twin
 ```
 
-详见 `docs/AWS_DT_TUTOR_DEMO_PACK.md` 与 `env/aws_dt_demo.env.example`（进程环境；项目 `.env` 仍被忽略）。
+详见 `assets/README/AWS_DT_TUTOR_DEMO_PACK.md` 与 `examples/aws_dt_demo.env.example`（进程环境；项目 `.env` 仍被忽略）。
 
 Handshake SoT（勿在 Tutor 双活协议）：见 `docs/LEARNING_PLUGINS_HANDSHAKE_SOT.md`。
 薄客户端：`from cognispheretutor.integrations.cognisphere import handshake`。
