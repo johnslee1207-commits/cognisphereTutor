@@ -892,6 +892,8 @@ def _source_provenance_for_turn(
         sources.append("Knowledge/RAG")
     if not sources:
         sources.append("model")
+    elif context.metadata.get("mastery_mode") or path_id.startswith("csphere-"):
+        sources.append("model wording")
     deduped = list(dict.fromkeys(sources))
     show_visible_label = bool(context.metadata.get("mastery_mode")) or path_id.startswith(
         "csphere-"

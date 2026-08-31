@@ -1730,9 +1730,10 @@ def test_source_provenance_marks_plugin_web_and_rag() -> None:
         "Cognisphere materialized",
         "web_search",
         "Knowledge/RAG",
+        "model wording",
     ]
     assert provenance["visible_label"] == (
-        "Source: local plugin pack, Cognisphere materialized, web_search, Knowledge/RAG"
+        "Source: local plugin pack, Cognisphere materialized, web_search, Knowledge/RAG, model wording"
     )
 
 

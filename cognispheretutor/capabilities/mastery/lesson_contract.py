@@ -177,7 +177,8 @@ def _must_ask(next_step: NextStep) -> str:
         f"After the mini-lesson, immediately register one quick multiple-choice "
         f"check about {name} with mastery_quiz(question_type='choice'), then "
         "present it with ask_user. Do not ask whether the learner wants a quiz. "
-        "Free response can be offered after the quick check, not before it."
+        "Do not ask a second explain-back question after a correct early quick "
+        "check unless required_check.mode is free_response."
     )
 
 
@@ -236,15 +237,15 @@ def _check_options(next_step: NextStep) -> list[dict[str, str]]:
     return [
         {
             "mode": "multiple_choice",
-            "purpose": "Fast certification-style check before the deeper explain-back.",
+            "purpose": "Fast certification-style check for early confidence and pacing.",
         },
         {
             "mode": "true_false",
-            "purpose": "Quick misconception check before the deeper explain-back.",
+            "purpose": "Quick misconception check for early confidence and pacing.",
         },
         {
             "mode": "free_response",
-            "purpose": "Optional deep explanation now; required later at mastery checkpoints.",
+            "purpose": "Optional deep explanation only when the learner asks or a checkpoint requires it.",
         },
     ]
 
@@ -278,8 +279,9 @@ def _free_response_policy(next_step: NextStep, summary: dict[str, Any]) -> dict[
             "at review checkpoints, or when quick checks reveal fragile understanding."
         ),
         "instruction": (
-            "Offer free response as an alternative, not as the default required answer, "
-            "while required_now is false."
+            "Do not require or casually add a free-response explain-back while "
+            "required_now is false. If a quick check is correct in the early ramp, "
+            "give concise feedback and continue with the next objective's mini-lesson."
         ),
     }
 
@@ -304,7 +306,7 @@ def _interaction_policy(next_step: NextStep, learner_profile: dict[str, Any]) ->
         "For each objective, teach a substantive mini-lesson before registering its quick check.",
         "After the mini-lesson, immediately register and present one quick multiple-choice check.",
         "After grading a previous objective as mastered, do not chain directly into another quiz; teach the next mini-lesson first.",
-        "Free response is optional unless free_response_policy.required_now is true.",
+        "Free response is optional only when the learner asks for it; do not add it after a correct early quick check unless free_response_policy.required_now is true.",
         "Do not mark qualitative mastery in the same turn as the initial explanation.",
     ]
     if learner_profile.get("level") == "absolute_beginner":
