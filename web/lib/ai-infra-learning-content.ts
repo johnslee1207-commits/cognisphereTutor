@@ -199,6 +199,20 @@ export interface AiInfraDiagnosisResponseAssessment {
   feedback: string;
 }
 
+export interface AiInfraSourceDocumentDrillAssessment {
+  scorePct: number;
+  passed: boolean;
+  matchedDocuments: string[];
+  matchedEvidenceRequirements: string[];
+  feedback: string;
+}
+
+export interface AiInfraReviewStageSummary {
+  displayLabel: string;
+  approved: boolean;
+  requiredApprovals: string[];
+}
+
 const PRIORITY_COURSE_DOMAINS = [
   "containers",
   "kubernetes",
@@ -382,6 +396,7 @@ export function getAiInfraUnitMasteryState(params: {
   unit: AiInfraKnowledgeUnitCard | null | undefined;
   quizCorrect?: boolean;
   diagnosisPassed?: boolean;
+  sourceDocumentPassed?: boolean;
   diagnosisNote?: string;
   reflectionNote?: string;
   completed?: boolean;
@@ -403,8 +418,10 @@ export function getAiInfraUnitMasteryState(params: {
   const hasTwinPractice = Boolean(
     (unit.standard_learning?.twin_practice?.lab_refs || unit.lab_refs || []).length,
   );
+  const hasSourceDocuments = Boolean(unit.candidate_documents?.length);
   const diagnosisReady =
     params.diagnosisPassed ?? normalizedLength(params.diagnosisNote) >= 20;
+  const sourceDocumentReady = params.sourceDocumentPassed ?? !hasSourceDocuments;
   const reflectionReady = normalizedLength(params.reflectionNote) >= 20;
   const labEvidenceReady = Boolean(params.hasLabEvidence);
   const checks: AiInfraUnitMasteryCheck[] = [
@@ -431,10 +448,17 @@ export function getAiInfraUnitMasteryState(params: {
       done: diagnosisReady,
     });
   }
+  if (hasSourceDocuments) {
+    checks.splice(checks.length - 1, 0, {
+      id: "source_document",
+      label: "Ground answer in trusted source",
+      done: sourceDocumentReady,
+    });
+  }
   if (hasTwinPractice) {
     checks.splice(checks.length - 1, 0, {
       id: "lab_evidence",
-      label: "Attach Twin lab evidence",
+      label: "Bind Evidence Bundle",
       done: labEvidenceReady,
     });
   }
@@ -456,6 +480,7 @@ export function getAiInfraReviewQueue(params: {
   completedUnits?: Record<string, boolean>;
   reflectionNotes?: Record<string, string>;
   diagnosisNotes?: Record<string, string>;
+  sourceDocumentNotes?: Record<string, string>;
   labEvidenceByUnitId?: Record<string, boolean>;
   limit?: number;
 }): AiInfraReviewQueueItem[] {
@@ -464,6 +489,7 @@ export function getAiInfraReviewQueue(params: {
   const reflectionNotes = params.reflectionNotes || {};
   const diagnosisNotes = params.diagnosisNotes || {};
   const labEvidenceByUnitId = params.labEvidenceByUnitId || {};
+  const sourceDocumentNotes = params.sourceDocumentNotes || {};
   const items = params.units
     .map((unit, index) => {
       const quiz = unit.standard_learning?.assessment?.quiz?.[0];
@@ -473,6 +499,10 @@ export function getAiInfraReviewQueue(params: {
       const diagnosisAssessment = drill
         ? assessAiInfraDiagnosisResponse(drill, diagnosisNote)
         : null;
+      const sourceDocumentAssessment = assessAiInfraSourceDocumentDrill(
+        unit,
+        unit.unit_id ? sourceDocumentNotes[unit.unit_id] : "",
+      );
       return {
         index,
         unit,
@@ -480,6 +510,7 @@ export function getAiInfraReviewQueue(params: {
           unit,
           quizCorrect: Boolean(answer && answer === quiz?.answer),
           diagnosisPassed: diagnosisAssessment?.passed,
+          sourceDocumentPassed: sourceDocumentAssessment.passed,
           diagnosisNote,
           reflectionNote: unit.unit_id ? reflectionNotes[unit.unit_id] : "",
           hasLabEvidence: unit.unit_id ? labEvidenceByUnitId[unit.unit_id] : false,
@@ -506,6 +537,7 @@ export function getAiInfraSpacedReviewQueue(params: {
   completedUnits?: Record<string, boolean>;
   reflectionNotes?: Record<string, string>;
   diagnosisNotes?: Record<string, string>;
+  sourceDocumentNotes?: Record<string, string>;
   labEvidenceByUnitId?: Record<string, boolean>;
   reviewLedger?: Record<string, AiInfraReviewLedgerEntry>;
   now?: Date;
@@ -524,10 +556,15 @@ export function getAiInfraSpacedReviewQueue(params: {
       const diagnosisAssessment = drill
         ? assessAiInfraDiagnosisResponse(drill, diagnosisNote)
         : null;
+      const sourceDocumentAssessment = assessAiInfraSourceDocumentDrill(
+        unit,
+        unitId ? params.sourceDocumentNotes?.[unitId] : "",
+      );
       const mastery = getAiInfraUnitMasteryState({
         unit,
         quizCorrect: Boolean(answer && answer === quiz?.answer),
         diagnosisPassed: diagnosisAssessment?.passed,
+        sourceDocumentPassed: sourceDocumentAssessment.passed,
         diagnosisNote,
         reflectionNote: unitId ? params.reflectionNotes?.[unitId] : "",
         hasLabEvidence: unitId ? params.labEvidenceByUnitId?.[unitId] : false,
@@ -556,6 +593,74 @@ export function getAiInfraSpacedReviewQueue(params: {
     })
     .sort((a, b) => a.priority - b.priority);
   return items.slice(0, params.limit ?? 6);
+}
+
+export function getAiInfraReviewStageSummary(
+  reviewStatus: string | undefined,
+): AiInfraReviewStageSummary {
+  const rawStatus = reviewStatus || "generated_candidate";
+  const status = normalizeForSearch(rawStatus);
+  const approved = status === "approved";
+  const labelByStatus: Record<string, string> = {
+    "generated candidate": "generated candidate",
+    "source verified": "source verified",
+    "source backed draft review required": "source-backed draft",
+    "technical reviewed": "technical reviewed",
+    "lab validated": "lab validated",
+    "assessment validated": "assessment validated",
+    approved: "approved",
+    deprecated: "deprecated",
+  };
+  return {
+    displayLabel: labelByStatus[status] || rawStatus,
+    approved,
+    requiredApprovals: approved
+      ? []
+      : ["technical reviewer", "lab reviewer", "assessment reviewer"],
+  };
+}
+
+export function assessAiInfraSourceDocumentDrill(
+  unit: AiInfraKnowledgeUnitCard | null | undefined,
+  response: string | undefined,
+): AiInfraSourceDocumentDrillAssessment {
+  const text = normalizeForSearch(response || "");
+  const docs = unit?.candidate_documents || [];
+  const evidenceRequirements = unit?.evidence_requirements || [];
+  const matchedDocuments = docs
+    .filter((doc) => isDocumentReferenced(doc, text))
+    .map((doc) => doc.document_id || doc.title || doc.relative_path || doc.source_id || "document");
+  const matchedEvidenceRequirements = evidenceRequirements.filter((item) =>
+    textTokens([item]).some((token) => text.includes(token)),
+  );
+  const documentScore = docs.length ? (matchedDocuments.length > 0 ? 1 : 0) : 1;
+  const evidenceScore = evidenceRequirements.length
+    ? Math.min(1, matchedEvidenceRequirements.length / Math.min(2, evidenceRequirements.length))
+    : 1;
+  const claimBoundaryScore = textTokens(unit?.claim_boundaries || []).some((token) =>
+    text.includes(token),
+  )
+    ? 1
+    : unit?.claim_boundaries?.length
+      ? 0
+      : 1;
+  const substanceScore = Math.min(1, normalizedLength(response) / 120);
+  const scorePct = Math.round(
+    (documentScore * 0.35 + evidenceScore * 0.3 + claimBoundaryScore * 0.15 + substanceScore * 0.2) *
+      100,
+  );
+  const passed = scorePct >= 70 && (!docs.length || matchedDocuments.length > 0);
+  return {
+    scorePct,
+    passed,
+    matchedDocuments,
+    matchedEvidenceRequirements,
+    feedback: passed
+      ? "Source-grounded answer is ready for evidence review"
+      : matchedDocuments.length === 0 && docs.length > 0
+        ? "Reference at least one trusted document"
+        : "Tie the source claim to required evidence and claim boundary",
+  };
 }
 
 export function assessAiInfraDiagnosisResponse(
@@ -669,6 +774,13 @@ function parseReviewDate(value: string | undefined): Date | null {
   if (!value) return null;
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function isDocumentReferenced(doc: AiInfraCandidateDocument, text: string): boolean {
+  return [doc.document_id, doc.title, doc.relative_path, doc.source_id]
+    .map((value) => normalizeForSearch(value || ""))
+    .filter((value) => value.length >= 6)
+    .some((value) => text.includes(value));
 }
 
 function reviewIntervalDays(scorePct: number): number {

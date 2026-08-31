@@ -3,12 +3,14 @@ import assert from "node:assert/strict";
 
 import {
   assessAiInfraDiagnosisResponse,
+  assessAiInfraSourceDocumentDrill,
   filterAiInfraCoursePaths,
   getAiInfraCourseContextStats,
   getAiInfraCoverageSummary,
   findAiInfraKnowledgeUnit,
   getAiInfraCourseProgress,
   getAiInfraReviewQueue,
+  getAiInfraReviewStageSummary,
   getAiInfraSpacedReviewQueue,
   getAiInfraUnitMasteryState,
   getPriorityAiInfraCoursePaths,
@@ -272,12 +274,13 @@ test("getAiInfraUnitMasteryState guides the next missing learning action", () =>
     reflectionNote: "evidence is still too thin",
   });
   assert.equal(partial.level, "familiar");
-  assert.equal(partial.nextAction, "Attach Twin lab evidence");
+  assert.equal(partial.nextAction, "Ground answer in trusted source");
 
   const complete = getAiInfraUnitMasteryState({
     unit,
     quizCorrect: true,
     diagnosisNote: "container stopped before cleanup proof",
+    sourceDocumentPassed: true,
     reflectionNote: "evidence supports only the local lifecycle claim",
     hasLabEvidence: true,
     completed: true,
@@ -296,6 +299,10 @@ test("getAiInfraReviewQueue prioritizes weakest unfinished units", () => {
     reflectionNotes: {
       "unit.container": "evidence supports only local lifecycle claims",
     },
+    sourceDocumentNotes: {
+      "unit.container":
+        "docker:engine.md supports cleanup_proof evidence within the local_lifecycle_only boundary.",
+    },
     labEvidenceByUnitId: { "unit.container": true },
     completedUnits: { "unit.container": true },
   });
@@ -303,6 +310,35 @@ test("getAiInfraReviewQueue prioritizes weakest unfinished units", () => {
   assert.equal(queue.length, 1);
   assert.equal(queue[0]?.unit.unit_id, "unit.inference");
   assert.equal(queue[0]?.mastery.level, "not_started");
+});
+
+test("getAiInfraReviewStageSummary does not treat source-backed drafts as approved", () => {
+  const stage = getAiInfraReviewStageSummary("source_backed_draft_review_required");
+
+  assert.equal(stage.displayLabel, "source-backed draft");
+  assert.equal(stage.approved, false);
+  assert.deepEqual(stage.requiredApprovals, [
+    "technical reviewer",
+    "lab reviewer",
+    "assessment reviewer",
+  ]);
+  assert.equal(getAiInfraReviewStageSummary("approved").approved, true);
+});
+
+test("assessAiInfraSourceDocumentDrill requires source, evidence, and boundary grounding", () => {
+  const unit = findAiInfraKnowledgeUnit(knowledge, "unit.container");
+  const passed = assessAiInfraSourceDocumentDrill(
+    unit,
+    "docker:engine.md supports cleanup_proof evidence, but the claim boundary is local_lifecycle_only rather than production fleet behavior.",
+  );
+
+  assert.equal(passed.passed, true);
+  assert.deepEqual(passed.matchedDocuments, ["docker:engine.md"]);
+  assert.deepEqual(passed.matchedEvidenceRequirements, ["cleanup_proof"]);
+
+  const weak = assessAiInfraSourceDocumentDrill(unit, "Docker matters.");
+  assert.equal(weak.passed, false);
+  assert.equal(weak.feedback, "Reference at least one trusted document");
 });
 
 test("getAiInfraSpacedReviewQueue ranks due weak units before later reviews", () => {

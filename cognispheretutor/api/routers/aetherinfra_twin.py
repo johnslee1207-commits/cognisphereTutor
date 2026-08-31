@@ -33,6 +33,8 @@ class LearningWorkspaceState(BaseModel):
     completed_units: dict[str, bool] = Field(default_factory=dict)
     reflection_notes: dict[str, str] = Field(default_factory=dict)
     diagnosis_notes: dict[str, str] = Field(default_factory=dict)
+    source_document_notes: dict[str, str] = Field(default_factory=dict)
+    evidence_bundles: dict[str, list[str]] = Field(default_factory=dict)
     review_ledger: dict[str, dict[str, str]] = Field(default_factory=dict)
 
 

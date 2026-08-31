@@ -36,6 +36,7 @@ import {
 } from "@/lib/ai-infra-twin-api";
 import {
   assessAiInfraDiagnosisResponse,
+  assessAiInfraSourceDocumentDrill,
   filterAiInfraCoursePaths,
   findAiInfraKnowledgeUnit,
   extractAiInfraPluginKnowledge,
@@ -43,6 +44,7 @@ import {
   getAiInfraCourseProgress,
   getAiInfraCoverageSummary,
   getAiInfraReviewQueue,
+  getAiInfraReviewStageSummary,
   getAiInfraSpacedReviewQueue,
   getAiInfraUnitMasteryState,
   getPriorityAiInfraCoursePaths,
@@ -65,6 +67,8 @@ interface AiInfraLearningWorkspaceState {
   completedUnits: Record<string, boolean>;
   reflectionNotes: Record<string, string>;
   diagnosisNotes: Record<string, string>;
+  sourceDocumentNotes: Record<string, string>;
+  evidenceBundles: Record<string, string[]>;
   reviewLedger: Record<string, AiInfraReviewLedgerEntry>;
 }
 
@@ -89,6 +93,8 @@ export default function AiInfraTwinPage() {
   const [completedUnits, setCompletedUnits] = useState<Record<string, boolean>>({});
   const [reflectionNotes, setReflectionNotes] = useState<Record<string, string>>({});
   const [diagnosisNotes, setDiagnosisNotes] = useState<Record<string, string>>({});
+  const [sourceDocumentNotes, setSourceDocumentNotes] = useState<Record<string, string>>({});
+  const [evidenceBundles, setEvidenceBundles] = useState<Record<string, string[]>>({});
   const [reviewLedger, setReviewLedger] = useState<Record<string, AiInfraReviewLedgerEntry>>({});
   const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
   const [workspaceSyncState, setWorkspaceSyncState] = useState<"local" | "synced" | "offline">("local");
@@ -105,6 +111,8 @@ export default function AiInfraTwinPage() {
         completedUnits: {},
         reflectionNotes: {},
         diagnosisNotes: {},
+        sourceDocumentNotes: {},
+        evidenceBundles: {},
         reviewLedger: {},
       },
     );
@@ -114,6 +122,8 @@ export default function AiInfraTwinPage() {
     setCompletedUnits(stored.completedUnits || {});
     setReflectionNotes(stored.reflectionNotes || {});
     setDiagnosisNotes(stored.diagnosisNotes || {});
+    setSourceDocumentNotes(stored.sourceDocumentNotes || {});
+    setEvidenceBundles(stored.evidenceBundles || {});
     setReviewLedger(stored.reviewLedger || {});
     setWorkspaceHydrated(true);
     void fetchAiInfraLearningWorkspace(AI_INFRA_WORKSPACE_ID)
@@ -129,6 +139,8 @@ export default function AiInfraTwinPage() {
         setCompletedUnits(next.completedUnits);
         setReflectionNotes(next.reflectionNotes);
         setDiagnosisNotes(next.diagnosisNotes);
+        setSourceDocumentNotes(next.sourceDocumentNotes);
+        setEvidenceBundles(next.evidenceBundles);
         setReviewLedger(next.reviewLedger);
         saveToStorage<AiInfraLearningWorkspaceState>(
           AI_INFRA_WORKSPACE_STORAGE_KEY,
@@ -148,6 +160,8 @@ export default function AiInfraTwinPage() {
       completedUnits,
       reflectionNotes,
       diagnosisNotes,
+      sourceDocumentNotes,
+      evidenceBundles,
       reviewLedger,
     };
     saveToStorage<AiInfraLearningWorkspaceState>(AI_INFRA_WORKSPACE_STORAGE_KEY, state);
@@ -160,9 +174,11 @@ export default function AiInfraTwinPage() {
   }, [
     completedUnits,
     diagnosisNotes,
+    evidenceBundles,
     quizAnswers,
     reviewLedger,
     reflectionNotes,
+    sourceDocumentNotes,
     selectedCourseId,
     selectedUnitId,
     workspaceHydrated,
@@ -265,6 +281,10 @@ export default function AiInfraTwinPage() {
       null,
     [selectedCourseUnits, selectedUnitId],
   );
+  const selectedUnitReviewStage = useMemo(
+    () => getAiInfraReviewStageSummary(selectedUnit?.review_status),
+    [selectedUnit?.review_status],
+  );
   const selectedQuiz = selectedUnit?.standard_learning?.assessment?.quiz?.[0];
   const selectedQuizAnswer = selectedQuiz?.question_id
     ? quizAnswers[selectedQuiz.question_id]
@@ -300,6 +320,16 @@ export default function AiInfraTwinPage() {
     () => assessAiInfraDiagnosisResponse(selectedDiagnosisDrill, selectedDiagnosisNote),
     [selectedDiagnosisDrill, selectedDiagnosisNote],
   );
+  const selectedSourceDocumentNote = selectedUnit?.unit_id
+    ? sourceDocumentNotes[selectedUnit.unit_id] || ""
+    : "";
+  const selectedSourceDocumentAssessment = useMemo(
+    () => assessAiInfraSourceDocumentDrill(selectedUnit, selectedSourceDocumentNote),
+    [selectedSourceDocumentNote, selectedUnit],
+  );
+  const selectedUnitEvidenceRefs = selectedUnit?.unit_id
+    ? evidenceBundles[selectedUnit.unit_id] || []
+    : [];
   const selectedUnitLabs = useMemo(() => {
     const labRefs = [
       ...(selectedUnit?.standard_learning?.twin_practice?.lab_refs || []),
@@ -310,26 +340,16 @@ export default function AiInfraTwinPage() {
       .filter((lab): lab is AiInfraLab => Boolean(lab));
   }, [labsById, selectedUnit]);
   const selectedUnitHasLabEvidence = useMemo(
-    () =>
-      selectedUnitLabs.some(
-        (lab) => Boolean(lab.latestRun) || Number(lab.runCount || 0) > 0,
-      ),
-    [selectedUnitLabs],
+    () => selectedUnitEvidenceRefs.length > 0,
+    [selectedUnitEvidenceRefs.length],
   );
   const labEvidenceByUnitId = useMemo(() => {
     const result: Record<string, boolean> = {};
     for (const unit of selectedCourseUnits) {
-      const labRefs = [
-        ...(unit.standard_learning?.twin_practice?.lab_refs || []),
-        ...(unit.lab_refs || []),
-      ];
-      result[unit.unit_id || ""] = labRefs.some((labId) => {
-        const lab = labsById.get(labId);
-        return Boolean(lab?.latestRun) || Number(lab?.runCount || 0) > 0;
-      });
+      result[unit.unit_id || ""] = Boolean(unit.unit_id && evidenceBundles[unit.unit_id]?.length);
     }
     return result;
-  }, [labsById, selectedCourseUnits]);
+  }, [evidenceBundles, selectedCourseUnits]);
   const reviewQueue = useMemo(
     () =>
       getAiInfraReviewQueue({
@@ -338,6 +358,7 @@ export default function AiInfraTwinPage() {
         completedUnits,
         reflectionNotes,
         diagnosisNotes,
+        sourceDocumentNotes,
         labEvidenceByUnitId,
         limit: 4,
       }),
@@ -347,6 +368,7 @@ export default function AiInfraTwinPage() {
       labEvidenceByUnitId,
       quizAnswers,
       reflectionNotes,
+      sourceDocumentNotes,
       selectedCourseUnits,
     ],
   );
@@ -358,6 +380,7 @@ export default function AiInfraTwinPage() {
         completedUnits,
         reflectionNotes,
         diagnosisNotes,
+        sourceDocumentNotes,
         labEvidenceByUnitId,
         reviewLedger,
         limit: 5,
@@ -369,6 +392,7 @@ export default function AiInfraTwinPage() {
       quizAnswers,
       reflectionNotes,
       reviewLedger,
+      sourceDocumentNotes,
       selectedCourseUnits,
     ],
   );
@@ -378,6 +402,7 @@ export default function AiInfraTwinPage() {
         unit: selectedUnit,
         quizCorrect: selectedQuizCorrect,
         diagnosisPassed: selectedDiagnosisAssessment.passed,
+        sourceDocumentPassed: selectedSourceDocumentAssessment.passed,
         diagnosisNote: selectedDiagnosisNote,
         reflectionNote: selectedReflection,
         hasLabEvidence: selectedUnitHasLabEvidence,
@@ -389,6 +414,7 @@ export default function AiInfraTwinPage() {
       selectedDiagnosisAssessment.passed,
       selectedQuizCorrect,
       selectedReflection,
+      selectedSourceDocumentAssessment.passed,
       selectedUnit,
       selectedUnitHasLabEvidence,
     ],
@@ -412,6 +438,24 @@ export default function AiInfraTwinPage() {
         : [],
     [evidence, selected?.scenarioId],
   );
+  const selectedUnitEvidenceCandidates = useMemo(() => {
+    const refs = new Map<string, { ref: string; label: string }>();
+    for (const lab of selectedUnitLabs) {
+      if (lab.latestRun?.runId) {
+        refs.set(lab.latestRun.runId, {
+          ref: lab.latestRun.runId,
+          label: `${lab.title}: ${lab.latestRun.status}`,
+        });
+      }
+    }
+    for (const item of selectedEvidence) {
+      refs.set(item.runId, {
+        ref: item.runId,
+        label: `${item.runId}: ${item.status}`,
+      });
+    }
+    return Array.from(refs.values());
+  }, [selectedEvidence, selectedUnitLabs]);
 
   useEffect(() => {
     if (!selectedCourseId && priorityCoursePaths[0]?.course_path_id) {
@@ -483,6 +527,8 @@ export default function AiInfraTwinPage() {
     setCompletedUnits({});
     setReflectionNotes({});
     setDiagnosisNotes({});
+    setSourceDocumentNotes({});
+    setEvidenceBundles({});
     setReviewLedger({});
   }, [priorityCoursePaths]);
 
@@ -1043,11 +1089,20 @@ export default function AiInfraTwinPage() {
                         <div className="mt-0.5 truncate text-[10px] text-[var(--muted-foreground)]">
                           {selectedUnit.level} · {selectedUnit.standard_learning?.estimated_minutes ?? "-"} min ·{" "}
                           {selectedUnit.standard_learning?.learning_mode || "standard"} ·{" "}
-                          {selectedUnit.review_status || "review_required"}
+                          {selectedUnitReviewStage.displayLabel}
                         </div>
                       </div>
-                      <span className="shrink-0 rounded-md border border-[var(--border)] px-2 py-1 text-[10px] text-[var(--muted-foreground)]">
-                        {selectedUnit.topic_family_id}
+                      <span
+                        className={`shrink-0 rounded-md border px-2 py-1 text-[10px] ${
+                          selectedUnitReviewStage.approved
+                            ? "border-emerald-500/40 text-emerald-500"
+                            : "border-amber-500/40 text-amber-500"
+                        }`}
+                        title={selectedUnitReviewStage.requiredApprovals.join(", ")}
+                      >
+                        {selectedUnitReviewStage.approved
+                          ? tr("已批准", "approved")
+                          : tr("待三审", "3 reviews")}
                       </span>
                     </div>
 
@@ -1303,6 +1358,11 @@ export default function AiInfraTwinPage() {
                             !selectedUnit.unit_id ||
                             !selectedQuizCorrect ||
                             Boolean(selectedDiagnosisDrill && !selectedDiagnosisAssessment.passed) ||
+                            Boolean(
+                              selectedUnit.candidate_documents?.length &&
+                                !selectedSourceDocumentAssessment.passed,
+                            ) ||
+                            Boolean(selectedUnitLabs.length && selectedUnitEvidenceRefs.length === 0) ||
                             selectedReflection.trim().length < 20
                           }
                           onClick={() =>
@@ -1346,6 +1406,79 @@ export default function AiInfraTwinPage() {
                               selectedUnit.standard_learning?.twin_practice?.post_lab_evidence || []
                             }
                           />
+                        </div>
+                        <div className="mt-2 rounded-md border border-[var(--border)] p-2">
+                          <div className="mb-1 flex items-center justify-between gap-2">
+                            <span className="text-[10px] font-medium text-[var(--foreground)]">
+                              {tr("证据包", "Evidence Bundle")}
+                            </span>
+                            <span
+                              className={
+                                selectedUnitEvidenceRefs.length > 0
+                                  ? "text-[10px] text-emerald-500"
+                                  : "text-[10px] text-amber-500"
+                              }
+                            >
+                              {selectedUnitEvidenceRefs.length}
+                            </span>
+                          </div>
+                          {selectedUnitEvidenceRefs.length > 0 && (
+                            <div className="mb-1 flex flex-wrap gap-1">
+                              {selectedUnitEvidenceRefs.map((ref) => (
+                                <button
+                                  key={ref}
+                                  type="button"
+                                  onClick={() =>
+                                    selectedUnit.unit_id &&
+                                    setEvidenceBundles((prev) => ({
+                                      ...prev,
+                                      [selectedUnit.unit_id as string]: (
+                                        prev[selectedUnit.unit_id as string] || []
+                                      ).filter((item) => item !== ref),
+                                    }))
+                                  }
+                                  className="max-w-full truncate rounded-md border border-emerald-500/40 px-1.5 py-0.5 text-[10px] text-emerald-500"
+                                  title={tr("点击移除", "Click to remove")}
+                                >
+                                  {ref}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                          <div className="flex flex-wrap gap-1">
+                            {selectedUnitEvidenceCandidates.slice(0, 5).map((candidate) => {
+                              const attached = selectedUnitEvidenceRefs.includes(candidate.ref);
+                              return (
+                                <button
+                                  key={candidate.ref}
+                                  type="button"
+                                  disabled={attached}
+                                  onClick={() =>
+                                    selectedUnit.unit_id &&
+                                    setEvidenceBundles((prev) => ({
+                                      ...prev,
+                                      [selectedUnit.unit_id as string]: Array.from(
+                                        new Set([
+                                          ...(prev[selectedUnit.unit_id as string] || []),
+                                          candidate.ref,
+                                        ]),
+                                      ),
+                                    }))
+                                  }
+                                  className="max-w-full truncate rounded-md border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--muted-foreground)] hover:bg-[var(--accent)] disabled:opacity-50"
+                                  title={candidate.label}
+                                >
+                                  {attached ? tr("已绑定", "Bound") : tr("绑定", "Bind")}{" "}
+                                  {candidate.ref}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          {selectedUnitEvidenceCandidates.length === 0 && (
+                            <div className="text-[10px] text-[var(--muted-foreground)]">
+                              {tr("运行关联 Twin Lab 后可绑定证据。", "Run a linked Twin lab before binding evidence.")}
+                            </div>
+                          )}
                         </div>
                         {selectedUnitLabs.length > 0 && (
                           <div className="mt-2 space-y-1">
@@ -1401,10 +1534,10 @@ export default function AiInfraTwinPage() {
                       <div className="mt-2 rounded-md border border-[var(--border)] p-2">
                         <div className="mb-1 flex items-center justify-between gap-2">
                           <span className="text-[10px] font-medium text-[var(--foreground)]">
-                            {tr("候选可信文档", "Candidate trusted documents")}
+                            {tr("可信来源 Drill", "Trusted source drill")}
                           </span>
                           <span className="text-[10px] text-[var(--muted-foreground)]">
-                            {selectedUnit.candidate_documents.length}
+                            {selectedSourceDocumentAssessment.scorePct}%
                           </span>
                         </div>
                         <div className="grid max-h-20 grid-cols-2 gap-1 overflow-y-auto pr-1">
@@ -1429,6 +1562,37 @@ export default function AiInfraTwinPage() {
                             </div>
                           ))}
                         </div>
+                        <textarea
+                          value={selectedSourceDocumentNote}
+                          onChange={(event) =>
+                            selectedUnit.unit_id &&
+                            setSourceDocumentNotes((prev) => ({
+                              ...prev,
+                              [selectedUnit.unit_id as string]: event.target.value,
+                            }))
+                          }
+                          placeholder={tr(
+                            "引用至少一个可信文档，并说明它支持哪项证据要求和主张边界。",
+                            "Reference at least one trusted document and tie it to evidence requirements and claim boundaries.",
+                          )}
+                          className="mt-1.5 h-16 w-full resize-none rounded-md border border-[var(--border)] bg-transparent p-2 text-[10px] text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
+                        />
+                        <div className="mt-1 flex items-center justify-between gap-2 text-[10px]">
+                          <span
+                            className={
+                              selectedSourceDocumentAssessment.passed
+                                ? "text-emerald-500"
+                                : "text-amber-500"
+                            }
+                          >
+                            {selectedSourceDocumentAssessment.passed
+                              ? tr("来源通过", "Source passed")
+                              : tr("来源待补", "Source pending")}
+                          </span>
+                          <span className="truncate text-[var(--muted-foreground)]">
+                            {selectedSourceDocumentAssessment.feedback}
+                          </span>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -1444,7 +1608,7 @@ export default function AiInfraTwinPage() {
               <div className="flex min-w-0 items-center gap-2">
                 <BookOpenCheck className="h-4 w-4 shrink-0 text-[var(--muted-foreground)]" />
                 <h3 className="truncate text-sm font-medium text-[var(--foreground)]">
-                  {tr("AI Infra 专家覆盖", "AI Infra expert coverage")}
+                  {tr("AI Infra 高阶草案覆盖", "AI Infra advanced draft coverage")}
                 </h3>
               </div>
               <span className="shrink-0 text-[11px] text-[var(--muted-foreground)]">
@@ -1452,37 +1616,45 @@ export default function AiInfraTwinPage() {
               </span>
             </div>
             <div className="grid grid-cols-4 gap-2">
-              {expertUnits.slice(0, 8).map((unit) => (
-                <article
-                  key={unit.unit_id || unit.title}
-                  className="min-w-0 rounded-md border border-[var(--border)] p-2"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="truncate text-[10px] uppercase text-[var(--muted-foreground)]">
-                      {unit.level || unit.topic_family_id || "unit"}
-                    </span>
-                    <span className="shrink-0 text-[10px] text-amber-500">
-                      {unit.review_status ? tr("待复核", "review") : ""}
-                    </span>
-                  </div>
-                  <div className="mt-1 line-clamp-2 text-xs font-medium text-[var(--foreground)]">
-                    {unit.title}
-                  </div>
-                  <p className="mt-1 line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
-                    {unit.summary || unit.body}
-                  </p>
-                  {unit.standard_learning?.steps?.[0]?.task && (
-                    <p className="mt-1 line-clamp-2 text-[10px] text-[var(--muted-foreground)]">
-                      {unit.standard_learning.steps[0].task}
-                    </p>
-                  )}
-                  {unit.source_ids && unit.source_ids.length > 0 && (
-                    <div className="mt-1 truncate text-[10px] text-[var(--muted-foreground)]">
-                      {unit.source_ids.slice(0, 2).join(" · ")}
+              {expertUnits.slice(0, 8).map((unit) => {
+                const stage = getAiInfraReviewStageSummary(unit.review_status);
+                return (
+                  <article
+                    key={unit.unit_id || unit.title}
+                    className="min-w-0 rounded-md border border-[var(--border)] p-2"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="truncate text-[10px] uppercase text-[var(--muted-foreground)]">
+                        {unit.level || unit.topic_family_id || "unit"}
+                      </span>
+                      <span
+                        className={`shrink-0 text-[10px] ${
+                          stage.approved ? "text-emerald-500" : "text-amber-500"
+                        }`}
+                        title={stage.requiredApprovals.join(", ")}
+                      >
+                        {stage.displayLabel}
+                      </span>
                     </div>
-                  )}
-                </article>
-              ))}
+                    <div className="mt-1 line-clamp-2 text-xs font-medium text-[var(--foreground)]">
+                      {unit.title}
+                    </div>
+                    <p className="mt-1 line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
+                      {unit.summary || unit.body}
+                    </p>
+                    {unit.standard_learning?.steps?.[0]?.task && (
+                      <p className="mt-1 line-clamp-2 text-[10px] text-[var(--muted-foreground)]">
+                        {unit.standard_learning.steps[0].task}
+                      </p>
+                    )}
+                    {unit.source_ids && unit.source_ids.length > 0 && (
+                      <div className="mt-1 truncate text-[10px] text-[var(--muted-foreground)]">
+                        {unit.source_ids.slice(0, 2).join(" · ")}
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
             </div>
           </section>
         )}
@@ -1624,6 +1796,8 @@ function workspaceStateFromServer(
     completedUnits: state.completed_units || {},
     reflectionNotes: state.reflection_notes || {},
     diagnosisNotes: state.diagnosis_notes || {},
+    sourceDocumentNotes: state.source_document_notes || {},
+    evidenceBundles: state.evidence_bundles || {},
     reviewLedger: state.review_ledger || {},
   };
 }
@@ -1638,6 +1812,8 @@ function workspaceStateToServer(
     completed_units: state.completedUnits,
     reflection_notes: state.reflectionNotes,
     diagnosis_notes: state.diagnosisNotes,
+    source_document_notes: state.sourceDocumentNotes,
+    evidence_bundles: state.evidenceBundles,
     review_ledger: state.reviewLedger,
   };
 }
