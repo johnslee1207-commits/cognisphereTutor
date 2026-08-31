@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import asyncio
+import json
+import time
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
@@ -12,6 +14,8 @@ from cognispheretutor.integrations.aetherinfra_twin import (
     AetherInfraTwinError,
     default_client,
 )
+from cognispheretutor.services.file_io import atomic_write_text
+from cognispheretutor.services.path_service import get_path_service
 
 router = APIRouter()
 
@@ -20,6 +24,40 @@ class DiagnosisRequest(BaseModel):
     selected_diagnosis: str = Field(..., min_length=1, max_length=200)
     evidence_refs: list[str] = Field(default_factory=list)
     notes: str = Field("", max_length=2000)
+
+
+class LearningWorkspaceState(BaseModel):
+    selected_course_id: str | None = Field(default=None, max_length=200)
+    selected_unit_id: str | None = Field(default=None, max_length=300)
+    quiz_answers: dict[str, str] = Field(default_factory=dict)
+    completed_units: dict[str, bool] = Field(default_factory=dict)
+    reflection_notes: dict[str, str] = Field(default_factory=dict)
+
+
+class LearningWorkspaceSaveRequest(BaseModel):
+    state: LearningWorkspaceState
+
+
+def _validate_workspace_id(workspace_id: str) -> None:
+    if (
+        not workspace_id
+        or ".." in workspace_id
+        or "/" in workspace_id
+        or "\\" in workspace_id
+        or ":" in workspace_id
+    ):
+        raise HTTPException(status_code=400, detail="Invalid workspace_id")
+
+
+def _workspace_state_path(workspace_id: str):
+    _validate_workspace_id(workspace_id)
+    root = get_path_service().get_workspace_dir() / "ai_infra_learning_workspaces"
+    root.mkdir(parents=True, exist_ok=True)
+    return root / f"{workspace_id}.json"
+
+
+def _empty_workspace_state() -> dict[str, Any]:
+    return LearningWorkspaceState().model_dump(mode="json")
 
 
 async def _call(method: str, path: str, payload: dict[str, Any] | None = None):
@@ -113,3 +151,60 @@ async def submit_diagnosis(lab_id: str, payload: DiagnosisRequest) -> dict[str, 
             "notes": payload.notes,
         },
     )
+
+
+@router.get("/workspace/{workspace_id}")
+async def get_learning_workspace(workspace_id: str) -> dict[str, Any]:
+    path = _workspace_state_path(workspace_id)
+    if not path.exists():
+        return {
+            "ok": True,
+            "workspace_id": workspace_id,
+            "state": _empty_workspace_state(),
+            "updated_at": None,
+        }
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        state = LearningWorkspaceState.model_validate(data.get("state") or {})
+    except Exception as exc:
+        raise HTTPException(status_code=422, detail="Invalid workspace state") from exc
+    return {
+        "ok": True,
+        "workspace_id": workspace_id,
+        "state": state.model_dump(mode="json"),
+        "updated_at": data.get("updated_at"),
+    }
+
+
+@router.put("/workspace/{workspace_id}")
+async def save_learning_workspace(
+    workspace_id: str,
+    payload: LearningWorkspaceSaveRequest,
+) -> dict[str, Any]:
+    path = _workspace_state_path(workspace_id)
+    updated_at = time.time()
+    data = {
+        "workspace_id": workspace_id,
+        "updated_at": updated_at,
+        "state": payload.state.model_dump(mode="json"),
+    }
+    atomic_write_text(path, json.dumps(data, ensure_ascii=False, indent=2))
+    return {
+        "ok": True,
+        "workspace_id": workspace_id,
+        "state": data["state"],
+        "updated_at": updated_at,
+    }
+
+
+@router.delete("/workspace/{workspace_id}")
+async def delete_learning_workspace(workspace_id: str) -> dict[str, Any]:
+    path = _workspace_state_path(workspace_id)
+    if path.exists():
+        path.unlink()
+    return {
+        "ok": True,
+        "workspace_id": workspace_id,
+        "state": _empty_workspace_state(),
+        "updated_at": None,
+    }

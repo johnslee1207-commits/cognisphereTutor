@@ -46,6 +46,21 @@ export interface AiInfraDiagnosisAssessment {
   [key: string]: unknown;
 }
 
+export interface AiInfraLearningWorkspaceState {
+  selected_course_id: string | null;
+  selected_unit_id: string | null;
+  quiz_answers: Record<string, string>;
+  completed_units: Record<string, boolean>;
+  reflection_notes: Record<string, string>;
+}
+
+export interface AiInfraLearningWorkspaceResult {
+  ok: boolean;
+  workspace_id: string;
+  state: AiInfraLearningWorkspaceState;
+  updated_at?: number | null;
+}
+
 export interface AiInfraStatus {
   ok: boolean;
   base_url: string;
@@ -143,4 +158,41 @@ export async function submitAiInfraDiagnosis(opts: {
   );
   if (!res.ok) throw new Error(`AI Infra Twin diagnosis failed: ${res.status}`);
   return res.json() as Promise<AiInfraDiagnosisAssessment>;
+}
+
+export async function fetchAiInfraLearningWorkspace(
+  workspaceId = "default",
+): Promise<AiInfraLearningWorkspaceResult> {
+  const res = await apiFetch(
+    apiUrl(`/api/v1/learning/ai-infra-twin/workspace/${encodeURIComponent(workspaceId)}`),
+  );
+  if (!res.ok) throw new Error(`AI Infra workspace failed: ${res.status}`);
+  return res.json() as Promise<AiInfraLearningWorkspaceResult>;
+}
+
+export async function saveAiInfraLearningWorkspace(
+  state: AiInfraLearningWorkspaceState,
+  workspaceId = "default",
+): Promise<AiInfraLearningWorkspaceResult> {
+  const res = await apiFetch(
+    apiUrl(`/api/v1/learning/ai-infra-twin/workspace/${encodeURIComponent(workspaceId)}`),
+    {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ state }),
+    },
+  );
+  if (!res.ok) throw new Error(`AI Infra workspace save failed: ${res.status}`);
+  return res.json() as Promise<AiInfraLearningWorkspaceResult>;
+}
+
+export async function deleteAiInfraLearningWorkspace(
+  workspaceId = "default",
+): Promise<AiInfraLearningWorkspaceResult> {
+  const res = await apiFetch(
+    apiUrl(`/api/v1/learning/ai-infra-twin/workspace/${encodeURIComponent(workspaceId)}`),
+    { method: "DELETE" },
+  );
+  if (!res.ok) throw new Error(`AI Infra workspace delete failed: ${res.status}`);
+  return res.json() as Promise<AiInfraLearningWorkspaceResult>;
 }

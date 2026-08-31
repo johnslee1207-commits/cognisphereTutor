@@ -86,3 +86,58 @@ def test_unavailable_twin_maps_to_503(monkeypatch: pytest.MonkeyPatch) -> None:
     with pytest.raises(HTTPException) as exc:
         asyncio.run(aetherinfra_twin.labs())
     assert exc.value.status_code == 503
+
+
+def test_learning_workspace_round_trips_state(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    class FakePathService:
+        def get_workspace_dir(self):
+            return tmp_path
+
+    monkeypatch.setattr(aetherinfra_twin, "get_path_service", lambda: FakePathService())
+
+    empty = asyncio.run(aetherinfra_twin.get_learning_workspace("default"))
+    assert empty["state"]["completed_units"] == {}
+    assert empty["updated_at"] is None
+
+    payload = aetherinfra_twin.LearningWorkspaceSaveRequest(
+        state=aetherinfra_twin.LearningWorkspaceState(
+            selected_course_id="course.containers",
+            selected_unit_id="ai_infra.expert.containers.l1",
+            quiz_answers={"q1": "A"},
+            completed_units={"ai_infra.expert.containers.l1": True},
+            reflection_notes={"ai_infra.expert.containers.l1": "evidence-backed claim"},
+        )
+    )
+
+    saved = asyncio.run(aetherinfra_twin.save_learning_workspace("default", payload))
+    loaded = asyncio.run(aetherinfra_twin.get_learning_workspace("default"))
+
+    assert saved["ok"] is True
+    assert loaded["state"]["selected_course_id"] == "course.containers"
+    assert loaded["state"]["quiz_answers"] == {"q1": "A"}
+    assert loaded["state"]["completed_units"]["ai_infra.expert.containers.l1"] is True
+
+
+def test_learning_workspace_delete_resets_state(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    class FakePathService:
+        def get_workspace_dir(self):
+            return tmp_path
+
+    monkeypatch.setattr(aetherinfra_twin, "get_path_service", lambda: FakePathService())
+    payload = aetherinfra_twin.LearningWorkspaceSaveRequest(
+        state=aetherinfra_twin.LearningWorkspaceState(selected_course_id="course.kubernetes")
+    )
+
+    asyncio.run(aetherinfra_twin.save_learning_workspace("default", payload))
+    deleted = asyncio.run(aetherinfra_twin.delete_learning_workspace("default"))
+    loaded = asyncio.run(aetherinfra_twin.get_learning_workspace("default"))
+
+    assert deleted["state"]["selected_course_id"] is None
+    assert loaded["state"]["selected_course_id"] is None
+    assert loaded["updated_at"] is None
+
+
+def test_learning_workspace_rejects_invalid_id() -> None:
+    with pytest.raises(HTTPException) as exc:
+        asyncio.run(aetherinfra_twin.get_learning_workspace("../bad"))
+    assert exc.value.status_code == 400

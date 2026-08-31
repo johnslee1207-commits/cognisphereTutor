@@ -20,13 +20,17 @@ import { useTranslation } from "react-i18next";
 import {
   fetchAiInfraEvidence,
   fetchAiInfraLab,
+  fetchAiInfraLearningWorkspace,
   fetchAiInfraLabs,
   fetchAiInfraStatus,
+  deleteAiInfraLearningWorkspace,
   runAiInfraLab,
+  saveAiInfraLearningWorkspace,
   submitAiInfraDiagnosis,
   type AiInfraDiagnosisAssessment,
   type AiInfraEvidence,
   type AiInfraLab,
+  type AiInfraLearningWorkspaceState as ServerAiInfraLearningWorkspaceState,
   type AiInfraStatus,
 } from "@/lib/ai-infra-twin-api";
 import {
@@ -44,6 +48,7 @@ import {
 import { loadFromStorage, removeFromStorage, saveToStorage } from "@/lib/persistence";
 
 const AI_INFRA_WORKSPACE_STORAGE_KEY = "ai_infra_learning_workspace_v1";
+const AI_INFRA_WORKSPACE_ID = "default";
 
 interface AiInfraLearningWorkspaceState {
   selectedCourseId: string | null;
@@ -74,6 +79,7 @@ export default function AiInfraTwinPage() {
   const [completedUnits, setCompletedUnits] = useState<Record<string, boolean>>({});
   const [reflectionNotes, setReflectionNotes] = useState<Record<string, string>>({});
   const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
+  const [workspaceSyncState, setWorkspaceSyncState] = useState<"local" | "synced" | "offline">("local");
   const [error, setError] = useState<string | null>(null);
   const [lastRun, setLastRun] = useState<Record<string, unknown> | null>(null);
 
@@ -94,17 +100,43 @@ export default function AiInfraTwinPage() {
     setCompletedUnits(stored.completedUnits || {});
     setReflectionNotes(stored.reflectionNotes || {});
     setWorkspaceHydrated(true);
+    void fetchAiInfraLearningWorkspace(AI_INFRA_WORKSPACE_ID)
+      .then((result) => {
+        if (result.updated_at == null) {
+          setWorkspaceSyncState("synced");
+          return;
+        }
+        const next = workspaceStateFromServer(result.state);
+        setSelectedCourseId(next.selectedCourseId);
+        setSelectedUnitId(next.selectedUnitId);
+        setQuizAnswers(next.quizAnswers);
+        setCompletedUnits(next.completedUnits);
+        setReflectionNotes(next.reflectionNotes);
+        saveToStorage<AiInfraLearningWorkspaceState>(
+          AI_INFRA_WORKSPACE_STORAGE_KEY,
+          next,
+        );
+        setWorkspaceSyncState("synced");
+      })
+      .catch(() => setWorkspaceSyncState("offline"));
   }, []);
 
   useEffect(() => {
     if (!workspaceHydrated) return;
-    saveToStorage<AiInfraLearningWorkspaceState>(AI_INFRA_WORKSPACE_STORAGE_KEY, {
+    const state = {
       selectedCourseId,
       selectedUnitId,
       quizAnswers,
       completedUnits,
       reflectionNotes,
-    });
+    };
+    saveToStorage<AiInfraLearningWorkspaceState>(AI_INFRA_WORKSPACE_STORAGE_KEY, state);
+    void saveAiInfraLearningWorkspace(
+      workspaceStateToServer(state),
+      AI_INFRA_WORKSPACE_ID,
+    )
+      .then(() => setWorkspaceSyncState("synced"))
+      .catch(() => setWorkspaceSyncState("offline"));
   }, [
     completedUnits,
     quizAnswers,
@@ -319,6 +351,9 @@ export default function AiInfraTwinPage() {
 
   const handleResetLearningWorkspace = useCallback(() => {
     removeFromStorage(AI_INFRA_WORKSPACE_STORAGE_KEY);
+    void deleteAiInfraLearningWorkspace(AI_INFRA_WORKSPACE_ID)
+      .then(() => setWorkspaceSyncState("synced"))
+      .catch(() => setWorkspaceSyncState("offline"));
     setSelectedCourseId(priorityCoursePaths[0]?.course_path_id || null);
     setSelectedUnitId(priorityCoursePaths[0]?.unit_refs?.[0] || null);
     setQuizAnswers({});
@@ -403,6 +438,12 @@ export default function AiInfraTwinPage() {
             <div>
               {tr("课程路径", "Course paths")}: {standardLearningAssets?.course_path_count ?? coursePaths.length} ·{" "}
               {trustedSourceCoverage?.review_status || standardLearningAssets?.review_status || "review_required"}
+            </div>
+            <div>
+              {tr("学习状态", "Learning state")}:{" "}
+              <span className={workspaceSyncState === "synced" ? "text-emerald-500" : "text-amber-500"}>
+                {workspaceSyncState}
+              </span>
             </div>
             <button
               type="button"
@@ -1109,6 +1150,30 @@ function EvidenceList({ label, items }: { label: string; items: string[] }) {
       </div>
     </div>
   );
+}
+
+function workspaceStateFromServer(
+  state: ServerAiInfraLearningWorkspaceState,
+): AiInfraLearningWorkspaceState {
+  return {
+    selectedCourseId: state.selected_course_id || null,
+    selectedUnitId: state.selected_unit_id || null,
+    quizAnswers: state.quiz_answers || {},
+    completedUnits: state.completed_units || {},
+    reflectionNotes: state.reflection_notes || {},
+  };
+}
+
+function workspaceStateToServer(
+  state: AiInfraLearningWorkspaceState,
+): ServerAiInfraLearningWorkspaceState {
+  return {
+    selected_course_id: state.selectedCourseId,
+    selected_unit_id: state.selectedUnitId,
+    quiz_answers: state.quizAnswers,
+    completed_units: state.completedUnits,
+    reflection_notes: state.reflectionNotes,
+  };
 }
 
 function EvidenceMiniList({ label, items }: { label: string; items: string[] }) {
