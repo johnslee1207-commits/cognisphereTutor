@@ -66,6 +66,7 @@ const AI_INFRA_WORKSPACE_STORAGE_KEY = "ai_infra_learning_workspace_v1";
 const AI_INFRA_WORKSPACE_ID = "default";
 
 type AiInfraWorkspaceTab = "learn" | "labs" | "roadmap" | "review" | "sources";
+type AiInfraLearningStep = "orient" | "quiz" | "diagnosis" | "source" | "lab" | "reflect";
 
 interface AiInfraLearningWorkspaceState {
   selectedCourseId: string | null;
@@ -97,6 +98,7 @@ export default function AiInfraTwinPage() {
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<AiInfraWorkspaceTab>("learn");
+  const [activeLearningStep, setActiveLearningStep] = useState<AiInfraLearningStep>("orient");
   const [assessmentMode, setAssessmentMode] = useState<AiInfraLearningMode>("learn");
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [courseQuery, setCourseQuery] = useState("");
@@ -480,6 +482,66 @@ export default function AiInfraTwinPage() {
     }
     return Array.from(refs.values());
   }, [selectedEvidence, selectedUnitLabs]);
+  const learningStepItems = useMemo(
+    () =>
+      [
+        {
+          id: "orient" as const,
+          label: tr("任务", "Task"),
+          done: Boolean(selectedUnit?.standard_learning?.steps?.length),
+        },
+        {
+          id: "quiz" as const,
+          label: tr("测验", "Quiz"),
+          done: !selectedQuiz || selectedQuizCorrect,
+        },
+        {
+          id: "diagnosis" as const,
+          label: tr("诊断", "Diagnosis"),
+          done: !selectedDiagnosisDrill || selectedDiagnosisAssessment.passed,
+        },
+        {
+          id: "source" as const,
+          label: tr("来源", "Source Drill"),
+          done:
+            !learningModeView.showTrustedDocuments ||
+            !selectedUnit?.candidate_documents?.length ||
+            selectedSourceDocumentAssessment.passed,
+        },
+        {
+          id: "lab" as const,
+          label: tr("实验", "Lab"),
+          done: !selectedUnitLabs.length || selectedUnitEvidenceRefs.length > 0,
+        },
+        {
+          id: "reflect" as const,
+          label: tr("反思", "Reflection"),
+          done:
+            selectedReflection.trim().length >= 20 &&
+            Boolean(selectedUnit?.unit_id && completedUnits[selectedUnit.unit_id]),
+        },
+      ],
+    [
+      completedUnits,
+      learningModeView.showTrustedDocuments,
+      selectedDiagnosisAssessment.passed,
+      selectedDiagnosisDrill,
+      selectedQuiz,
+      selectedQuizCorrect,
+      selectedReflection,
+      selectedSourceDocumentAssessment.passed,
+      selectedUnit,
+      selectedUnitEvidenceRefs.length,
+      selectedUnitLabs.length,
+      tr,
+    ],
+  );
+  const activeLearningStepIndex = Math.max(
+    0,
+    learningStepItems.findIndex((item) => item.id === activeLearningStep),
+  );
+  const previousLearningStep = learningStepItems[activeLearningStepIndex - 1]?.id;
+  const nextLearningStep = learningStepItems[activeLearningStepIndex + 1]?.id;
 
   useEffect(() => {
     if (!selectedCourseId && priorityCoursePaths[0]?.course_path_id) {
@@ -492,6 +554,10 @@ export default function AiInfraTwinPage() {
       setSelectedUnitId(selectedCourseUnits[0].unit_id);
     }
   }, [selectedCourseUnits, selectedUnitId]);
+
+  useEffect(() => {
+    setActiveLearningStep("orient");
+  }, [selectedUnit?.unit_id]);
 
   const handleSelect = useCallback(async (lab: AiInfraLab) => {
     setError(null);
@@ -1506,88 +1572,125 @@ export default function AiInfraTwinPage() {
                       </div>
                     </div>
 
-                    <div className="mt-2 grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.9fr)] gap-2">
-                      <div className="min-w-0">
-                        <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
-                          {tr("学习步骤", "Learning steps")}
-                        </div>
-                        <div className="max-h-64 space-y-1 overflow-y-auto pr-1">
-                          {(selectedUnit.standard_learning?.steps || []).map((step) => (
-                            <div
-                              key={`${selectedUnit.unit_id}:${step.phase}`}
-                              className="rounded-md border border-[var(--border)] px-2 py-1"
-                            >
-                              <div className="text-[10px] uppercase text-[var(--muted-foreground)]">
-                                {step.phase}
-                              </div>
-                              <div className="line-clamp-2 text-[11px] text-[var(--foreground)]">
-                                {step.task}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                    <div className="mt-2 grid grid-cols-3 gap-1 xl:grid-cols-6">
+                      {learningStepItems.map((step, index) => {
+                        const active = activeLearningStep === step.id;
+                        return (
+                          <button
+                            key={step.id}
+                            type="button"
+                            onClick={() => setActiveLearningStep(step.id)}
+                            className={`min-w-0 rounded-md border px-2 py-1.5 text-left transition-colors ${
+                              active
+                                ? "border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--foreground)]"
+                                : step.done
+                                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-500"
+                                  : "border-[var(--border)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
+                            }`}
+                            title={step.label}
+                          >
+                            <span className="block text-[10px] tabular-nums">{index + 1}</span>
+                            <span className="flex min-w-0 items-center gap-1">
+                              {step.done && <CheckCircle2 className="h-3 w-3 shrink-0" />}
+                              <span className="truncate text-[10px]">{step.label}</span>
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
 
-                      <div className="min-w-0">
-                        <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
-                          {tr("测验与诊断", "Quiz and diagnosis")}
-                        </div>
-                        {selectedQuiz && (
-                          <div className="rounded-md border border-[var(--border)] p-2">
-                            <div className="line-clamp-2 text-[11px] text-[var(--foreground)]">
-                              {selectedQuiz.prompt}
-                            </div>
-                            <div className="mt-1.5 grid grid-cols-2 gap-1">
-                              {(selectedQuiz.choices || []).map((choice) => {
-                                const chosen = selectedQuizAnswer === choice.id;
-                                const correct = choice.id === selectedQuiz.answer;
-                                return (
-                                  <button
-                                    key={choice.id || choice.text}
-                                    type="button"
-                                    onClick={() =>
-                                      selectedQuiz.question_id &&
-                                      setQuizAnswers((prev) => ({
-                                        ...prev,
-                                        [selectedQuiz.question_id as string]: choice.id || "",
-                                      }))
-                                    }
-                                    className={`rounded-md border px-2 py-1 text-left text-[10px] transition-colors ${
-                                      chosen
-                                        ? correct
-                                          ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-500"
-                                          : "border-amber-500/50 bg-amber-500/10 text-amber-500"
-                                        : "border-[var(--border)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
-                                    }`}
-                                  >
-                                    <span className="font-medium">{choice.id}</span> {choice.text}
-                                  </button>
-                                );
-                              })}
-                            </div>
-                            {selectedQuizAnswer && (
-                              <p className="mt-1.5 line-clamp-2 text-[10px] text-[var(--muted-foreground)]">
-                                {selectedQuiz.rationale}
-                              </p>
-                            )}
+                    <div className="mt-2 rounded-md border border-[var(--border)] p-2">
+                      {activeLearningStep === "orient" ? (
+                        <div className="min-w-0">
+                          <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
+                            {tr("当前任务", "Current task")}
                           </div>
-                        )}
-                        {selectedUnit.standard_learning?.assessment?.diagnosis_drills?.[0] && (
-                          <div className="mt-1.5 rounded-md border border-[var(--border)] p-2">
-                            <div className="line-clamp-1 text-[10px] uppercase text-[var(--muted-foreground)]">
-                              {tr("诊断任务", "Diagnosis drill")}
+                          <div className="max-h-64 space-y-1 overflow-y-auto pr-1">
+                            {(selectedUnit.standard_learning?.steps || []).map((step) => (
+                              <div
+                                key={`${selectedUnit.unit_id}:${step.phase}`}
+                                className="rounded-md border border-[var(--border)] px-2 py-1"
+                              >
+                                <div className="text-[10px] uppercase text-[var(--muted-foreground)]">
+                                  {step.phase}
+                                </div>
+                                <div className="line-clamp-2 text-[11px] text-[var(--foreground)]">
+                                  {step.task}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {activeLearningStep === "quiz" ? (
+                        <div className="min-w-0">
+                          <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
+                            {tr("主动回忆测验", "Active-recall quiz")}
+                          </div>
+                          {selectedQuiz ? (
+                            <div className="rounded-md border border-[var(--border)] p-2">
+                              <div className="line-clamp-2 text-[11px] text-[var(--foreground)]">
+                                {selectedQuiz.prompt}
+                              </div>
+                              <div className="mt-1.5 grid grid-cols-2 gap-1">
+                                {(selectedQuiz.choices || []).map((choice) => {
+                                  const chosen = selectedQuizAnswer === choice.id;
+                                  const correct = choice.id === selectedQuiz.answer;
+                                  return (
+                                    <button
+                                      key={choice.id || choice.text}
+                                      type="button"
+                                      onClick={() =>
+                                        selectedQuiz.question_id &&
+                                        setQuizAnswers((prev) => ({
+                                          ...prev,
+                                          [selectedQuiz.question_id as string]: choice.id || "",
+                                        }))
+                                      }
+                                      className={`rounded-md border px-2 py-1 text-left text-[10px] transition-colors ${
+                                        chosen
+                                          ? correct
+                                            ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-500"
+                                            : "border-amber-500/50 bg-amber-500/10 text-amber-500"
+                                          : "border-[var(--border)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
+                                      }`}
+                                    >
+                                      <span className="font-medium">{choice.id}</span> {choice.text}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                              {selectedQuizAnswer ? (
+                                <p className="mt-1.5 line-clamp-2 text-[10px] text-[var(--muted-foreground)]">
+                                  {selectedQuiz.rationale}
+                                </p>
+                              ) : null}
                             </div>
-                            <div className="mt-0.5 line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
-                              {selectedUnit.standard_learning.assessment.diagnosis_drills[0].scenario}
+                          ) : (
+                            <div className="rounded-md border border-[var(--border)] p-2 text-[10px] text-[var(--muted-foreground)]">
+                              {tr("当前单元没有配置测验，可直接进入诊断。", "This unit has no quiz; continue to diagnosis.")}
                             </div>
-                            <div className="mt-0.5 line-clamp-2 text-[11px] text-[var(--foreground)]">
-                              {selectedUnit.standard_learning.assessment.diagnosis_drills[0].task}
-                            </div>
-                            {learningModeView.showDiagnosisRubric && (
-                              <ul className="mt-1 space-y-0.5">
-                                {(selectedUnit.standard_learning.assessment.diagnosis_drills[0].rubric || [])
-                                  .slice(0, 3)
-                                  .map((item) => (
+                          )}
+                        </div>
+                      ) : null}
+
+                      {activeLearningStep === "diagnosis" ? (
+                        <div className="min-w-0">
+                          <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
+                            {tr("诊断练习", "Diagnosis drill")}
+                          </div>
+                          {selectedDiagnosisDrill ? (
+                            <div className="rounded-md border border-[var(--border)] p-2">
+                              <div className="line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
+                                {selectedDiagnosisDrill.scenario}
+                              </div>
+                              <div className="mt-0.5 line-clamp-2 text-[11px] text-[var(--foreground)]">
+                                {selectedDiagnosisDrill.task}
+                              </div>
+                              {learningModeView.showDiagnosisRubric ? (
+                                <ul className="mt-1 space-y-0.5">
+                                  {(selectedDiagnosisDrill.rubric || []).slice(0, 3).map((item) => (
                                     <li
                                       key={item}
                                       className="line-clamp-1 text-[10px] text-[var(--muted-foreground)]"
@@ -1595,73 +1698,284 @@ export default function AiInfraTwinPage() {
                                       {item}
                                     </li>
                                   ))}
-                              </ul>
-                            )}
-                            {learningModeView.showExpectedClaimShape &&
-                              selectedUnit.standard_learning.assessment.diagnosis_drills[0]
-                              .expected_claim_shape && (
-                              <div className="mt-1 grid grid-cols-2 gap-1">
-                                {Object.entries(
-                                  selectedUnit.standard_learning.assessment.diagnosis_drills[0]
-                                    .expected_claim_shape || {},
-                                )
-                                  .slice(0, 4)
-                                  .map(([key, value]) => (
-                                    <div
-                                      key={key}
-                                      className="min-w-0 rounded-md border border-[var(--border)] px-1.5 py-1"
-                                      title={`${key}: ${String(value)}`}
-                                    >
-                                      <div className="truncate text-[10px] uppercase text-[var(--muted-foreground)]">
-                                        {key}
+                                </ul>
+                              ) : null}
+                              {learningModeView.showExpectedClaimShape &&
+                              selectedDiagnosisDrill.expected_claim_shape ? (
+                                <div className="mt-1 grid grid-cols-2 gap-1">
+                                  {Object.entries(selectedDiagnosisDrill.expected_claim_shape)
+                                    .slice(0, 4)
+                                    .map(([key, value]) => (
+                                      <div
+                                        key={key}
+                                        className="min-w-0 rounded-md border border-[var(--border)] px-1.5 py-1"
+                                        title={`${key}: ${String(value)}`}
+                                      >
+                                        <div className="truncate text-[10px] uppercase text-[var(--muted-foreground)]">
+                                          {key}
+                                        </div>
+                                        <div className="truncate text-[10px] text-[var(--foreground)]">
+                                          {String(value)}
+                                        </div>
                                       </div>
-                                      <div className="truncate text-[10px] text-[var(--foreground)]">
-                                        {String(value)}
-                                      </div>
-                                    </div>
-                                  ))}
-                              </div>
-                            )}
-                            <textarea
-                              value={selectedDiagnosisNote}
-                              onChange={(event) =>
-                                selectedUnit.unit_id &&
-                                setDiagnosisNotes((prev) => ({
-                                  ...prev,
-                                  [selectedUnit.unit_id as string]: event.target.value,
-                                }))
-                              }
-                              placeholder={tr(
-                                "按 symptom / evidence / claim strength / missing proof 写诊断结论。",
-                                "Write the diagnosis as symptom / evidence / claim strength / missing proof.",
-                              )}
-                              className="mt-1.5 h-16 w-full resize-none rounded-md border border-[var(--border)] bg-transparent p-2 text-[10px] text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
-                            />
-                            <div className="mt-1 flex items-center justify-between gap-2 text-[10px]">
-                              <span
-                                className={
-                                  selectedDiagnosisAssessment.passed
-                                    ? "text-emerald-500"
-                                    : "text-amber-500"
+                                    ))}
+                                </div>
+                              ) : null}
+                              <textarea
+                                value={selectedDiagnosisNote}
+                                onChange={(event) =>
+                                  selectedUnit.unit_id &&
+                                  setDiagnosisNotes((prev) => ({
+                                    ...prev,
+                                    [selectedUnit.unit_id as string]: event.target.value,
+                                  }))
                                 }
-                              >
-                                {tr("诊断评分", "Diagnosis score")}{" "}
-                                {selectedDiagnosisAssessment.scorePct}%
+                                placeholder={tr(
+                                  "按 symptom / evidence / claim strength / missing proof 写诊断结论。",
+                                  "Write the diagnosis as symptom / evidence / claim strength / missing proof.",
+                                )}
+                                className="mt-1.5 h-20 w-full resize-none rounded-md border border-[var(--border)] bg-transparent p-2 text-[10px] text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
+                              />
+                              <div className="mt-1 flex items-center justify-between gap-2 text-[10px]">
+                                <span
+                                  className={
+                                    selectedDiagnosisAssessment.passed
+                                      ? "text-emerald-500"
+                                      : "text-amber-500"
+                                  }
+                                >
+                                  {tr("诊断评分", "Diagnosis score")}{" "}
+                                  {selectedDiagnosisAssessment.scorePct}%
+                                </span>
+                                <span className="truncate text-[var(--muted-foreground)]">
+                                  {selectedDiagnosisAssessment.feedback}
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="rounded-md border border-[var(--border)] p-2 text-[10px] text-[var(--muted-foreground)]">
+                              {tr("当前单元没有配置诊断题，可进入来源核验。", "This unit has no diagnosis drill; continue to source verification.")}
+                            </div>
+                          )}
+                        </div>
+                      ) : null}
+
+                      {activeLearningStep === "source" ? (
+                        <div className="min-w-0">
+                          {learningModeView.showTrustedDocuments &&
+                          selectedUnit.source_ids &&
+                          selectedUnit.source_ids.length > 0 ? (
+                            <div className="truncate text-[10px] text-[var(--muted-foreground)]">
+                              {tr("来源", "Sources")}: {selectedUnit.source_ids.slice(0, 4).join(" · ")}
+                            </div>
+                          ) : null}
+                          <div className="mt-2 grid grid-cols-2 gap-2 xl:grid-cols-4">
+                            {learningModeView.showConcepts ? (
+                              <EvidenceMiniList label={tr("概念", "Concepts")} items={selectedUnit.concepts || []} />
+                            ) : null}
+                            {learningModeView.showFailureModes ? (
+                              <EvidenceMiniList label={tr("故障模式", "Failure modes")} items={selectedUnit.failure_modes || []} />
+                            ) : null}
+                            {learningModeView.showEvidenceRequirements ? (
+                              <EvidenceMiniList label={tr("证据要求", "Evidence required")} items={selectedUnit.evidence_requirements || []} />
+                            ) : null}
+                            {learningModeView.showClaimBoundaries ? (
+                              <EvidenceMiniList label={tr("主张边界", "Claim boundaries")} items={selectedUnit.claim_boundaries || []} />
+                            ) : null}
+                          </div>
+                          {!learningModeView.showFailureModes ? (
+                            <div className="mt-2 rounded-md border border-amber-500/30 bg-amber-500/10 p-2 text-[10px] text-amber-500">
+                              {tr(
+                                "当前模式已隐藏故障模式、证据清单或边界提示，请基于任务、运行结果和可用文档独立判断。",
+                                "This mode hides failure, evidence, or boundary hints. Diagnose from the task, runs, and available documents.",
+                              )}
+                            </div>
+                          ) : null}
+                          {learningModeView.showTrustedDocuments &&
+                          selectedUnit.candidate_documents &&
+                          selectedUnit.candidate_documents.length > 0 ? (
+                            <div className="mt-2 rounded-md border border-[var(--border)] p-2">
+                              <div className="mb-1 flex items-center justify-between gap-2">
+                                <span className="text-[10px] font-medium text-[var(--foreground)]">
+                                  {tr("可信来源 Drill", "Trusted source drill")}
+                                </span>
+                                <span className="text-[10px] text-[var(--muted-foreground)]">
+                                  {selectedSourceDocumentAssessment.scorePct}%
+                                </span>
+                              </div>
+                              <div className="grid max-h-20 grid-cols-2 gap-1 overflow-y-auto pr-1">
+                                {selectedUnit.candidate_documents.slice(0, 8).map((doc) => (
+                                  <div
+                                    key={doc.document_id || `${doc.source_id}:${doc.relative_path}`}
+                                    className="min-w-0 rounded-md border border-[var(--border)] px-2 py-1"
+                                    title={[
+                                      doc.document_id,
+                                      doc.relative_path,
+                                      doc.sha256 ? `sha256:${doc.sha256}` : "",
+                                    ]
+                                      .filter(Boolean)
+                                      .join("\n")}
+                                  >
+                                    <div className="truncate text-[10px] font-medium text-[var(--foreground)]">
+                                      {doc.title || doc.relative_path || doc.document_id}
+                                    </div>
+                                    <div className="truncate text-[10px] text-[var(--muted-foreground)]">
+                                      {doc.source_id?.replace("src:ai-infra:", "") || doc.document_id}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                              <textarea
+                                value={selectedSourceDocumentNote}
+                                onChange={(event) =>
+                                  selectedUnit.unit_id &&
+                                  setSourceDocumentNotes((prev) => ({
+                                    ...prev,
+                                    [selectedUnit.unit_id as string]: event.target.value,
+                                  }))
+                                }
+                                placeholder={tr(
+                                  "引用至少一个可信文档，并说明它支持哪项证据要求和主张边界。",
+                                  "Reference at least one trusted document and tie it to evidence requirements and claim boundaries.",
+                                )}
+                                className="mt-1.5 h-20 w-full resize-none rounded-md border border-[var(--border)] bg-transparent p-2 text-[10px] text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
+                              />
+                              <div className="mt-1 flex items-center justify-between gap-2 text-[10px]">
+                                <span
+                                  className={
+                                    selectedSourceDocumentAssessment.passed
+                                      ? "text-emerald-500"
+                                      : "text-amber-500"
+                                  }
+                                >
+                                  {selectedSourceDocumentAssessment.passed
+                                    ? tr("来源通过", "Source passed")
+                                    : tr("来源待补", "Source pending")}
+                                </span>
+                                <span className="truncate text-[var(--muted-foreground)]">
+                                  {selectedSourceDocumentAssessment.feedback}
+                                </span>
+                              </div>
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : null}
+
+                      {activeLearningStep === "lab" ? (
+                        <div className="min-w-0">
+                          <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
+                            {tr("实验证据", "Lab evidence")}
+                          </div>
+                          <div className="grid grid-cols-2 gap-1">
+                            <EvidenceMiniList
+                              label={tr("Lab 门禁", "Lab gates")}
+                              items={selectedUnit.standard_learning?.twin_practice?.pre_lab_gate || []}
+                            />
+                            <EvidenceMiniList
+                              label={tr("后置证据", "Post evidence")}
+                              items={selectedUnit.standard_learning?.twin_practice?.post_lab_evidence || []}
+                            />
+                          </div>
+                          <div className="mt-2 rounded-md border border-[var(--border)] p-2">
+                            <div className="mb-1 flex items-center justify-between gap-2">
+                              <span className="text-[10px] font-medium text-[var(--foreground)]">
+                                {tr("证据包", "Evidence Bundle")}
                               </span>
-                              <span className="truncate text-[var(--muted-foreground)]">
-                                {selectedDiagnosisAssessment.feedback}
+                              <span className={selectedUnitEvidenceRefs.length > 0 ? "text-[10px] text-emerald-500" : "text-[10px] text-amber-500"}>
+                                {selectedUnitEvidenceRefs.length}
                               </span>
                             </div>
+                            {selectedUnitEvidenceRefs.length > 0 ? (
+                              <div className="mb-1 flex flex-wrap gap-1">
+                                {selectedUnitEvidenceRefs.map((ref) => (
+                                  <button
+                                    key={ref}
+                                    type="button"
+                                    onClick={() =>
+                                      selectedUnit.unit_id &&
+                                      setEvidenceBundles((prev) => ({
+                                        ...prev,
+                                        [selectedUnit.unit_id as string]: (
+                                          prev[selectedUnit.unit_id as string] || []
+                                        ).filter((item) => item !== ref),
+                                      }))
+                                    }
+                                    className="max-w-full truncate rounded-md border border-emerald-500/40 px-1.5 py-0.5 text-[10px] text-emerald-500"
+                                    title={tr("点击移除", "Click to remove")}
+                                  >
+                                    {ref}
+                                  </button>
+                                ))}
+                              </div>
+                            ) : null}
+                            <div className="flex flex-wrap gap-1">
+                              {selectedUnitEvidenceCandidates.slice(0, 5).map((candidate) => {
+                                const attached = selectedUnitEvidenceRefs.includes(candidate.ref);
+                                return (
+                                  <button
+                                    key={candidate.ref}
+                                    type="button"
+                                    disabled={attached}
+                                    onClick={() =>
+                                      selectedUnit.unit_id &&
+                                      setEvidenceBundles((prev) => ({
+                                        ...prev,
+                                        [selectedUnit.unit_id as string]: Array.from(
+                                          new Set([
+                                            ...(prev[selectedUnit.unit_id as string] || []),
+                                            candidate.ref,
+                                          ]),
+                                        ),
+                                      }))
+                                    }
+                                    className="max-w-full truncate rounded-md border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--muted-foreground)] hover:bg-[var(--accent)] disabled:opacity-50"
+                                    title={candidate.label}
+                                  >
+                                    {attached ? tr("已绑定", "Bound") : tr("绑定", "Bind")} {candidate.ref}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {selectedUnitEvidenceCandidates.length === 0 ? (
+                              <div className="text-[10px] text-[var(--muted-foreground)]">
+                                {tr("运行关联 Twin Lab 后可绑定证据。", "Run a linked Twin lab before binding evidence.")}
+                              </div>
+                            ) : null}
                           </div>
-                        )}
-                      </div>
-
-                      <div className="min-w-0">
-                        <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
-                          {tr("反思与完成", "Reflect and complete")}
+                          {selectedUnitLabs.length > 0 ? (
+                            <div className="mt-2 space-y-1">
+                              <div className="text-[10px] font-medium text-[var(--foreground)]">
+                                {tr("关联 Twin Lab", "Linked Twin labs")}
+                              </div>
+                              {selectedUnitLabs.slice(0, 3).map((lab) => (
+                                <button
+                                  key={lab.labId}
+                                  type="button"
+                                  disabled={!selectedQuizCorrect}
+                                  onClick={() => void handleSelect(lab)}
+                                  className="flex w-full items-center gap-1.5 rounded-md border border-[var(--border)] px-2 py-1 text-left text-[10px] text-[var(--muted-foreground)] hover:bg-[var(--accent)] disabled:opacity-50"
+                                  title={
+                                    selectedQuizCorrect
+                                      ? lab.title
+                                      : tr("先通过测验再进入实验", "Pass the quiz before entering the lab")
+                                  }
+                                >
+                                  <Play className="h-3 w-3 shrink-0" />
+                                  <span className="min-w-0 truncate">{lab.title}</span>
+                                </button>
+                              ))}
+                            </div>
+                          ) : null}
                         </div>
-                        {selectedUnit.standard_learning?.assessment?.reflection_prompts &&
-                          selectedUnit.standard_learning.assessment.reflection_prompts.length > 0 && (
+                      ) : null}
+
+                      {activeLearningStep === "reflect" ? (
+                        <div className="min-w-0">
+                          <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
+                            {tr("反思与完成", "Reflect and complete")}
+                          </div>
+                          {selectedUnit.standard_learning?.assessment?.reflection_prompts &&
+                          selectedUnit.standard_learning.assessment.reflection_prompts.length > 0 ? (
                             <div className="mb-1 space-y-0.5">
                               {selectedUnit.standard_learning.assessment.reflection_prompts
                                 .slice(0, 2)
@@ -1675,284 +1989,91 @@ export default function AiInfraTwinPage() {
                                   </div>
                                 ))}
                             </div>
-                          )}
-                        <textarea
-                          value={selectedReflection}
-                          onChange={(event) =>
-                            selectedUnit.unit_id &&
-                            setReflectionNotes((prev) => ({
-                              ...prev,
-                              [selectedUnit.unit_id as string]: event.target.value,
-                            }))
-                          }
-                          placeholder={tr(
-                            "写下可被当前证据支持的结论，以及还缺什么证明。",
-                            "Write the claim supported by current evidence, and what proof is still missing.",
-                          )}
-                          className="h-24 w-full resize-none rounded-md border border-[var(--border)] bg-transparent p-2 text-[11px] text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
-                        />
+                          ) : null}
+                          <textarea
+                            value={selectedReflection}
+                            onChange={(event) =>
+                              selectedUnit.unit_id &&
+                              setReflectionNotes((prev) => ({
+                                ...prev,
+                                [selectedUnit.unit_id as string]: event.target.value,
+                              }))
+                            }
+                            placeholder={tr(
+                              "写下可被当前证据支持的结论，以及还缺什么证明。",
+                              "Write the claim supported by current evidence, and what proof is still missing.",
+                            )}
+                            className="h-24 w-full resize-none rounded-md border border-[var(--border)] bg-transparent p-2 text-[11px] text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
+                          />
+                          <button
+                            type="button"
+                            disabled={
+                              !selectedUnit.unit_id ||
+                              !selectedQuizCorrect ||
+                              Boolean(selectedDiagnosisDrill && !selectedDiagnosisAssessment.passed) ||
+                              Boolean(
+                                learningModeView.showTrustedDocuments &&
+                                  selectedUnit.candidate_documents?.length &&
+                                  !selectedSourceDocumentAssessment.passed,
+                              ) ||
+                              Boolean(selectedUnitLabs.length && selectedUnitEvidenceRefs.length === 0) ||
+                              selectedReflection.trim().length < 20
+                            }
+                            onClick={() =>
+                              selectedUnit.unit_id &&
+                              (() => {
+                                const unitId = selectedUnit.unit_id as string;
+                                const completedAt = new Date().toISOString();
+                                setCompletedUnits((prev) => ({
+                                  ...prev,
+                                  [unitId]: true,
+                                }));
+                                setReviewLedger((prev) => ({
+                                  ...prev,
+                                  [unitId]: {
+                                    ...(prev[unitId] || {}),
+                                    completedAt: prev[unitId]?.completedAt || completedAt,
+                                  },
+                                }));
+                              })()
+                            }
+                            className="mt-1.5 inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-[var(--primary)] px-2 py-1.5 text-[11px] text-[var(--primary-foreground)] disabled:opacity-50"
+                          >
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            {completedUnits[selectedUnit.unit_id || ""]
+                              ? tr("已完成", "Completed")
+                              : tr("标记完成", "Mark complete")}
+                          </button>
+                          <div className="mt-1 text-[10px] text-[var(--muted-foreground)]">
+                            {selectedUnitMastery.nextAction}
+                          </div>
+                        </div>
+                      ) : null}
+
+                      <div className="mt-3 flex items-center justify-between gap-2 border-t border-[var(--border)] pt-2">
                         <button
                           type="button"
-                          disabled={
-                            !selectedUnit.unit_id ||
-                            !selectedQuizCorrect ||
-                            Boolean(selectedDiagnosisDrill && !selectedDiagnosisAssessment.passed) ||
-                            Boolean(
-                              learningModeView.showTrustedDocuments &&
-                              selectedUnit.candidate_documents?.length &&
-                                !selectedSourceDocumentAssessment.passed,
-                            ) ||
-                            Boolean(selectedUnitLabs.length && selectedUnitEvidenceRefs.length === 0) ||
-                            selectedReflection.trim().length < 20
-                          }
+                          disabled={!previousLearningStep}
                           onClick={() =>
-                            selectedUnit.unit_id &&
-                            (() => {
-                              const unitId = selectedUnit.unit_id as string;
-                              const completedAt = new Date().toISOString();
-                              setCompletedUnits((prev) => ({
-                                ...prev,
-                                [unitId]: true,
-                              }));
-                              setReviewLedger((prev) => ({
-                                ...prev,
-                                [unitId]: {
-                                  ...(prev[unitId] || {}),
-                                  completedAt: prev[unitId]?.completedAt || completedAt,
-                                },
-                              }));
-                            })()
+                            previousLearningStep && setActiveLearningStep(previousLearningStep)
                           }
-                          className="mt-1.5 inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-[var(--primary)] px-2 py-1.5 text-[11px] text-[var(--primary-foreground)] disabled:opacity-50"
+                          className="rounded-md border border-[var(--border)] px-2 py-1 text-[10px] text-[var(--foreground)] hover:bg-[var(--accent)] disabled:opacity-40"
                         >
-                          <CheckCircle2 className="h-3.5 w-3.5" />
-                          {completedUnits[selectedUnit.unit_id || ""]
-                            ? tr("已完成", "Completed")
-                            : tr("标记完成", "Mark complete")}
+                          {tr("上一步", "Previous")}
                         </button>
-                        <div className="mt-1 text-[10px] text-[var(--muted-foreground)]">
-                          {selectedUnitMastery.nextAction}
+                        <div className="min-w-0 truncate text-center text-[10px] text-[var(--muted-foreground)]">
+                          {learningStepItems[activeLearningStepIndex]?.label || tr("任务", "Task")}
                         </div>
-                        <div className="mt-2 grid grid-cols-2 gap-1">
-                          <EvidenceMiniList
-                            label={tr("Lab 门禁", "Lab gates")}
-                            items={
-                              selectedUnit.standard_learning?.twin_practice?.pre_lab_gate || []
-                            }
-                          />
-                          <EvidenceMiniList
-                            label={tr("后置证据", "Post evidence")}
-                            items={
-                              selectedUnit.standard_learning?.twin_practice?.post_lab_evidence || []
-                            }
-                          />
-                        </div>
-                        <div className="mt-2 rounded-md border border-[var(--border)] p-2">
-                          <div className="mb-1 flex items-center justify-between gap-2">
-                            <span className="text-[10px] font-medium text-[var(--foreground)]">
-                              {tr("证据包", "Evidence Bundle")}
-                            </span>
-                            <span
-                              className={
-                                selectedUnitEvidenceRefs.length > 0
-                                  ? "text-[10px] text-emerald-500"
-                                  : "text-[10px] text-amber-500"
-                              }
-                            >
-                              {selectedUnitEvidenceRefs.length}
-                            </span>
-                          </div>
-                          {selectedUnitEvidenceRefs.length > 0 && (
-                            <div className="mb-1 flex flex-wrap gap-1">
-                              {selectedUnitEvidenceRefs.map((ref) => (
-                                <button
-                                  key={ref}
-                                  type="button"
-                                  onClick={() =>
-                                    selectedUnit.unit_id &&
-                                    setEvidenceBundles((prev) => ({
-                                      ...prev,
-                                      [selectedUnit.unit_id as string]: (
-                                        prev[selectedUnit.unit_id as string] || []
-                                      ).filter((item) => item !== ref),
-                                    }))
-                                  }
-                                  className="max-w-full truncate rounded-md border border-emerald-500/40 px-1.5 py-0.5 text-[10px] text-emerald-500"
-                                  title={tr("点击移除", "Click to remove")}
-                                >
-                                  {ref}
-                                </button>
-                              ))}
-                            </div>
-                          )}
-                          <div className="flex flex-wrap gap-1">
-                            {selectedUnitEvidenceCandidates.slice(0, 5).map((candidate) => {
-                              const attached = selectedUnitEvidenceRefs.includes(candidate.ref);
-                              return (
-                                <button
-                                  key={candidate.ref}
-                                  type="button"
-                                  disabled={attached}
-                                  onClick={() =>
-                                    selectedUnit.unit_id &&
-                                    setEvidenceBundles((prev) => ({
-                                      ...prev,
-                                      [selectedUnit.unit_id as string]: Array.from(
-                                        new Set([
-                                          ...(prev[selectedUnit.unit_id as string] || []),
-                                          candidate.ref,
-                                        ]),
-                                      ),
-                                    }))
-                                  }
-                                  className="max-w-full truncate rounded-md border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--muted-foreground)] hover:bg-[var(--accent)] disabled:opacity-50"
-                                  title={candidate.label}
-                                >
-                                  {attached ? tr("已绑定", "Bound") : tr("绑定", "Bind")}{" "}
-                                  {candidate.ref}
-                                </button>
-                              );
-                            })}
-                          </div>
-                          {selectedUnitEvidenceCandidates.length === 0 && (
-                            <div className="text-[10px] text-[var(--muted-foreground)]">
-                              {tr("运行关联 Twin Lab 后可绑定证据。", "Run a linked Twin lab before binding evidence.")}
-                            </div>
-                          )}
-                        </div>
-                        {selectedUnitLabs.length > 0 && (
-                          <div className="mt-2 space-y-1">
-                            <div className="text-[10px] font-medium text-[var(--foreground)]">
-                              {tr("关联 Twin Lab", "Linked Twin labs")}
-                            </div>
-                            {selectedUnitLabs.slice(0, 3).map((lab) => (
-                              <button
-                                key={lab.labId}
-                                type="button"
-                                disabled={!selectedQuizCorrect}
-                                onClick={() => void handleSelect(lab)}
-                                className="flex w-full items-center gap-1.5 rounded-md border border-[var(--border)] px-2 py-1 text-left text-[10px] text-[var(--muted-foreground)] hover:bg-[var(--accent)] disabled:opacity-50"
-                                title={
-                                  selectedQuizCorrect
-                                    ? lab.title
-                                    : tr("先通过测验再进入实验", "Pass the quiz before entering the lab")
-                                }
-                              >
-                                <Play className="h-3 w-3 shrink-0" />
-                                <span className="min-w-0 truncate">{lab.title}</span>
-                              </button>
-                            ))}
-                          </div>
-                        )}
+                        <button
+                          type="button"
+                          disabled={!nextLearningStep}
+                          onClick={() => nextLearningStep && setActiveLearningStep(nextLearningStep)}
+                          className="rounded-md border border-[var(--border)] px-2 py-1 text-[10px] text-[var(--foreground)] hover:bg-[var(--accent)] disabled:opacity-40"
+                        >
+                          {tr("下一步", "Next")}
+                        </button>
                       </div>
                     </div>
-
-                        {learningModeView.showTrustedDocuments &&
-                          selectedUnit.source_ids && selectedUnit.source_ids.length > 0 && (
-                          <div className="mt-2 truncate text-[10px] text-[var(--muted-foreground)]">
-                            {tr("来源", "Sources")}: {selectedUnit.source_ids.slice(0, 4).join(" · ")}
-                          </div>
-                        )}
-                    <div className="mt-2 grid grid-cols-4 gap-2">
-                      {learningModeView.showConcepts && (
-                        <EvidenceMiniList
-                          label={tr("概念", "Concepts")}
-                          items={selectedUnit.concepts || []}
-                        />
-                      )}
-                      {learningModeView.showFailureModes && (
-                        <EvidenceMiniList
-                          label={tr("故障模式", "Failure modes")}
-                          items={selectedUnit.failure_modes || []}
-                        />
-                      )}
-                      {learningModeView.showEvidenceRequirements && (
-                        <EvidenceMiniList
-                          label={tr("证据要求", "Evidence required")}
-                          items={selectedUnit.evidence_requirements || []}
-                        />
-                      )}
-                      {learningModeView.showClaimBoundaries && (
-                        <EvidenceMiniList
-                          label={tr("主张边界", "Claim boundaries")}
-                          items={selectedUnit.claim_boundaries || []}
-                        />
-                      )}
-                    </div>
-                    {!learningModeView.showFailureModes && (
-                      <div className="mt-2 rounded-md border border-amber-500/30 bg-amber-500/10 p-2 text-[10px] text-amber-500">
-                        {tr(
-                          "当前模式已隐藏故障模式、证据清单或边界提示，请基于任务、运行结果和可用文档独立判断。",
-                          "This mode hides failure, evidence, or boundary hints. Diagnose from the task, runs, and available documents.",
-                        )}
-                      </div>
-                    )}
-                    {learningModeView.showTrustedDocuments &&
-                      selectedUnit.candidate_documents && selectedUnit.candidate_documents.length > 0 && (
-                      <div className="mt-2 rounded-md border border-[var(--border)] p-2">
-                        <div className="mb-1 flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-medium text-[var(--foreground)]">
-                            {tr("可信来源 Drill", "Trusted source drill")}
-                          </span>
-                          <span className="text-[10px] text-[var(--muted-foreground)]">
-                            {selectedSourceDocumentAssessment.scorePct}%
-                          </span>
-                        </div>
-                        <div className="grid max-h-20 grid-cols-2 gap-1 overflow-y-auto pr-1">
-                          {selectedUnit.candidate_documents.slice(0, 8).map((doc) => (
-                            <div
-                              key={doc.document_id || `${doc.source_id}:${doc.relative_path}`}
-                              className="min-w-0 rounded-md border border-[var(--border)] px-2 py-1"
-                              title={[
-                                doc.document_id,
-                                doc.relative_path,
-                                doc.sha256 ? `sha256:${doc.sha256}` : "",
-                              ]
-                                .filter(Boolean)
-                                .join("\n")}
-                            >
-                              <div className="truncate text-[10px] font-medium text-[var(--foreground)]">
-                                {doc.title || doc.relative_path || doc.document_id}
-                              </div>
-                              <div className="truncate text-[10px] text-[var(--muted-foreground)]">
-                                {doc.source_id?.replace("src:ai-infra:", "") || doc.document_id}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        <textarea
-                          value={selectedSourceDocumentNote}
-                          onChange={(event) =>
-                            selectedUnit.unit_id &&
-                            setSourceDocumentNotes((prev) => ({
-                              ...prev,
-                              [selectedUnit.unit_id as string]: event.target.value,
-                            }))
-                          }
-                          placeholder={tr(
-                            "引用至少一个可信文档，并说明它支持哪项证据要求和主张边界。",
-                            "Reference at least one trusted document and tie it to evidence requirements and claim boundaries.",
-                          )}
-                          className="mt-1.5 h-16 w-full resize-none rounded-md border border-[var(--border)] bg-transparent p-2 text-[10px] text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
-                        />
-                        <div className="mt-1 flex items-center justify-between gap-2 text-[10px]">
-                          <span
-                            className={
-                              selectedSourceDocumentAssessment.passed
-                                ? "text-emerald-500"
-                                : "text-amber-500"
-                            }
-                          >
-                            {selectedSourceDocumentAssessment.passed
-                              ? tr("来源通过", "Source passed")
-                              : tr("来源待补", "Source pending")}
-                          </span>
-                          <span className="truncate text-[var(--muted-foreground)]">
-                            {selectedSourceDocumentAssessment.feedback}
-                          </span>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 )}
               </div>
