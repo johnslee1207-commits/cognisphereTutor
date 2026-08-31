@@ -7,7 +7,7 @@ from typing import Any
 
 import pytest
 
-from cognispheretutor.agents.chat.agent_loop import InlineThinkFilter
+from cognispheretutor.agents.chat.agent_loop import InlineThinkFilter, InlineToolMarkupFilter
 from cognispheretutor.agents.chat.agentic_pipeline import AgenticChatPipeline
 from cognispheretutor.capabilities.explore_context import explorer as explorer_mod
 from cognispheretutor.capabilities.mastery import MASTERY_TOOL_NAMES
@@ -244,6 +244,31 @@ class TestInlineThinkFilter:
         segs = self._run(["<think>1</think>mid<think>2</think>end"])
         assert self._join(segs, "content") == "midend"
         assert self._join(segs, "thinking") == "12"
+
+
+class TestInlineToolMarkupFilter:
+    @staticmethod
+    def _run(chunks: list[str]) -> str:
+        f = InlineToolMarkupFilter()
+        out: list[str] = []
+        for chunk in chunks:
+            out.extend(f.feed(chunk))
+        out.extend(f.flush())
+        return "".join(out)
+
+    def test_dsml_tool_block_is_suppressed(self) -> None:
+        text = self._run(
+            [
+                "Let me register the final check.\n",
+                "<｜｜DSML｜｜tool_calls> <｜｜DSML｜｜invoke name=\"mastery_grade\">",
+                "<｜｜DSML｜｜parameter name=\"answer\" string=\"true\">B</｜｜DSML｜｜parameter>",
+                "</｜｜DSML｜｜invoke> </｜｜DSML｜｜tool_calls>",
+            ]
+        )
+
+        assert text == "Let me register the final check.\n"
+        assert "DSML" not in text
+        assert "mastery_grade" not in text
 
 
 @pytest.mark.asyncio
@@ -1651,6 +1676,82 @@ async def test_mastery_blocks_say_continue_after_mastered_grade(
     assert result.metadata["completed"] is True
     assert "Next up: Observability" in result.metadata["response"]
     assert "say continue" not in result.metadata["response"]
+
+
+@pytest.mark.asyncio
+async def test_inline_dsml_mastery_grade_executes_without_leaking_content(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _GradeRegistry(_Registry):
+        def build_openai_schemas(self, _enabled):
+            return [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "mastery_grade",
+                        "description": "Grade answer",
+                        "parameters": {"type": "object", "properties": {}},
+                    },
+                }
+            ]
+
+        async def execute(self, name: str, **kwargs):
+            self.executed.append({"name": name, "kwargs": kwargs})
+            return ToolResult(
+                content=json.dumps({"is_correct": True, "mastered": True}),
+                success=True,
+                metadata={"mastery_grade": {"is_correct": True, "mastered": True}},
+            )
+
+    registry = _GradeRegistry()
+    dsml_grade = (
+        "<｜｜DSML｜｜tool_calls> "
+        "<｜｜DSML｜｜invoke name=\"mastery_grade\"> "
+        "<｜｜DSML｜｜parameter name=\"answer\" string=\"true\">B</｜｜DSML｜｜parameter> "
+        "</｜｜DSML｜｜invoke> "
+        "</｜｜DSML｜｜tool_calls>"
+    )
+    client = _ScriptedChatClient(
+        [
+            [
+                _llm_chunk(content="Let me register the final check.\n"),
+                _llm_chunk(content=dsml_grade),
+            ],
+            [
+                _llm_chunk(
+                    content=(
+                        "Correct. Observability and golden signals is mastered. "
+                        "Next up: MiniMind reference workload boundaries."
+                    )
+                )
+            ],
+        ]
+    )
+    pipeline = AgenticChatPipeline(language="en")
+    pipeline.registry = registry
+    monkeypatch.setattr(pipeline, "_compose_enabled_tools", lambda _context: ["mastery_grade"])
+    monkeypatch.setattr(pipeline, "_build_openai_client", lambda: client)
+
+    events = await _run(
+        pipeline,
+        UnifiedContext(
+            session_id="s1",
+            user_message="B",
+            enabled_tools=["mastery_grade"],
+            metadata={"mastery_mode": True, "mastery_path_id": "csphere-ai_infra"},
+        ),
+    )
+
+    assert client.call_count == 2
+    assert [call["name"] for call in registry.executed] == ["mastery_grade"]
+    assert registry.executed[0]["kwargs"]["answer"] == "B"
+    visible = "".join(_contents(events))
+    assert "DSML" not in visible
+    assert "mastery_grade" not in visible
+    result = _result(events)
+    assert result.metadata["completed"] is True
+    assert "DSML" not in result.metadata["response"]
+    assert "Next up: MiniMind reference workload boundaries" in result.metadata["response"]
 
 
 @pytest.mark.asyncio

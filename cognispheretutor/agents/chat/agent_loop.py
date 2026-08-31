@@ -26,6 +26,7 @@ from __future__ import annotations
 
 from contextlib import suppress
 from dataclasses import dataclass, field
+import json
 import logging
 import re
 from typing import TYPE_CHECKING, Any
@@ -62,6 +63,25 @@ _THINK_OPEN_RE = re.compile(r"<\s*think(?:ing)?\b[^>]*>", re.IGNORECASE)
 _THINK_CLOSE_RE = re.compile(r"<\s*/\s*think(?:ing)?\s*>", re.IGNORECASE)
 # Longest partial tag worth waiting a chunk for (e.g. "</thinking" + slack).
 _TAG_HOLDBACK_CHARS = 24
+_DSML_TOOL_OPEN_RE = re.compile(r"<\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*tool_calls\s*>", re.IGNORECASE)
+_DSML_TOOL_CLOSE_RE = re.compile(r"<\s*/\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*tool_calls\s*>", re.IGNORECASE)
+_DSML_TOOL_BLOCK_RE = re.compile(
+    r"<\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*tool_calls\s*>.*?"
+    r"<\s*/\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*tool_calls\s*>",
+    re.IGNORECASE | re.DOTALL,
+)
+_DSML_INVOKE_RE = re.compile(
+    r"<\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*invoke\s+name=[\"'](?P<name>[^\"']+)[\"']\s*>"
+    r"(?P<body>.*?)"
+    r"<\s*/\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*invoke\s*>",
+    re.IGNORECASE | re.DOTALL,
+)
+_DSML_PARAMETER_RE = re.compile(
+    r"<\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*parameter\s+name=[\"'](?P<name>[^\"']+)[\"'][^>]*>"
+    r"(?P<value>.*?)"
+    r"<\s*/\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*parameter\s*>",
+    re.IGNORECASE | re.DOTALL,
+)
 
 
 class InlineThinkFilter:
@@ -117,6 +137,55 @@ class InlineThinkFilter:
 
     def _kind(self) -> str:
         return "thinking" if self._in_think else "content"
+
+
+class InlineToolMarkupFilter:
+    """Incremental filter for provider-emitted inline DSML tool blocks."""
+
+    def __init__(self) -> None:
+        self._buffer = ""
+        self._in_tool_markup = False
+
+    def feed(self, chunk: str) -> list[str]:
+        self._buffer += chunk
+        segments: list[str] = []
+        while True:
+            pattern = _DSML_TOOL_CLOSE_RE if self._in_tool_markup else _DSML_TOOL_OPEN_RE
+            match = pattern.search(self._buffer)
+            if match is None:
+                break
+            if not self._in_tool_markup and match.start() > 0:
+                segments.append(self._buffer[: match.start()])
+            self._buffer = self._buffer[match.end() :]
+            self._in_tool_markup = not self._in_tool_markup
+        if self._in_tool_markup:
+            return segments
+        emit_upto = len(self._buffer)
+        tag_start = self._buffer.rfind("<")
+        if tag_start != -1 and len(self._buffer) - tag_start <= _TAG_HOLDBACK_CHARS:
+            tail = self._buffer[tag_start:]
+            if _looks_like_partial_dsml_tool_open(tail):
+                emit_upto = tag_start
+        if emit_upto > 0:
+            segments.append(self._buffer[:emit_upto])
+            self._buffer = self._buffer[emit_upto:]
+        return segments
+
+    def flush(self) -> list[str]:
+        if not self._buffer:
+            return []
+        if self._in_tool_markup or _DSML_TOOL_OPEN_RE.search(self._buffer):
+            self._buffer = ""
+            self._in_tool_markup = False
+            return []
+        segments = [self._buffer]
+        self._buffer = ""
+        return segments
+
+
+def _looks_like_partial_dsml_tool_open(text: str) -> bool:
+    compact = re.sub(r"\s+", "", text).lower().replace("｜", "|")
+    return "<||dsml||tool_calls>".startswith(compact)
 
 
 @dataclass(slots=True)
@@ -727,6 +796,7 @@ class AgentLoop:
         output_chars = 0
         finish_reason = ""
         think_filter = InlineThinkFilter()
+        tool_markup_filter = InlineToolMarkupFilter()
         chunk_meta = merge_trace_metadata(trace_meta, {"trace_kind": "llm_chunk"})
 
         async def _emit_segments(segments: list[tuple[str, str]]) -> None:
@@ -776,7 +846,8 @@ class AgentLoop:
                     # whether to render it as narration or as the answer.
                     # Inline <think> segments are split off to the thinking
                     # channel so the content stream stays user-facing.
-                    await _emit_segments(think_filter.feed(content))
+                    for visible_content in tool_markup_filter.feed(content):
+                        await _emit_segments(think_filter.feed(visible_content))
 
                 for tc_delta in getattr(delta, "tool_calls", None) or []:
                     index = int(getattr(tc_delta, "index", 0) or 0)
@@ -801,6 +872,8 @@ class AgentLoop:
                 with suppress(Exception):
                     await close()
 
+        for visible_content in tool_markup_filter.flush():
+            await _emit_segments(think_filter.feed(visible_content))
         await _emit_segments(think_filter.flush())
         text = "".join(text_parts)
         record_streamed_usage(
@@ -819,6 +892,10 @@ class AgentLoop:
             for idx, data in sorted(tool_acc.items())
             if data.get("name")
         ]
+        inline_tool_calls = _parse_inline_tool_markup(text)
+        if inline_tool_calls:
+            tool_calls.extend(inline_tool_calls)
+            text = _strip_inline_tool_markup(text)
 
         await self.stream.progress(
             "",
@@ -961,6 +1038,30 @@ def _tool_call_names(tool_calls: list[dict[str, Any]]) -> set[str]:
         str(call.get("function", {}).get("name") or call.get("name") or "").strip()
         for call in tool_calls
     }
+
+
+def _strip_inline_tool_markup(text: str) -> str:
+    return _DSML_TOOL_BLOCK_RE.sub("", str(text or "")).strip()
+
+
+def _parse_inline_tool_markup(text: str) -> list[dict[str, str]]:
+    tool_calls: list[dict[str, str]] = []
+    for block_match in _DSML_TOOL_BLOCK_RE.finditer(str(text or "")):
+        block = block_match.group(0)
+        for invoke_match in _DSML_INVOKE_RE.finditer(block):
+            args: dict[str, str] = {}
+            body = invoke_match.group("body") or ""
+            for param_match in _DSML_PARAMETER_RE.finditer(body):
+                value = re.sub(r"\s+", " ", param_match.group("value") or "").strip()
+                args[param_match.group("name")] = value
+            tool_calls.append(
+                {
+                    "id": f"inline_dsml_{len(tool_calls)}",
+                    "name": invoke_match.group("name"),
+                    "arguments": json.dumps(args, ensure_ascii=False),
+                }
+            )
+    return tool_calls
 
 
 def _needs_mastery_quiz_card_repair(
@@ -1214,6 +1315,7 @@ __all__ = [
     "AgentLoop",
     "AgentLoopState",
     "InlineThinkFilter",
+    "InlineToolMarkupFilter",
     "LLMCallResult",
     "LOOP_STAGE",
     "LoopOutcome",
