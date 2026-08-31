@@ -320,6 +320,7 @@ function getCapability(value: string | null): CapabilityDef {
 
 function cognispherePathTitle(pathId: string): string {
   const domain = pathId.slice("csphere-".length);
+  if (domain === "ai_infra") return "AI Infrastructure Learning Path";
   if (domain === "aws_certification") return "AWS Certification Learning Path";
   if (domain === "ap_calculus") return "AP Calculus Learning Path";
   if (domain === "leetcode") return "LeetCode Learning Path";
@@ -368,6 +369,7 @@ export default function ChatPage() {
     sessionIdParam && isCognispherePathId(sessionIdParam) ? sessionIdParam : null;
   const chatSessionIdParam = masteryPathParam ? null : sessionIdParam;
   const masteryPathTitle = masteryPathParam ? cognispherePathTitle(masteryPathParam) : "";
+  const isAiInfraMasteryPath = masteryPathParam === "csphere-ai_infra";
   const { setActiveSessionId, language: appLanguage } = useAppShell();
 
   const {
@@ -2175,6 +2177,59 @@ export default function ChatPage() {
                       {masteryPathTitle || t(welcomeGreeting)}
                     </h1>
                   </div>
+                  {isAiInfraMasteryPath ? (
+                    <div className="mx-auto flex w-full max-w-[620px] flex-col gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)]/70 p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--muted)]/35">
+                          <GraduationCap className="h-4 w-4 text-[var(--primary)]" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium text-[var(--foreground)]">
+                            {goalTr("以对话方式学习 AI Infra", "Learn AI Infra through guided conversation")}
+                          </div>
+                          <p className="mt-1 text-xs leading-relaxed text-[var(--muted-foreground)]">
+                            {goalTr(
+                              "先用 Mastery Path 建立概念、边界和判断力；需要证据时再进入 Twin Lab 运行实验。",
+                              "Use Mastery Path first for concepts, boundaries, and judgment; open Twin Lab when you need evidence.",
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="grid gap-2 sm:grid-cols-3">
+                        <button
+                          type="button"
+                          disabled={masteryProgressBusy}
+                          onClick={() => void handleNewMasterySession("continue")}
+                          className="flex min-w-0 items-center gap-2 rounded-md border border-[var(--primary)]/45 px-3 py-2 text-left text-xs text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <MessageCirclePlus className="h-4 w-4 shrink-0" />
+                          <span className="min-w-0 truncate">
+                            {goalTr("继续对话学习", "Continue in chat")}
+                          </span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => router.push("/space/learning?domains=ai_infra")}
+                          className="flex min-w-0 items-center gap-2 rounded-md border border-[var(--border)] px-3 py-2 text-left text-xs text-[var(--foreground)] hover:bg-[var(--accent)]"
+                        >
+                          <Compass className="h-4 w-4 shrink-0" />
+                          <span className="min-w-0 truncate">
+                            {goalTr("查看学习路径", "View path map")}
+                          </span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => router.push("/space/ai-infra")}
+                          className="flex min-w-0 items-center gap-2 rounded-md border border-[var(--border)] px-3 py-2 text-left text-xs text-[var(--foreground)] hover:bg-[var(--accent)]"
+                        >
+                          <Microscope className="h-4 w-4 shrink-0" />
+                          <span className="min-w-0 truncate">
+                            {goalTr("打开实验证据", "Open lab evidence")}
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
                   {masteryPathParam && (
                     <div className="mx-auto flex w-full max-w-[560px] flex-col items-stretch gap-2 rounded-lg border border-[var(--border)] bg-[var(--card)]/70 p-3">
                       <div className="flex flex-col gap-2 sm:flex-row">
