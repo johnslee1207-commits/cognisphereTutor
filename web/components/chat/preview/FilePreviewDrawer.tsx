@@ -20,7 +20,9 @@ const SvgPreview = dynamic(() => import("./previewers/SvgPreview"));
 const MarkdownPreview = dynamic(() => import("./previewers/MarkdownPreview"));
 const TextPreview = dynamic(() => import("./previewers/TextPreview"));
 const DocxPreview = dynamic(() => import("./previewers/DocxPreview"));
-const XlsxPreview = dynamic(() => import("./previewers/XlsxPreview"));
+const XlsxPreview = dynamic(() => import("./previewers/XlsxPreview"), {
+  ssr: false,
+});
 const OfficeTextPreview = dynamic(
   () => import("./previewers/OfficeTextPreview"),
 );

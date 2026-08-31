@@ -77,6 +77,7 @@ const DocxPreview = dynamic(
 );
 const XlsxPreview = dynamic(
   () => import("@/components/chat/preview/previewers/XlsxPreview"),
+  { ssr: false },
 );
 const OfficeTextPreview = dynamic(
   () => import("@/components/chat/preview/previewers/OfficeTextPreview"),
