@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  assessAiInfraDiagnosisResponse,
   filterAiInfraCoursePaths,
   getAiInfraCourseContextStats,
   getAiInfraCoverageSummary,
@@ -301,4 +302,36 @@ test("getAiInfraReviewQueue prioritizes weakest unfinished units", () => {
   assert.equal(queue.length, 1);
   assert.equal(queue[0]?.unit.unit_id, "unit.inference");
   assert.equal(queue[0]?.mastery.level, "not_started");
+});
+
+test("assessAiInfraDiagnosisResponse checks claim shape and rubric signals", () => {
+  const assessment = assessAiInfraDiagnosisResponse(
+    {
+      expected_claim_shape: {
+        symptom: "observable fact only",
+        evidence: "runtime version",
+        "claim strength": "bounded_to_current_lab",
+        "missing proof": "production scale",
+      },
+      rubric: ["cleanup proof", "local lifecycle only"],
+    },
+    "Symptom: container exits early. Evidence: cleanup proof and runtime version. Claim strength: bounded to current local lifecycle only. Missing proof: production scale parity.",
+  );
+
+  assert.equal(assessment.passed, true);
+  assert.equal(assessment.scorePct >= 70, true);
+  assert.deepEqual(assessment.missingClaimKeys, []);
+
+  const weak = assessAiInfraDiagnosisResponse(
+    {
+      expected_claim_shape: {
+        symptom: "observable fact only",
+        evidence: "runtime version",
+      },
+    },
+    "It is broken.",
+  );
+
+  assert.equal(weak.passed, false);
+  assert.deepEqual(weak.missingClaimKeys, ["symptom", "evidence"]);
 });

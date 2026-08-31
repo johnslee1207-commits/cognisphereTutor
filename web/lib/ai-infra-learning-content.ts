@@ -175,6 +175,15 @@ export interface AiInfraReviewQueueItem {
   mastery: AiInfraUnitMasteryState;
 }
 
+export interface AiInfraDiagnosisResponseAssessment {
+  scorePct: number;
+  passed: boolean;
+  matchedClaimKeys: string[];
+  missingClaimKeys: string[];
+  rubricSignals: string[];
+  feedback: string;
+}
+
 const PRIORITY_COURSE_DOMAINS = [
   "containers",
   "kubernetes",
@@ -357,6 +366,7 @@ export function getAiInfraCourseContextStats(
 export function getAiInfraUnitMasteryState(params: {
   unit: AiInfraKnowledgeUnitCard | null | undefined;
   quizCorrect?: boolean;
+  diagnosisPassed?: boolean;
   diagnosisNote?: string;
   reflectionNote?: string;
   completed?: boolean;
@@ -378,7 +388,8 @@ export function getAiInfraUnitMasteryState(params: {
   const hasTwinPractice = Boolean(
     (unit.standard_learning?.twin_practice?.lab_refs || unit.lab_refs || []).length,
   );
-  const diagnosisReady = normalizedLength(params.diagnosisNote) >= 20;
+  const diagnosisReady =
+    params.diagnosisPassed ?? normalizedLength(params.diagnosisNote) >= 20;
   const reflectionReady = normalizedLength(params.reflectionNote) >= 20;
   const labEvidenceReady = Boolean(params.hasLabEvidence);
   const checks: AiInfraUnitMasteryCheck[] = [
@@ -442,13 +453,19 @@ export function getAiInfraReviewQueue(params: {
     .map((unit, index) => {
       const quiz = unit.standard_learning?.assessment?.quiz?.[0];
       const answer = quiz?.question_id ? quizAnswers[quiz.question_id] : undefined;
+      const drill = unit.standard_learning?.assessment?.diagnosis_drills?.[0];
+      const diagnosisNote = unit.unit_id ? diagnosisNotes[unit.unit_id] : "";
+      const diagnosisAssessment = drill
+        ? assessAiInfraDiagnosisResponse(drill, diagnosisNote)
+        : null;
       return {
         index,
         unit,
         mastery: getAiInfraUnitMasteryState({
           unit,
           quizCorrect: Boolean(answer && answer === quiz?.answer),
-          diagnosisNote: unit.unit_id ? diagnosisNotes[unit.unit_id] : "",
+          diagnosisPassed: diagnosisAssessment?.passed,
+          diagnosisNote,
           reflectionNote: unit.unit_id ? reflectionNotes[unit.unit_id] : "",
           hasLabEvidence: unit.unit_id ? labEvidenceByUnitId[unit.unit_id] : false,
           completed: Boolean(unit.unit_id && completedUnits[unit.unit_id]),
@@ -466,6 +483,46 @@ export function getAiInfraReviewQueue(params: {
     unit,
     mastery,
   }));
+}
+
+export function assessAiInfraDiagnosisResponse(
+  drill: AiInfraDiagnosisDrill | null | undefined,
+  response: string | undefined,
+): AiInfraDiagnosisResponseAssessment {
+  const text = normalizeForSearch(response || "");
+  const claimKeys = Object.keys(drill?.expected_claim_shape || {});
+  const matchedClaimKeys = claimKeys.filter((key) =>
+    tokenAliases(key).some((token) => text.includes(token)),
+  );
+  const missingClaimKeys = claimKeys.filter((key) => !matchedClaimKeys.includes(key));
+  const rubricSignals = (drill?.rubric || []).filter((item) =>
+    textTokens([item]).some((token) => text.includes(token)),
+  );
+  const structureScore = claimKeys.length
+    ? matchedClaimKeys.length / claimKeys.length
+    : normalizedLength(response) >= 20
+      ? 1
+      : 0;
+  const rubricScore = drill?.rubric?.length
+    ? Math.min(1, rubricSignals.length / Math.min(3, drill.rubric.length))
+    : 1;
+  const substanceScore = Math.min(1, normalizedLength(response) / 160);
+  const scorePct = Math.round(
+    (structureScore * 0.5 + rubricScore * 0.25 + substanceScore * 0.25) * 100,
+  );
+  const passed = scorePct >= 70 && missingClaimKeys.length === 0;
+  return {
+    scorePct,
+    passed,
+    matchedClaimKeys,
+    missingClaimKeys,
+    rubricSignals,
+    feedback: passed
+      ? "Diagnosis is structured enough for evidence review"
+      : missingClaimKeys.length
+        ? `Missing claim fields: ${missingClaimKeys.join(", ")}`
+        : "Add more evidence-specific reasoning before marking complete",
+  };
 }
 
 export function prioritizeAiInfraContent(params: {
@@ -529,6 +586,21 @@ function masteryLevelForScore(scorePct: number): AiInfraUnitMasteryLevel {
 
 function normalizedLength(value: string | undefined): number {
   return (value || "").trim().replace(/\s+/g, " ").length;
+}
+
+function normalizeForSearch(value: string): string {
+  return value.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function tokenAliases(key: string): string[] {
+  const normalized = normalizeForSearch(key);
+  const aliases: Record<string, string[]> = {
+    symptom: ["symptom", "observable fact", "现象", "症状"],
+    evidence: ["evidence", "proof", "metric", "log", "trace", "证据", "指标", "日志"],
+    "claim strength": ["claim strength", "bounded", "confidence", "主张强度", "边界"],
+    "missing proof": ["missing proof", "missing", "unknown", "unobserved", "缺失证明", "还缺"],
+  };
+  return [normalized, ...(aliases[normalized] || [])];
 }
 
 function scoreLesson(

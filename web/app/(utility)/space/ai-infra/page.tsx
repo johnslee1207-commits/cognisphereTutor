@@ -34,6 +34,7 @@ import {
   type AiInfraStatus,
 } from "@/lib/ai-infra-twin-api";
 import {
+  assessAiInfraDiagnosisResponse,
   filterAiInfraCoursePaths,
   findAiInfraKnowledgeUnit,
   extractAiInfraPluginKnowledge,
@@ -261,6 +262,8 @@ export default function AiInfraTwinPage() {
   const selectedQuizCorrect = Boolean(
     selectedQuizAnswer && selectedQuizAnswer === selectedQuiz?.answer,
   );
+  const selectedDiagnosisDrill =
+    selectedUnit?.standard_learning?.assessment?.diagnosis_drills?.[0];
   const completedUnitIds = useMemo(
     () => new Set(Object.entries(completedUnits).filter(([, done]) => done).map(([unitId]) => unitId)),
     [completedUnits],
@@ -283,6 +286,10 @@ export default function AiInfraTwinPage() {
   const selectedDiagnosisNote = selectedUnit?.unit_id
     ? diagnosisNotes[selectedUnit.unit_id] || ""
     : "";
+  const selectedDiagnosisAssessment = useMemo(
+    () => assessAiInfraDiagnosisResponse(selectedDiagnosisDrill, selectedDiagnosisNote),
+    [selectedDiagnosisDrill, selectedDiagnosisNote],
+  );
   const selectedUnitLabs = useMemo(() => {
     const labRefs = [
       ...(selectedUnit?.standard_learning?.twin_practice?.lab_refs || []),
@@ -338,6 +345,7 @@ export default function AiInfraTwinPage() {
       getAiInfraUnitMasteryState({
         unit: selectedUnit,
         quizCorrect: selectedQuizCorrect,
+        diagnosisPassed: selectedDiagnosisAssessment.passed,
         diagnosisNote: selectedDiagnosisNote,
         reflectionNote: selectedReflection,
         hasLabEvidence: selectedUnitHasLabEvidence,
@@ -346,6 +354,7 @@ export default function AiInfraTwinPage() {
     [
       completedUnits,
       selectedDiagnosisNote,
+      selectedDiagnosisAssessment.passed,
       selectedQuizCorrect,
       selectedReflection,
       selectedUnit,
@@ -1138,6 +1147,21 @@ export default function AiInfraTwinPage() {
                               )}
                               className="mt-1.5 h-16 w-full resize-none rounded-md border border-[var(--border)] bg-transparent p-2 text-[10px] text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
                             />
+                            <div className="mt-1 flex items-center justify-between gap-2 text-[10px]">
+                              <span
+                                className={
+                                  selectedDiagnosisAssessment.passed
+                                    ? "text-emerald-500"
+                                    : "text-amber-500"
+                                }
+                              >
+                                {tr("诊断评分", "Diagnosis score")}{" "}
+                                {selectedDiagnosisAssessment.scorePct}%
+                              </span>
+                              <span className="truncate text-[var(--muted-foreground)]">
+                                {selectedDiagnosisAssessment.feedback}
+                              </span>
+                            </div>
                           </div>
                         )}
                       </div>
@@ -1182,7 +1206,7 @@ export default function AiInfraTwinPage() {
                           disabled={
                             !selectedUnit.unit_id ||
                             !selectedQuizCorrect ||
-                            selectedDiagnosisNote.trim().length < 20 ||
+                            Boolean(selectedDiagnosisDrill && !selectedDiagnosisAssessment.passed) ||
                             selectedReflection.trim().length < 20
                           }
                           onClick={() =>
