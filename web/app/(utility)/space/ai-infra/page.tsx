@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   BookOpenCheck,
+  CheckCircle2,
   Cpu,
   ExternalLink,
   GraduationCap,
@@ -10,6 +11,7 @@ import {
   Network,
   Play,
   RefreshCw,
+  Search,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -27,8 +29,10 @@ import {
   type AiInfraStatus,
 } from "@/lib/ai-infra-twin-api";
 import {
+  filterAiInfraCoursePaths,
   findAiInfraKnowledgeUnit,
   extractAiInfraPluginKnowledge,
+  getAiInfraCourseProgress,
   getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
 } from "@/lib/ai-infra-learning-content";
@@ -54,6 +58,9 @@ export default function AiInfraTwinPage() {
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
+  const [courseQuery, setCourseQuery] = useState("");
+  const [completedUnits, setCompletedUnits] = useState<Record<string, boolean>>({});
+  const [reflectionNotes, setReflectionNotes] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [lastRun, setLastRun] = useState<Record<string, unknown> | null>(null);
 
@@ -127,12 +134,18 @@ export default function AiInfraTwinPage() {
     () => getPriorityAiInfraCoursePaths(pluginKnowledge),
     [pluginKnowledge],
   );
+  const visibleCoursePaths = useMemo(
+    () => filterAiInfraCoursePaths(priorityCoursePaths, courseQuery),
+    [courseQuery, priorityCoursePaths],
+  );
   const selectedCourse = useMemo(
     () =>
+      visibleCoursePaths.find((path) => path.course_path_id === selectedCourseId) ||
       priorityCoursePaths.find((path) => path.course_path_id === selectedCourseId) ||
+      visibleCoursePaths[0] ||
       priorityCoursePaths[0] ||
       null,
-    [priorityCoursePaths, selectedCourseId],
+    [priorityCoursePaths, selectedCourseId, visibleCoursePaths],
   );
   const selectedCourseUnits = useMemo(
     () =>
@@ -152,6 +165,20 @@ export default function AiInfraTwinPage() {
   const selectedQuizAnswer = selectedQuiz?.question_id
     ? quizAnswers[selectedQuiz.question_id]
     : undefined;
+  const selectedQuizCorrect = Boolean(
+    selectedQuizAnswer && selectedQuizAnswer === selectedQuiz?.answer,
+  );
+  const completedUnitIds = useMemo(
+    () => new Set(Object.entries(completedUnits).filter(([, done]) => done).map(([unitId]) => unitId)),
+    [completedUnits],
+  );
+  const selectedCourseProgress = useMemo(
+    () => getAiInfraCourseProgress(selectedCourse, completedUnitIds),
+    [completedUnitIds, selectedCourse],
+  );
+  const selectedReflection = selectedUnit?.unit_id
+    ? reflectionNotes[selectedUnit.unit_id] || ""
+    : "";
   const expertUnits = useMemo(
     () =>
       knowledgeUnits.filter((unit) =>
@@ -521,9 +548,20 @@ export default function AiInfraTwinPage() {
               </span>
             </div>
 
-            <div className="grid grid-cols-4 gap-2">
-              {priorityCoursePaths.slice(0, 4).map((path) => {
+            <label className="mb-2 flex h-8 items-center gap-2 rounded-md border border-[var(--border)] px-2 text-[11px] text-[var(--muted-foreground)]">
+              <Search className="h-3.5 w-3.5 shrink-0" />
+              <input
+                value={courseQuery}
+                onChange={(event) => setCourseQuery(event.target.value)}
+                placeholder={tr("搜索 19 条路径", "Search 19 paths")}
+                className="min-w-0 flex-1 bg-transparent text-xs text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
+              />
+            </label>
+
+            <div className="grid max-h-28 grid-cols-4 gap-2 overflow-y-auto pr-1">
+              {visibleCoursePaths.map((path, index) => {
                 const active = selectedCourse?.course_path_id === path.course_path_id;
+                const progress = getAiInfraCourseProgress(path, completedUnitIds);
                 return (
                   <button
                     key={path.course_path_id || path.title}
@@ -538,14 +576,21 @@ export default function AiInfraTwinPage() {
                         : "border-[var(--border)] hover:bg-[var(--accent)]"
                     }`}
                   >
-                    <span className="block truncate text-xs font-medium text-[var(--foreground)]">
-                      {path.title}
+                    <span className="flex items-center justify-between gap-2">
+                      <span className="min-w-0 truncate text-xs font-medium text-[var(--foreground)]">
+                        {path.title}
+                      </span>
+                      {index < 4 && (
+                        <span className="shrink-0 text-[10px] text-[var(--muted-foreground)]">
+                          P{index + 1}
+                        </span>
+                      )}
                     </span>
                     <span className="mt-1 block truncate text-[10px] uppercase text-[var(--muted-foreground)]">
                       {(path.levels || []).join(" · ")}
                     </span>
                     <span className="mt-1 block text-[10px] text-[var(--muted-foreground)]">
-                      {tr("单元", "Units")} {path.unit_refs?.length ?? 0} ·{" "}
+                      {tr("完成", "Done")} {progress.completed}/{progress.total} ·{" "}
                       {tr("Labs", "Labs")} {path.lab_refs?.length ?? 0}
                     </span>
                   </button>
@@ -556,12 +601,24 @@ export default function AiInfraTwinPage() {
             {selectedCourse && (
               <div className="mt-3 grid grid-cols-[minmax(170px,0.45fr)_minmax(0,1fr)] gap-3">
                 <div className="min-w-0 rounded-md border border-[var(--border)] p-2">
-                  <div className="mb-2 text-[11px] font-medium text-[var(--foreground)]">
-                    {tr("层级", "Levels")}
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-medium text-[var(--foreground)]">
+                      {tr("层级", "Levels")}
+                    </span>
+                    <span className="text-[10px] text-[var(--muted-foreground)]">
+                      {selectedCourseProgress.pct}%
+                    </span>
+                  </div>
+                  <div className="mb-2 h-1.5 overflow-hidden rounded-full bg-[var(--muted)]">
+                    <div
+                      className="h-full rounded-full bg-[var(--primary)]"
+                      style={{ width: `${selectedCourseProgress.pct}%` }}
+                    />
                   </div>
                   <div className="space-y-1.5">
                     {selectedCourseUnits.map((unit) => {
                       const active = selectedUnit?.unit_id === unit.unit_id;
+                      const done = Boolean(unit.unit_id && completedUnits[unit.unit_id]);
                       return (
                         <button
                           key={unit.unit_id || unit.title}
@@ -573,7 +630,10 @@ export default function AiInfraTwinPage() {
                               : "border-[var(--border)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
                           }`}
                         >
-                          <span className="block truncate uppercase">{unit.level || "unit"}</span>
+                          <span className="flex items-center justify-between gap-2">
+                            <span className="min-w-0 truncate uppercase">{unit.level || "unit"}</span>
+                            {done && <CheckCircle2 className="h-3 w-3 shrink-0 text-emerald-500" />}
+                          </span>
                           <span className="mt-0.5 block truncate">{unit.title}</span>
                         </button>
                       );
@@ -617,8 +677,13 @@ export default function AiInfraTwinPage() {
                     <p className="mt-2 line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
                       {selectedUnit.body || selectedUnit.summary}
                     </p>
+                    {selectedCourse.capstone_task && (
+                      <p className="mt-1 line-clamp-2 text-[10px] text-[var(--muted-foreground)]">
+                        {tr("Capstone", "Capstone")}: {selectedCourse.capstone_task}
+                      </p>
+                    )}
 
-                    <div className="mt-2 grid grid-cols-2 gap-2">
+                    <div className="mt-2 grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.9fr)] gap-2">
                       <div className="min-w-0">
                         <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
                           {tr("学习步骤", "Learning steps")}
@@ -684,7 +749,7 @@ export default function AiInfraTwinPage() {
                             )}
                           </div>
                         )}
-                        {selectedUnit.standard_learning?.assessment?.diagnosis_drills?.[0] && (
+                          {selectedUnit.standard_learning?.assessment?.diagnosis_drills?.[0] && (
                           <div className="mt-1.5 rounded-md border border-[var(--border)] p-2">
                             <div className="line-clamp-1 text-[10px] uppercase text-[var(--muted-foreground)]">
                               {tr("诊断任务", "Diagnosis drill")}
@@ -694,6 +759,49 @@ export default function AiInfraTwinPage() {
                             </div>
                           </div>
                         )}
+                      </div>
+
+                      <div className="min-w-0">
+                        <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
+                          {tr("反思与完成", "Reflect and complete")}
+                        </div>
+                        <textarea
+                          value={selectedReflection}
+                          onChange={(event) =>
+                            selectedUnit.unit_id &&
+                            setReflectionNotes((prev) => ({
+                              ...prev,
+                              [selectedUnit.unit_id as string]: event.target.value,
+                            }))
+                          }
+                          placeholder={tr(
+                            "写下可被当前证据支持的结论，以及还缺什么证明。",
+                            "Write the claim supported by current evidence, and what proof is still missing.",
+                          )}
+                          className="h-24 w-full resize-none rounded-md border border-[var(--border)] bg-transparent p-2 text-[11px] text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
+                        />
+                        <button
+                          type="button"
+                          disabled={!selectedUnit.unit_id || !selectedQuizCorrect}
+                          onClick={() =>
+                            selectedUnit.unit_id &&
+                            setCompletedUnits((prev) => ({
+                              ...prev,
+                              [selectedUnit.unit_id as string]: true,
+                            }))
+                          }
+                          className="mt-1.5 inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-[var(--primary)] px-2 py-1.5 text-[11px] text-[var(--primary-foreground)] disabled:opacity-50"
+                        >
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          {completedUnits[selectedUnit.unit_id || ""]
+                            ? tr("已完成", "Completed")
+                            : tr("标记完成", "Mark complete")}
+                        </button>
+                        <div className="mt-1 text-[10px] text-[var(--muted-foreground)]">
+                          {selectedQuizCorrect
+                            ? tr("测验已通过，可以完成该单元。", "Quiz passed. This unit can be completed.")
+                            : tr("先完成测验，再记录学习完成。", "Pass the quiz before completing the unit.")}
+                        </div>
                       </div>
                     </div>
 

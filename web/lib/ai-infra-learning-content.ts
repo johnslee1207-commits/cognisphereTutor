@@ -101,6 +101,12 @@ export interface PrioritizedAiInfraContent {
   matchedKnowledgeCount: number;
 }
 
+export interface AiInfraCourseProgress {
+  completed: number;
+  total: number;
+  pct: number;
+}
+
 const PRIORITY_COURSE_DOMAINS = [
   "containers",
   "kubernetes",
@@ -132,6 +138,42 @@ export function getPriorityAiInfraCoursePaths(
     ),
     ...courses.filter((course) => !PRIORITY_COURSE_DOMAINS.includes(course.domain || "")),
   ];
+}
+
+export function filterAiInfraCoursePaths(
+  courses: AiInfraCoursePath[],
+  query: string,
+): AiInfraCoursePath[] {
+  const tokens = textTokens([query]);
+  if (tokens.length === 0) return courses;
+  return courses.filter((course) => {
+    const haystack = new Set(
+      textTokens([
+        course.course_path_id,
+        course.title,
+        course.domain,
+        course.capstone_task,
+        ...(course.levels || []),
+        ...(course.lab_refs || []),
+        ...(course.unit_refs || []),
+      ]),
+    );
+    return tokens.every((token) => haystack.has(token));
+  });
+}
+
+export function getAiInfraCourseProgress(
+  course: AiInfraCoursePath | null | undefined,
+  completedUnitIds: Set<string>,
+): AiInfraCourseProgress {
+  const refs = course?.unit_refs || [];
+  if (refs.length === 0) return { completed: 0, total: 0, pct: 0 };
+  const completed = refs.filter((unitId) => completedUnitIds.has(unitId)).length;
+  return {
+    completed,
+    total: refs.length,
+    pct: Math.round((completed / refs.length) * 100),
+  };
 }
 
 export function findAiInfraKnowledgeUnit(

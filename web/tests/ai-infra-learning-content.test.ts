@@ -2,7 +2,9 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  filterAiInfraCoursePaths,
   findAiInfraKnowledgeUnit,
+  getAiInfraCourseProgress,
   getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
   type AiInfraPluginKnowledge,
@@ -49,6 +51,7 @@ const knowledge: AiInfraPluginKnowledge = {
         domain: "containers",
         title: "Containers",
         unit_refs: ["unit.container"],
+        lab_refs: ["lab.container.docker-lifecycle"],
       },
       {
         course_path_id: "course.inference",
@@ -143,4 +146,29 @@ test("findAiInfraKnowledgeUnit resolves full units from course path refs", () =>
   const unit = findAiInfraKnowledgeUnit(knowledge, "unit.container");
 
   assert.equal(unit?.title, "Docker lifecycle lab pattern");
+});
+
+test("filterAiInfraCoursePaths matches course title, domain, and labs", () => {
+  const courses = getPriorityAiInfraCoursePaths(knowledge);
+
+  assert.deepEqual(
+    filterAiInfraCoursePaths(courses, "serving").map((course) => course.domain),
+    ["inference_serving"],
+  );
+  assert.deepEqual(
+    filterAiInfraCoursePaths(courses, "docker").map((course) => course.domain),
+    ["containers"],
+  );
+});
+
+test("getAiInfraCourseProgress computes completed unit percentage", () => {
+  const course = getPriorityAiInfraCoursePaths(knowledge).find(
+    (item) => item.domain === "containers",
+  );
+
+  assert.deepEqual(getAiInfraCourseProgress(course, new Set(["unit.container"])), {
+    completed: 1,
+    total: 1,
+    pct: 100,
+  });
 });
