@@ -1545,6 +1545,115 @@ async def test_mastery_blocks_back_to_back_quiz_after_mastered_grade(
 
 
 @pytest.mark.asyncio
+async def test_mastery_blocks_say_continue_after_mastered_grade(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _PostGradeRegistry(_Registry):
+        def build_openai_schemas(self, _enabled):
+            return [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "mastery_grade",
+                        "description": "Grade answer",
+                        "parameters": {"type": "object", "properties": {}},
+                    },
+                }
+            ]
+
+        async def execute(self, name: str, **kwargs):
+            self.executed.append({"name": name, "kwargs": kwargs})
+            return ToolResult(
+                content=json.dumps(
+                    {
+                        "is_correct": True,
+                        "mastered": True,
+                        "next": {
+                            "knowledge_point_id": "observability-golden-signals",
+                            "title": "Observability and golden signals",
+                        },
+                    }
+                ),
+                success=True,
+                metadata={
+                    "mastery_grade": {
+                        "is_correct": True,
+                        "mastered": True,
+                        "next": {
+                            "knowledge_point_id": "observability-golden-signals",
+                            "title": "Observability and golden signals",
+                        },
+                    }
+                },
+            )
+
+    registry = _PostGradeRegistry()
+    client = _ScriptedChatClient(
+        [
+            [
+                _llm_chunk(
+                    tool_calls=[
+                        {
+                            "id": "call-grade",
+                            "name": "mastery_grade",
+                            "arguments": json.dumps({"answer": "B"}),
+                        }
+                    ]
+                )
+            ],
+            [
+                _llm_chunk(
+                    content=(
+                        "Runtime readiness is now mastered. Ready to continue "
+                        "when you are - just say continue."
+                    )
+                )
+            ],
+            [
+                _llm_chunk(
+                    content=(
+                        "Runtime readiness is cleared. Next up: Observability "
+                        "and golden signals. In this objective, you learn how "
+                        "to tell whether a running AI infrastructure service is "
+                        "healthy from evidence instead of vibes. The four golden "
+                        "signals are latency, traffic, errors, and saturation. "
+                        "Together they help you separate a slow model endpoint, "
+                        "an overloaded runtime, and a request failure pattern."
+                    )
+                )
+            ],
+        ]
+    )
+    pipeline = AgenticChatPipeline(language="en")
+    pipeline.registry = registry
+    monkeypatch.setattr(
+        pipeline,
+        "_compose_enabled_tools",
+        lambda _context: ["mastery_grade"],
+    )
+    monkeypatch.setattr(pipeline, "_build_openai_client", lambda: client)
+
+    events = await _run(
+        pipeline,
+        UnifiedContext(
+            session_id="s1",
+            user_message="B",
+            enabled_tools=["mastery_grade"],
+            metadata={"mastery_mode": True, "mastery_path_id": "csphere-ai_infra"},
+        ),
+    )
+
+    assert client.call_count == 3
+    repair_instruction = client.calls[2]["messages"][-1]["content"]
+    assert "asked the learner to say continue" in repair_instruction
+    assert [call["name"] for call in registry.executed] == ["mastery_grade"]
+    result = _result(events)
+    assert result.metadata["completed"] is True
+    assert "Next up: Observability" in result.metadata["response"]
+    assert "say continue" not in result.metadata["response"]
+
+
+@pytest.mark.asyncio
 async def test_round_budget_forces_tool_less_finish(monkeypatch: pytest.MonkeyPatch) -> None:
     registry = _Registry()
     client = _ScriptedChatClient(

@@ -9,6 +9,7 @@
 - memory / procedure 类：先用 `mastery_quiz` 登记题目与答案，然后**始终用 `ask_user` 工具**把题目呈现成可点选的卡片让学习者作答——绝不要把选项写成纯文字的 1./2./3.。选择题必须把每个选项的完整正文按标签顺序传入 `mastery_quiz.options`（例如 `A：……`、`B：……`），再给 `ask_user` 使用 A / B / C … 短标签，并把相同正文放进对应 description；正确标签设为 `mastery_quiz` 的 `expected_answer`。绝不能只把 A/B/C/D 裸标签传给 `mastery_quiz.options`。简答题用 `ask_user` 的自由输入。收到作答后用 `mastery_grade` 批改。在 `mastery_grade` 返回 `mastered: true` 之前，持续打磨同一个知识点。
 - concept / design 类：mini-lesson 后优先给一个贴近认证考试的快速检查（multiple choice 或 true/false，用 `mastery_quiz` + `ask_user` 呈现，再用 `mastery_grade` 批改）。除非 lesson contract 明确 `free_response_policy.required_now: true`，否则自由复述是可选项，不是默认必答；只有当复述确实体现理解时，才用 `mastery_assess` 记录真正掌握。
 - 当 `mastery_grade` 或 `mastery_assess` 已经通过一个知识点后，不要连续串出下一个 quiz 卡片；必须先把 `next` 指向的新知识点作为实质 mini-lesson 讲清楚，然后才可以注册下一张 quick check。
+- 当一个知识点已掌握且路径还有下一个知识点时，本轮直接按顺序继续到下一个 mini-lesson；不要以“输入继续/说 continue”结束。Continue 应作为界面流程控件，而不是聊天口令。
 - `review`：有到期的间隔复习项——再考一次以巩固。
 - `complete`：祝贺学习者并总结其已掌握的内容。
 

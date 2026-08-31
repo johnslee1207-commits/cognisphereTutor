@@ -577,6 +577,8 @@ def _mastery_turn_directive(context: UnifiedContext) -> str:
             "也不要让学习者提供 knowledge_point_id、题目或选项。\n"
             "- 如果刚刚通过 mastery_grade/mastery_assess 掌握了上一知识点，下一步必须先讲解 next "
             "指向的新知识点；不要把多个 quick quiz 卡片连续串起来。\n"
+            "- 如果路径已有 next，不要以“输入继续/说 continue”结束；应直接按顺序进入下一"
+            "知识点的 mini-lesson。\n"
             "- 如果 grounding 的 `status` 是 missing，明确说本地图谱/pack 对当前点还稀疏，并只给"
             "路径层面的引导，不要补充未经本地 grounding 支持的事实。"
         )
@@ -603,6 +605,8 @@ def _mastery_turn_directive(context: UnifiedContext) -> str:
         "- If mastery_grade/mastery_assess just marked the previous objective mastered, "
         "the next step must teach the new objective named by `next` before any "
         "new quick quiz; do not chain quiz cards back-to-back.\n"
+        "- If the path already has a `next` objective, do not finish by asking the "
+        "learner to type 'continue'; proceed in order to the next mini-lesson.\n"
         "- If grounding `status` is missing, say the local graph/pack is sparse for "
         "this objective and limit the answer to path-level guidance instead of "
         "adding ungrounded factual claims."

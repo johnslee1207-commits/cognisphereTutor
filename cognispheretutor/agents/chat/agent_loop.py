@@ -262,6 +262,7 @@ class AgentLoop:
         mastery_ask_registration_repair_attempts = 0
         mastery_grade_repair_attempts = 0
         mastery_post_grade_lesson_repair_attempts = 0
+        mastery_continue_wait_repair_attempts = 0
         for _round in range(max(1, self.pipeline.effective_max_rounds(self.context))):
             try:
                 result = await self._call_llm(
@@ -404,6 +405,38 @@ class AgentLoop:
                         {
                             "role": "user",
                             "content": _mastery_quiz_card_repair_instruction(final_text),
+                        }
+                    )
+                    continue
+                if _needs_mastery_continue_wait_repair(
+                    context=self.context,
+                    final_text=final_text,
+                    gate_cleared_this_turn=state.mastery_gate_cleared,
+                ):
+                    if mastery_continue_wait_repair_attempts >= 2:
+                        return await self._finalize_finish(final_text)
+                    mastery_continue_wait_repair_attempts += 1
+                    await self.stream.progress(
+                        self.pipeline._t(
+                            "notices.mastery_continue_wait_repaired",
+                            default=(
+                                "Detected a mastered objective ending with a "
+                                "manual continue prompt; asking the model to "
+                                "continue the ordered learning flow."
+                            ),
+                        ),
+                        source="chat",
+                        stage=LOOP_STAGE,
+                        metadata={
+                            "trace_kind": "warning",
+                            "mastery_continue_wait_repair": True,
+                        },
+                    )
+                    messages.append({"role": "assistant", "content": result.text})
+                    messages.append(
+                        {
+                            "role": "user",
+                            "content": _mastery_continue_wait_instruction(),
                         }
                     )
                     continue
@@ -1015,6 +1048,37 @@ def _needs_mastery_post_grade_lesson_repair(
     return not _looks_like_mini_lesson(pre_tool_text)
 
 
+def _needs_mastery_continue_wait_repair(
+    *,
+    context: UnifiedContext,
+    final_text: str,
+    gate_cleared_this_turn: bool,
+) -> bool:
+    if not context.metadata.get("mastery_mode"):
+        return False
+    if not gate_cleared_this_turn:
+        return False
+    text = re.sub(r"\s+", " ", str(final_text or "")).strip().lower()
+    if not text:
+        return False
+    wait_patterns = (
+        "say continue",
+        "type continue",
+        "ready to continue",
+        "continue when you are",
+        "when you're ready",
+        "when you are ready",
+        "just say continue",
+        "reply continue",
+        "回复继续",
+        "输入继续",
+        "说继续",
+        "准备好后继续",
+        "准备好了再继续",
+    )
+    return any(pattern in text for pattern in wait_patterns)
+
+
 def _looks_like_mini_lesson(text: str) -> bool:
     compact = re.sub(r"\s+", " ", str(text or "")).strip()
     if len(compact) < 420:
@@ -1109,6 +1173,22 @@ def _mastery_lesson_before_quiz_instruction() -> str:
         "4. After that mini-lesson, you may register exactly one quick multiple-"
         "choice check with mastery_quiz and present it with ask_user. If you are "
         "not ready to teach the mini-lesson, finish with the lesson only."
+    )
+
+
+def _mastery_continue_wait_instruction() -> str:
+    return (
+        "You just cleared a mastery objective, but your last answer asked the "
+        "learner to say continue. In mastery mode, do not wait for a chat command "
+        "when the current path already has a next objective.\n\n"
+        "Repair this now:\n"
+        "1. Briefly acknowledge the cleared objective.\n"
+        "2. Continue in sequence to the next objective from mastery_grade.next or "
+        "the latest mastery_status result.\n"
+        "3. Teach that next objective as a beginner-friendly mini-lesson using "
+        "the local plugin grounding.\n"
+        "4. Do not ask the learner to type continue. Do not register the next "
+        "quiz until after the mini-lesson."
     )
 
 
