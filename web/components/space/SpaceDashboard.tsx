@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import {
   ArrowUpRight,
   ClipboardList,
+  Cpu,
   GraduationCap,
   History,
   NotebookPen,
@@ -37,7 +38,8 @@ type DashKey =
   | "question_bank"
   | "personas"
   | "skills"
-  | "mastery_path";
+  | "mastery_path"
+  | "ai_infra";
 
 interface DashboardItem {
   key: DashKey;
@@ -119,6 +121,22 @@ const GROUPS: DashboardGroup[] = [
         load: async () =>
           (await fetchAllProgress()).summaries.filter((s) => s.kp_count > 0)
             .length,
+      },
+      {
+        key: "ai_infra",
+        href: "/space/learning?domains=ai_infra",
+        icon: Cpu,
+        title: { zh: "AI Infra Mastery", en: "AI Infra Mastery" },
+        blurb: {
+          zh: "先走标准学习路径，再进入孪生实验与证据复盘。",
+          en: "Start with standard learning, then enter twin labs and evidence review.",
+        },
+        unit: { zh: "个 Lab 可实践", en: "practice labs" },
+        tile: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400",
+        load: async () => {
+          const mod = await import("@/lib/ai-infra-twin-api");
+          return (await mod.fetchAiInfraStatus()).summary.counts?.labs ?? 0;
+        },
       },
       {
         key: "personas",

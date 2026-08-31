@@ -1,0 +1,222 @@
+import type { AiInfraLab } from "./ai-infra-twin-api";
+import type { HandshakeResult } from "./cognisphere-learning-api";
+
+export interface AiInfraLessonCard {
+  lesson_id?: string;
+  track_id?: string;
+  title?: string;
+  summary?: string;
+  outcomes?: string[];
+  lab_refs?: string[];
+  unit_refs?: string[];
+}
+
+export interface AiInfraKnowledgeUnitCard {
+  unit_id?: string;
+  title?: string;
+  level?: string;
+  body?: string;
+  summary?: string;
+  teaching_points?: string[];
+  topic_family_id?: string;
+  source_ids?: string[];
+  lab_refs?: string[];
+  review_status?: string;
+  standard_learning?: {
+    estimated_minutes?: number;
+    steps?: { phase?: string; task?: string }[];
+    assessment?: {
+      quiz?: unknown[];
+      diagnosis_drills?: unknown[];
+      reflection_prompts?: string[];
+    };
+    twin_practice?: { lab_refs?: string[]; post_lab_evidence?: string[] };
+  };
+}
+
+export interface AiInfraCoursePath {
+  course_path_id?: string;
+  title?: string;
+  domain?: string;
+  levels?: string[];
+  unit_refs?: string[];
+  lab_refs?: string[];
+  capstone_task?: string;
+  review_status?: string;
+}
+
+export interface AiInfraPluginKnowledge {
+  pack_metadata?: { title?: string; version?: string };
+  tracks?: unknown[];
+  learning_surface?: {
+    lesson_cards?: AiInfraLessonCard[];
+    knowledge_unit_cards?: AiInfraKnowledgeUnitCard[];
+    trusted_source_coverage?: AiInfraPluginKnowledge["trusted_source_coverage"];
+    standard_learning_assets?: AiInfraPluginKnowledge["standard_learning_assets"];
+    course_paths?: AiInfraCoursePath[];
+  };
+  lesson_cards?: AiInfraLessonCard[];
+  knowledge_units?: AiInfraKnowledgeUnitCard[];
+  topic_families?: unknown[];
+  course_paths?: AiInfraCoursePath[];
+  twin_backend?: { default_base_url?: string; guided_learning_url?: string };
+  trusted_source_coverage?: {
+    source_count?: number;
+    indexed_documents?: number;
+    topic_count?: number;
+    expert_unit_count?: number;
+    review_status?: string;
+    external_corpus_root?: string;
+  };
+  standard_learning_assets?: {
+    course_path_count?: number;
+    expert_unit_count?: number;
+    quiz_count?: number;
+    diagnosis_drill_count?: number;
+    review_status?: string;
+  };
+}
+
+export interface PrioritizedAiInfraContent {
+  lessonCards: AiInfraLessonCard[];
+  knowledgeUnits: AiInfraKnowledgeUnitCard[];
+  matchedLessonCount: number;
+  matchedKnowledgeCount: number;
+}
+
+export function extractAiInfraPluginKnowledge(
+  handshake: HandshakeResult | null,
+): AiInfraPluginKnowledge | undefined {
+  return (handshake?.export as { bundle?: { knowledge?: unknown } } | undefined)?.bundle
+    ?.knowledge as AiInfraPluginKnowledge | undefined;
+}
+
+export function prioritizeAiInfraContent(params: {
+  knowledge: AiInfraPluginKnowledge | undefined;
+  selectedLab: AiInfraLab | null;
+}): PrioritizedAiInfraContent {
+  const lessonCards =
+    params.knowledge?.lesson_cards ||
+    params.knowledge?.learning_surface?.lesson_cards ||
+    [];
+  const knowledgeUnits =
+    params.knowledge?.knowledge_units ||
+    params.knowledge?.learning_surface?.knowledge_unit_cards ||
+    [];
+
+  if (!params.selectedLab) {
+    return {
+      lessonCards,
+      knowledgeUnits,
+      matchedLessonCount: lessonCards.length,
+      matchedKnowledgeCount: knowledgeUnits.length,
+    };
+  }
+
+  const labId = params.selectedLab.labId;
+  const contextTokens = tokensForLab(params.selectedLab);
+  const scoredLessons = lessonCards.map((lesson, index) => ({
+    item: lesson,
+    index,
+    score: scoreLesson(lesson, labId, contextTokens),
+  }));
+  const matchedTopicFamilies = new Set(
+    scoredLessons
+      .filter((entry) => entry.score >= 100)
+      .map((entry) => entry.item.track_id)
+      .filter((trackId): trackId is string => Boolean(trackId))
+      .flatMap(topicHintsFromTrack),
+  );
+
+  const scoredUnits = knowledgeUnits.map((unit, index) => ({
+    item: unit,
+    index,
+    score: scoreKnowledgeUnit(unit, labId, contextTokens, matchedTopicFamilies),
+  }));
+
+  return {
+    lessonCards: rankByScore(scoredLessons),
+    knowledgeUnits: rankByScore(scoredUnits),
+    matchedLessonCount: scoredLessons.filter((entry) => entry.score >= 100).length,
+    matchedKnowledgeCount: scoredUnits.filter((entry) => entry.score >= 100).length,
+  };
+}
+
+function scoreLesson(
+  lesson: AiInfraLessonCard,
+  labId: string,
+  contextTokens: Set<string>,
+): number {
+  let score = lesson.lab_refs?.includes(labId) ? 100 : 0;
+  for (const token of textTokens([
+    lesson.lesson_id,
+    lesson.track_id,
+    lesson.title,
+    lesson.summary,
+    ...(lesson.outcomes || []),
+  ])) {
+    if (contextTokens.has(token)) score += 1;
+  }
+  return score;
+}
+
+function scoreKnowledgeUnit(
+  unit: AiInfraKnowledgeUnitCard,
+  labId: string,
+  contextTokens: Set<string>,
+  matchedTopicFamilies: Set<string>,
+): number {
+  let score = unit.lab_refs?.includes(labId) ? 100 : 0;
+  if (unit.topic_family_id && matchedTopicFamilies.has(unit.topic_family_id)) {
+    score += 12;
+  }
+  for (const token of textTokens([
+    unit.unit_id,
+    unit.topic_family_id,
+    unit.title,
+    unit.summary,
+    unit.body,
+    ...(unit.teaching_points || []),
+  ])) {
+    if (contextTokens.has(token)) score += 1;
+  }
+  return score;
+}
+
+function rankByScore<T>(entries: Array<{ item: T; index: number; score: number }>): T[] {
+  return [...entries]
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .map((entry) => entry.item);
+}
+
+function tokensForLab(lab: AiInfraLab): Set<string> {
+  return new Set(
+    textTokens([
+      lab.labId,
+      lab.title,
+      lab.role,
+      lab.roleLabel,
+      lab.stage,
+      lab.symptom,
+      lab.learnerTask,
+      lab.executionMode,
+      ...(lab.competencies || []),
+      ...(lab.requiredEvidence || []),
+      ...(lab.diagnosisChoices || []),
+    ]),
+  );
+}
+
+function textTokens(parts: Array<string | undefined>): string[] {
+  return parts
+    .join(" ")
+    .toLowerCase()
+    .split(/[^a-z0-9]+/u)
+    .filter((token) => token.length >= 3);
+}
+
+function topicHintsFromTrack(trackId: string): string[] {
+  const parts = trackId.split(".");
+  const lastPart = parts[parts.length - 1] || trackId;
+  return textTokens([lastPart]);
+}

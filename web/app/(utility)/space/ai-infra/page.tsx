@@ -1,0 +1,662 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  BookOpenCheck,
+  Cpu,
+  ExternalLink,
+  GraduationCap,
+  Loader2,
+  Network,
+  Play,
+  RefreshCw,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+
+import {
+  fetchAiInfraEvidence,
+  fetchAiInfraLab,
+  fetchAiInfraLabs,
+  fetchAiInfraStatus,
+  runAiInfraLab,
+  submitAiInfraDiagnosis,
+  type AiInfraDiagnosisAssessment,
+  type AiInfraEvidence,
+  type AiInfraLab,
+  type AiInfraStatus,
+} from "@/lib/ai-infra-twin-api";
+import {
+  extractAiInfraPluginKnowledge,
+  prioritizeAiInfraContent,
+} from "@/lib/ai-infra-learning-content";
+import {
+  runCognisphereHandshake,
+  type HandshakeResult,
+} from "@/lib/cognisphere-learning-api";
+
+export default function AiInfraTwinPage() {
+  const { i18n } = useTranslation();
+  const router = useRouter();
+  const zh = i18n.language?.toLowerCase().startsWith("zh");
+  const tr = useCallback((cn: string, en: string) => (zh ? cn : en), [zh]);
+  const [status, setStatus] = useState<AiInfraStatus | null>(null);
+  const [labs, setLabs] = useState<AiInfraLab[]>([]);
+  const [evidence, setEvidence] = useState<AiInfraEvidence[]>([]);
+  const [selected, setSelected] = useState<AiInfraLab | null>(null);
+  const [pluginHandshake, setPluginHandshake] = useState<HandshakeResult | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [running, setRunning] = useState(false);
+  const [diagnosing, setDiagnosing] = useState(false);
+  const [diagnosisResult, setDiagnosisResult] = useState<AiInfraDiagnosisAssessment | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [lastRun, setLastRun] = useState<Record<string, unknown> | null>(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [nextStatus, nextLabs, nextEvidence, nextHandshake] = await Promise.all([
+        fetchAiInfraStatus(),
+        fetchAiInfraLabs(),
+        fetchAiInfraEvidence(),
+        runCognisphereHandshake({ domain: "ai_infra", checkMode: "full" }),
+      ]);
+      setStatus(nextStatus);
+      setLabs(nextLabs);
+      setEvidence(nextEvidence);
+      setPluginHandshake(nextHandshake);
+      setSelected((prev) => {
+        const preferred = prev && nextLabs.find((lab) => lab.labId === prev.labId);
+        return preferred || nextLabs[0] || null;
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "AI Infra Twin unavailable");
+      setStatus(null);
+      setLabs([]);
+      setEvidence([]);
+      setSelected(null);
+      setPluginHandshake(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  const modules = status?.curriculum?.spec?.modules || [];
+  const maturityCounts = status?.maturity?.spec?.counts || {};
+  const embedUrl =
+    selected?.embed_url ||
+    (selected && status?.base_url
+      ? `${status.base_url}/embed/${encodeURIComponent(selected.labId)}`
+      : status?.embed_url);
+
+  const labsById = useMemo(() => new Map(labs.map((lab) => [lab.labId, lab])), [labs]);
+  const handshakeSummary = pluginHandshake?.summary as
+    | { tutor_ready?: boolean; issue_count?: number }
+    | undefined;
+  const pluginKnowledge = useMemo(
+    () => extractAiInfraPluginKnowledge(pluginHandshake),
+    [pluginHandshake],
+  );
+  const focusedContent = useMemo(
+    () => prioritizeAiInfraContent({ knowledge: pluginKnowledge, selectedLab: selected }),
+    [pluginKnowledge, selected],
+  );
+  const lessonCards = focusedContent.lessonCards;
+  const knowledgeUnits = focusedContent.knowledgeUnits;
+  const trustedSourceCoverage =
+    pluginKnowledge?.trusted_source_coverage ||
+    pluginKnowledge?.learning_surface?.trusted_source_coverage;
+  const standardLearningAssets =
+    pluginKnowledge?.standard_learning_assets ||
+    pluginKnowledge?.learning_surface?.standard_learning_assets;
+  const coursePaths =
+    pluginKnowledge?.course_paths ||
+    pluginKnowledge?.learning_surface?.course_paths ||
+    [];
+  const expertUnits = useMemo(
+    () =>
+      knowledgeUnits.filter((unit) =>
+        String(unit.unit_id || "").startsWith("ai_infra.expert."),
+      ),
+    [knowledgeUnits],
+  );
+  const selectedMaturity = useMemo(
+    () => status?.maturity?.spec?.labs?.find((lab) => lab.labId === selected?.labId),
+    [selected?.labId, status],
+  );
+  const selectedLatestRun = selected?.latestRun || selectedMaturity?.latestRun || null;
+  const selectedEvidence = useMemo(
+    () =>
+      selected?.scenarioId
+        ? evidence.filter((item) => item.scenarioId === selected.scenarioId).slice(0, 4)
+        : [],
+    [evidence, selected?.scenarioId],
+  );
+
+  const handleSelect = useCallback(async (lab: AiInfraLab) => {
+    setError(null);
+    setLastRun(null);
+    setDiagnosisResult(null);
+    try {
+      setSelected(await fetchAiInfraLab(lab.labId));
+    } catch {
+      setSelected(lab);
+    }
+  }, []);
+
+  const handleRun = useCallback(async () => {
+    if (!selected) return;
+    setRunning(true);
+    setError(null);
+    try {
+      const result = await runAiInfraLab(selected.labId);
+      setLastRun(result as Record<string, unknown>);
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Lab run failed");
+    } finally {
+      setRunning(false);
+    }
+  }, [load, selected]);
+
+  const handleDiagnosis = useCallback(
+    async (selectedDiagnosis: string) => {
+      if (!selected) return;
+      setDiagnosing(true);
+      setError(null);
+      try {
+        const result = await submitAiInfraDiagnosis({
+          labId: selected.labId,
+          selectedDiagnosis,
+          evidenceRefs: selectedEvidence.map((item) => item.runId),
+        });
+        setDiagnosisResult(result);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Diagnosis failed");
+      } finally {
+        setDiagnosing(false);
+      }
+    },
+    [selected, selectedEvidence],
+  );
+
+  return (
+    <main className="grid h-full min-h-0 grid-cols-[360px_minmax(0,1fr)] bg-[var(--background)]">
+      <aside className="min-h-0 overflow-y-auto border-r border-[var(--border)] p-4">
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2 text-xs text-[var(--muted-foreground)]">
+              <Cpu className="h-3.5 w-3.5" />
+              AetherAI-Infra-Twin
+            </div>
+            <h1 className="mt-1 text-lg font-semibold text-[var(--foreground)]">
+              {tr("AI Infra Twin Lab Console", "AI Infra Twin Lab Console")}
+            </h1>
+          </div>
+          <div className="flex gap-1.5">
+            <button
+              type="button"
+              onClick={() => router.push("/space/learning?domains=ai_infra")}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-[var(--border)] hover:bg-[var(--accent)]"
+              title={tr("标准学习", "Standard learning")}
+            >
+              <GraduationCap className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => void load()}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-[var(--border)] hover:bg-[var(--accent)]"
+              title={tr("刷新", "Refresh")}
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+
+        {error && (
+          <div className="mb-3 rounded-md border border-red-500/30 bg-red-500/10 p-3 text-xs text-red-500">
+            {error}
+          </div>
+        )}
+
+        <section className="mb-4 grid grid-cols-3 gap-2">
+          <Metric label={tr("Labs", "Labs")} value={status?.summary?.counts?.labs ?? labs.length} />
+          <Metric label={tr("证据", "Evidence")} value={status?.summary?.counts?.evidence ?? 0} />
+          <Metric label={tr("场景", "Scenarios")} value={status?.summary?.counts?.scenarios ?? 0} />
+        </section>
+
+        <section className="mb-5 rounded-lg border border-[var(--border)] p-3">
+          <div className="flex items-center gap-2">
+            <Network className="h-4 w-4 text-[var(--muted-foreground)]" />
+            <h2 className="text-sm font-medium text-[var(--foreground)]">
+              {tr("Cognisphere 插件", "Cognisphere plugin")}
+            </h2>
+          </div>
+          <div className="mt-2 space-y-1 text-xs text-[var(--muted-foreground)]">
+            <div>
+              {tr("状态", "Status")}:{" "}
+              <span className={handshakeSummary?.tutor_ready ? "text-emerald-500" : "text-amber-500"}>
+                {handshakeSummary?.tutor_ready ? "ready" : "checking"}
+              </span>
+            </div>
+            <div>
+              {tr("Pack", "Pack")}: {pluginKnowledge?.pack_metadata?.title || "ai_infra"}
+            </div>
+            <div>
+              {tr("学习轨道", "Tracks")}: {pluginKnowledge?.tracks?.length ?? 0} ·{" "}
+              {tr("主题族", "Topics")}: {pluginKnowledge?.topic_families?.length ?? 0}
+            </div>
+            <div>
+              {tr("可信来源", "Trusted sources")}: {trustedSourceCoverage?.source_count ?? 0} ·{" "}
+              {tr("索引文档", "Indexed docs")}: {trustedSourceCoverage?.indexed_documents ?? 0}
+            </div>
+            <div>
+              {tr("专家单元", "Expert units")}: {trustedSourceCoverage?.expert_unit_count ?? expertUnits.length} ·{" "}
+              {tr("测验", "Quizzes")}: {standardLearningAssets?.quiz_count ?? 0}
+            </div>
+            <div>
+              {tr("课程路径", "Course paths")}: {standardLearningAssets?.course_path_count ?? coursePaths.length} ·{" "}
+              {trustedSourceCoverage?.review_status || standardLearningAssets?.review_status || "review_required"}
+            </div>
+            <div className="truncate">
+              {tr("Twin 后端", "Twin backend")}:{" "}
+              {pluginKnowledge?.twin_backend?.default_base_url || status?.base_url || "offline"}
+            </div>
+          </div>
+        </section>
+
+        <section className="mb-5 rounded-lg border border-[var(--border)] p-3">
+          <h2 className="text-sm font-medium text-[var(--foreground)]">
+            {tr("实验成熟度", "Lab maturity")}
+          </h2>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {Object.entries(maturityCounts).map(([key, value]) => (
+              <span
+                key={key}
+                className="rounded-full border border-[var(--border)] px-2 py-1 text-[11px] text-[var(--muted-foreground)]"
+              >
+                {key}: {value}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-sm font-medium text-[var(--foreground)]">
+            {tr("课程模块", "Curriculum modules")}
+          </h2>
+          {modules.map((module) => (
+            <div key={module.id} className="rounded-lg border border-[var(--border)] p-3">
+              <div className="text-[11px] uppercase text-[var(--muted-foreground)]">
+                {module.track}
+              </div>
+              <div className="mt-1 text-sm font-medium text-[var(--foreground)]">
+                {module.title}
+              </div>
+              <div className="mt-2 space-y-1.5">
+                {module.labs.map((labId) => {
+                  const lab = labsById.get(labId);
+                  const active = selected?.labId === labId;
+                  return (
+                    <button
+                      key={labId}
+                      type="button"
+                      onClick={() => lab && void handleSelect(lab)}
+                      disabled={!lab}
+                      className={`w-full rounded-md border px-2.5 py-2 text-left text-xs transition-colors ${
+                        active
+                          ? "border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--foreground)]"
+                          : "border-[var(--border)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
+                      }`}
+                    >
+                      <span className="block truncate">{lab?.title || labId}</span>
+                      {lab && (
+                        <span className="mt-0.5 block text-[10px] uppercase">
+                          {lab.executionMode} · {lab.stage}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </section>
+      </aside>
+
+      <section className="flex min-h-0 flex-col">
+        <header className="flex shrink-0 items-center justify-between gap-3 border-b border-[var(--border)] px-4 py-3">
+          <div className="min-w-0">
+            <h2 className="truncate text-base font-semibold text-[var(--foreground)]">
+              {selected?.title || tr("选择一个 AI Infra Lab", "Select an AI Infra Lab")}
+            </h2>
+            <p className="mt-0.5 truncate text-xs text-[var(--muted-foreground)]">
+              {selected?.symptom ||
+                tr(
+                  "Cognisphere 插件提供知识路径，AetherAI-Infra-Twin 执行实验并返回证据。",
+                  "The Cognisphere plugin provides the learning path; AetherAI-Infra-Twin runs labs and returns evidence.",
+                )}
+            </p>
+          </div>
+          <div className="flex shrink-0 gap-2">
+            <button
+              type="button"
+              onClick={() => void handleRun()}
+              disabled={!selected || running}
+              className="inline-flex items-center gap-1.5 rounded-md bg-[var(--primary)] px-3 py-2 text-sm text-[var(--primary-foreground)] disabled:opacity-50"
+            >
+              {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+              {tr("运行 Lab", "Run Lab")}
+            </button>
+            {embedUrl && (
+              <a
+                href={embedUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border)] px-3 py-2 text-sm hover:bg-[var(--accent)]"
+              >
+                <ExternalLink className="h-4 w-4" />
+                {tr("打开 Twin", "Open Twin")}
+              </a>
+            )}
+          </div>
+        </header>
+
+        {lastRun && (
+          <pre className="mx-4 mt-3 max-h-32 shrink-0 overflow-auto rounded-md border border-[var(--border)] bg-[var(--card)] p-3 text-xs text-[var(--muted-foreground)]">
+            {JSON.stringify(lastRun, null, 2)}
+          </pre>
+        )}
+
+        {selected && (
+          <section className="mx-4 mt-3 shrink-0 rounded-lg border border-[var(--border)] p-3">
+            <div className="grid grid-cols-4 gap-2">
+              <LabFact label={tr("模式", "Mode")} value={selected.executionMode} />
+              <LabFact label={tr("阶段", "Stage")} value={selected.stage} />
+              <LabFact
+                label={tr("成熟度", "Maturity")}
+                value={selectedMaturity?.maturityLevel || tr("未标注", "Unlabeled")}
+              />
+              <LabFact
+                label={tr("最近运行", "Latest run")}
+                value={selectedLatestRun?.status || tr("未运行", "Not run")}
+              />
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <EvidenceList
+                label={tr("必需证据", "Required evidence")}
+                items={selected.requiredEvidence}
+              />
+              <EvidenceList
+                label={tr("能力点", "Competencies")}
+                items={selected.competencies}
+              />
+            </div>
+            {selectedEvidence.length > 0 && (
+              <div className="mt-3">
+                <div className="mb-1.5 text-[11px] font-medium text-[var(--foreground)]">
+                  {tr("最近证据", "Recent evidence")}
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {selectedEvidence.map((item) => (
+                    <div
+                      key={item.runId}
+                      className="min-w-0 rounded-md border border-[var(--border)] px-2.5 py-2"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="truncate text-xs font-medium text-[var(--foreground)]">
+                          {item.runId}
+                        </span>
+                        <span className="shrink-0 text-[10px] text-emerald-500">
+                          {item.status}
+                        </span>
+                      </div>
+                      <div className="mt-1 truncate text-[10px] text-[var(--muted-foreground)]">
+                        {item.mode}
+                        {item.createdAt ? ` · ${item.createdAt}` : ""}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="mt-3">
+              <div className="mb-1.5 text-[11px] font-medium text-[var(--foreground)]">
+                {tr("诊断选项", "Diagnosis choices")}
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {selected.diagnosisChoices.map((choice) => (
+                  <button
+                    key={choice}
+                    type="button"
+                    onClick={() => void handleDiagnosis(choice)}
+                    disabled={diagnosing}
+                    className="rounded-md border border-[var(--border)] px-2.5 py-1.5 text-[11px] text-[var(--foreground)] hover:bg-[var(--accent)] disabled:opacity-50"
+                  >
+                    {choice}
+                  </button>
+                ))}
+              </div>
+              {diagnosisResult?.spec && (
+                <div className="mt-2 rounded-md border border-[var(--border)] bg-[var(--card)] px-2.5 py-2">
+                  <div className="flex items-center justify-between gap-2 text-xs">
+                    <span className="font-medium text-[var(--foreground)]">
+                      {diagnosisResult.spec.passed ? tr("通过", "Passed") : tr("需复盘", "Review")}
+                    </span>
+                    <span className="text-[var(--muted-foreground)]">
+                      {tr("分数", "Score")} {diagnosisResult.spec.score ?? "-"}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                    {diagnosisResult.spec.feedback}
+                  </p>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {coursePaths.length > 0 && (
+          <section className="mx-4 mt-3 shrink-0 rounded-lg border border-[var(--border)] p-3">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <h3 className="text-sm font-medium text-[var(--foreground)]">
+                {tr("标准课程路径", "Standard course paths")}
+              </h3>
+              <span className="text-[11px] text-[var(--muted-foreground)]">
+                {coursePaths.length}
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {coursePaths.slice(0, 6).map((path) => (
+                <article
+                  key={path.course_path_id || path.title}
+                  className="min-w-0 rounded-md border border-[var(--border)] p-2"
+                >
+                  <div className="truncate text-xs font-medium text-[var(--foreground)]">
+                    {path.title}
+                  </div>
+                  <div className="mt-1 truncate text-[10px] uppercase text-[var(--muted-foreground)]">
+                    {(path.levels || []).join(" · ")}
+                  </div>
+                  <div className="mt-1 text-[10px] text-[var(--muted-foreground)]">
+                    {tr("单元", "Units")} {path.unit_refs?.length ?? 0} ·{" "}
+                    {tr("Labs", "Labs")} {path.lab_refs?.length ?? 0}
+                  </div>
+                  <p className="mt-1 line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
+                    {path.capstone_task}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {expertUnits.length > 0 && (
+          <section className="mx-4 mt-3 shrink-0 rounded-lg border border-[var(--border)] p-3">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <div className="flex min-w-0 items-center gap-2">
+                <BookOpenCheck className="h-4 w-4 shrink-0 text-[var(--muted-foreground)]" />
+                <h3 className="truncate text-sm font-medium text-[var(--foreground)]">
+                  {tr("AI Infra 专家覆盖", "AI Infra expert coverage")}
+                </h3>
+              </div>
+              <span className="shrink-0 text-[11px] text-[var(--muted-foreground)]">
+                {expertUnits.length}/{knowledgeUnits.length}
+              </span>
+            </div>
+            <div className="grid grid-cols-4 gap-2">
+              {expertUnits.slice(0, 8).map((unit) => (
+                <article
+                  key={unit.unit_id || unit.title}
+                  className="min-w-0 rounded-md border border-[var(--border)] p-2"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="truncate text-[10px] uppercase text-[var(--muted-foreground)]">
+                      {unit.level || unit.topic_family_id || "unit"}
+                    </span>
+                    <span className="shrink-0 text-[10px] text-amber-500">
+                      {unit.review_status ? tr("待复核", "review") : ""}
+                    </span>
+                  </div>
+                  <div className="mt-1 line-clamp-2 text-xs font-medium text-[var(--foreground)]">
+                    {unit.title}
+                  </div>
+                  <p className="mt-1 line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
+                    {unit.summary || unit.body}
+                  </p>
+                  {unit.standard_learning?.steps?.[0]?.task && (
+                    <p className="mt-1 line-clamp-2 text-[10px] text-[var(--muted-foreground)]">
+                      {unit.standard_learning.steps[0].task}
+                    </p>
+                  )}
+                  {unit.source_ids && unit.source_ids.length > 0 && (
+                    <div className="mt-1 truncate text-[10px] text-[var(--muted-foreground)]">
+                      {unit.source_ids.slice(0, 2).join(" · ")}
+                    </div>
+                  )}
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {(lessonCards.length > 0 || knowledgeUnits.length > 0) && (
+          <div className="mx-4 mt-3 grid max-h-48 shrink-0 grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] gap-3 overflow-hidden">
+            <section className="min-w-0 overflow-y-auto rounded-lg border border-[var(--border)] p-3">
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <h3 className="text-sm font-medium text-[var(--foreground)]">
+                  {tr("当前 Lab 学习卡片", "Current lab lesson cards")}
+                </h3>
+                <span className="text-[11px] text-[var(--muted-foreground)]">
+                  {tr("关联", "linked")} {focusedContent.matchedLessonCount}/{lessonCards.length}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {lessonCards.slice(0, 6).map((lesson) => (
+                  <article
+                    key={lesson.lesson_id || lesson.title}
+                    className="rounded-md border border-[var(--border)] p-2"
+                  >
+                    <div className="truncate text-xs font-medium text-[var(--foreground)]">
+                      {lesson.title}
+                    </div>
+                    <p className="mt-1 line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
+                      {lesson.summary}
+                    </p>
+                    <div className="mt-1 truncate text-[10px] text-[var(--muted-foreground)]">
+                      {(lesson.lab_refs || []).slice(0, 3).join(" · ")}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            <section className="min-w-0 overflow-y-auto rounded-lg border border-[var(--border)] p-3">
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <h3 className="text-sm font-medium text-[var(--foreground)]">
+                  {tr("相关知识单元", "Related knowledge units")}
+                </h3>
+                <span className="text-[11px] text-[var(--muted-foreground)]">
+                  {tr("关联", "linked")} {focusedContent.matchedKnowledgeCount}/{knowledgeUnits.length}
+                </span>
+              </div>
+              <div className="space-y-2">
+                {knowledgeUnits.slice(0, 8).map((unit) => (
+                  <article key={unit.unit_id || unit.title} className="min-w-0">
+                    <div className="truncate text-xs font-medium text-[var(--foreground)]">
+                      {unit.title}
+                    </div>
+                    <p className="mt-0.5 line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
+                      {unit.body || unit.summary}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          </div>
+        )}
+
+        <div className="min-h-0 flex-1 p-4">
+          {embedUrl ? (
+            <iframe
+              title="AetherAI Infra Twin Lab Console"
+              src={embedUrl}
+              className="h-full w-full rounded-lg border border-[var(--border)] bg-white"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-sm text-[var(--muted-foreground)]">
+              {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : tr("Twin 暂不可用", "Twin unavailable")}
+            </div>
+          )}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function Metric({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-lg border border-[var(--border)] p-2.5">
+      <div className="text-[11px] text-[var(--muted-foreground)]">{label}</div>
+      <div className="mt-1 text-xl font-semibold tabular-nums text-[var(--foreground)]">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function LabFact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0 rounded-md border border-[var(--border)] px-2.5 py-2">
+      <div className="text-[10px] text-[var(--muted-foreground)]">{label}</div>
+      <div className="mt-1 truncate text-xs font-medium text-[var(--foreground)]">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function EvidenceList({ label, items }: { label: string; items: string[] }) {
+  return (
+    <div className="min-w-0">
+      <div className="mb-1.5 text-[11px] font-medium text-[var(--foreground)]">
+        {label}
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {items.slice(0, 6).map((item) => (
+          <span
+            key={item}
+            className="max-w-full truncate rounded-full border border-[var(--border)] px-2 py-1 text-[10px] text-[var(--muted-foreground)]"
+          >
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}

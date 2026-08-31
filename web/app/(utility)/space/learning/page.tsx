@@ -12,6 +12,7 @@ import {
   CircleCheck,
   CircleDot,
   Circle,
+  Cpu,
   MessageSquare,
   Package,
   Sparkles,
@@ -102,6 +103,7 @@ function MasteryPathPageInner() {
   const [radar, setRadar] = useState<AbilityRadarResult | null>(null);
   const [urlGoalApplied, setUrlGoalApplied] = useState(false);
   const [awsTwinBusy, setAwsTwinBusy] = useState(false);
+  const [aiInfraBusy, setAiInfraBusy] = useState(false);
   const [awsTwinResult, setAwsTwinResult] = useState<AwsTwinMasteryResult | null>(
     null,
   );
@@ -343,6 +345,8 @@ function MasteryPathPageInner() {
     awsTwinGate?.learning_domain || "aws_certification";
   const awsMasteryPathId =
     awsTwinGate?.mastery_path_id || `csphere-${awsLearningDomain}`;
+  const aiInfraLearningDomain = "ai_infra";
+  const aiInfraMasteryPathId = `csphere-${aiInfraLearningDomain}`;
 
   const twinModeLabel = useCallback(
     (mode?: string | null) => {
@@ -447,6 +451,36 @@ function MasteryPathPageInner() {
     router,
     tr,
   ]);
+
+  const handleContinueAiInfraMasteryPath = useCallback(async () => {
+    setAiInfraBusy(true);
+    setCsphereError(null);
+    setCsphereNote(null);
+    try {
+      const existing = paths.find((p) => p.book_id === aiInfraMasteryPathId);
+      if (!existing) {
+        const seeded = await importAndSeedCognisphere(aiInfraLearningDomain);
+        const pathId = seeded.mastery_path?.path_id || aiInfraMasteryPathId;
+        await loadList();
+        setSelected(pathId);
+        router.push(masteryChatHref(pathId));
+        return;
+      }
+      setSelected(aiInfraMasteryPathId);
+      router.push(masteryChatHref(aiInfraMasteryPathId));
+    } catch (err) {
+      setCsphereError(
+        err instanceof Error
+          ? err.message
+          : tr(
+              "无法打开 AI Infra Mastery Path",
+              "Could not open AI Infra Mastery Path",
+            ),
+      );
+    } finally {
+      setAiInfraBusy(false);
+    }
+  }, [aiInfraMasteryPathId, loadList, paths, router, tr]);
 
   const handleAwsLearningTwinHandshake = useCallback(async () => {
     setAwsTwinBusy(true);
@@ -882,6 +916,49 @@ function MasteryPathPageInner() {
               )}
             </p>
           )}
+          <div className="rounded-md border border-[var(--border)] px-2 py-2 space-y-2">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5 text-xs font-medium text-[var(--foreground)]">
+                  <Cpu className="w-3.5 h-3.5" />
+                  {tr("AI Infra Mastery", "AI Infra Mastery")}
+                </div>
+                <div className="mt-0.5 text-[10px] text-[var(--muted-foreground)] leading-relaxed">
+                  {tr(
+                    "先进入标准学习路径，再使用孪生 Lab 收集证据。",
+                    "Start with the standard learning path, then use Twin labs for evidence.",
+                  )}
+                </div>
+              </div>
+              <span className="shrink-0 text-[10px] text-green-600">
+                {tr("学习优先", "Learn first")}
+              </span>
+            </div>
+            <div className="flex gap-1">
+              <button
+                type="button"
+                disabled={aiInfraBusy || csphereBusy}
+                onClick={() => void handleContinueAiInfraMasteryPath()}
+                className="flex-1 flex items-center justify-center gap-1 px-2 py-1 text-[11px] rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50 cursor-pointer"
+              >
+                {aiInfraBusy ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <MessageSquare className="w-3 h-3" />
+                )}
+                {tr("进入标准学习", "Open standard learning")}
+              </button>
+              <button
+                type="button"
+                disabled={aiInfraBusy}
+                onClick={() => router.push("/space/ai-infra")}
+                className="px-2 py-1 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
+                title={tr("打开 AI Infra Twin Lab Console", "Open AI Infra Twin Lab Console")}
+              >
+                <Package className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
           <div
             className={`rounded-md border px-2 py-2 space-y-2 ${
               mainPanel === "aws-twin"
@@ -1793,6 +1870,9 @@ function AwsTwinPracticeView({
               learner?.choice && typeof learner.choice === "object"
                 ? (learner.choice as Record<string, unknown>)
                 : null;
+            const hasChoiceRationale = Boolean(
+              choice && (choice.label || choice.choice_why),
+            );
             const mistakes = Array.isArray(learner?.common_mistakes)
               ? (learner!.common_mistakes as unknown[]).map(String)
               : [];
@@ -1891,7 +1971,7 @@ function AwsTwinPracticeView({
                   </div>
                 )}
 
-                {choice && (choice.label || choice.choice_why) && (
+                {choice && hasChoiceRationale && (
                   <div>
                     <div className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
                       {tr("选择与理由", "Choice & rationale")}

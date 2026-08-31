@@ -306,6 +306,7 @@ app.mount(
 # Some router modules load YAML settings at import time.
 from cognispheretutor.api.routers import (
     agent_config,
+    aetherinfra_twin,
     attachments,
     auth,
     book,
@@ -380,6 +381,12 @@ app.include_router(
     cognisphere_learning.router,
     prefix="/api/v1/learning/cognisphere",
     tags=["cognisphere-learning"],
+    dependencies=_auth,
+)
+app.include_router(
+    aetherinfra_twin.router,
+    prefix="/api/v1/learning/ai-infra-twin",
+    tags=["ai-infra-twin"],
     dependencies=_auth,
 )
 app.include_router(
