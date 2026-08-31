@@ -9,6 +9,7 @@ import {
   findAiInfraKnowledgeUnit,
   getAiInfraCourseProgress,
   getAiInfraReviewQueue,
+  getAiInfraSpacedReviewQueue,
   getAiInfraUnitMasteryState,
   getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
@@ -302,6 +303,33 @@ test("getAiInfraReviewQueue prioritizes weakest unfinished units", () => {
   assert.equal(queue.length, 1);
   assert.equal(queue[0]?.unit.unit_id, "unit.inference");
   assert.equal(queue[0]?.mastery.level, "not_started");
+});
+
+test("getAiInfraSpacedReviewQueue ranks due weak units before later reviews", () => {
+  const units = knowledge.learning_surface?.knowledge_unit_cards || [];
+  const now = new Date("2026-08-31T00:00:00.000Z");
+
+  const queue = getAiInfraSpacedReviewQueue({
+    units,
+    quizAnswers: { "q.container": "A" },
+    diagnosisNotes: { "unit.container": "container stopped before cleanup proof" },
+    reflectionNotes: {
+      "unit.container": "evidence supports only local lifecycle claims",
+    },
+    labEvidenceByUnitId: { "unit.container": true },
+    completedUnits: { "unit.container": true },
+    reviewLedger: {
+      "unit.container": {
+        completedAt: "2026-08-30T00:00:00.000Z",
+        lastReviewedAt: "2026-08-30T00:00:00.000Z",
+      },
+    },
+    now,
+  });
+
+  assert.equal(queue[0]?.unit.unit_id, "unit.inference");
+  assert.equal(queue[0]?.dueStatus, "due");
+  assert.equal(queue[1]?.unit.unit_id, "unit.container");
 });
 
 test("assessAiInfraDiagnosisResponse checks claim shape and rubric signals", () => {

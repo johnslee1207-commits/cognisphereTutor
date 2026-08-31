@@ -175,6 +175,21 @@ export interface AiInfraReviewQueueItem {
   mastery: AiInfraUnitMasteryState;
 }
 
+export interface AiInfraReviewLedgerEntry {
+  completedAt?: string;
+  lastReviewedAt?: string;
+}
+
+export type AiInfraSpacedReviewDueStatus = "due" | "soon" | "later";
+
+export interface AiInfraSpacedReviewQueueItem extends AiInfraReviewQueueItem {
+  dueAt: string;
+  dueStatus: AiInfraSpacedReviewDueStatus;
+  dueLabel: string;
+  reason: string;
+  priority: number;
+}
+
 export interface AiInfraDiagnosisResponseAssessment {
   scorePct: number;
   passed: boolean;
@@ -485,6 +500,64 @@ export function getAiInfraReviewQueue(params: {
   }));
 }
 
+export function getAiInfraSpacedReviewQueue(params: {
+  units: AiInfraKnowledgeUnitCard[];
+  quizAnswers?: Record<string, string>;
+  completedUnits?: Record<string, boolean>;
+  reflectionNotes?: Record<string, string>;
+  diagnosisNotes?: Record<string, string>;
+  labEvidenceByUnitId?: Record<string, boolean>;
+  reviewLedger?: Record<string, AiInfraReviewLedgerEntry>;
+  now?: Date;
+  limit?: number;
+}): AiInfraSpacedReviewQueueItem[] {
+  const now = params.now || new Date();
+  const nowMs = now.getTime();
+  const reviewLedger = params.reviewLedger || {};
+  const items = params.units
+    .map((unit, index) => {
+      const unitId = unit.unit_id || "";
+      const quiz = unit.standard_learning?.assessment?.quiz?.[0];
+      const answer = quiz?.question_id ? params.quizAnswers?.[quiz.question_id] : undefined;
+      const drill = unit.standard_learning?.assessment?.diagnosis_drills?.[0];
+      const diagnosisNote = unitId ? params.diagnosisNotes?.[unitId] : "";
+      const diagnosisAssessment = drill
+        ? assessAiInfraDiagnosisResponse(drill, diagnosisNote)
+        : null;
+      const mastery = getAiInfraUnitMasteryState({
+        unit,
+        quizCorrect: Boolean(answer && answer === quiz?.answer),
+        diagnosisPassed: diagnosisAssessment?.passed,
+        diagnosisNote,
+        reflectionNote: unitId ? params.reflectionNotes?.[unitId] : "",
+        hasLabEvidence: unitId ? params.labEvidenceByUnitId?.[unitId] : false,
+        completed: Boolean(unitId && params.completedUnits?.[unitId]),
+      });
+      const ledger = unitId ? reviewLedger[unitId] : undefined;
+      const anchor = parseReviewDate(ledger?.lastReviewedAt) || parseReviewDate(ledger?.completedAt);
+      const intervalDays = reviewIntervalDays(mastery.scorePct);
+      const dueAtMs = anchor ? anchor.getTime() + intervalDays * 86400000 : nowMs;
+      const hoursUntilDue = (dueAtMs - nowMs) / 3600000;
+      const dueStatus: AiInfraSpacedReviewDueStatus =
+        hoursUntilDue <= 0 ? "due" : hoursUntilDue <= 48 ? "soon" : "later";
+      const priority =
+        (dueStatus === "due" ? 0 : dueStatus === "soon" ? 100 : 200) +
+        (100 - mastery.scorePct) +
+        index / 100;
+      return {
+        unit,
+        mastery,
+        dueAt: new Date(dueAtMs).toISOString(),
+        dueStatus,
+        dueLabel: formatDueLabel(hoursUntilDue),
+        reason: reviewReason(mastery),
+        priority,
+      };
+    })
+    .sort((a, b) => a.priority - b.priority);
+  return items.slice(0, params.limit ?? 6);
+}
+
 export function assessAiInfraDiagnosisResponse(
   drill: AiInfraDiagnosisDrill | null | undefined,
   response: string | undefined,
@@ -590,6 +663,33 @@ function normalizedLength(value: string | undefined): number {
 
 function normalizeForSearch(value: string): string {
   return value.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function parseReviewDate(value: string | undefined): Date | null {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function reviewIntervalDays(scorePct: number): number {
+  if (scorePct >= 100) return 7;
+  if (scorePct >= 80) return 3;
+  if (scorePct >= 40) return 1;
+  return 0;
+}
+
+function formatDueLabel(hoursUntilDue: number): string {
+  if (hoursUntilDue <= -24) return `${Math.ceil(Math.abs(hoursUntilDue) / 24)}d overdue`;
+  if (hoursUntilDue <= 0) return "due now";
+  if (hoursUntilDue < 24) return `in ${Math.ceil(hoursUntilDue)}h`;
+  return `in ${Math.ceil(hoursUntilDue / 24)}d`;
+}
+
+function reviewReason(mastery: AiInfraUnitMasteryState): string {
+  if (mastery.scorePct < 40) return mastery.nextAction;
+  if (mastery.scorePct < 80) return "Rebuild weak evidence chain";
+  if (mastery.scorePct < 100) return "Close remaining mastery gate";
+  return "Retention review after evidence-ready completion";
 }
 
 function tokenAliases(key: string): string[] {

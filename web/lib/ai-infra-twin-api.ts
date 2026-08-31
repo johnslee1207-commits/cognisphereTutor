@@ -53,6 +53,7 @@ export interface AiInfraLearningWorkspaceState {
   completed_units: Record<string, boolean>;
   reflection_notes: Record<string, string>;
   diagnosis_notes: Record<string, string>;
+  review_ledger: Record<string, { completedAt?: string; lastReviewedAt?: string }>;
 }
 
 export interface AiInfraLearningWorkspaceResult {

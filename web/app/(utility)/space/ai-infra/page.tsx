@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   BookOpenCheck,
+  CalendarClock,
   CheckCircle2,
   Cpu,
   ExternalLink,
@@ -42,9 +43,11 @@ import {
   getAiInfraCourseProgress,
   getAiInfraCoverageSummary,
   getAiInfraReviewQueue,
+  getAiInfraSpacedReviewQueue,
   getAiInfraUnitMasteryState,
   getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
+  type AiInfraReviewLedgerEntry,
 } from "@/lib/ai-infra-learning-content";
 import {
   runCognisphereHandshake,
@@ -62,6 +65,7 @@ interface AiInfraLearningWorkspaceState {
   completedUnits: Record<string, boolean>;
   reflectionNotes: Record<string, string>;
   diagnosisNotes: Record<string, string>;
+  reviewLedger: Record<string, AiInfraReviewLedgerEntry>;
 }
 
 export default function AiInfraTwinPage() {
@@ -85,6 +89,7 @@ export default function AiInfraTwinPage() {
   const [completedUnits, setCompletedUnits] = useState<Record<string, boolean>>({});
   const [reflectionNotes, setReflectionNotes] = useState<Record<string, string>>({});
   const [diagnosisNotes, setDiagnosisNotes] = useState<Record<string, string>>({});
+  const [reviewLedger, setReviewLedger] = useState<Record<string, AiInfraReviewLedgerEntry>>({});
   const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
   const [workspaceSyncState, setWorkspaceSyncState] = useState<"local" | "synced" | "offline">("local");
   const [error, setError] = useState<string | null>(null);
@@ -100,6 +105,7 @@ export default function AiInfraTwinPage() {
         completedUnits: {},
         reflectionNotes: {},
         diagnosisNotes: {},
+        reviewLedger: {},
       },
     );
     setSelectedCourseId(stored.selectedCourseId);
@@ -108,6 +114,7 @@ export default function AiInfraTwinPage() {
     setCompletedUnits(stored.completedUnits || {});
     setReflectionNotes(stored.reflectionNotes || {});
     setDiagnosisNotes(stored.diagnosisNotes || {});
+    setReviewLedger(stored.reviewLedger || {});
     setWorkspaceHydrated(true);
     void fetchAiInfraLearningWorkspace(AI_INFRA_WORKSPACE_ID)
       .then((result) => {
@@ -122,6 +129,7 @@ export default function AiInfraTwinPage() {
         setCompletedUnits(next.completedUnits);
         setReflectionNotes(next.reflectionNotes);
         setDiagnosisNotes(next.diagnosisNotes);
+        setReviewLedger(next.reviewLedger);
         saveToStorage<AiInfraLearningWorkspaceState>(
           AI_INFRA_WORKSPACE_STORAGE_KEY,
           next,
@@ -140,6 +148,7 @@ export default function AiInfraTwinPage() {
       completedUnits,
       reflectionNotes,
       diagnosisNotes,
+      reviewLedger,
     };
     saveToStorage<AiInfraLearningWorkspaceState>(AI_INFRA_WORKSPACE_STORAGE_KEY, state);
     void saveAiInfraLearningWorkspace(
@@ -152,6 +161,7 @@ export default function AiInfraTwinPage() {
     completedUnits,
     diagnosisNotes,
     quizAnswers,
+    reviewLedger,
     reflectionNotes,
     selectedCourseId,
     selectedUnitId,
@@ -340,6 +350,28 @@ export default function AiInfraTwinPage() {
       selectedCourseUnits,
     ],
   );
+  const spacedReviewQueue = useMemo(
+    () =>
+      getAiInfraSpacedReviewQueue({
+        units: selectedCourseUnits,
+        quizAnswers,
+        completedUnits,
+        reflectionNotes,
+        diagnosisNotes,
+        labEvidenceByUnitId,
+        reviewLedger,
+        limit: 5,
+      }),
+    [
+      completedUnits,
+      diagnosisNotes,
+      labEvidenceByUnitId,
+      quizAnswers,
+      reflectionNotes,
+      reviewLedger,
+      selectedCourseUnits,
+    ],
+  );
   const selectedUnitMastery = useMemo(
     () =>
       getAiInfraUnitMasteryState({
@@ -451,6 +483,7 @@ export default function AiInfraTwinPage() {
     setCompletedUnits({});
     setReflectionNotes({});
     setDiagnosisNotes({});
+    setReviewLedger({});
   }, [priorityCoursePaths]);
 
   return (
@@ -877,6 +910,69 @@ export default function AiInfraTwinPage() {
                       </div>
                     </div>
                   )}
+                  {spacedReviewQueue.length > 0 && (
+                    <div className="mb-2 rounded-md border border-[var(--border)] p-2">
+                      <div className="mb-1 flex items-center justify-between gap-2">
+                        <span className="inline-flex min-w-0 items-center gap-1 text-[10px] font-medium text-[var(--foreground)]">
+                          <CalendarClock className="h-3 w-3 shrink-0" />
+                          {tr("间隔复习", "Spaced review")}
+                        </span>
+                        <span className="text-[10px] text-[var(--muted-foreground)]">
+                          {spacedReviewQueue.filter((item) => item.dueStatus === "due").length}{" "}
+                          {tr("到期", "due")}
+                        </span>
+                      </div>
+                      <div className="space-y-1">
+                        {spacedReviewQueue.map((item) => (
+                          <div
+                            key={item.unit.unit_id || item.unit.title}
+                            className="rounded-md border border-[var(--border)] px-2 py-1"
+                          >
+                            <button
+                              type="button"
+                              onClick={() => setSelectedUnitId(item.unit.unit_id || null)}
+                              className="w-full text-left"
+                              title={item.reason}
+                            >
+                              <span className="flex items-center justify-between gap-2">
+                                <span className="min-w-0 truncate text-[10px] font-medium text-[var(--foreground)]">
+                                  {item.unit.title}
+                                </span>
+                                <span
+                                  className={`shrink-0 text-[10px] tabular-nums ${
+                                    item.dueStatus === "due"
+                                      ? "text-amber-500"
+                                      : "text-[var(--muted-foreground)]"
+                                  }`}
+                                >
+                                  {item.dueLabel}
+                                </span>
+                              </span>
+                              <span className="mt-0.5 block truncate text-[10px] text-[var(--muted-foreground)]">
+                                {item.reason}
+                              </span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                item.unit.unit_id &&
+                                setReviewLedger((prev) => ({
+                                  ...prev,
+                                  [item.unit.unit_id as string]: {
+                                    ...(prev[item.unit.unit_id as string] || {}),
+                                    lastReviewedAt: new Date().toISOString(),
+                                  },
+                                }))
+                              }
+                              className="mt-1 rounded-md border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
+                            >
+                              {tr("记录复习", "Mark reviewed")}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div className="space-y-1.5">
                     {selectedCourseUnits.map((unit) => {
                       const active = selectedUnit?.unit_id === unit.unit_id;
@@ -1211,10 +1307,21 @@ export default function AiInfraTwinPage() {
                           }
                           onClick={() =>
                             selectedUnit.unit_id &&
-                            setCompletedUnits((prev) => ({
-                              ...prev,
-                              [selectedUnit.unit_id as string]: true,
-                            }))
+                            (() => {
+                              const unitId = selectedUnit.unit_id as string;
+                              const completedAt = new Date().toISOString();
+                              setCompletedUnits((prev) => ({
+                                ...prev,
+                                [unitId]: true,
+                              }));
+                              setReviewLedger((prev) => ({
+                                ...prev,
+                                [unitId]: {
+                                  ...(prev[unitId] || {}),
+                                  completedAt: prev[unitId]?.completedAt || completedAt,
+                                },
+                              }));
+                            })()
                           }
                           className="mt-1.5 inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-[var(--primary)] px-2 py-1.5 text-[11px] text-[var(--primary-foreground)] disabled:opacity-50"
                         >
@@ -1517,6 +1624,7 @@ function workspaceStateFromServer(
     completedUnits: state.completed_units || {},
     reflectionNotes: state.reflection_notes || {},
     diagnosisNotes: state.diagnosis_notes || {},
+    reviewLedger: state.review_ledger || {},
   };
 }
 
@@ -1530,6 +1638,7 @@ function workspaceStateToServer(
     completed_units: state.completedUnits,
     reflection_notes: state.reflectionNotes,
     diagnosis_notes: state.diagnosisNotes,
+    review_ledger: state.reviewLedger,
   };
 }
 
