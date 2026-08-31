@@ -37,7 +37,9 @@ import {
   filterAiInfraCoursePaths,
   findAiInfraKnowledgeUnit,
   extractAiInfraPluginKnowledge,
+  getAiInfraCourseContextStats,
   getAiInfraCourseProgress,
+  getAiInfraCoverageSummary,
   getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
 } from "@/lib/ai-infra-learning-content";
@@ -258,6 +260,14 @@ export default function AiInfraTwinPage() {
     () => getAiInfraCourseProgress(selectedCourse, completedUnitIds),
     [completedUnitIds, selectedCourse],
   );
+  const coverageSummary = useMemo(
+    () => getAiInfraCoverageSummary(pluginKnowledge, completedUnitIds),
+    [completedUnitIds, pluginKnowledge],
+  );
+  const selectedCourseContextStats = useMemo(
+    () => getAiInfraCourseContextStats(pluginKnowledge, selectedCourse),
+    [pluginKnowledge, selectedCourse],
+  );
   const selectedReflection = selectedUnit?.unit_id
     ? reflectionNotes[selectedUnit.unit_id] || ""
     : "";
@@ -438,6 +448,10 @@ export default function AiInfraTwinPage() {
             <div>
               {tr("课程路径", "Course paths")}: {standardLearningAssets?.course_path_count ?? coursePaths.length} ·{" "}
               {trustedSourceCoverage?.review_status || standardLearningAssets?.review_status || "review_required"}
+            </div>
+            <div>
+              {tr("覆盖摘要", "Coverage")}: {coverageSummary.domainCount} domains ·{" "}
+              {coverageSummary.sourceCount} sources · {coverageSummary.candidateDocumentCount} docs
             </div>
             <div>
               {tr("学习状态", "Learning state")}:{" "}
@@ -732,6 +746,11 @@ export default function AiInfraTwinPage() {
                       style={{ width: `${selectedCourseProgress.pct}%` }}
                     />
                   </div>
+                  <div className="mb-2 grid grid-cols-3 gap-1">
+                    <MiniStat label={tr("来源", "Sources")} value={selectedCourseContextStats.sourceCount} />
+                    <MiniStat label={tr("文档", "Docs")} value={selectedCourseContextStats.candidateDocumentCount} />
+                    <MiniStat label={tr("证据", "Evidence")} value={selectedCourseContextStats.evidenceRequirementCount} />
+                  </div>
                   <div className="space-y-1.5">
                     {selectedCourseUnits.map((unit) => {
                       const active = selectedUnit?.unit_id === unit.unit_id;
@@ -801,6 +820,7 @@ export default function AiInfraTwinPage() {
                         </div>
                         <div className="mt-0.5 truncate text-[10px] text-[var(--muted-foreground)]">
                           {selectedUnit.level} · {selectedUnit.standard_learning?.estimated_minutes ?? "-"} min ·{" "}
+                          {selectedUnit.standard_learning?.learning_mode || "standard"} ·{" "}
                           {selectedUnit.review_status || "review_required"}
                         </div>
                       </div>
@@ -817,6 +837,20 @@ export default function AiInfraTwinPage() {
                         {tr("Capstone", "Capstone")}: {selectedCourse.capstone_task}
                       </p>
                     )}
+                    {selectedUnit.standard_learning?.prerequisites &&
+                      selectedUnit.standard_learning.prerequisites.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          {selectedUnit.standard_learning.prerequisites.slice(0, 6).map((item) => (
+                            <span
+                              key={item}
+                              className="max-w-full truncate rounded-md border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--muted-foreground)]"
+                              title={item}
+                            >
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                      )}
 
                     <div className="mt-2 grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.9fr)] gap-2">
                       <div className="min-w-0">
@@ -1196,6 +1230,17 @@ function LabFact({ label, value }: { label: string; value: string }) {
     <div className="min-w-0 rounded-md border border-[var(--border)] px-2.5 py-2">
       <div className="text-[10px] text-[var(--muted-foreground)]">{label}</div>
       <div className="mt-1 truncate text-xs font-medium text-[var(--foreground)]">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function MiniStat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="min-w-0 rounded-md border border-[var(--border)] px-1.5 py-1">
+      <div className="truncate text-[10px] text-[var(--muted-foreground)]">{label}</div>
+      <div className="text-xs font-medium tabular-nums text-[var(--foreground)]">
         {value}
       </div>
     </div>

@@ -30,6 +30,8 @@ export interface AiInfraKnowledgeUnitCard {
   review_status?: string;
   standard_learning?: {
     estimated_minutes?: number;
+    learning_mode?: string;
+    prerequisites?: string[];
     steps?: { phase?: string; task?: string }[];
     assessment?: {
       quiz?: AiInfraQuizQuestion[];
@@ -126,6 +128,28 @@ export interface AiInfraCourseProgress {
   pct: number;
 }
 
+export interface AiInfraCoverageSummary {
+  courseCount: number;
+  unitCount: number;
+  completedUnitCount: number;
+  completionPct: number;
+  domainCount: number;
+  sourceCount: number;
+  labCount: number;
+  candidateDocumentCount: number;
+  evidenceRequirementCount: number;
+  failureModeCount: number;
+}
+
+export interface AiInfraCourseContextStats {
+  sourceCount: number;
+  labCount: number;
+  candidateDocumentCount: number;
+  evidenceRequirementCount: number;
+  failureModeCount: number;
+  claimBoundaryCount: number;
+}
+
 const PRIORITY_COURSE_DOMAINS = [
   "containers",
   "kubernetes",
@@ -205,6 +229,104 @@ export function findAiInfraKnowledgeUnit(
     knowledge?.learning_surface?.knowledge_unit_cards ||
     [];
   return units.find((unit) => unit.unit_id === unitId);
+}
+
+export function getAiInfraCoverageSummary(
+  knowledge: AiInfraPluginKnowledge | undefined,
+  completedUnitIds: Set<string> = new Set(),
+): AiInfraCoverageSummary {
+  const courses = getAiInfraCoursePaths(knowledge);
+  const units =
+    knowledge?.knowledge_units ||
+    knowledge?.learning_surface?.knowledge_unit_cards ||
+    [];
+  const domains = new Set<string>();
+  const sources = new Set<string>();
+  const labs = new Set<string>();
+  const candidateDocuments = new Set<string>();
+  const evidenceRequirements = new Set<string>();
+  const failureModes = new Set<string>();
+
+  for (const course of courses) {
+    if (course.domain) domains.add(course.domain);
+    for (const sourceId of course.source_ids || []) sources.add(sourceId);
+    for (const labId of course.lab_refs || []) labs.add(labId);
+  }
+
+  for (const unit of units) {
+    if (unit.domain) domains.add(unit.domain);
+    if (unit.topic_family_id) domains.add(unit.topic_family_id);
+    for (const sourceId of unit.source_ids || []) sources.add(sourceId);
+    for (const labId of unit.lab_refs || []) labs.add(labId);
+    for (const doc of unit.candidate_documents || []) {
+      const docId = doc.document_id || `${doc.source_id || ""}:${doc.relative_path || ""}`;
+      if (docId !== ":") candidateDocuments.add(docId);
+    }
+    for (const item of unit.evidence_requirements || []) evidenceRequirements.add(item);
+    for (const item of unit.failure_modes || []) failureModes.add(item);
+  }
+
+  const completedUnitCount = units.filter(
+    (unit) => unit.unit_id && completedUnitIds.has(unit.unit_id),
+  ).length;
+
+  return {
+    courseCount: courses.length,
+    unitCount: units.length,
+    completedUnitCount,
+    completionPct: units.length ? Math.round((completedUnitCount / units.length) * 100) : 0,
+    domainCount: domains.size,
+    sourceCount: sources.size,
+    labCount: labs.size,
+    candidateDocumentCount: candidateDocuments.size,
+    evidenceRequirementCount: evidenceRequirements.size,
+    failureModeCount: failureModes.size,
+  };
+}
+
+export function getAiInfraCourseContextStats(
+  knowledge: AiInfraPluginKnowledge | undefined,
+  course: AiInfraCoursePath | null | undefined,
+): AiInfraCourseContextStats {
+  if (!course) {
+    return {
+      sourceCount: 0,
+      labCount: 0,
+      candidateDocumentCount: 0,
+      evidenceRequirementCount: 0,
+      failureModeCount: 0,
+      claimBoundaryCount: 0,
+    };
+  }
+  const sources = new Set(course.source_ids || []);
+  const labs = new Set(course.lab_refs || []);
+  const candidateDocuments = new Set<string>();
+  const evidenceRequirements = new Set<string>();
+  const failureModes = new Set<string>();
+  const claimBoundaries = new Set<string>();
+
+  for (const unitId of course.unit_refs || []) {
+    const unit = findAiInfraKnowledgeUnit(knowledge, unitId);
+    if (!unit) continue;
+    for (const sourceId of unit.source_ids || []) sources.add(sourceId);
+    for (const labId of unit.lab_refs || []) labs.add(labId);
+    for (const doc of unit.candidate_documents || []) {
+      const docId = doc.document_id || `${doc.source_id || ""}:${doc.relative_path || ""}`;
+      if (docId !== ":") candidateDocuments.add(docId);
+    }
+    for (const item of unit.evidence_requirements || []) evidenceRequirements.add(item);
+    for (const item of unit.failure_modes || []) failureModes.add(item);
+    for (const item of unit.claim_boundaries || []) claimBoundaries.add(item);
+  }
+
+  return {
+    sourceCount: sources.size,
+    labCount: labs.size,
+    candidateDocumentCount: candidateDocuments.size,
+    evidenceRequirementCount: evidenceRequirements.size,
+    failureModeCount: failureModes.size,
+    claimBoundaryCount: claimBoundaries.size,
+  };
 }
 
 export function prioritizeAiInfraContent(params: {

@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 
 import {
   filterAiInfraCoursePaths,
+  getAiInfraCourseContextStats,
+  getAiInfraCoverageSummary,
   findAiInfraKnowledgeUnit,
   getAiInfraCourseProgress,
   getPriorityAiInfraCoursePaths,
@@ -29,13 +31,35 @@ const knowledge: AiInfraPluginKnowledge = {
       {
         unit_id: "unit.inference",
         title: "vLLM and Triton readiness",
+        domain: "inference_serving",
         topic_family_id: "serving_readiness",
+        source_ids: ["src:ai-infra:vllm-docs"],
+        candidate_documents: [
+          {
+            document_id: "vllm:README.md",
+            source_id: "src:ai-infra:vllm-docs",
+          },
+        ],
+        failure_modes: ["endpoint_not_ready"],
+        evidence_requirements: ["health_probe"],
+        claim_boundaries: ["readiness_not_throughput"],
         lab_refs: ["lab.inference.vllm-triton-readiness"],
       },
       {
         unit_id: "unit.container",
         title: "Docker lifecycle lab pattern",
+        domain: "containers",
         topic_family_id: "containers",
+        source_ids: ["src:ai-infra:docker-docs"],
+        candidate_documents: [
+          {
+            document_id: "docker:engine.md",
+            source_id: "src:ai-infra:docker-docs",
+          },
+        ],
+        failure_modes: ["stale_container"],
+        evidence_requirements: ["cleanup_proof"],
+        claim_boundaries: ["local_lifecycle_only"],
         lab_refs: ["lab.container.docker-lifecycle"],
       },
     ],
@@ -52,6 +76,7 @@ const knowledge: AiInfraPluginKnowledge = {
         title: "Containers",
         unit_refs: ["unit.container"],
         lab_refs: ["lab.container.docker-lifecycle"],
+        source_ids: ["src:ai-infra:containerd-docs"],
       },
       {
         course_path_id: "course.inference",
@@ -170,5 +195,35 @@ test("getAiInfraCourseProgress computes completed unit percentage", () => {
     completed: 1,
     total: 1,
     pct: 100,
+  });
+});
+
+test("getAiInfraCoverageSummary counts sources, labs, docs, and completion", () => {
+  const summary = getAiInfraCoverageSummary(knowledge, new Set(["unit.container"]));
+
+  assert.equal(summary.courseCount, 4);
+  assert.equal(summary.unitCount, 2);
+  assert.equal(summary.completedUnitCount, 1);
+  assert.equal(summary.completionPct, 50);
+  assert.equal(summary.sourceCount, 3);
+  assert.equal(summary.labCount, 2);
+  assert.equal(summary.candidateDocumentCount, 2);
+  assert.equal(summary.evidenceRequirementCount, 2);
+  assert.equal(summary.failureModeCount, 2);
+});
+
+test("getAiInfraCourseContextStats summarizes the selected path context", () => {
+  const course = getPriorityAiInfraCoursePaths(knowledge).find(
+    (item) => item.domain === "containers",
+  );
+  const stats = getAiInfraCourseContextStats(knowledge, course);
+
+  assert.deepEqual(stats, {
+    sourceCount: 2,
+    labCount: 1,
+    candidateDocumentCount: 1,
+    evidenceRequirementCount: 1,
+    failureModeCount: 1,
+    claimBoundaryCount: 1,
   });
 });
