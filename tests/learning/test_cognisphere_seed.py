@@ -109,6 +109,28 @@ def test_modules_from_knowledge_groups() -> None:
     assert sum(len(m.knowledge_points) for m in modules) >= 4
 
 
+def test_modules_from_knowledge_uses_course_overview_as_first_module() -> None:
+    modules = modules_from_knowledge(
+        {
+            "learning_surface": {
+                "course_overview": {
+                    "overview_id": "ai_infra.course_overview.v1",
+                    "title": "AI Infrastructure Knowledge Platform and Digital Twin Course",
+                    "teaching_purpose": "Explain why standard learning comes before Twin practice.",
+                }
+            },
+            "learning_loop": ["orient", "concept"],
+        },
+        domain="ai_infra",
+    )
+
+    assert modules[0].name == "AI Infrastructure Knowledge Platform and Digital Twin Course"
+    assert modules[0].knowledge_points[0].id == "ov-ai_infra-course_overview-v1"
+    assert modules[0].knowledge_points[0].name == (
+        "AI Infrastructure Knowledge Platform and Digital Twin Course"
+    )
+
+
 def test_modules_from_knowledge_maps_assessments_and_references() -> None:
     modules = modules_from_knowledge(
         {

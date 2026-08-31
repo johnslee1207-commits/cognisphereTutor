@@ -199,14 +199,20 @@ def modules_from_knowledge(
         + _nested_list(data, "original_knowledge", "units")
     )
     learning_loop = _as_list(data, "learning_loop", "sample_learning_path")
+    surface = data.get("learning_surface") if isinstance(data.get("learning_surface"), dict) else {}
+    course_overview = data.get("course_overview") or surface.get("course_overview")
+    if not isinstance(course_overview, dict):
+        course_overview = {}
+    overview_name = _item_name(course_overview, f"Cognisphere · {domain}")
+    overview_id = course_overview.get("overview_id") or course_overview.get("id") or "overview"
 
     overview_items: list[dict[str, Any]] = [
         {
-            "id": "overview",
-            "name": f"Cognisphere · {domain}",
+            "id": overview_id,
+            "name": overview_name,
         }
     ]
-    _add_module("overview", f"Cognisphere · {domain}", overview_items, KnowledgeType.CONCEPT, id_prefix="ov")
+    _add_module("overview", overview_name, overview_items, KnowledgeType.CONCEPT, id_prefix="ov")
 
     _add_module("patterns", "Patterns", patterns, KnowledgeType.CONCEPT, id_prefix="pat")
     _add_module("skills", "Skills", skills, KnowledgeType.PROCEDURE, id_prefix="sk")

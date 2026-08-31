@@ -147,6 +147,12 @@ def _must_teach(next_step: NextStep, modules: list[Any]) -> list[str]:
         "Use the Cognisphere Plugin Graph Grounding block for factual content.",
         "Keep the explanation beginner-friendly and focused on one objective.",
     ]
+    if _is_overview_objective(next_step):
+        items.append(
+            "For the course overview, teach the course purpose, target learner, "
+            "content design, rationale for the sequence, standard-learning-before-Twin "
+            "method, and source boundary before the first quick check."
+        )
     if next_step.status == "new":
         items.append("Briefly orient the learner before checking prior knowledge.")
     if modules:
@@ -324,9 +330,23 @@ def _objective_label(next_step: NextStep, domain: str) -> str:
     domain_text = _normalize_label(domain)
     if not name:
         return "the current objective"
-    if "cognisphere" in lowered and (not domain_text or domain_text in lowered):
+    if _is_overview_objective(next_step) and "cognisphere" in lowered and (
+        not domain_text or domain_text in lowered
+    ):
         return "the learning path overview"
     return name
+
+
+def _is_overview_objective(next_step: NextStep) -> bool:
+    text = _normalize_label(
+        " ".join(
+            [
+                next_step.knowledge_point_id or "",
+                next_step.knowledge_point_name or "",
+            ]
+        )
+    )
+    return "overview" in text or "course overview" in text
 
 
 def _normalize_label(text: str) -> str:

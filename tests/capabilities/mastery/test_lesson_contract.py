@@ -128,6 +128,30 @@ def test_lesson_contract_masks_materialized_overview_name() -> None:
     assert "immediately register one quick multiple-choice" in payload["must_ask"]
 
 
+def test_lesson_contract_teaches_course_overview_as_system_introduction() -> None:
+    seed = build_lesson_contract_seed(
+        domain="ai_infra",
+        learner_goal="systematic beginner path",
+        next_step=NextStep(
+            action="assess",
+            knowledge_point_id="ov-ai_infra-course_overview-v1",
+            knowledge_point_name="AI Infrastructure Knowledge Platform and Digital Twin Course",
+            knowledge_point_type="concept",
+            status="learning",
+        ),
+        map_summary={"counts": {"total": 76}, "modules": []},
+    )
+
+    payload = _payload(seed)
+
+    assert payload["current_objective"]["display_name"] == (
+        "AI Infrastructure Knowledge Platform and Digital Twin Course"
+    )
+    assert any("course purpose" in item for item in payload["must_teach"])
+    assert any("standard-learning-before-Twin" in item for item in payload["must_teach"])
+    assert any("source boundary" in item for item in payload["must_teach"])
+
+
 def test_lesson_contract_requires_free_response_after_foundation_ramp() -> None:
     seed = build_lesson_contract_seed(
         domain="aws_certification",
