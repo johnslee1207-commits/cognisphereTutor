@@ -30,7 +30,11 @@ export interface AiInfraKnowledgeUnitCard {
       diagnosis_drills?: AiInfraDiagnosisDrill[];
       reflection_prompts?: string[];
     };
-    twin_practice?: { lab_refs?: string[]; post_lab_evidence?: string[] };
+    twin_practice?: {
+      pre_lab_gate?: string[];
+      lab_refs?: string[];
+      post_lab_evidence?: string[];
+    };
   };
 }
 

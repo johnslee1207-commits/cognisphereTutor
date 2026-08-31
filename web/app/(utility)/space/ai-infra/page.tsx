@@ -11,6 +11,7 @@ import {
   Network,
   Play,
   RefreshCw,
+  RotateCcw,
   Search,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -40,6 +41,17 @@ import {
   runCognisphereHandshake,
   type HandshakeResult,
 } from "@/lib/cognisphere-learning-api";
+import { loadFromStorage, removeFromStorage, saveToStorage } from "@/lib/persistence";
+
+const AI_INFRA_WORKSPACE_STORAGE_KEY = "ai_infra_learning_workspace_v1";
+
+interface AiInfraLearningWorkspaceState {
+  selectedCourseId: string | null;
+  selectedUnitId: string | null;
+  quizAnswers: Record<string, string>;
+  completedUnits: Record<string, boolean>;
+  reflectionNotes: Record<string, string>;
+}
 
 export default function AiInfraTwinPage() {
   const { i18n } = useTranslation();
@@ -61,8 +73,46 @@ export default function AiInfraTwinPage() {
   const [courseQuery, setCourseQuery] = useState("");
   const [completedUnits, setCompletedUnits] = useState<Record<string, boolean>>({});
   const [reflectionNotes, setReflectionNotes] = useState<Record<string, string>>({});
+  const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastRun, setLastRun] = useState<Record<string, unknown> | null>(null);
+
+  useEffect(() => {
+    const stored = loadFromStorage<AiInfraLearningWorkspaceState>(
+      AI_INFRA_WORKSPACE_STORAGE_KEY,
+      {
+        selectedCourseId: null,
+        selectedUnitId: null,
+        quizAnswers: {},
+        completedUnits: {},
+        reflectionNotes: {},
+      },
+    );
+    setSelectedCourseId(stored.selectedCourseId);
+    setSelectedUnitId(stored.selectedUnitId);
+    setQuizAnswers(stored.quizAnswers || {});
+    setCompletedUnits(stored.completedUnits || {});
+    setReflectionNotes(stored.reflectionNotes || {});
+    setWorkspaceHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!workspaceHydrated) return;
+    saveToStorage<AiInfraLearningWorkspaceState>(AI_INFRA_WORKSPACE_STORAGE_KEY, {
+      selectedCourseId,
+      selectedUnitId,
+      quizAnswers,
+      completedUnits,
+      reflectionNotes,
+    });
+  }, [
+    completedUnits,
+    quizAnswers,
+    reflectionNotes,
+    selectedCourseId,
+    selectedUnitId,
+    workspaceHydrated,
+  ]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -179,6 +229,15 @@ export default function AiInfraTwinPage() {
   const selectedReflection = selectedUnit?.unit_id
     ? reflectionNotes[selectedUnit.unit_id] || ""
     : "";
+  const selectedUnitLabs = useMemo(() => {
+    const labRefs = [
+      ...(selectedUnit?.standard_learning?.twin_practice?.lab_refs || []),
+      ...(selectedUnit?.lab_refs || []),
+    ];
+    return Array.from(new Set(labRefs))
+      .map((labId) => labsById.get(labId))
+      .filter((lab): lab is AiInfraLab => Boolean(lab));
+  }, [labsById, selectedUnit]);
   const expertUnits = useMemo(
     () =>
       knowledgeUnits.filter((unit) =>
@@ -258,6 +317,15 @@ export default function AiInfraTwinPage() {
     [selected, selectedEvidence],
   );
 
+  const handleResetLearningWorkspace = useCallback(() => {
+    removeFromStorage(AI_INFRA_WORKSPACE_STORAGE_KEY);
+    setSelectedCourseId(priorityCoursePaths[0]?.course_path_id || null);
+    setSelectedUnitId(priorityCoursePaths[0]?.unit_refs?.[0] || null);
+    setQuizAnswers({});
+    setCompletedUnits({});
+    setReflectionNotes({});
+  }, [priorityCoursePaths]);
+
   return (
     <main className="grid h-full min-h-0 grid-cols-[360px_minmax(0,1fr)] bg-[var(--background)]">
       <aside className="min-h-0 overflow-y-auto border-r border-[var(--border)] p-4">
@@ -336,6 +404,14 @@ export default function AiInfraTwinPage() {
               {tr("课程路径", "Course paths")}: {standardLearningAssets?.course_path_count ?? coursePaths.length} ·{" "}
               {trustedSourceCoverage?.review_status || standardLearningAssets?.review_status || "review_required"}
             </div>
+            <button
+              type="button"
+              onClick={handleResetLearningWorkspace}
+              className="mt-2 inline-flex items-center gap-1.5 rounded-md border border-[var(--border)] px-2 py-1 text-[11px] text-[var(--foreground)] hover:bg-[var(--accent)]"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              {tr("重置学习进度", "Reset learning progress")}
+            </button>
             <div className="truncate">
               {tr("Twin 后端", "Twin backend")}:{" "}
               {pluginKnowledge?.twin_backend?.default_base_url || status?.base_url || "offline"}
@@ -688,8 +764,8 @@ export default function AiInfraTwinPage() {
                         <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
                           {tr("学习步骤", "Learning steps")}
                         </div>
-                        <div className="space-y-1">
-                          {(selectedUnit.standard_learning?.steps || []).slice(0, 4).map((step) => (
+                        <div className="max-h-64 space-y-1 overflow-y-auto pr-1">
+                          {(selectedUnit.standard_learning?.steps || []).map((step) => (
                             <div
                               key={`${selectedUnit.unit_id}:${step.phase}`}
                               className="rounded-md border border-[var(--border)] px-2 py-1"
@@ -749,14 +825,29 @@ export default function AiInfraTwinPage() {
                             )}
                           </div>
                         )}
-                          {selectedUnit.standard_learning?.assessment?.diagnosis_drills?.[0] && (
+                        {selectedUnit.standard_learning?.assessment?.diagnosis_drills?.[0] && (
                           <div className="mt-1.5 rounded-md border border-[var(--border)] p-2">
                             <div className="line-clamp-1 text-[10px] uppercase text-[var(--muted-foreground)]">
                               {tr("诊断任务", "Diagnosis drill")}
                             </div>
+                            <div className="mt-0.5 line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
+                              {selectedUnit.standard_learning.assessment.diagnosis_drills[0].scenario}
+                            </div>
                             <div className="mt-0.5 line-clamp-2 text-[11px] text-[var(--foreground)]">
                               {selectedUnit.standard_learning.assessment.diagnosis_drills[0].task}
                             </div>
+                            <ul className="mt-1 space-y-0.5">
+                              {(selectedUnit.standard_learning.assessment.diagnosis_drills[0].rubric || [])
+                                .slice(0, 3)
+                                .map((item) => (
+                                  <li
+                                    key={item}
+                                    className="line-clamp-1 text-[10px] text-[var(--muted-foreground)]"
+                                  >
+                                    {item}
+                                  </li>
+                                ))}
+                            </ul>
                           </div>
                         )}
                       </div>
@@ -802,6 +893,44 @@ export default function AiInfraTwinPage() {
                             ? tr("测验已通过，可以完成该单元。", "Quiz passed. This unit can be completed.")
                             : tr("先完成测验，再记录学习完成。", "Pass the quiz before completing the unit.")}
                         </div>
+                        <div className="mt-2 grid grid-cols-2 gap-1">
+                          <EvidenceMiniList
+                            label={tr("Lab 门禁", "Lab gates")}
+                            items={
+                              selectedUnit.standard_learning?.twin_practice?.pre_lab_gate || []
+                            }
+                          />
+                          <EvidenceMiniList
+                            label={tr("后置证据", "Post evidence")}
+                            items={
+                              selectedUnit.standard_learning?.twin_practice?.post_lab_evidence || []
+                            }
+                          />
+                        </div>
+                        {selectedUnitLabs.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            <div className="text-[10px] font-medium text-[var(--foreground)]">
+                              {tr("关联 Twin Lab", "Linked Twin labs")}
+                            </div>
+                            {selectedUnitLabs.slice(0, 3).map((lab) => (
+                              <button
+                                key={lab.labId}
+                                type="button"
+                                disabled={!selectedQuizCorrect}
+                                onClick={() => void handleSelect(lab)}
+                                className="flex w-full items-center gap-1.5 rounded-md border border-[var(--border)] px-2 py-1 text-left text-[10px] text-[var(--muted-foreground)] hover:bg-[var(--accent)] disabled:opacity-50"
+                                title={
+                                  selectedQuizCorrect
+                                    ? lab.title
+                                    : tr("先通过测验再进入实验", "Pass the quiz before entering the lab")
+                                }
+                              >
+                                <Play className="h-3 w-3 shrink-0" />
+                                <span className="min-w-0 truncate">{lab.title}</span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -976,6 +1105,27 @@ function EvidenceList({ label, items }: { label: string; items: string[] }) {
           >
             {item}
           </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function EvidenceMiniList({ label, items }: { label: string; items: string[] }) {
+  return (
+    <div className="min-w-0 rounded-md border border-[var(--border)] p-1.5">
+      <div className="mb-1 truncate text-[10px] font-medium text-[var(--foreground)]">
+        {label}
+      </div>
+      <div className="space-y-0.5">
+        {items.slice(0, 3).map((item) => (
+          <div
+            key={item}
+            className="truncate text-[10px] text-[var(--muted-foreground)]"
+            title={item}
+          >
+            {item}
+          </div>
         ))}
       </div>
     </div>
