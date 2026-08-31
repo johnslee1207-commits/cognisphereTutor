@@ -107,11 +107,12 @@ export default function LearningGoalEntry({
       }
       onSeeded?.(firstPath);
       if (result.continue_in_chat) {
-        router.push(result.continue_in_chat);
+        const separator = result.continue_in_chat.includes("?") ? "&" : "?";
+        router.push(`${result.continue_in_chat}${separator}autostart=next`);
         return;
       }
       if (firstPath) {
-        router.push(masteryChatHref(firstPath));
+        router.push(masteryChatHref(firstPath, { autoStart: "next" }));
         return;
       }
       router.push(

@@ -402,6 +402,8 @@ export default function ChatPage() {
   const pendingCapabilityRef = useRef<string | null | undefined>(undefined);
   const pendingTutorSessionRef = useRef<string | null | undefined>(undefined);
   const pendingMasteryPathRef = useRef<string | null | undefined>(undefined);
+  const pendingMasteryAutoStartRef = useRef<string | null | undefined>(undefined);
+  const masteryAutoStartSentRef = useRef(false);
   if (pendingAgentRef.current === undefined) {
     const params =
       typeof window === "undefined"
@@ -410,6 +412,7 @@ export default function ChatPage() {
     pendingAgentRef.current = params?.get("agent") ?? null;
     pendingCapabilityRef.current = params?.get("capability") ?? null;
     pendingTutorSessionRef.current = params?.get("tutor_session") ?? null;
+    pendingMasteryAutoStartRef.current = params?.get("autostart") ?? null;
     pendingMasteryPathRef.current = masteryPathParam;
   }
   useEffect(() => {
@@ -424,7 +427,9 @@ export default function ChatPage() {
       .then((progress) => {
         if (cancelled || !progressLooksLikeAwsCertification(progress)) return;
         pendingMasteryPathRef.current = "csphere-aws_certification";
-        router.replace(masteryChatHref("csphere-aws_certification"));
+        router.replace(
+          masteryChatHref("csphere-aws_certification", { autoStart: "next" }),
+        );
       })
       .catch(() => undefined);
     return () => {
@@ -793,7 +798,11 @@ export default function ChatPage() {
         newSession();
         setCapability("mastery_path");
         pendingMasteryPathRef.current = masteryPathParam;
-        router.replace(masteryChatHref(masteryPathParam), { scroll: false });
+        pendingMasteryAutoStartRef.current = "next";
+        masteryAutoStartSentRef.current = false;
+        router.replace(masteryChatHref(masteryPathParam, { autoStart: "next" }), {
+          scroll: false,
+        });
         setMasteryProgressNotice(
           mode === "restart"
             ? goalTr(
@@ -1780,6 +1789,39 @@ export default function ChatPage() {
     ],
   );
 
+  useEffect(() => {
+    if (masteryAutoStartSentRef.current) return;
+    if ((pendingMasteryAutoStartRef.current || "") !== "next") return;
+    const masteryPathId = pendingMasteryPathRef.current;
+    if (!masteryPathId) return;
+    if (state.activeCapability !== "mastery_path") return;
+    if (state.isStreaming || state.messages.length > 0) return;
+    masteryAutoStartSentRef.current = true;
+    sendMessage(
+      "Continue the current mastery path in order.",
+      [],
+      {
+        mastery_path_id: masteryPathId,
+        ...(pendingTutorSessionRef.current
+          ? { cognisphere_tutor_session_id: pendingTutorSessionRef.current }
+          : {}),
+      },
+      [],
+      [],
+      {
+        displayUserMessage: false,
+        persistUserMessage: false,
+      },
+    );
+    shouldAutoScrollRef.current = true;
+  }, [
+    sendMessage,
+    state.activeCapability,
+    state.isStreaming,
+    state.messages.length,
+    shouldAutoScrollRef,
+  ]);
+
   const handleConfirmOutline = useCallback(
     (
       outline: OutlineItem[],
@@ -2185,7 +2227,7 @@ export default function ChatPage() {
                         </div>
                         <div className="min-w-0">
                           <div className="text-sm font-medium text-[var(--foreground)]">
-                            {goalTr("以对话方式学习 AI Infra", "Learn AI Infra through guided conversation")}
+                            {goalTr("按顺序学习 AI Infra", "Learn AI Infra in order")}
                           </div>
                           <p className="mt-1 text-xs leading-relaxed text-[var(--muted-foreground)]">
                             {goalTr(
@@ -2204,7 +2246,7 @@ export default function ChatPage() {
                         >
                           <MessageCirclePlus className="h-4 w-4 shrink-0" />
                           <span className="min-w-0 truncate">
-                            {goalTr("继续对话学习", "Continue in chat")}
+                            {goalTr("继续下一课", "Continue next lesson")}
                           </span>
                         </button>
                         <button
@@ -2240,7 +2282,7 @@ export default function ChatPage() {
                           className="inline-flex flex-1 items-center justify-center gap-2 rounded-md border border-[var(--border)] px-3 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           <MessageCirclePlus className="h-4 w-4" />
-                          {goalTr("新会话继续当前进度", "New session, continue")}
+                          {goalTr("新会话继续下一步", "New session, next step")}
                         </button>
                         <button
                           type="button"

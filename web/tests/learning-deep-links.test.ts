@@ -16,6 +16,10 @@ test("masteryChatHref preselects mastery_path", () => {
       "tutor_session=sess-1",
     ),
   );
+  assert.equal(
+    masteryChatHref("csphere-demo", { autoStart: "next" }),
+    "/home/csphere-demo?capability=mastery_path&autostart=next",
+  );
 });
 
 test("learningSpaceGoalHref carries goal and domains", () => {

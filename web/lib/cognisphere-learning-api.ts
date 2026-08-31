@@ -432,11 +432,14 @@ export async function startCognisphereTutor(opts: {
 /** Chat deep-link that pre-selects Mastery Path mode. */
 export function masteryChatHref(
   pathId: string,
-  opts?: { tutorSessionId?: string },
+  opts?: { tutorSessionId?: string; autoStart?: "next" },
 ): string {
   const params = new URLSearchParams({ capability: "mastery_path" });
   if (opts?.tutorSessionId) {
     params.set("tutor_session", opts.tutorSessionId);
+  }
+  if (opts?.autoStart) {
+    params.set("autostart", opts.autoStart);
   }
   return `/home/${encodeURIComponent(pathId)}?${params.toString()}`;
 }

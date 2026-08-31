@@ -423,12 +423,13 @@ function MasteryPathPageInner() {
         const pathId = seeded.mastery_path?.path_id || awsMasteryPathId;
         await loadList();
         setSelected(pathId);
-        router.push(masteryChatHref(pathId));
+        router.push(masteryChatHref(pathId, { autoStart: "next" }));
         return;
       }
       setSelected(awsMasteryPathId);
       router.push(
-        awsTwinGate?.continue_in_chat || masteryChatHref(awsMasteryPathId),
+        awsTwinGate?.continue_in_chat ||
+          masteryChatHref(awsMasteryPathId, { autoStart: "next" }),
       );
     } catch (err) {
       setCsphereError(
@@ -463,11 +464,11 @@ function MasteryPathPageInner() {
         const pathId = seeded.mastery_path?.path_id || aiInfraMasteryPathId;
         await loadList();
         setSelected(pathId);
-        router.push(masteryChatHref(pathId));
+        router.push(masteryChatHref(pathId, { autoStart: "next" }));
         return;
       }
       setSelected(aiInfraMasteryPathId);
-      router.push(masteryChatHref(aiInfraMasteryPathId));
+      router.push(masteryChatHref(aiInfraMasteryPathId, { autoStart: "next" }));
     } catch (err) {
       setCsphereError(
         err instanceof Error
@@ -1150,7 +1151,9 @@ function MasteryPathPageInner() {
                         disabled={!path?.book_id}
                         onClick={() =>
                           path?.book_id &&
-                          router.push(masteryChatHref(path.book_id))
+                          router.push(
+                            masteryChatHref(path.book_id, { autoStart: "next" }),
+                          )
                         }
                         className="px-2 py-1 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
                         title={tr("进入 Mastery 对话", "Open Mastery Chat")}
@@ -1191,14 +1194,14 @@ function MasteryPathPageInner() {
             onClick={() =>
               router.push(
                 selected
-                  ? masteryChatHref(selected)
+                  ? masteryChatHref(selected, { autoStart: "next" })
                   : "/home?capability=mastery_path",
               )
             }
             className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-sm rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-opacity cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            {tr("进入学习对话", "Open learning chat")}
+            {tr("继续下一步", "Continue next step")}
           </button>
         </footer>
       </aside>
@@ -1251,7 +1254,8 @@ function MasteryPathPageInner() {
             planHint={planHint}
             tutorBusy={tutorBusy}
             onContinue={() =>
-              selected && router.push(masteryChatHref(selected))
+              selected &&
+              router.push(masteryChatHref(selected, { autoStart: "next" }))
             }
             onSocratic={handleSocraticPractice}
             onAwsTwinPractice={() => void handleRunAwsTwinMastery()}
@@ -1588,7 +1592,7 @@ function MapView({
             : `${next.knowledge_point_name} — ${tr(action.cn, action.en)}`}
         </div>
         <div className="mt-1 text-xs text-[var(--primary)]">
-          {tr("在对话中继续辅导 →", "Continue tutoring in Chat →")}
+          {tr("按顺序继续下一步 →", "Continue next step in order →")}
         </div>
       </button>
 
