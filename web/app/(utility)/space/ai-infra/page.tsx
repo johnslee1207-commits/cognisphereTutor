@@ -8,6 +8,7 @@ import {
   Cpu,
   ExternalLink,
   GraduationCap,
+  ListChecks,
   Loader2,
   Network,
   Play,
@@ -43,6 +44,8 @@ import {
   getAiInfraCourseContextStats,
   getAiInfraCourseProgress,
   getAiInfraCoverageSummary,
+  getAiInfraImprovementRoadmap,
+  getAiInfraImprovementRoadmapSummary,
   getAiInfraReviewQueue,
   getAiInfraReviewStageSummary,
   getAiInfraLearningModeView,
@@ -255,6 +258,11 @@ export default function AiInfraTwinPage() {
   const standardLearningAssets =
     pluginKnowledge?.standard_learning_assets ||
     pluginKnowledge?.learning_surface?.standard_learning_assets;
+  const improvementRoadmap = useMemo(() => getAiInfraImprovementRoadmap(), []);
+  const improvementSummary = useMemo(
+    () => getAiInfraImprovementRoadmapSummary(improvementRoadmap),
+    [improvementRoadmap],
+  );
   const coursePaths =
     pluginKnowledge?.course_paths ||
     pluginKnowledge?.learning_surface?.course_paths ||
@@ -646,6 +654,67 @@ export default function AiInfraTwinPage() {
               {tr("Twin 后端", "Twin backend")}:{" "}
               {pluginKnowledge?.twin_backend?.default_base_url || status?.base_url || "offline"}
             </div>
+          </div>
+        </section>
+
+        <section className="mb-5 rounded-lg border border-[var(--border)] p-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2">
+              <ListChecks className="h-4 w-4 shrink-0 text-[var(--muted-foreground)]" />
+              <h2 className="truncate text-sm font-medium text-[var(--foreground)]">
+                {tr("专家整改路线图", "Expert improvement roadmap")}
+              </h2>
+            </div>
+            <span className="shrink-0 text-[11px] text-[var(--muted-foreground)]">
+              {improvementSummary.done}/{improvementSummary.total}
+            </span>
+          </div>
+          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--muted)]">
+            <div
+              className="h-full rounded-full bg-[var(--primary)]"
+              style={{ width: `${improvementSummary.donePct}%` }}
+            />
+          </div>
+          <div className="mt-2 grid grid-cols-4 gap-1">
+            <MiniStat label={tr("完成", "Done")} value={improvementSummary.done} />
+            <MiniStat label={tr("进行中", "Active")} value={improvementSummary.inProgress} />
+            <MiniStat label={tr("计划", "Planned")} value={improvementSummary.planned} />
+            <MiniStat label={tr("阻塞", "Blocked")} value={improvementSummary.blocked} />
+          </div>
+          <div className="mt-2 flex flex-wrap gap-1">
+            {Object.entries(improvementSummary.byPriority).map(([priority, value]) => (
+              <span
+                key={priority}
+                className="rounded-md border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--muted-foreground)]"
+              >
+                {priority} {value.done}/{value.total}
+              </span>
+            ))}
+          </div>
+          <div className="mt-2 space-y-1">
+            {improvementSummary.nextTasks.map((task) => (
+              <div
+                key={task.id}
+                className="rounded-md border border-[var(--border)] px-2 py-1"
+                title={task.acceptance.join("\n")}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="min-w-0 truncate text-[10px] font-medium text-[var(--foreground)]">
+                    {task.priority} · {task.title}
+                  </span>
+                  <span
+                    className={`shrink-0 text-[10px] ${
+                      task.status === "in_progress" ? "text-amber-500" : "text-[var(--muted-foreground)]"
+                    }`}
+                  >
+                    {task.status.replace(/_/g, " ")}
+                  </span>
+                </div>
+                <div className="mt-0.5 truncate text-[10px] text-[var(--muted-foreground)]">
+                  {task.area} · {task.owner}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 

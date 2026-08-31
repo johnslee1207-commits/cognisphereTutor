@@ -1,5 +1,6 @@
 import type { AiInfraLab } from "./ai-infra-twin-api";
 import type { HandshakeResult } from "./cognisphere-learning-api";
+import roadmapManifest from "../manifests/ai-infra-expert-improvement-roadmap.json";
 
 export interface AiInfraLessonCard {
   lesson_id?: string;
@@ -213,6 +214,41 @@ export interface AiInfraReviewStageSummary {
   requiredApprovals: string[];
 }
 
+export type AiInfraImprovementTaskStatus =
+  | "planned"
+  | "in_progress"
+  | "done"
+  | "blocked";
+
+export interface AiInfraImprovementTask {
+  id: string;
+  priority: string;
+  title: string;
+  status: AiInfraImprovementTaskStatus;
+  area: string;
+  owner: string;
+  acceptance: string[];
+  evidence: string[];
+}
+
+export interface AiInfraImprovementRoadmap {
+  version: string;
+  source_review: string;
+  positioning: string;
+  tasks: AiInfraImprovementTask[];
+}
+
+export interface AiInfraImprovementRoadmapSummary {
+  total: number;
+  done: number;
+  inProgress: number;
+  planned: number;
+  blocked: number;
+  donePct: number;
+  nextTasks: AiInfraImprovementTask[];
+  byPriority: Record<string, { total: number; done: number }>;
+}
+
 export type AiInfraLearningMode =
   | "learn"
   | "guided_practice"
@@ -240,6 +276,37 @@ const PRIORITY_COURSE_DOMAINS = [
   "observability",
   "inference_serving",
 ];
+
+export function getAiInfraImprovementRoadmap(): AiInfraImprovementRoadmap {
+  return roadmapManifest as AiInfraImprovementRoadmap;
+}
+
+export function getAiInfraImprovementRoadmapSummary(
+  roadmap: AiInfraImprovementRoadmap = getAiInfraImprovementRoadmap(),
+): AiInfraImprovementRoadmapSummary {
+  const byPriority: Record<string, { total: number; done: number }> = {};
+  for (const task of roadmap.tasks) {
+    byPriority[task.priority] ||= { total: 0, done: 0 };
+    byPriority[task.priority].total += 1;
+    if (task.status === "done") byPriority[task.priority].done += 1;
+  }
+  const done = roadmap.tasks.filter((task) => task.status === "done").length;
+  const inProgress = roadmap.tasks.filter((task) => task.status === "in_progress").length;
+  const planned = roadmap.tasks.filter((task) => task.status === "planned").length;
+  const blocked = roadmap.tasks.filter((task) => task.status === "blocked").length;
+  return {
+    total: roadmap.tasks.length,
+    done,
+    inProgress,
+    planned,
+    blocked,
+    donePct: roadmap.tasks.length ? Math.round((done / roadmap.tasks.length) * 100) : 0,
+    nextTasks: roadmap.tasks
+      .filter((task) => task.status === "in_progress" || task.status === "planned")
+      .slice(0, 4),
+    byPriority,
+  };
+}
 
 export function extractAiInfraPluginKnowledge(
   handshake: HandshakeResult | null,

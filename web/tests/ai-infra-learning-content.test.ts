@@ -9,6 +9,8 @@ import {
   getAiInfraCoverageSummary,
   findAiInfraKnowledgeUnit,
   getAiInfraCourseProgress,
+  getAiInfraImprovementRoadmap,
+  getAiInfraImprovementRoadmapSummary,
   getAiInfraLearningModeView,
   getAiInfraReviewQueue,
   getAiInfraReviewStageSummary,
@@ -324,6 +326,21 @@ test("getAiInfraReviewStageSummary does not treat source-backed drafts as approv
     "assessment reviewer",
   ]);
   assert.equal(getAiInfraReviewStageSummary("approved").approved, true);
+});
+
+test("getAiInfraImprovementRoadmapSummary exposes expert remediation progress", () => {
+  const roadmap = getAiInfraImprovementRoadmap();
+  const summary = getAiInfraImprovementRoadmapSummary(roadmap);
+
+  assert.equal(roadmap.source_review.includes("Expert_Evaluation"), true);
+  assert.equal(summary.total >= 10, true);
+  assert.equal(summary.done >= 4, true);
+  assert.equal(summary.byPriority.P0.total >= 1, true);
+  assert.equal(summary.nextTasks[0]?.status, "planned");
+  assert.equal(
+    roadmap.tasks.some((task) => task.title === "Upgrade real lifecycle lab count"),
+    true,
+  );
 });
 
 test("getAiInfraLearningModeView reduces hints for independent and incident work", () => {

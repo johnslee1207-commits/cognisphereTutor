@@ -1,0 +1,164 @@
+{
+  "version": "2026-08-31",
+  "source_review": "AetherAI-Infra-Twin_Learning_System_Expert_Evaluation_and_Improvement_Recommendations_v1.0.md",
+  "positioning": "evidence-driven AI infra learning and desktop digital twin practice platform for foundation-to-advanced engineering capability",
+  "tasks": [
+    {
+      "id": "P0-01",
+      "priority": "P0",
+      "title": "Redefine expert claims",
+      "status": "done",
+      "area": "governance",
+      "owner": "CognisphereTutor",
+      "acceptance": [
+        "source_backed_draft_review_required is not rendered as approved expert content",
+        "technical, lab, and assessment reviewer obligations are visible"
+      ],
+      "evidence": ["commit:46a07dfe"]
+    },
+    {
+      "id": "P0-02",
+      "priority": "P0",
+      "title": "Create tri-review approval workflow",
+      "status": "planned",
+      "area": "governance",
+      "owner": "Cognisphere + CognisphereTutor",
+      "acceptance": [
+        "each unit can hold technical_reviewed, lab_validated, assessment_validated, approved, or deprecated state",
+        "review decisions are auditable and separated from generated content"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P1-01",
+      "priority": "P1",
+      "title": "Upgrade real lifecycle lab count",
+      "status": "planned",
+      "area": "labs",
+      "owner": "AetherAI-Infra Twin",
+      "acceptance": [
+        "real_lifecycle labs increase from 2 to at least 10",
+        "Docker, kind, Prometheus, vLLM, Jenkins, GPU OOM, and rollback loops have bounded cleanup proof"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P1-02",
+      "priority": "P1",
+      "title": "Bind mastery to Evidence Bundle",
+      "status": "done",
+      "area": "assessment",
+      "owner": "CognisphereTutor",
+      "acceptance": [
+        "unit completion requires explicit evidence refs when Twin practice exists",
+        "evidence refs persist in the AI infra learning workspace"
+      ],
+      "evidence": ["commit:46a07dfe"]
+    },
+    {
+      "id": "P2-01",
+      "priority": "P2",
+      "title": "Upgrade diagnosis scoring rubric",
+      "status": "in_progress",
+      "area": "assessment",
+      "owner": "CognisphereTutor",
+      "acceptance": [
+        "diagnosis gate checks claim shape instead of minimum length only",
+        "future scorer checks evidence-claim consistency, candidate hypotheses, exclusion process, safe fix, and validation method"
+      ],
+      "evidence": ["commit:3d4143f1"]
+    },
+    {
+      "id": "P2-02",
+      "priority": "P2",
+      "title": "Add source document drill",
+      "status": "done",
+      "area": "assessment",
+      "owner": "CognisphereTutor",
+      "acceptance": [
+        "learner must reference at least one candidate trusted document",
+        "answer must connect source, evidence requirement, and claim boundary"
+      ],
+      "evidence": ["commit:46a07dfe"]
+    },
+    {
+      "id": "P2-03",
+      "priority": "P2",
+      "title": "Add unknown challenge modes",
+      "status": "done",
+      "area": "assessment",
+      "owner": "CognisphereTutor",
+      "acceptance": [
+        "Learn, Guided Practice, Independent Lab, Incident Challenge, and Capstone modes are available",
+        "independent and incident modes hide failure-mode and expected-claim hints"
+      ],
+      "evidence": ["commit:72a80e0b"]
+    },
+    {
+      "id": "P3-01",
+      "priority": "P3",
+      "title": "Add AI Infra Software Engineering path",
+      "status": "planned",
+      "area": "content",
+      "owner": "CognisphereLearningPlugins",
+      "acceptance": [
+        "path covers API/controller/operator design, idempotency, retries, schema compatibility, CI, and tests",
+        "path includes source-backed units, quizzes, diagnosis drills, and at least one capstone"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P3-02",
+      "priority": "P3",
+      "title": "Expand deep paths beyond four units",
+      "status": "planned",
+      "area": "content",
+      "owner": "CognisphereLearningPlugins",
+      "acceptance": [
+        "Kubernetes, inference serving, GPU SRE, distributed training, networking, and storage paths have complexity-proportional unit counts",
+        "core role paths target 12 to 20 units instead of fixed four-unit shells"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P4-01",
+      "priority": "P4",
+      "title": "Add real multi-node calibration profile",
+      "status": "planned",
+      "area": "calibration",
+      "owner": "AetherAI-Infra Twin",
+      "acceptance": [
+        "RTX 4050, RTX 5090, L20, and CX6 device profiles are reported separately",
+        "NCCL, DDP, topology, rank failure, checkpoint pressure, and multi-replica inference are calibrated on real hardware when available"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P5-01",
+      "priority": "P5",
+      "title": "Add spaced repetition and retention tracking",
+      "status": "done",
+      "area": "learning_effectiveness",
+      "owner": "CognisphereTutor",
+      "acceptance": [
+        "review queue shows due, soon, and later units",
+        "last reviewed state persists in workspace"
+      ],
+      "evidence": ["commit:9e51ef0c"]
+    },
+    {
+      "id": "P5-02",
+      "priority": "P5",
+      "title": "Add pre, post, transfer, and expert-agreement evaluation",
+      "status": "planned",
+      "area": "learning_effectiveness",
+      "owner": "CognisphereTutor + Expert reviewers",
+      "acceptance": [
+        "pre/post tests measure immediate gain",
+        "transfer tests use unseen incidents",
+        "automatic scorer agreement with expert scoring is reported"
+      ],
+      "evidence": []
+    }
+  ]
+}
