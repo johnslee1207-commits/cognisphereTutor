@@ -65,6 +65,8 @@ import { loadFromStorage, removeFromStorage, saveToStorage } from "@/lib/persist
 const AI_INFRA_WORKSPACE_STORAGE_KEY = "ai_infra_learning_workspace_v1";
 const AI_INFRA_WORKSPACE_ID = "default";
 
+type AiInfraWorkspaceTab = "learn" | "labs" | "roadmap" | "review" | "sources";
+
 interface AiInfraLearningWorkspaceState {
   selectedCourseId: string | null;
   selectedUnitId: string | null;
@@ -94,6 +96,7 @@ export default function AiInfraTwinPage() {
   const [diagnosisResult, setDiagnosisResult] = useState<AiInfraDiagnosisAssessment | null>(null);
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<AiInfraWorkspaceTab>("learn");
   const [assessmentMode, setAssessmentMode] = useState<AiInfraLearningMode>("learn");
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [courseQuery, setCourseQuery] = useState("");
@@ -553,9 +556,16 @@ export default function AiInfraTwinPage() {
     setEvidenceBundles({});
     setReviewLedger({});
   }, [priorityCoursePaths]);
+  const workspaceTabs: { id: AiInfraWorkspaceTab; label: string }[] = [
+    { id: "learn", label: tr("学习", "Learn") },
+    { id: "labs", label: tr("实验", "Labs") },
+    { id: "roadmap", label: tr("路线图", "Roadmap") },
+    { id: "review", label: tr("复习", "Review") },
+    { id: "sources", label: tr("来源", "Sources") },
+  ];
 
   return (
-    <main className="grid h-full min-h-0 grid-cols-[360px_minmax(0,1fr)] bg-[var(--background)]">
+    <main className="grid h-full min-h-0 grid-cols-[320px_minmax(0,1fr)] bg-[var(--background)]">
       <aside className="min-h-0 overflow-y-auto border-r border-[var(--border)] p-4">
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
@@ -593,12 +603,39 @@ export default function AiInfraTwinPage() {
           </div>
         )}
 
+        {activeTab === "learn" && (
+          <section className="mb-4 rounded-lg border border-[var(--border)] p-3">
+            <div className="text-[11px] uppercase text-[var(--muted-foreground)]">
+              {tr("学习焦点", "Learning focus")}
+            </div>
+            <div className="mt-1 text-sm font-medium text-[var(--foreground)]">
+              {selectedCourse?.title || tr("选择课程路径", "Select a course path")}
+            </div>
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--muted)]">
+              <div
+                className="h-full rounded-full bg-[var(--primary)]"
+                style={{ width: `${selectedCourseProgress.pct}%` }}
+              />
+            </div>
+            <div className="mt-2 grid grid-cols-2 gap-1">
+              <MiniStat label={tr("路径进度", "Path")} value={selectedCourseProgress.pct} />
+              <MiniStat label={tr("掌握度", "Mastery")} value={selectedUnitMastery.scorePct} />
+            </div>
+            <div className="mt-2 rounded-md border border-[var(--border)] px-2 py-1 text-[10px] text-[var(--muted-foreground)]">
+              {selectedUnitMastery.nextAction}
+            </div>
+          </section>
+        )}
+
+        {activeTab === "labs" && (
         <section className="mb-4 grid grid-cols-3 gap-2">
           <Metric label={tr("Labs", "Labs")} value={status?.summary?.counts?.labs ?? labs.length} />
           <Metric label={tr("证据", "Evidence")} value={status?.summary?.counts?.evidence ?? 0} />
           <Metric label={tr("场景", "Scenarios")} value={status?.summary?.counts?.scenarios ?? 0} />
         </section>
+        )}
 
+        {activeTab === "sources" && (
         <section className="mb-5 rounded-lg border border-[var(--border)] p-3">
           <div className="flex items-center gap-2">
             <Network className="h-4 w-4 text-[var(--muted-foreground)]" />
@@ -656,7 +693,9 @@ export default function AiInfraTwinPage() {
             </div>
           </div>
         </section>
+        )}
 
+        {activeTab === "roadmap" && (
         <section className="mb-5 rounded-lg border border-[var(--border)] p-3">
           <div className="flex items-center justify-between gap-2">
             <div className="flex min-w-0 items-center gap-2">
@@ -717,7 +756,9 @@ export default function AiInfraTwinPage() {
             ))}
           </div>
         </section>
+        )}
 
+        {activeTab === "labs" && (
         <section className="mb-5 rounded-lg border border-[var(--border)] p-3">
           <h2 className="text-sm font-medium text-[var(--foreground)]">
             {tr("实验成熟度", "Lab maturity")}
@@ -733,7 +774,9 @@ export default function AiInfraTwinPage() {
             ))}
           </div>
         </section>
+        )}
 
+        {activeTab === "labs" && (
         <section className="space-y-3">
           <h2 className="text-sm font-medium text-[var(--foreground)]">
             {tr("课程模块", "Curriculum modules")}
@@ -775,53 +818,81 @@ export default function AiInfraTwinPage() {
             </div>
           ))}
         </section>
+        )}
       </aside>
 
       <section className="flex min-h-0 flex-col">
-        <header className="flex shrink-0 items-center justify-between gap-3 border-b border-[var(--border)] px-4 py-3">
-          <div className="min-w-0">
-            <h2 className="truncate text-base font-semibold text-[var(--foreground)]">
-              {selected?.title || tr("选择一个 AI Infra Lab", "Select an AI Infra Lab")}
-            </h2>
-            <p className="mt-0.5 truncate text-xs text-[var(--muted-foreground)]">
-              {selected?.symptom ||
-                tr(
-                  "Cognisphere 插件提供知识路径，AetherAI-Infra-Twin 执行实验并返回证据。",
-                  "The Cognisphere plugin provides the learning path; AetherAI-Infra-Twin runs labs and returns evidence.",
-                )}
-            </p>
+        <header className="shrink-0 border-b border-[var(--border)] px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="truncate text-base font-semibold text-[var(--foreground)]">
+                {activeTab === "learn"
+                  ? selectedUnit?.title || tr("选择一个学习单元", "Select a learning unit")
+                  : selected?.title || tr("选择一个 AI Infra Lab", "Select an AI Infra Lab")}
+              </h2>
+              <p className="mt-0.5 truncate text-xs text-[var(--muted-foreground)]">
+                {activeTab === "learn"
+                  ? selectedCourse?.title || tr("标准学习工作台", "Standard learning workspace")
+                  : selected?.symptom ||
+                    tr(
+                      "Cognisphere 插件提供知识路径，AetherAI-Infra-Twin 执行实验并返回证据。",
+                      "The Cognisphere plugin provides the learning path; AetherAI-Infra-Twin runs labs and returns evidence.",
+                    )}
+              </p>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              {activeTab === "labs" && (
+                <button
+                  type="button"
+                  onClick={() => void handleRun()}
+                  disabled={!selected || running}
+                  className="inline-flex items-center gap-1.5 rounded-md bg-[var(--primary)] px-3 py-2 text-sm text-[var(--primary-foreground)] disabled:opacity-50"
+                >
+                  {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+                  {tr("运行 Lab", "Run Lab")}
+                </button>
+              )}
+              {activeTab === "labs" && embedUrl && (
+                <a
+                  href={embedUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border)] px-3 py-2 text-sm hover:bg-[var(--accent)]"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  {tr("打开 Twin", "Open Twin")}
+                </a>
+              )}
+            </div>
           </div>
-          <div className="flex shrink-0 gap-2">
-            <button
-              type="button"
-              onClick={() => void handleRun()}
-              disabled={!selected || running}
-              className="inline-flex items-center gap-1.5 rounded-md bg-[var(--primary)] px-3 py-2 text-sm text-[var(--primary-foreground)] disabled:opacity-50"
-            >
-              {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
-              {tr("运行 Lab", "Run Lab")}
-            </button>
-            {embedUrl && (
-              <a
-                href={embedUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-md border border-[var(--border)] px-3 py-2 text-sm hover:bg-[var(--accent)]"
-              >
-                <ExternalLink className="h-4 w-4" />
-                {tr("打开 Twin", "Open Twin")}
-              </a>
-            )}
+          <div className="mt-3 grid grid-cols-5 gap-1">
+            {workspaceTabs.map((tab) => {
+              const active = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`rounded-md border px-2 py-1.5 text-xs transition-colors ${
+                    active
+                      ? "border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--foreground)]"
+                      : "border-[var(--border)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
         </header>
 
-        {lastRun && (
+        {activeTab === "labs" && lastRun && (
           <pre className="mx-4 mt-3 max-h-32 shrink-0 overflow-auto rounded-md border border-[var(--border)] bg-[var(--card)] p-3 text-xs text-[var(--muted-foreground)]">
             {JSON.stringify(lastRun, null, 2)}
           </pre>
         )}
 
-        {selected && (
+        {activeTab === "labs" && selected && (
           <section className="mx-4 mt-3 shrink-0 rounded-lg border border-[var(--border)] p-3">
             <div className="grid grid-cols-4 gap-2">
               <LabFact label={tr("模式", "Mode")} value={selected.executionMode} />
@@ -909,8 +980,153 @@ export default function AiInfraTwinPage() {
           </section>
         )}
 
-        {priorityCoursePaths.length > 0 && (
-          <section className="mx-4 mt-3 shrink-0 rounded-lg border border-[var(--border)] p-3">
+        {activeTab === "roadmap" && (
+          <section className="mx-4 my-3 min-h-0 flex-1 overflow-y-auto rounded-lg border border-[var(--border)] p-3">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <div className="min-w-0">
+                <h3 className="truncate text-sm font-medium text-[var(--foreground)]">
+                  {tr("专家评审整改计划", "Expert remediation plan")}
+                </h3>
+                <p className="mt-0.5 truncate text-[11px] text-[var(--muted-foreground)]">
+                  {improvementRoadmap.positioning}
+                </p>
+              </div>
+              <span className="shrink-0 rounded-md border border-[var(--border)] px-2 py-1 text-[11px] text-[var(--muted-foreground)]">
+                {improvementRoadmap.version}
+              </span>
+            </div>
+            <div className="mb-3 grid grid-cols-5 gap-2">
+              {Object.entries(improvementSummary.byPriority).map(([priority, value]) => (
+                <MiniStat key={priority} label={priority} value={value.done} />
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {improvementRoadmap.tasks.map((task) => (
+                <article
+                  key={task.id}
+                  className="min-w-0 rounded-md border border-[var(--border)] p-2"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="truncate text-xs font-medium text-[var(--foreground)]">
+                      {task.priority} · {task.title}
+                    </span>
+                    <span
+                      className={`shrink-0 rounded-md border px-1.5 py-0.5 text-[10px] ${
+                        task.status === "done"
+                          ? "border-emerald-500/40 text-emerald-500"
+                          : task.status === "in_progress"
+                            ? "border-amber-500/40 text-amber-500"
+                            : "border-[var(--border)] text-[var(--muted-foreground)]"
+                      }`}
+                    >
+                      {task.status.replace(/_/g, " ")}
+                    </span>
+                  </div>
+                  <div className="mt-1 truncate text-[10px] text-[var(--muted-foreground)]">
+                    {task.area} · {task.owner}
+                  </div>
+                  <ul className="mt-1 space-y-0.5">
+                    {task.acceptance.slice(0, 2).map((item) => (
+                      <li key={item} className="line-clamp-1 text-[10px] text-[var(--muted-foreground)]">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  {task.evidence.length > 0 && (
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {task.evidence.map((item) => (
+                        <span
+                          key={item}
+                          className="rounded-md border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--muted-foreground)]"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {activeTab === "review" && (
+          <section className="mx-4 my-3 min-h-0 flex-1 overflow-y-auto rounded-lg border border-[var(--border)] p-3">
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h3 className="text-sm font-medium text-[var(--foreground)]">
+                {tr("复习工作台", "Review workspace")}
+              </h3>
+              <span className="text-[11px] text-[var(--muted-foreground)]">
+                {reviewQueue.length + spacedReviewQueue.length} {tr("项", "items")}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <section className="min-w-0 rounded-md border border-[var(--border)] p-2">
+                <div className="mb-2 text-xs font-medium text-[var(--foreground)]">
+                  {tr("薄弱项", "Weakest units")}
+                </div>
+                <div className="space-y-1">
+                  {reviewQueue.map((item) => (
+                    <button
+                      key={item.unit.unit_id || item.unit.title}
+                      type="button"
+                      onClick={() => {
+                        setActiveTab("learn");
+                        setSelectedUnitId(item.unit.unit_id || null);
+                      }}
+                      className="w-full rounded-md border border-[var(--border)] px-2 py-1.5 text-left hover:bg-[var(--accent)]"
+                    >
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="min-w-0 truncate text-xs font-medium text-[var(--foreground)]">
+                          {item.unit.title}
+                        </span>
+                        <span className="shrink-0 text-[10px] tabular-nums text-[var(--muted-foreground)]">
+                          {item.mastery.scorePct}%
+                        </span>
+                      </span>
+                      <span className="mt-0.5 block truncate text-[10px] text-[var(--muted-foreground)]">
+                        {item.mastery.nextAction}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+              <section className="min-w-0 rounded-md border border-[var(--border)] p-2">
+                <div className="mb-2 text-xs font-medium text-[var(--foreground)]">
+                  {tr("间隔复习", "Spaced review")}
+                </div>
+                <div className="space-y-1">
+                  {spacedReviewQueue.map((item) => (
+                    <button
+                      key={item.unit.unit_id || item.unit.title}
+                      type="button"
+                      onClick={() => {
+                        setActiveTab("learn");
+                        setSelectedUnitId(item.unit.unit_id || null);
+                      }}
+                      className="w-full rounded-md border border-[var(--border)] px-2 py-1.5 text-left hover:bg-[var(--accent)]"
+                    >
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="min-w-0 truncate text-xs font-medium text-[var(--foreground)]">
+                          {item.unit.title}
+                        </span>
+                        <span className="shrink-0 text-[10px] text-amber-500">
+                          {item.dueLabel}
+                        </span>
+                      </span>
+                      <span className="mt-0.5 block truncate text-[10px] text-[var(--muted-foreground)]">
+                        {item.reason}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </section>
+        )}
+
+        {activeTab === "learn" && priorityCoursePaths.length > 0 && (
+          <section className="mx-4 my-3 min-h-0 flex-1 overflow-y-auto rounded-lg border border-[var(--border)] p-3">
             <div className="mb-2 flex items-center justify-between gap-2">
               <div className="flex min-w-0 items-center gap-2">
                 <BookOpenCheck className="h-4 w-4 shrink-0 text-[var(--muted-foreground)]" />
@@ -1744,7 +1960,7 @@ export default function AiInfraTwinPage() {
           </section>
         )}
 
-        {expertUnits.length > 0 && (
+        {activeTab === "sources" && expertUnits.length > 0 && (
           <section className="mx-4 mt-3 shrink-0 rounded-lg border border-[var(--border)] p-3">
             <div className="mb-2 flex items-center justify-between gap-2">
               <div className="flex min-w-0 items-center gap-2">
@@ -1801,8 +2017,8 @@ export default function AiInfraTwinPage() {
           </section>
         )}
 
-        {(lessonCards.length > 0 || knowledgeUnits.length > 0) && (
-          <div className="mx-4 mt-3 grid max-h-48 shrink-0 grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] gap-3 overflow-hidden">
+        {activeTab === "sources" && (lessonCards.length > 0 || knowledgeUnits.length > 0) && (
+          <div className="mx-4 my-3 grid min-h-0 flex-1 grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] gap-3 overflow-hidden">
             <section className="min-w-0 overflow-y-auto rounded-lg border border-[var(--border)] p-3">
               <div className="mb-2 flex items-center justify-between gap-2">
                 <h3 className="text-sm font-medium text-[var(--foreground)]">
@@ -1857,6 +2073,7 @@ export default function AiInfraTwinPage() {
           </div>
         )}
 
+        {activeTab === "labs" && (
         <div className="min-h-0 flex-1 p-4">
           {embedUrl ? (
             <iframe
@@ -1870,6 +2087,7 @@ export default function AiInfraTwinPage() {
             </div>
           )}
         </div>
+        )}
       </section>
     </main>
   );
