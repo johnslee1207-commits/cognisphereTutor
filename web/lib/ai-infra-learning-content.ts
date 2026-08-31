@@ -15,12 +15,18 @@ export interface AiInfraKnowledgeUnitCard {
   unit_id?: string;
   title?: string;
   level?: string;
+  domain?: string;
   body?: string;
   summary?: string;
   teaching_points?: string[];
   topic_family_id?: string;
   source_ids?: string[];
+  candidate_documents?: AiInfraCandidateDocument[];
+  concepts?: string[];
+  failure_modes?: string[];
+  evidence_requirements?: string[];
   lab_refs?: string[];
+  claim_boundaries?: string[];
   review_status?: string;
   standard_learning?: {
     estimated_minutes?: number;
@@ -36,6 +42,14 @@ export interface AiInfraKnowledgeUnitCard {
       post_lab_evidence?: string[];
     };
   };
+}
+
+export interface AiInfraCandidateDocument {
+  document_id?: string;
+  source_id?: string;
+  title?: string;
+  relative_path?: string;
+  sha256?: string;
 }
 
 export interface AiInfraQuizQuestion {
@@ -62,6 +76,7 @@ export interface AiInfraCoursePath {
   levels?: string[];
   unit_refs?: string[];
   lab_refs?: string[];
+  source_ids?: string[];
   capstone_task?: string;
   review_status?: string;
 }

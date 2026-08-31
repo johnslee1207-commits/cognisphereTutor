@@ -772,6 +772,24 @@ export default function AiInfraTwinPage() {
                       );
                     })}
                   </div>
+                  {selectedCourse.source_ids && selectedCourse.source_ids.length > 0 && (
+                    <div className="mt-2">
+                      <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
+                        {tr("课程来源", "Course sources")}
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedCourse.source_ids.slice(0, 6).map((sourceId) => (
+                          <span
+                            key={sourceId}
+                            className="max-w-full truncate rounded-md border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--muted-foreground)]"
+                            title={sourceId}
+                          >
+                            {sourceId.replace("src:ai-infra:", "")}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {selectedUnit && (
@@ -975,9 +993,61 @@ export default function AiInfraTwinPage() {
                       </div>
                     </div>
 
-                    {selectedUnit.source_ids && selectedUnit.source_ids.length > 0 && (
-                      <div className="mt-2 truncate text-[10px] text-[var(--muted-foreground)]">
-                        {tr("来源", "Sources")}: {selectedUnit.source_ids.slice(0, 4).join(" · ")}
+                        {selectedUnit.source_ids && selectedUnit.source_ids.length > 0 && (
+                          <div className="mt-2 truncate text-[10px] text-[var(--muted-foreground)]">
+                            {tr("来源", "Sources")}: {selectedUnit.source_ids.slice(0, 4).join(" · ")}
+                          </div>
+                        )}
+                    <div className="mt-2 grid grid-cols-4 gap-2">
+                      <EvidenceMiniList
+                        label={tr("概念", "Concepts")}
+                        items={selectedUnit.concepts || []}
+                      />
+                      <EvidenceMiniList
+                        label={tr("故障模式", "Failure modes")}
+                        items={selectedUnit.failure_modes || []}
+                      />
+                      <EvidenceMiniList
+                        label={tr("证据要求", "Evidence required")}
+                        items={selectedUnit.evidence_requirements || []}
+                      />
+                      <EvidenceMiniList
+                        label={tr("主张边界", "Claim boundaries")}
+                        items={selectedUnit.claim_boundaries || []}
+                      />
+                    </div>
+                    {selectedUnit.candidate_documents && selectedUnit.candidate_documents.length > 0 && (
+                      <div className="mt-2 rounded-md border border-[var(--border)] p-2">
+                        <div className="mb-1 flex items-center justify-between gap-2">
+                          <span className="text-[10px] font-medium text-[var(--foreground)]">
+                            {tr("候选可信文档", "Candidate trusted documents")}
+                          </span>
+                          <span className="text-[10px] text-[var(--muted-foreground)]">
+                            {selectedUnit.candidate_documents.length}
+                          </span>
+                        </div>
+                        <div className="grid max-h-20 grid-cols-2 gap-1 overflow-y-auto pr-1">
+                          {selectedUnit.candidate_documents.slice(0, 8).map((doc) => (
+                            <div
+                              key={doc.document_id || `${doc.source_id}:${doc.relative_path}`}
+                              className="min-w-0 rounded-md border border-[var(--border)] px-2 py-1"
+                              title={[
+                                doc.document_id,
+                                doc.relative_path,
+                                doc.sha256 ? `sha256:${doc.sha256}` : "",
+                              ]
+                                .filter(Boolean)
+                                .join("\n")}
+                            >
+                              <div className="truncate text-[10px] font-medium text-[var(--foreground)]">
+                                {doc.title || doc.relative_path || doc.document_id}
+                              </div>
+                              <div className="truncate text-[10px] text-[var(--muted-foreground)]">
+                                {doc.source_id?.replace("src:ai-infra:", "") || doc.document_id}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
