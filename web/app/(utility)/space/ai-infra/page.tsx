@@ -40,6 +40,7 @@ import {
   getAiInfraCourseContextStats,
   getAiInfraCourseProgress,
   getAiInfraCoverageSummary,
+  getAiInfraReviewQueue,
   getAiInfraUnitMasteryState,
   getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
@@ -297,6 +298,40 @@ export default function AiInfraTwinPage() {
         (lab) => Boolean(lab.latestRun) || Number(lab.runCount || 0) > 0,
       ),
     [selectedUnitLabs],
+  );
+  const labEvidenceByUnitId = useMemo(() => {
+    const result: Record<string, boolean> = {};
+    for (const unit of selectedCourseUnits) {
+      const labRefs = [
+        ...(unit.standard_learning?.twin_practice?.lab_refs || []),
+        ...(unit.lab_refs || []),
+      ];
+      result[unit.unit_id || ""] = labRefs.some((labId) => {
+        const lab = labsById.get(labId);
+        return Boolean(lab?.latestRun) || Number(lab?.runCount || 0) > 0;
+      });
+    }
+    return result;
+  }, [labsById, selectedCourseUnits]);
+  const reviewQueue = useMemo(
+    () =>
+      getAiInfraReviewQueue({
+        units: selectedCourseUnits,
+        quizAnswers,
+        completedUnits,
+        reflectionNotes,
+        diagnosisNotes,
+        labEvidenceByUnitId,
+        limit: 4,
+      }),
+    [
+      completedUnits,
+      diagnosisNotes,
+      labEvidenceByUnitId,
+      quizAnswers,
+      reflectionNotes,
+      selectedCourseUnits,
+    ],
   );
   const selectedUnitMastery = useMemo(
     () =>
@@ -798,6 +833,41 @@ export default function AiInfraTwinPage() {
                     <MiniStat label={tr("文档", "Docs")} value={selectedCourseContextStats.candidateDocumentCount} />
                     <MiniStat label={tr("证据", "Evidence")} value={selectedCourseContextStats.evidenceRequirementCount} />
                   </div>
+                  {reviewQueue.length > 0 && (
+                    <div className="mb-2 rounded-md border border-[var(--border)] p-2">
+                      <div className="mb-1 flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-medium text-[var(--foreground)]">
+                          {tr("个性化复习", "Personalized review")}
+                        </span>
+                        <span className="text-[10px] text-[var(--muted-foreground)]">
+                          {reviewQueue.length}
+                        </span>
+                      </div>
+                      <div className="space-y-1">
+                        {reviewQueue.map((item) => (
+                          <button
+                            key={item.unit.unit_id || item.unit.title}
+                            type="button"
+                            onClick={() => setSelectedUnitId(item.unit.unit_id || null)}
+                            className="w-full rounded-md border border-[var(--border)] px-2 py-1 text-left hover:bg-[var(--accent)]"
+                            title={item.mastery.nextAction}
+                          >
+                            <span className="flex items-center justify-between gap-2">
+                              <span className="min-w-0 truncate text-[10px] font-medium text-[var(--foreground)]">
+                                {item.unit.title}
+                              </span>
+                              <span className="shrink-0 text-[10px] tabular-nums text-[var(--muted-foreground)]">
+                                {item.mastery.scorePct}%
+                              </span>
+                            </span>
+                            <span className="mt-0.5 block truncate text-[10px] text-[var(--muted-foreground)]">
+                              {item.mastery.nextAction}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                   <div className="space-y-1.5">
                     {selectedCourseUnits.map((unit) => {
                       const active = selectedUnit?.unit_id === unit.unit_id;

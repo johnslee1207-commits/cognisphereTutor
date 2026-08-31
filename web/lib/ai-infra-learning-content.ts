@@ -170,6 +170,11 @@ export interface AiInfraUnitMasteryState {
   checks: AiInfraUnitMasteryCheck[];
 }
 
+export interface AiInfraReviewQueueItem {
+  unit: AiInfraKnowledgeUnitCard;
+  mastery: AiInfraUnitMasteryState;
+}
+
 const PRIORITY_COURSE_DOMAINS = [
   "containers",
   "kubernetes",
@@ -373,10 +378,9 @@ export function getAiInfraUnitMasteryState(params: {
   const hasTwinPractice = Boolean(
     (unit.standard_learning?.twin_practice?.lab_refs || unit.lab_refs || []).length,
   );
-  const diagnosisReady =
-    !hasDiagnosisDrill || normalizedLength(params.diagnosisNote) >= 20;
+  const diagnosisReady = normalizedLength(params.diagnosisNote) >= 20;
   const reflectionReady = normalizedLength(params.reflectionNote) >= 20;
-  const labEvidenceReady = !hasTwinPractice || Boolean(params.hasLabEvidence);
+  const labEvidenceReady = Boolean(params.hasLabEvidence);
   const checks: AiInfraUnitMasteryCheck[] = [
     {
       id: "active_recall",
@@ -384,19 +388,9 @@ export function getAiInfraUnitMasteryState(params: {
       done: Boolean(params.quizCorrect),
     },
     {
-      id: "diagnosis",
-      label: "Write bounded diagnosis",
-      done: diagnosisReady,
-    },
-    {
       id: "reflection",
       label: "Reflect with evidence",
       done: reflectionReady,
-    },
-    {
-      id: "lab_evidence",
-      label: "Attach Twin lab evidence",
-      done: labEvidenceReady,
     },
     {
       id: "complete",
@@ -404,6 +398,20 @@ export function getAiInfraUnitMasteryState(params: {
       done: Boolean(params.completed),
     },
   ];
+  if (hasDiagnosisDrill) {
+    checks.splice(1, 0, {
+      id: "diagnosis",
+      label: "Write bounded diagnosis",
+      done: diagnosisReady,
+    });
+  }
+  if (hasTwinPractice) {
+    checks.splice(checks.length - 1, 0, {
+      id: "lab_evidence",
+      label: "Attach Twin lab evidence",
+      done: labEvidenceReady,
+    });
+  }
   const doneCount = checks.filter((check) => check.done).length;
   const scorePct = Math.round((doneCount / checks.length) * 100);
   const next = checks.find((check) => !check.done);
@@ -414,6 +422,50 @@ export function getAiInfraUnitMasteryState(params: {
     nextAction: next?.label || "Start spaced review or next unit",
     checks,
   };
+}
+
+export function getAiInfraReviewQueue(params: {
+  units: AiInfraKnowledgeUnitCard[];
+  quizAnswers?: Record<string, string>;
+  completedUnits?: Record<string, boolean>;
+  reflectionNotes?: Record<string, string>;
+  diagnosisNotes?: Record<string, string>;
+  labEvidenceByUnitId?: Record<string, boolean>;
+  limit?: number;
+}): AiInfraReviewQueueItem[] {
+  const quizAnswers = params.quizAnswers || {};
+  const completedUnits = params.completedUnits || {};
+  const reflectionNotes = params.reflectionNotes || {};
+  const diagnosisNotes = params.diagnosisNotes || {};
+  const labEvidenceByUnitId = params.labEvidenceByUnitId || {};
+  const items = params.units
+    .map((unit, index) => {
+      const quiz = unit.standard_learning?.assessment?.quiz?.[0];
+      const answer = quiz?.question_id ? quizAnswers[quiz.question_id] : undefined;
+      return {
+        index,
+        unit,
+        mastery: getAiInfraUnitMasteryState({
+          unit,
+          quizCorrect: Boolean(answer && answer === quiz?.answer),
+          diagnosisNote: unit.unit_id ? diagnosisNotes[unit.unit_id] : "",
+          reflectionNote: unit.unit_id ? reflectionNotes[unit.unit_id] : "",
+          hasLabEvidence: unit.unit_id ? labEvidenceByUnitId[unit.unit_id] : false,
+          completed: Boolean(unit.unit_id && completedUnits[unit.unit_id]),
+        }),
+      };
+    })
+    .filter((item) => item.mastery.level !== "evidence_ready")
+    .sort((a, b) => {
+      if (a.mastery.scorePct !== b.mastery.scorePct) {
+        return a.mastery.scorePct - b.mastery.scorePct;
+      }
+      return a.index - b.index;
+    });
+  return items.slice(0, params.limit ?? 5).map(({ unit, mastery }) => ({
+    unit,
+    mastery,
+  }));
 }
 
 export function prioritizeAiInfraContent(params: {

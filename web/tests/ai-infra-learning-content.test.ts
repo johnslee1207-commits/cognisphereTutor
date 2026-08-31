@@ -7,6 +7,7 @@ import {
   getAiInfraCoverageSummary,
   findAiInfraKnowledgeUnit,
   getAiInfraCourseProgress,
+  getAiInfraReviewQueue,
   getAiInfraUnitMasteryState,
   getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
@@ -45,6 +46,17 @@ const knowledge: AiInfraPluginKnowledge = {
         evidence_requirements: ["health_probe"],
         claim_boundaries: ["readiness_not_throughput"],
         lab_refs: ["lab.inference.vllm-triton-readiness"],
+        standard_learning: {
+          assessment: {
+            quiz: [
+              {
+                question_id: "q.inference",
+                choices: [{ id: "A", text: "ready" }],
+                answer: "A",
+              },
+            ],
+          },
+        },
       },
       {
         unit_id: "unit.container",
@@ -64,6 +76,13 @@ const knowledge: AiInfraPluginKnowledge = {
         lab_refs: ["lab.container.docker-lifecycle"],
         standard_learning: {
           assessment: {
+            quiz: [
+              {
+                question_id: "q.container",
+                choices: [{ id: "A", text: "cleanup" }],
+                answer: "A",
+              },
+            ],
             diagnosis_drills: [{ drill_id: "d1", task: "Diagnose the lifecycle" }],
           },
           twin_practice: {
@@ -263,4 +282,23 @@ test("getAiInfraUnitMasteryState guides the next missing learning action", () =>
   });
   assert.equal(complete.level, "evidence_ready");
   assert.equal(complete.scorePct, 100);
+});
+
+test("getAiInfraReviewQueue prioritizes weakest unfinished units", () => {
+  const units = knowledge.learning_surface?.knowledge_unit_cards || [];
+
+  const queue = getAiInfraReviewQueue({
+    units,
+    quizAnswers: { "q.container": "A" },
+    diagnosisNotes: { "unit.container": "container stopped before cleanup proof" },
+    reflectionNotes: {
+      "unit.container": "evidence supports only local lifecycle claims",
+    },
+    labEvidenceByUnitId: { "unit.container": true },
+    completedUnits: { "unit.container": true },
+  });
+
+  assert.equal(queue.length, 1);
+  assert.equal(queue[0]?.unit.unit_id, "unit.inference");
+  assert.equal(queue[0]?.mastery.level, "not_started");
 });
