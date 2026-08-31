@@ -689,6 +689,15 @@ export default function AiInfraTwinPage() {
                 {tr("路径", "paths")} {coursePaths.length} · {tr("单元", "units")} {expertUnits.length}
               </span>
             </div>
+            <div className="mb-2 grid grid-cols-7 gap-1">
+              <MiniStat label={tr("课程", "Courses")} value={coverageSummary.courseCount} />
+              <MiniStat label={tr("单元", "Units")} value={coverageSummary.unitCount} />
+              <MiniStat label={tr("已完成", "Done")} value={coverageSummary.completedUnitCount} />
+              <MiniStat label={tr("Labs", "Labs")} value={coverageSummary.labCount} />
+              <MiniStat label={tr("文档", "Docs")} value={coverageSummary.candidateDocumentCount} />
+              <MiniStat label={tr("故障", "Failures")} value={coverageSummary.failureModeCount} />
+              <MiniStat label={tr("证据", "Evidence")} value={coverageSummary.evidenceRequirementCount} />
+            </div>
 
             <label className="mb-2 flex h-8 items-center gap-2 rounded-md border border-[var(--border)] px-2 text-[11px] text-[var(--muted-foreground)]">
               <Search className="h-3.5 w-3.5 shrink-0" />
