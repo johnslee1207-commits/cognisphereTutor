@@ -52,6 +52,7 @@ export interface AiInfraLearningWorkspaceState {
   quiz_answers: Record<string, string>;
   completed_units: Record<string, boolean>;
   reflection_notes: Record<string, string>;
+  diagnosis_notes: Record<string, string>;
 }
 
 export interface AiInfraLearningWorkspaceResult {

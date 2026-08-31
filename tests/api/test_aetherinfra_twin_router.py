@@ -106,6 +106,7 @@ def test_learning_workspace_round_trips_state(tmp_path, monkeypatch: pytest.Monk
             quiz_answers={"q1": "A"},
             completed_units={"ai_infra.expert.containers.l1": True},
             reflection_notes={"ai_infra.expert.containers.l1": "evidence-backed claim"},
+            diagnosis_notes={"ai_infra.expert.containers.l1": "bounded diagnosis"},
         )
     )
 
@@ -116,6 +117,7 @@ def test_learning_workspace_round_trips_state(tmp_path, monkeypatch: pytest.Monk
     assert loaded["state"]["selected_course_id"] == "course.containers"
     assert loaded["state"]["quiz_answers"] == {"q1": "A"}
     assert loaded["state"]["completed_units"]["ai_infra.expert.containers.l1"] is True
+    assert loaded["state"]["diagnosis_notes"]["ai_infra.expert.containers.l1"] == "bounded diagnosis"
 
 
 def test_learning_workspace_delete_resets_state(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:

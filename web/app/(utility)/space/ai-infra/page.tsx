@@ -58,6 +58,7 @@ interface AiInfraLearningWorkspaceState {
   quizAnswers: Record<string, string>;
   completedUnits: Record<string, boolean>;
   reflectionNotes: Record<string, string>;
+  diagnosisNotes: Record<string, string>;
 }
 
 export default function AiInfraTwinPage() {
@@ -80,6 +81,7 @@ export default function AiInfraTwinPage() {
   const [courseQuery, setCourseQuery] = useState("");
   const [completedUnits, setCompletedUnits] = useState<Record<string, boolean>>({});
   const [reflectionNotes, setReflectionNotes] = useState<Record<string, string>>({});
+  const [diagnosisNotes, setDiagnosisNotes] = useState<Record<string, string>>({});
   const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
   const [workspaceSyncState, setWorkspaceSyncState] = useState<"local" | "synced" | "offline">("local");
   const [error, setError] = useState<string | null>(null);
@@ -94,6 +96,7 @@ export default function AiInfraTwinPage() {
         quizAnswers: {},
         completedUnits: {},
         reflectionNotes: {},
+        diagnosisNotes: {},
       },
     );
     setSelectedCourseId(stored.selectedCourseId);
@@ -101,6 +104,7 @@ export default function AiInfraTwinPage() {
     setQuizAnswers(stored.quizAnswers || {});
     setCompletedUnits(stored.completedUnits || {});
     setReflectionNotes(stored.reflectionNotes || {});
+    setDiagnosisNotes(stored.diagnosisNotes || {});
     setWorkspaceHydrated(true);
     void fetchAiInfraLearningWorkspace(AI_INFRA_WORKSPACE_ID)
       .then((result) => {
@@ -114,6 +118,7 @@ export default function AiInfraTwinPage() {
         setQuizAnswers(next.quizAnswers);
         setCompletedUnits(next.completedUnits);
         setReflectionNotes(next.reflectionNotes);
+        setDiagnosisNotes(next.diagnosisNotes);
         saveToStorage<AiInfraLearningWorkspaceState>(
           AI_INFRA_WORKSPACE_STORAGE_KEY,
           next,
@@ -131,6 +136,7 @@ export default function AiInfraTwinPage() {
       quizAnswers,
       completedUnits,
       reflectionNotes,
+      diagnosisNotes,
     };
     saveToStorage<AiInfraLearningWorkspaceState>(AI_INFRA_WORKSPACE_STORAGE_KEY, state);
     void saveAiInfraLearningWorkspace(
@@ -141,6 +147,7 @@ export default function AiInfraTwinPage() {
       .catch(() => setWorkspaceSyncState("offline"));
   }, [
     completedUnits,
+    diagnosisNotes,
     quizAnswers,
     reflectionNotes,
     selectedCourseId,
@@ -271,6 +278,9 @@ export default function AiInfraTwinPage() {
   const selectedReflection = selectedUnit?.unit_id
     ? reflectionNotes[selectedUnit.unit_id] || ""
     : "";
+  const selectedDiagnosisNote = selectedUnit?.unit_id
+    ? diagnosisNotes[selectedUnit.unit_id] || ""
+    : "";
   const selectedUnitLabs = useMemo(() => {
     const labRefs = [
       ...(selectedUnit?.standard_learning?.twin_practice?.lab_refs || []),
@@ -369,6 +379,7 @@ export default function AiInfraTwinPage() {
     setQuizAnswers({});
     setCompletedUnits({});
     setReflectionNotes({});
+    setDiagnosisNotes({});
   }, [priorityCoursePaths]);
 
   return (
@@ -941,6 +952,45 @@ export default function AiInfraTwinPage() {
                                   </li>
                                 ))}
                             </ul>
+                            {selectedUnit.standard_learning.assessment.diagnosis_drills[0]
+                              .expected_claim_shape && (
+                              <div className="mt-1 grid grid-cols-2 gap-1">
+                                {Object.entries(
+                                  selectedUnit.standard_learning.assessment.diagnosis_drills[0]
+                                    .expected_claim_shape || {},
+                                )
+                                  .slice(0, 4)
+                                  .map(([key, value]) => (
+                                    <div
+                                      key={key}
+                                      className="min-w-0 rounded-md border border-[var(--border)] px-1.5 py-1"
+                                      title={`${key}: ${String(value)}`}
+                                    >
+                                      <div className="truncate text-[10px] uppercase text-[var(--muted-foreground)]">
+                                        {key}
+                                      </div>
+                                      <div className="truncate text-[10px] text-[var(--foreground)]">
+                                        {String(value)}
+                                      </div>
+                                    </div>
+                                  ))}
+                              </div>
+                            )}
+                            <textarea
+                              value={selectedDiagnosisNote}
+                              onChange={(event) =>
+                                selectedUnit.unit_id &&
+                                setDiagnosisNotes((prev) => ({
+                                  ...prev,
+                                  [selectedUnit.unit_id as string]: event.target.value,
+                                }))
+                              }
+                              placeholder={tr(
+                                "按 symptom / evidence / claim strength / missing proof 写诊断结论。",
+                                "Write the diagnosis as symptom / evidence / claim strength / missing proof.",
+                              )}
+                              className="mt-1.5 h-16 w-full resize-none rounded-md border border-[var(--border)] bg-transparent p-2 text-[10px] text-[var(--foreground)] outline-none placeholder:text-[var(--muted-foreground)]"
+                            />
                           </div>
                         )}
                       </div>
@@ -949,6 +999,22 @@ export default function AiInfraTwinPage() {
                         <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
                           {tr("反思与完成", "Reflect and complete")}
                         </div>
+                        {selectedUnit.standard_learning?.assessment?.reflection_prompts &&
+                          selectedUnit.standard_learning.assessment.reflection_prompts.length > 0 && (
+                            <div className="mb-1 space-y-0.5">
+                              {selectedUnit.standard_learning.assessment.reflection_prompts
+                                .slice(0, 2)
+                                .map((prompt) => (
+                                  <div
+                                    key={prompt}
+                                    className="line-clamp-1 text-[10px] text-[var(--muted-foreground)]"
+                                    title={prompt}
+                                  >
+                                    {prompt}
+                                  </div>
+                                ))}
+                            </div>
+                          )}
                         <textarea
                           value={selectedReflection}
                           onChange={(event) =>
@@ -1276,6 +1342,7 @@ function workspaceStateFromServer(
     quizAnswers: state.quiz_answers || {},
     completedUnits: state.completed_units || {},
     reflectionNotes: state.reflection_notes || {},
+    diagnosisNotes: state.diagnosis_notes || {},
   };
 }
 
@@ -1288,6 +1355,7 @@ function workspaceStateToServer(
     quiz_answers: state.quizAnswers,
     completed_units: state.completedUnits,
     reflection_notes: state.reflectionNotes,
+    diagnosis_notes: state.diagnosisNotes,
   };
 }
 

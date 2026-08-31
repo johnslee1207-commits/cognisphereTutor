@@ -32,6 +32,7 @@ class LearningWorkspaceState(BaseModel):
     quiz_answers: dict[str, str] = Field(default_factory=dict)
     completed_units: dict[str, bool] = Field(default_factory=dict)
     reflection_notes: dict[str, str] = Field(default_factory=dict)
+    diagnosis_notes: dict[str, str] = Field(default_factory=dict)
 
 
 class LearningWorkspaceSaveRequest(BaseModel):
