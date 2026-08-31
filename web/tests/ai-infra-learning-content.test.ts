@@ -9,6 +9,7 @@ import {
   getAiInfraCoverageSummary,
   findAiInfraKnowledgeUnit,
   getAiInfraCourseProgress,
+  getAiInfraLearningModeView,
   getAiInfraReviewQueue,
   getAiInfraReviewStageSummary,
   getAiInfraSpacedReviewQueue,
@@ -323,6 +324,24 @@ test("getAiInfraReviewStageSummary does not treat source-backed drafts as approv
     "assessment reviewer",
   ]);
   assert.equal(getAiInfraReviewStageSummary("approved").approved, true);
+});
+
+test("getAiInfraLearningModeView reduces hints for independent and incident work", () => {
+  const learn = getAiInfraLearningModeView("learn");
+  assert.equal(learn.showFailureModes, true);
+  assert.equal(learn.showExpectedClaimShape, true);
+
+  const independent = getAiInfraLearningModeView("independent_lab");
+  assert.equal(independent.showFailureModes, false);
+  assert.equal(independent.showTrustedDocuments, true);
+  assert.equal(independent.showExpectedClaimShape, false);
+
+  const incident = getAiInfraLearningModeView("incident_challenge");
+  assert.equal(incident.showFailureModes, false);
+  assert.equal(incident.showTrustedDocuments, false);
+  assert.equal(incident.showDiagnosisRubric, false);
+
+  assert.equal(getAiInfraLearningModeView("unknown").mode, "learn");
 });
 
 test("assessAiInfraSourceDocumentDrill requires source, evidence, and boundary grounding", () => {

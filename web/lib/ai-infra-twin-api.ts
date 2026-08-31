@@ -49,6 +49,7 @@ export interface AiInfraDiagnosisAssessment {
 export interface AiInfraLearningWorkspaceState {
   selected_course_id: string | null;
   selected_unit_id: string | null;
+  assessment_mode: string;
   quiz_answers: Record<string, string>;
   completed_units: Record<string, boolean>;
   reflection_notes: Record<string, string>;

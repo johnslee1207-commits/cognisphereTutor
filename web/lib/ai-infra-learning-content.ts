@@ -213,6 +213,27 @@ export interface AiInfraReviewStageSummary {
   requiredApprovals: string[];
 }
 
+export type AiInfraLearningMode =
+  | "learn"
+  | "guided_practice"
+  | "independent_lab"
+  | "incident_challenge"
+  | "capstone";
+
+export interface AiInfraLearningModeView {
+  mode: AiInfraLearningMode;
+  label: string;
+  requiresEvidenceBundle: boolean;
+  showConcepts: boolean;
+  showFailureModes: boolean;
+  showEvidenceRequirements: boolean;
+  showClaimBoundaries: boolean;
+  showDiagnosisRubric: boolean;
+  showExpectedClaimShape: boolean;
+  showTrustedDocuments: boolean;
+  prompt: string;
+}
+
 const PRIORITY_COURSE_DOMAINS = [
   "containers",
   "kubernetes",
@@ -620,6 +641,81 @@ export function getAiInfraReviewStageSummary(
   };
 }
 
+export function getAiInfraLearningModeView(
+  mode: AiInfraLearningMode | string | undefined,
+): AiInfraLearningModeView {
+  const normalized = normalizeForSearch(mode || "learn").replace(/\s+/g, "_");
+  const resolved = isAiInfraLearningMode(normalized) ? normalized : "learn";
+  const modes: Record<AiInfraLearningMode, AiInfraLearningModeView> = {
+    learn: {
+      mode: "learn",
+      label: "Learn",
+      requiresEvidenceBundle: true,
+      showConcepts: true,
+      showFailureModes: true,
+      showEvidenceRequirements: true,
+      showClaimBoundaries: true,
+      showDiagnosisRubric: true,
+      showExpectedClaimShape: true,
+      showTrustedDocuments: true,
+      prompt: "Use full scaffolding to build the mental model.",
+    },
+    guided_practice: {
+      mode: "guided_practice",
+      label: "Guided Practice",
+      requiresEvidenceBundle: true,
+      showConcepts: true,
+      showFailureModes: true,
+      showEvidenceRequirements: true,
+      showClaimBoundaries: true,
+      showDiagnosisRubric: true,
+      showExpectedClaimShape: false,
+      showTrustedDocuments: true,
+      prompt: "Keep partial hints, but write the claim structure yourself.",
+    },
+    independent_lab: {
+      mode: "independent_lab",
+      label: "Independent Lab",
+      requiresEvidenceBundle: true,
+      showConcepts: true,
+      showFailureModes: false,
+      showEvidenceRequirements: false,
+      showClaimBoundaries: false,
+      showDiagnosisRubric: false,
+      showExpectedClaimShape: false,
+      showTrustedDocuments: true,
+      prompt: "Solve from task, docs, and observed evidence without diagnosis hints.",
+    },
+    incident_challenge: {
+      mode: "incident_challenge",
+      label: "Incident Challenge",
+      requiresEvidenceBundle: true,
+      showConcepts: false,
+      showFailureModes: false,
+      showEvidenceRequirements: false,
+      showClaimBoundaries: false,
+      showDiagnosisRubric: false,
+      showExpectedClaimShape: false,
+      showTrustedDocuments: false,
+      prompt: "Treat this as an unknown incident with noisy or incomplete evidence.",
+    },
+    capstone: {
+      mode: "capstone",
+      label: "Capstone",
+      requiresEvidenceBundle: true,
+      showConcepts: false,
+      showFailureModes: false,
+      showEvidenceRequirements: false,
+      showClaimBoundaries: false,
+      showDiagnosisRubric: false,
+      showExpectedClaimShape: false,
+      showTrustedDocuments: false,
+      prompt: "Produce a reviewable engineering artifact and defend the trade-offs.",
+    },
+  };
+  return modes[resolved];
+}
+
 export function assessAiInfraSourceDocumentDrill(
   unit: AiInfraKnowledgeUnitCard | null | undefined,
   response: string | undefined,
@@ -661,6 +757,16 @@ export function assessAiInfraSourceDocumentDrill(
         ? "Reference at least one trusted document"
         : "Tie the source claim to required evidence and claim boundary",
   };
+}
+
+function isAiInfraLearningMode(value: string): value is AiInfraLearningMode {
+  return [
+    "learn",
+    "guided_practice",
+    "independent_lab",
+    "incident_challenge",
+    "capstone",
+  ].includes(value);
 }
 
 export function assessAiInfraDiagnosisResponse(

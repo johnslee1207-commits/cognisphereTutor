@@ -29,6 +29,7 @@ class DiagnosisRequest(BaseModel):
 class LearningWorkspaceState(BaseModel):
     selected_course_id: str | None = Field(default=None, max_length=200)
     selected_unit_id: str | None = Field(default=None, max_length=300)
+    assessment_mode: str = Field(default="learn", max_length=40)
     quiz_answers: dict[str, str] = Field(default_factory=dict)
     completed_units: dict[str, bool] = Field(default_factory=dict)
     reflection_notes: dict[str, str] = Field(default_factory=dict)

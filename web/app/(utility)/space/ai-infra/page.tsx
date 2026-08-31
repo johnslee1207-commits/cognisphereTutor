@@ -45,10 +45,12 @@ import {
   getAiInfraCoverageSummary,
   getAiInfraReviewQueue,
   getAiInfraReviewStageSummary,
+  getAiInfraLearningModeView,
   getAiInfraSpacedReviewQueue,
   getAiInfraUnitMasteryState,
   getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
+  type AiInfraLearningMode,
   type AiInfraReviewLedgerEntry,
 } from "@/lib/ai-infra-learning-content";
 import {
@@ -63,6 +65,7 @@ const AI_INFRA_WORKSPACE_ID = "default";
 interface AiInfraLearningWorkspaceState {
   selectedCourseId: string | null;
   selectedUnitId: string | null;
+  assessmentMode: AiInfraLearningMode;
   quizAnswers: Record<string, string>;
   completedUnits: Record<string, boolean>;
   reflectionNotes: Record<string, string>;
@@ -88,6 +91,7 @@ export default function AiInfraTwinPage() {
   const [diagnosisResult, setDiagnosisResult] = useState<AiInfraDiagnosisAssessment | null>(null);
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
+  const [assessmentMode, setAssessmentMode] = useState<AiInfraLearningMode>("learn");
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [courseQuery, setCourseQuery] = useState("");
   const [completedUnits, setCompletedUnits] = useState<Record<string, boolean>>({});
@@ -107,6 +111,7 @@ export default function AiInfraTwinPage() {
       {
         selectedCourseId: null,
         selectedUnitId: null,
+        assessmentMode: "learn",
         quizAnswers: {},
         completedUnits: {},
         reflectionNotes: {},
@@ -118,6 +123,7 @@ export default function AiInfraTwinPage() {
     );
     setSelectedCourseId(stored.selectedCourseId);
     setSelectedUnitId(stored.selectedUnitId);
+    setAssessmentMode(stored.assessmentMode || "learn");
     setQuizAnswers(stored.quizAnswers || {});
     setCompletedUnits(stored.completedUnits || {});
     setReflectionNotes(stored.reflectionNotes || {});
@@ -135,6 +141,7 @@ export default function AiInfraTwinPage() {
         const next = workspaceStateFromServer(result.state);
         setSelectedCourseId(next.selectedCourseId);
         setSelectedUnitId(next.selectedUnitId);
+        setAssessmentMode(next.assessmentMode);
         setQuizAnswers(next.quizAnswers);
         setCompletedUnits(next.completedUnits);
         setReflectionNotes(next.reflectionNotes);
@@ -156,6 +163,7 @@ export default function AiInfraTwinPage() {
     const state = {
       selectedCourseId,
       selectedUnitId,
+      assessmentMode,
       quizAnswers,
       completedUnits,
       reflectionNotes,
@@ -172,6 +180,7 @@ export default function AiInfraTwinPage() {
       .then(() => setWorkspaceSyncState("synced"))
       .catch(() => setWorkspaceSyncState("offline"));
   }, [
+    assessmentMode,
     completedUnits,
     diagnosisNotes,
     evidenceBundles,
@@ -284,6 +293,10 @@ export default function AiInfraTwinPage() {
   const selectedUnitReviewStage = useMemo(
     () => getAiInfraReviewStageSummary(selectedUnit?.review_status),
     [selectedUnit?.review_status],
+  );
+  const learningModeView = useMemo(
+    () => getAiInfraLearningModeView(assessmentMode),
+    [assessmentMode],
   );
   const selectedQuiz = selectedUnit?.standard_learning?.assessment?.quiz?.[0];
   const selectedQuizAnswer = selectedQuiz?.question_id
@@ -523,6 +536,7 @@ export default function AiInfraTwinPage() {
       .catch(() => setWorkspaceSyncState("offline"));
     setSelectedCourseId(priorityCoursePaths[0]?.course_path_id || null);
     setSelectedUnitId(priorityCoursePaths[0]?.unit_refs?.[0] || null);
+    setAssessmentMode("learn");
     setQuizAnswers({});
     setCompletedUnits({});
     setReflectionNotes({});
@@ -1114,6 +1128,43 @@ export default function AiInfraTwinPage() {
                         {tr("Capstone", "Capstone")}: {selectedCourse.capstone_task}
                       </p>
                     )}
+                    <div className="mt-2 rounded-md border border-[var(--border)] p-2">
+                      <div className="mb-1 flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-medium text-[var(--foreground)]">
+                          {tr("学习模式", "Learning mode")}
+                        </span>
+                        <span className="truncate text-[10px] text-[var(--muted-foreground)]">
+                          {learningModeView.prompt}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-5 gap-1">
+                        {[
+                          "learn",
+                          "guided_practice",
+                          "independent_lab",
+                          "incident_challenge",
+                          "capstone",
+                        ].map((mode) => {
+                          const view = getAiInfraLearningModeView(mode);
+                          const active = learningModeView.mode === view.mode;
+                          return (
+                            <button
+                              key={view.mode}
+                              type="button"
+                              onClick={() => setAssessmentMode(view.mode)}
+                              className={`min-w-0 rounded-md border px-1.5 py-1 text-[10px] transition-colors ${
+                                active
+                                  ? "border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--foreground)]"
+                                  : "border-[var(--border)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
+                              }`}
+                              title={view.prompt}
+                            >
+                              <span className="block truncate">{view.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                     {selectedUnit.standard_learning?.prerequisites &&
                       selectedUnit.standard_learning.prerequisites.length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-1">
@@ -1247,19 +1298,22 @@ export default function AiInfraTwinPage() {
                             <div className="mt-0.5 line-clamp-2 text-[11px] text-[var(--foreground)]">
                               {selectedUnit.standard_learning.assessment.diagnosis_drills[0].task}
                             </div>
-                            <ul className="mt-1 space-y-0.5">
-                              {(selectedUnit.standard_learning.assessment.diagnosis_drills[0].rubric || [])
-                                .slice(0, 3)
-                                .map((item) => (
-                                  <li
-                                    key={item}
-                                    className="line-clamp-1 text-[10px] text-[var(--muted-foreground)]"
-                                  >
-                                    {item}
-                                  </li>
-                                ))}
-                            </ul>
-                            {selectedUnit.standard_learning.assessment.diagnosis_drills[0]
+                            {learningModeView.showDiagnosisRubric && (
+                              <ul className="mt-1 space-y-0.5">
+                                {(selectedUnit.standard_learning.assessment.diagnosis_drills[0].rubric || [])
+                                  .slice(0, 3)
+                                  .map((item) => (
+                                    <li
+                                      key={item}
+                                      className="line-clamp-1 text-[10px] text-[var(--muted-foreground)]"
+                                    >
+                                      {item}
+                                    </li>
+                                  ))}
+                              </ul>
+                            )}
+                            {learningModeView.showExpectedClaimShape &&
+                              selectedUnit.standard_learning.assessment.diagnosis_drills[0]
                               .expected_claim_shape && (
                               <div className="mt-1 grid grid-cols-2 gap-1">
                                 {Object.entries(
@@ -1359,6 +1413,7 @@ export default function AiInfraTwinPage() {
                             !selectedQuizCorrect ||
                             Boolean(selectedDiagnosisDrill && !selectedDiagnosisAssessment.passed) ||
                             Boolean(
+                              learningModeView.showTrustedDocuments &&
                               selectedUnit.candidate_documents?.length &&
                                 !selectedSourceDocumentAssessment.passed,
                             ) ||
@@ -1507,30 +1562,48 @@ export default function AiInfraTwinPage() {
                       </div>
                     </div>
 
-                        {selectedUnit.source_ids && selectedUnit.source_ids.length > 0 && (
+                        {learningModeView.showTrustedDocuments &&
+                          selectedUnit.source_ids && selectedUnit.source_ids.length > 0 && (
                           <div className="mt-2 truncate text-[10px] text-[var(--muted-foreground)]">
                             {tr("来源", "Sources")}: {selectedUnit.source_ids.slice(0, 4).join(" · ")}
                           </div>
                         )}
                     <div className="mt-2 grid grid-cols-4 gap-2">
-                      <EvidenceMiniList
-                        label={tr("概念", "Concepts")}
-                        items={selectedUnit.concepts || []}
-                      />
-                      <EvidenceMiniList
-                        label={tr("故障模式", "Failure modes")}
-                        items={selectedUnit.failure_modes || []}
-                      />
-                      <EvidenceMiniList
-                        label={tr("证据要求", "Evidence required")}
-                        items={selectedUnit.evidence_requirements || []}
-                      />
-                      <EvidenceMiniList
-                        label={tr("主张边界", "Claim boundaries")}
-                        items={selectedUnit.claim_boundaries || []}
-                      />
+                      {learningModeView.showConcepts && (
+                        <EvidenceMiniList
+                          label={tr("概念", "Concepts")}
+                          items={selectedUnit.concepts || []}
+                        />
+                      )}
+                      {learningModeView.showFailureModes && (
+                        <EvidenceMiniList
+                          label={tr("故障模式", "Failure modes")}
+                          items={selectedUnit.failure_modes || []}
+                        />
+                      )}
+                      {learningModeView.showEvidenceRequirements && (
+                        <EvidenceMiniList
+                          label={tr("证据要求", "Evidence required")}
+                          items={selectedUnit.evidence_requirements || []}
+                        />
+                      )}
+                      {learningModeView.showClaimBoundaries && (
+                        <EvidenceMiniList
+                          label={tr("主张边界", "Claim boundaries")}
+                          items={selectedUnit.claim_boundaries || []}
+                        />
+                      )}
                     </div>
-                    {selectedUnit.candidate_documents && selectedUnit.candidate_documents.length > 0 && (
+                    {!learningModeView.showFailureModes && (
+                      <div className="mt-2 rounded-md border border-amber-500/30 bg-amber-500/10 p-2 text-[10px] text-amber-500">
+                        {tr(
+                          "当前模式已隐藏故障模式、证据清单或边界提示，请基于任务、运行结果和可用文档独立判断。",
+                          "This mode hides failure, evidence, or boundary hints. Diagnose from the task, runs, and available documents.",
+                        )}
+                      </div>
+                    )}
+                    {learningModeView.showTrustedDocuments &&
+                      selectedUnit.candidate_documents && selectedUnit.candidate_documents.length > 0 && (
                       <div className="mt-2 rounded-md border border-[var(--border)] p-2">
                         <div className="mb-1 flex items-center justify-between gap-2">
                           <span className="text-[10px] font-medium text-[var(--foreground)]">
@@ -1792,6 +1865,7 @@ function workspaceStateFromServer(
   return {
     selectedCourseId: state.selected_course_id || null,
     selectedUnitId: state.selected_unit_id || null,
+    assessmentMode: getAiInfraLearningModeView(state.assessment_mode).mode,
     quizAnswers: state.quiz_answers || {},
     completedUnits: state.completed_units || {},
     reflectionNotes: state.reflection_notes || {},
@@ -1808,6 +1882,7 @@ function workspaceStateToServer(
   return {
     selected_course_id: state.selectedCourseId,
     selected_unit_id: state.selectedUnitId,
+    assessment_mode: state.assessmentMode,
     quiz_answers: state.quizAnswers,
     completed_units: state.completedUnits,
     reflection_notes: state.reflectionNotes,
