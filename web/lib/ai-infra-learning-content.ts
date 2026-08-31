@@ -150,6 +150,26 @@ export interface AiInfraCourseContextStats {
   claimBoundaryCount: number;
 }
 
+export type AiInfraUnitMasteryLevel =
+  | "not_started"
+  | "attempted"
+  | "familiar"
+  | "proficient"
+  | "evidence_ready";
+
+export interface AiInfraUnitMasteryCheck {
+  id: string;
+  label: string;
+  done: boolean;
+}
+
+export interface AiInfraUnitMasteryState {
+  scorePct: number;
+  level: AiInfraUnitMasteryLevel;
+  nextAction: string;
+  checks: AiInfraUnitMasteryCheck[];
+}
+
 const PRIORITY_COURSE_DOMAINS = [
   "containers",
   "kubernetes",
@@ -329,6 +349,73 @@ export function getAiInfraCourseContextStats(
   };
 }
 
+export function getAiInfraUnitMasteryState(params: {
+  unit: AiInfraKnowledgeUnitCard | null | undefined;
+  quizCorrect?: boolean;
+  diagnosisNote?: string;
+  reflectionNote?: string;
+  completed?: boolean;
+  hasLabEvidence?: boolean;
+}): AiInfraUnitMasteryState {
+  const unit = params.unit;
+  if (!unit) {
+    return {
+      scorePct: 0,
+      level: "not_started",
+      nextAction: "Select a learning unit",
+      checks: [],
+    };
+  }
+
+  const hasDiagnosisDrill = Boolean(
+    unit.standard_learning?.assessment?.diagnosis_drills?.length,
+  );
+  const hasTwinPractice = Boolean(
+    (unit.standard_learning?.twin_practice?.lab_refs || unit.lab_refs || []).length,
+  );
+  const diagnosisReady =
+    !hasDiagnosisDrill || normalizedLength(params.diagnosisNote) >= 20;
+  const reflectionReady = normalizedLength(params.reflectionNote) >= 20;
+  const labEvidenceReady = !hasTwinPractice || Boolean(params.hasLabEvidence);
+  const checks: AiInfraUnitMasteryCheck[] = [
+    {
+      id: "active_recall",
+      label: "Pass active-recall quiz",
+      done: Boolean(params.quizCorrect),
+    },
+    {
+      id: "diagnosis",
+      label: "Write bounded diagnosis",
+      done: diagnosisReady,
+    },
+    {
+      id: "reflection",
+      label: "Reflect with evidence",
+      done: reflectionReady,
+    },
+    {
+      id: "lab_evidence",
+      label: "Attach Twin lab evidence",
+      done: labEvidenceReady,
+    },
+    {
+      id: "complete",
+      label: "Mark unit complete",
+      done: Boolean(params.completed),
+    },
+  ];
+  const doneCount = checks.filter((check) => check.done).length;
+  const scorePct = Math.round((doneCount / checks.length) * 100);
+  const next = checks.find((check) => !check.done);
+
+  return {
+    scorePct,
+    level: masteryLevelForScore(scorePct),
+    nextAction: next?.label || "Start spaced review or next unit",
+    checks,
+  };
+}
+
 export function prioritizeAiInfraContent(params: {
   knowledge: AiInfraPluginKnowledge | undefined;
   selectedLab: AiInfraLab | null;
@@ -378,6 +465,18 @@ export function prioritizeAiInfraContent(params: {
     matchedLessonCount: scoredLessons.filter((entry) => entry.score >= 100).length,
     matchedKnowledgeCount: scoredUnits.filter((entry) => entry.score >= 100).length,
   };
+}
+
+function masteryLevelForScore(scorePct: number): AiInfraUnitMasteryLevel {
+  if (scorePct >= 100) return "evidence_ready";
+  if (scorePct >= 80) return "proficient";
+  if (scorePct >= 40) return "familiar";
+  if (scorePct > 0) return "attempted";
+  return "not_started";
+}
+
+function normalizedLength(value: string | undefined): number {
+  return (value || "").trim().replace(/\s+/g, " ").length;
 }
 
 function scoreLesson(

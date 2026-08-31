@@ -7,6 +7,7 @@ import {
   getAiInfraCoverageSummary,
   findAiInfraKnowledgeUnit,
   getAiInfraCourseProgress,
+  getAiInfraUnitMasteryState,
   getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
   type AiInfraPluginKnowledge,
@@ -61,6 +62,14 @@ const knowledge: AiInfraPluginKnowledge = {
         evidence_requirements: ["cleanup_proof"],
         claim_boundaries: ["local_lifecycle_only"],
         lab_refs: ["lab.container.docker-lifecycle"],
+        standard_learning: {
+          assessment: {
+            diagnosis_drills: [{ drill_id: "d1", task: "Diagnose the lifecycle" }],
+          },
+          twin_practice: {
+            lab_refs: ["lab.container.docker-lifecycle"],
+          },
+        },
       },
     ],
     course_paths: [
@@ -226,4 +235,32 @@ test("getAiInfraCourseContextStats summarizes the selected path context", () => 
     failureModeCount: 1,
     claimBoundaryCount: 1,
   });
+});
+
+test("getAiInfraUnitMasteryState guides the next missing learning action", () => {
+  const unit = findAiInfraKnowledgeUnit(knowledge, "unit.container");
+
+  const initial = getAiInfraUnitMasteryState({ unit });
+  assert.equal(initial.level, "not_started");
+  assert.equal(initial.nextAction, "Pass active-recall quiz");
+
+  const partial = getAiInfraUnitMasteryState({
+    unit,
+    quizCorrect: true,
+    diagnosisNote: "container stopped before cleanup proof",
+    reflectionNote: "evidence is still too thin",
+  });
+  assert.equal(partial.level, "familiar");
+  assert.equal(partial.nextAction, "Attach Twin lab evidence");
+
+  const complete = getAiInfraUnitMasteryState({
+    unit,
+    quizCorrect: true,
+    diagnosisNote: "container stopped before cleanup proof",
+    reflectionNote: "evidence supports only the local lifecycle claim",
+    hasLabEvidence: true,
+    completed: true,
+  });
+  assert.equal(complete.level, "evidence_ready");
+  assert.equal(complete.scorePct, 100);
 });

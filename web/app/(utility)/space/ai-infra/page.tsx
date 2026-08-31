@@ -40,6 +40,7 @@ import {
   getAiInfraCourseContextStats,
   getAiInfraCourseProgress,
   getAiInfraCoverageSummary,
+  getAiInfraUnitMasteryState,
   getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
 } from "@/lib/ai-infra-learning-content";
@@ -290,6 +291,32 @@ export default function AiInfraTwinPage() {
       .map((labId) => labsById.get(labId))
       .filter((lab): lab is AiInfraLab => Boolean(lab));
   }, [labsById, selectedUnit]);
+  const selectedUnitHasLabEvidence = useMemo(
+    () =>
+      selectedUnitLabs.some(
+        (lab) => Boolean(lab.latestRun) || Number(lab.runCount || 0) > 0,
+      ),
+    [selectedUnitLabs],
+  );
+  const selectedUnitMastery = useMemo(
+    () =>
+      getAiInfraUnitMasteryState({
+        unit: selectedUnit,
+        quizCorrect: selectedQuizCorrect,
+        diagnosisNote: selectedDiagnosisNote,
+        reflectionNote: selectedReflection,
+        hasLabEvidence: selectedUnitHasLabEvidence,
+        completed: Boolean(selectedUnit?.unit_id && completedUnits[selectedUnit.unit_id]),
+      }),
+    [
+      completedUnits,
+      selectedDiagnosisNote,
+      selectedQuizCorrect,
+      selectedReflection,
+      selectedUnit,
+      selectedUnitHasLabEvidence,
+    ],
+  );
   const expertUnits = useMemo(
     () =>
       knowledgeUnits.filter((unit) =>
@@ -871,6 +898,47 @@ export default function AiInfraTwinPage() {
                           ))}
                         </div>
                       )}
+                    <div className="mt-2 rounded-md border border-[var(--border)] p-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="truncate text-[10px] font-medium text-[var(--foreground)]">
+                            {tr("单元掌握度", "Unit mastery")}
+                          </div>
+                          <div className="mt-0.5 truncate text-[10px] text-[var(--muted-foreground)]">
+                            {tr("下一步", "Next")}: {selectedUnitMastery.nextAction}
+                          </div>
+                        </div>
+                        <div className="shrink-0 text-right">
+                          <div className="text-sm font-semibold tabular-nums text-[var(--foreground)]">
+                            {selectedUnitMastery.scorePct}%
+                          </div>
+                          <div className="text-[10px] text-[var(--muted-foreground)]">
+                            {selectedUnitMastery.level.replace(/_/g, " ")}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--muted)]">
+                        <div
+                          className="h-full rounded-full bg-[var(--primary)]"
+                          style={{ width: `${selectedUnitMastery.scorePct}%` }}
+                        />
+                      </div>
+                      <div className="mt-2 grid grid-cols-5 gap-1">
+                        {selectedUnitMastery.checks.map((check) => (
+                          <div
+                            key={check.id}
+                            className={`min-w-0 rounded-md border px-1.5 py-1 ${
+                              check.done
+                                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-500"
+                                : "border-[var(--border)] text-[var(--muted-foreground)]"
+                            }`}
+                            title={check.label}
+                          >
+                            <div className="truncate text-[10px]">{check.label}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
 
                     <div className="mt-2 grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.9fr)] gap-2">
                       <div className="min-w-0">
@@ -1041,7 +1109,12 @@ export default function AiInfraTwinPage() {
                         />
                         <button
                           type="button"
-                          disabled={!selectedUnit.unit_id || !selectedQuizCorrect}
+                          disabled={
+                            !selectedUnit.unit_id ||
+                            !selectedQuizCorrect ||
+                            selectedDiagnosisNote.trim().length < 20 ||
+                            selectedReflection.trim().length < 20
+                          }
                           onClick={() =>
                             selectedUnit.unit_id &&
                             setCompletedUnits((prev) => ({
@@ -1057,9 +1130,7 @@ export default function AiInfraTwinPage() {
                             : tr("标记完成", "Mark complete")}
                         </button>
                         <div className="mt-1 text-[10px] text-[var(--muted-foreground)]">
-                          {selectedQuizCorrect
-                            ? tr("测验已通过，可以完成该单元。", "Quiz passed. This unit can be completed.")
-                            : tr("先完成测验，再记录学习完成。", "Pass the quiz before completing the unit.")}
+                          {selectedUnitMastery.nextAction}
                         </div>
                         <div className="mt-2 grid grid-cols-2 gap-1">
                           <EvidenceMiniList
