@@ -26,12 +26,29 @@ export interface AiInfraKnowledgeUnitCard {
     estimated_minutes?: number;
     steps?: { phase?: string; task?: string }[];
     assessment?: {
-      quiz?: unknown[];
-      diagnosis_drills?: unknown[];
+      quiz?: AiInfraQuizQuestion[];
+      diagnosis_drills?: AiInfraDiagnosisDrill[];
       reflection_prompts?: string[];
     };
     twin_practice?: { lab_refs?: string[]; post_lab_evidence?: string[] };
   };
+}
+
+export interface AiInfraQuizQuestion {
+  question_id?: string;
+  type?: string;
+  prompt?: string;
+  choices?: { id?: string; text?: string }[];
+  answer?: string;
+  rationale?: string;
+}
+
+export interface AiInfraDiagnosisDrill {
+  drill_id?: string;
+  scenario?: string;
+  task?: string;
+  expected_claim_shape?: Record<string, unknown>;
+  rubric?: string[];
 }
 
 export interface AiInfraCoursePath {
@@ -84,11 +101,49 @@ export interface PrioritizedAiInfraContent {
   matchedKnowledgeCount: number;
 }
 
+const PRIORITY_COURSE_DOMAINS = [
+  "containers",
+  "kubernetes",
+  "observability",
+  "inference_serving",
+];
+
 export function extractAiInfraPluginKnowledge(
   handshake: HandshakeResult | null,
 ): AiInfraPluginKnowledge | undefined {
   return (handshake?.export as { bundle?: { knowledge?: unknown } } | undefined)?.bundle
     ?.knowledge as AiInfraPluginKnowledge | undefined;
+}
+
+export function getAiInfraCoursePaths(
+  knowledge: AiInfraPluginKnowledge | undefined,
+): AiInfraCoursePath[] {
+  return knowledge?.course_paths || knowledge?.learning_surface?.course_paths || [];
+}
+
+export function getPriorityAiInfraCoursePaths(
+  knowledge: AiInfraPluginKnowledge | undefined,
+): AiInfraCoursePath[] {
+  const courses = getAiInfraCoursePaths(knowledge);
+  const byDomain = new Map(courses.map((course) => [course.domain, course]));
+  return [
+    ...PRIORITY_COURSE_DOMAINS.map((domain) => byDomain.get(domain)).filter(
+      (course): course is AiInfraCoursePath => Boolean(course),
+    ),
+    ...courses.filter((course) => !PRIORITY_COURSE_DOMAINS.includes(course.domain || "")),
+  ];
+}
+
+export function findAiInfraKnowledgeUnit(
+  knowledge: AiInfraPluginKnowledge | undefined,
+  unitId: string | undefined,
+): AiInfraKnowledgeUnitCard | undefined {
+  if (!unitId) return undefined;
+  const units =
+    knowledge?.knowledge_units ||
+    knowledge?.learning_surface?.knowledge_unit_cards ||
+    [];
+  return units.find((unit) => unit.unit_id === unitId);
 }
 
 export function prioritizeAiInfraContent(params: {

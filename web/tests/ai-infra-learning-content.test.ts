@@ -2,6 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  findAiInfraKnowledgeUnit,
+  getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
   type AiInfraPluginKnowledge,
 } from "../lib/ai-infra-learning-content";
@@ -33,6 +35,32 @@ const knowledge: AiInfraPluginKnowledge = {
         title: "Docker lifecycle lab pattern",
         topic_family_id: "containers",
         lab_refs: ["lab.container.docker-lifecycle"],
+      },
+    ],
+    course_paths: [
+      {
+        course_path_id: "course.observability",
+        domain: "observability",
+        title: "Observability",
+        unit_refs: ["unit.observability"],
+      },
+      {
+        course_path_id: "course.containers",
+        domain: "containers",
+        title: "Containers",
+        unit_refs: ["unit.container"],
+      },
+      {
+        course_path_id: "course.inference",
+        domain: "inference_serving",
+        title: "Inference",
+        unit_refs: ["unit.inference"],
+      },
+      {
+        course_path_id: "course.security",
+        domain: "security_governance",
+        title: "Security",
+        unit_refs: ["unit.security"],
       },
     ],
   },
@@ -99,4 +127,20 @@ test("prioritizeAiInfraContent preserves manifest order when no lab is selected"
     content.knowledgeUnits.map((unit) => unit.unit_id),
     ["unit.inference", "unit.container"],
   );
+});
+
+test("getPriorityAiInfraCoursePaths promotes the first interactive AI infra paths", () => {
+  const courses = getPriorityAiInfraCoursePaths(knowledge);
+
+  assert.deepEqual(
+    courses.slice(0, 3).map((course) => course.domain),
+    ["containers", "observability", "inference_serving"],
+  );
+  assert.equal(courses[3]?.domain, "security_governance");
+});
+
+test("findAiInfraKnowledgeUnit resolves full units from course path refs", () => {
+  const unit = findAiInfraKnowledgeUnit(knowledge, "unit.container");
+
+  assert.equal(unit?.title, "Docker lifecycle lab pattern");
 });

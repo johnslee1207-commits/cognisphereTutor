@@ -27,7 +27,9 @@ import {
   type AiInfraStatus,
 } from "@/lib/ai-infra-twin-api";
 import {
+  findAiInfraKnowledgeUnit,
   extractAiInfraPluginKnowledge,
+  getPriorityAiInfraCoursePaths,
   prioritizeAiInfraContent,
 } from "@/lib/ai-infra-learning-content";
 import {
@@ -49,6 +51,9 @@ export default function AiInfraTwinPage() {
   const [running, setRunning] = useState(false);
   const [diagnosing, setDiagnosing] = useState(false);
   const [diagnosisResult, setDiagnosisResult] = useState<AiInfraDiagnosisAssessment | null>(null);
+  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
+  const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
+  const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [lastRun, setLastRun] = useState<Record<string, unknown> | null>(null);
 
@@ -118,6 +123,35 @@ export default function AiInfraTwinPage() {
     pluginKnowledge?.course_paths ||
     pluginKnowledge?.learning_surface?.course_paths ||
     [];
+  const priorityCoursePaths = useMemo(
+    () => getPriorityAiInfraCoursePaths(pluginKnowledge),
+    [pluginKnowledge],
+  );
+  const selectedCourse = useMemo(
+    () =>
+      priorityCoursePaths.find((path) => path.course_path_id === selectedCourseId) ||
+      priorityCoursePaths[0] ||
+      null,
+    [priorityCoursePaths, selectedCourseId],
+  );
+  const selectedCourseUnits = useMemo(
+    () =>
+      (selectedCourse?.unit_refs || [])
+        .map((unitId) => findAiInfraKnowledgeUnit(pluginKnowledge, unitId))
+        .filter((unit): unit is NonNullable<typeof unit> => Boolean(unit)),
+    [pluginKnowledge, selectedCourse?.unit_refs],
+  );
+  const selectedUnit = useMemo(
+    () =>
+      selectedCourseUnits.find((unit) => unit.unit_id === selectedUnitId) ||
+      selectedCourseUnits[0] ||
+      null,
+    [selectedCourseUnits, selectedUnitId],
+  );
+  const selectedQuiz = selectedUnit?.standard_learning?.assessment?.quiz?.[0];
+  const selectedQuizAnswer = selectedQuiz?.question_id
+    ? quizAnswers[selectedQuiz.question_id]
+    : undefined;
   const expertUnits = useMemo(
     () =>
       knowledgeUnits.filter((unit) =>
@@ -137,6 +171,18 @@ export default function AiInfraTwinPage() {
         : [],
     [evidence, selected?.scenarioId],
   );
+
+  useEffect(() => {
+    if (!selectedCourseId && priorityCoursePaths[0]?.course_path_id) {
+      setSelectedCourseId(priorityCoursePaths[0].course_path_id);
+    }
+  }, [priorityCoursePaths, selectedCourseId]);
+
+  useEffect(() => {
+    if (selectedCourseUnits[0]?.unit_id && !selectedCourseUnits.some((unit) => unit.unit_id === selectedUnitId)) {
+      setSelectedUnitId(selectedCourseUnits[0].unit_id);
+    }
+  }, [selectedCourseUnits, selectedUnitId]);
 
   const handleSelect = useCallback(async (lab: AiInfraLab) => {
     setError(null);
@@ -461,38 +507,205 @@ export default function AiInfraTwinPage() {
           </section>
         )}
 
-        {coursePaths.length > 0 && (
+        {priorityCoursePaths.length > 0 && (
           <section className="mx-4 mt-3 shrink-0 rounded-lg border border-[var(--border)] p-3">
             <div className="mb-2 flex items-center justify-between gap-2">
-              <h3 className="text-sm font-medium text-[var(--foreground)]">
-                {tr("标准课程路径", "Standard course paths")}
-              </h3>
-              <span className="text-[11px] text-[var(--muted-foreground)]">
-                {coursePaths.length}
+              <div className="flex min-w-0 items-center gap-2">
+                <BookOpenCheck className="h-4 w-4 shrink-0 text-[var(--muted-foreground)]" />
+                <h3 className="truncate text-sm font-medium text-[var(--foreground)]">
+                  {tr("优先标准学习流", "Priority standard learning flows")}
+                </h3>
+              </div>
+              <span className="shrink-0 text-[11px] text-[var(--muted-foreground)]">
+                {tr("路径", "paths")} {coursePaths.length} · {tr("单元", "units")} {expertUnits.length}
               </span>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              {coursePaths.slice(0, 6).map((path) => (
-                <article
-                  key={path.course_path_id || path.title}
-                  className="min-w-0 rounded-md border border-[var(--border)] p-2"
-                >
-                  <div className="truncate text-xs font-medium text-[var(--foreground)]">
-                    {path.title}
-                  </div>
-                  <div className="mt-1 truncate text-[10px] uppercase text-[var(--muted-foreground)]">
-                    {(path.levels || []).join(" · ")}
-                  </div>
-                  <div className="mt-1 text-[10px] text-[var(--muted-foreground)]">
-                    {tr("单元", "Units")} {path.unit_refs?.length ?? 0} ·{" "}
-                    {tr("Labs", "Labs")} {path.lab_refs?.length ?? 0}
-                  </div>
-                  <p className="mt-1 line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
-                    {path.capstone_task}
-                  </p>
-                </article>
-              ))}
+
+            <div className="grid grid-cols-4 gap-2">
+              {priorityCoursePaths.slice(0, 4).map((path) => {
+                const active = selectedCourse?.course_path_id === path.course_path_id;
+                return (
+                  <button
+                    key={path.course_path_id || path.title}
+                    type="button"
+                    onClick={() => {
+                      setSelectedCourseId(path.course_path_id || null);
+                      setSelectedUnitId(path.unit_refs?.[0] || null);
+                    }}
+                    className={`min-w-0 rounded-md border p-2 text-left transition-colors ${
+                      active
+                        ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                        : "border-[var(--border)] hover:bg-[var(--accent)]"
+                    }`}
+                  >
+                    <span className="block truncate text-xs font-medium text-[var(--foreground)]">
+                      {path.title}
+                    </span>
+                    <span className="mt-1 block truncate text-[10px] uppercase text-[var(--muted-foreground)]">
+                      {(path.levels || []).join(" · ")}
+                    </span>
+                    <span className="mt-1 block text-[10px] text-[var(--muted-foreground)]">
+                      {tr("单元", "Units")} {path.unit_refs?.length ?? 0} ·{" "}
+                      {tr("Labs", "Labs")} {path.lab_refs?.length ?? 0}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
+
+            {selectedCourse && (
+              <div className="mt-3 grid grid-cols-[minmax(170px,0.45fr)_minmax(0,1fr)] gap-3">
+                <div className="min-w-0 rounded-md border border-[var(--border)] p-2">
+                  <div className="mb-2 text-[11px] font-medium text-[var(--foreground)]">
+                    {tr("层级", "Levels")}
+                  </div>
+                  <div className="space-y-1.5">
+                    {selectedCourseUnits.map((unit) => {
+                      const active = selectedUnit?.unit_id === unit.unit_id;
+                      return (
+                        <button
+                          key={unit.unit_id || unit.title}
+                          type="button"
+                          onClick={() => setSelectedUnitId(unit.unit_id || null)}
+                          className={`w-full rounded-md border px-2 py-1.5 text-left text-[11px] transition-colors ${
+                            active
+                              ? "border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--foreground)]"
+                              : "border-[var(--border)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
+                          }`}
+                        >
+                          <span className="block truncate uppercase">{unit.level || "unit"}</span>
+                          <span className="mt-0.5 block truncate">{unit.title}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {(selectedCourse.lab_refs || []).slice(0, 4).map((labId) => {
+                      const lab = labsById.get(labId);
+                      return (
+                        <button
+                          key={labId}
+                          type="button"
+                          disabled={!lab}
+                          onClick={() => lab && void handleSelect(lab)}
+                          className="max-w-full truncate rounded-md border border-[var(--border)] px-2 py-1 text-[10px] text-[var(--muted-foreground)] hover:bg-[var(--accent)] disabled:opacity-50"
+                        >
+                          {lab?.title || labId}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {selectedUnit && (
+                  <div className="min-w-0 rounded-md border border-[var(--border)] p-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="truncate text-xs font-medium text-[var(--foreground)]">
+                          {selectedUnit.title}
+                        </div>
+                        <div className="mt-0.5 truncate text-[10px] text-[var(--muted-foreground)]">
+                          {selectedUnit.level} · {selectedUnit.standard_learning?.estimated_minutes ?? "-"} min ·{" "}
+                          {selectedUnit.review_status || "review_required"}
+                        </div>
+                      </div>
+                      <span className="shrink-0 rounded-md border border-[var(--border)] px-2 py-1 text-[10px] text-[var(--muted-foreground)]">
+                        {selectedUnit.topic_family_id}
+                      </span>
+                    </div>
+
+                    <p className="mt-2 line-clamp-2 text-[11px] text-[var(--muted-foreground)]">
+                      {selectedUnit.body || selectedUnit.summary}
+                    </p>
+
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      <div className="min-w-0">
+                        <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
+                          {tr("学习步骤", "Learning steps")}
+                        </div>
+                        <div className="space-y-1">
+                          {(selectedUnit.standard_learning?.steps || []).slice(0, 4).map((step) => (
+                            <div
+                              key={`${selectedUnit.unit_id}:${step.phase}`}
+                              className="rounded-md border border-[var(--border)] px-2 py-1"
+                            >
+                              <div className="text-[10px] uppercase text-[var(--muted-foreground)]">
+                                {step.phase}
+                              </div>
+                              <div className="line-clamp-2 text-[11px] text-[var(--foreground)]">
+                                {step.task}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="min-w-0">
+                        <div className="mb-1 text-[10px] font-medium text-[var(--foreground)]">
+                          {tr("测验与诊断", "Quiz and diagnosis")}
+                        </div>
+                        {selectedQuiz && (
+                          <div className="rounded-md border border-[var(--border)] p-2">
+                            <div className="line-clamp-2 text-[11px] text-[var(--foreground)]">
+                              {selectedQuiz.prompt}
+                            </div>
+                            <div className="mt-1.5 grid grid-cols-2 gap-1">
+                              {(selectedQuiz.choices || []).map((choice) => {
+                                const chosen = selectedQuizAnswer === choice.id;
+                                const correct = choice.id === selectedQuiz.answer;
+                                return (
+                                  <button
+                                    key={choice.id || choice.text}
+                                    type="button"
+                                    onClick={() =>
+                                      selectedQuiz.question_id &&
+                                      setQuizAnswers((prev) => ({
+                                        ...prev,
+                                        [selectedQuiz.question_id as string]: choice.id || "",
+                                      }))
+                                    }
+                                    className={`rounded-md border px-2 py-1 text-left text-[10px] transition-colors ${
+                                      chosen
+                                        ? correct
+                                          ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-500"
+                                          : "border-amber-500/50 bg-amber-500/10 text-amber-500"
+                                        : "border-[var(--border)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
+                                    }`}
+                                  >
+                                    <span className="font-medium">{choice.id}</span> {choice.text}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {selectedQuizAnswer && (
+                              <p className="mt-1.5 line-clamp-2 text-[10px] text-[var(--muted-foreground)]">
+                                {selectedQuiz.rationale}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                        {selectedUnit.standard_learning?.assessment?.diagnosis_drills?.[0] && (
+                          <div className="mt-1.5 rounded-md border border-[var(--border)] p-2">
+                            <div className="line-clamp-1 text-[10px] uppercase text-[var(--muted-foreground)]">
+                              {tr("诊断任务", "Diagnosis drill")}
+                            </div>
+                            <div className="mt-0.5 line-clamp-2 text-[11px] text-[var(--foreground)]">
+                              {selectedUnit.standard_learning.assessment.diagnosis_drills[0].task}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {selectedUnit.source_ids && selectedUnit.source_ids.length > 0 && (
+                      <div className="mt-2 truncate text-[10px] text-[var(--muted-foreground)]">
+                        {tr("来源", "Sources")}: {selectedUnit.source_ids.slice(0, 4).join(" · ")}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </section>
         )}
 
