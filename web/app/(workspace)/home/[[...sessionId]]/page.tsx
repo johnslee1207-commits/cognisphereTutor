@@ -364,6 +364,45 @@ function formatMasteryValue(value?: number): string {
   return `${Math.round(value * 100)}%`;
 }
 
+function masteryActionLabel(action: string | undefined, tr: GoalTranslator): string {
+  switch (action) {
+    case "answer_pending":
+      return tr("回答当前问题", "Answer question");
+    case "review":
+      return tr("复习", "Review");
+    case "probe":
+      return tr("开始探测", "Start probe");
+    case "practice":
+      return tr("继续练习", "Practice");
+    case "assess":
+      return tr("解释掌握", "Explain mastery");
+    case "complete":
+      return tr("已完成", "Complete");
+    default:
+      return tr("继续", "Continue");
+  }
+}
+
+function masteryReasonLabel(next: MasteryMapResult["next"] | undefined, tr: GoalTranslator): string {
+  if (!next) return tr("按顺序进入下一个学习动作。", "Continue with the next ordered learning action.");
+  switch (next.action) {
+    case "answer_pending":
+      return tr("当前问题需要先完成评分，然后才能进入后续目标。", "The current question must be graded before the path can advance.");
+    case "review":
+      return tr("这个目标已到间隔复习时间，先巩固再继续推进。", "This objective is due for spaced review before moving ahead.");
+    case "probe":
+      return tr("这是尚未触达的目标，先做探测以确认是否可以直接通过。", "This untouched objective starts with a probe to check whether you can test out.");
+    case "practice":
+      return tr("掌握度还没达到门槛，继续练习直到证据足够。", "Mastery is below the gate, so practice continues until evidence is sufficient.");
+    case "assess":
+      return tr("这是定性目标，需要用自己的解释证明真正理解。", "This qualitative objective needs an explain-back to prove understanding.");
+    case "complete":
+      return tr("全部目标已掌握，当前没有到期复习。", "All objectives are mastered and no review is due.");
+    default:
+      return next.reason || tr("按顺序进入下一个学习动作。", "Continue with the next ordered learning action.");
+  }
+}
+
 function MasteryPathStatusStrip({
   title,
   pathId,
@@ -412,13 +451,18 @@ function MasteryPathStatusStrip({
       : tr("等待开始", "Ready to start"));
   const objectiveMeta = next
     ? [
+        next.module_name,
         next.knowledge_point_type,
+        next.gate,
         next.status,
         `${formatMasteryValue(next.mastery)} / ${formatMasteryValue(next.threshold)}`,
       ]
         .filter(Boolean)
         .join(" · ")
     : pathId;
+  const actionLabel = masteryActionLabel(next?.action, tr);
+  const reasonLabel = masteryReasonLabel(next, tr);
+  const isComplete = next?.action === "complete" || Boolean(map?.map.complete);
 
   return (
     <div className="border-b border-[var(--border)] bg-[var(--background)]/95 px-4 py-2">
@@ -446,17 +490,20 @@ function MasteryPathStatusStrip({
               <span className="mx-2 text-[var(--border)]">|</span>
               <span>{sourceText}</span>
             </div>
+            <div className="mt-1 truncate text-xs text-[var(--muted-foreground)]">
+              {reasonLabel}
+            </div>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2 self-start md:self-auto">
           <button
             type="button"
             onClick={onContinue}
-            disabled={continueDisabled}
+            disabled={continueDisabled || isComplete}
             className="inline-flex h-8 items-center gap-1.5 rounded-md bg-[var(--primary)] px-3 text-xs font-medium text-[var(--primary-foreground)] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-55"
           >
             <MessageCirclePlus className="h-3.5 w-3.5" />
-            {tr("继续", "Continue")}
+            {actionLabel}
           </button>
           <button
             type="button"

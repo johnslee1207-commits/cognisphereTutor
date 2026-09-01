@@ -86,12 +86,17 @@ export interface MasteryMap {
 
 export interface NextStep {
   action: string;
+  module_id?: string;
+  module_name?: string;
+  knowledge_point_id?: string;
   knowledge_point_name: string;
   knowledge_point_type: string;
   status: string;
+  gate?: string;
   mastery: number;
   threshold: number;
   reason: string;
+  pending_prompt?: string;
 }
 
 export interface MasteryMapResult {
