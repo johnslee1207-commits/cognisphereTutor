@@ -20,7 +20,7 @@
       "id": "P0-02",
       "priority": "P0",
       "title": "Create tri-review approval workflow",
-      "status": "planned",
+      "status": "in_progress",
       "area": "governance",
       "owner": "Cognisphere + CognisphereTutor",
       "acceptance": [
@@ -33,7 +33,7 @@
       "id": "P1-01",
       "priority": "P1",
       "title": "Upgrade real lifecycle lab count",
-      "status": "planned",
+      "status": "in_progress",
       "area": "labs",
       "owner": "AetherAI-Infra Twin",
       "acceptance": [
@@ -98,7 +98,7 @@
       "id": "P3-01",
       "priority": "P3",
       "title": "Add AI Infra Software Engineering path",
-      "status": "planned",
+      "status": "in_progress",
       "area": "content",
       "owner": "CognisphereLearningPlugins",
       "acceptance": [
@@ -111,7 +111,7 @@
       "id": "P3-02",
       "priority": "P3",
       "title": "Expand deep paths beyond four units",
-      "status": "planned",
+      "status": "in_progress",
       "area": "content",
       "owner": "CognisphereLearningPlugins",
       "acceptance": [
@@ -124,7 +124,7 @@
       "id": "P4-01",
       "priority": "P4",
       "title": "Add real multi-node calibration profile",
-      "status": "planned",
+      "status": "in_progress",
       "area": "calibration",
       "owner": "AetherAI-Infra Twin",
       "acceptance": [
@@ -171,6 +171,136 @@
         "course guide exposes mastery learning, retrieval and spacing, active learning, deliberate practice, and project or scenario-based learning alignment",
         "Tutor WebUI renders method alignment and remaining gaps",
         "alignment items remain source-backed draft until expert review"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P3-03",
+      "priority": "P3",
+      "title": "Add AI Infra Security and Governance path",
+      "status": "planned",
+      "area": "content",
+      "owner": "CognisphereLearningPlugins",
+      "acceptance": [
+        "path covers model artifact provenance, runtime permission boundaries, secret handling, supply-chain scanning, and audit evidence",
+        "units include source drills, unsafe-action refusal cases, and expert-review rubrics"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P3-04",
+      "priority": "P3",
+      "title": "Add AI Infra Networking path",
+      "status": "planned",
+      "area": "content",
+      "owner": "CognisphereLearningPlugins",
+      "acceptance": [
+        "path covers service discovery, ingress, DNS, east-west traffic, NCCL/network topology, and latency evidence",
+        "labs distinguish local emulation, single-node proof, and multi-node calibrated claims"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P3-05",
+      "priority": "P3",
+      "title": "Add AI Infra Storage and Data Path path",
+      "status": "planned",
+      "area": "content",
+      "owner": "CognisphereLearningPlugins",
+      "acceptance": [
+        "path covers dataset staging, checkpoint pressure, object storage, PVC behavior, cache locality, and recovery evidence",
+        "capstone requires bounded throughput and durability claims with source and lab evidence"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P3-06",
+      "priority": "P3",
+      "title": "Add GPU Systems and CUDA Operations path",
+      "status": "planned",
+      "area": "content",
+      "owner": "CognisphereLearningPlugins + AetherAI-Infra Twin",
+      "acceptance": [
+        "path covers driver/runtime compatibility, CUDA visibility, memory pressure, MIG/MPS concepts, utilization, and thermal/power caveats",
+        "real labs collect read-only GPU profile evidence before any workload claim"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P3-07",
+      "priority": "P3",
+      "title": "Add Platform Economics and Capacity Planning path",
+      "status": "planned",
+      "area": "content",
+      "owner": "CognisphereLearningPlugins",
+      "acceptance": [
+        "path covers tokens-per-dollar, utilization, queueing tradeoffs, reservation assumptions, and benchmark-to-cost claim boundaries",
+        "assessment includes cost/capacity diagnosis from evidence bundles"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P5-04",
+      "priority": "P5",
+      "title": "Upgrade spaced review to adaptive recall strength",
+      "status": "planned",
+      "area": "learning_effectiveness",
+      "owner": "CognisphereTutor",
+      "acceptance": [
+        "review scheduling uses learner result history instead of fixed intervals only",
+        "weak skills trigger shorter review intervals and targeted remediation"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P5-05",
+      "priority": "P5",
+      "title": "Add error taxonomy and remediation routing",
+      "status": "planned",
+      "area": "learning_effectiveness",
+      "owner": "CognisphereTutor + CognisphereLearningPlugins",
+      "acceptance": [
+        "wrong answers and weak diagnoses map to concept, evidence, source, safety, or reasoning error types",
+        "Tutor selects the next drill from the error type and learner history"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P5-06",
+      "priority": "P5",
+      "title": "Add operational brief review loop",
+      "status": "planned",
+      "area": "learning_effectiveness",
+      "owner": "CognisphereTutor + Expert reviewers",
+      "acceptance": [
+        "capstone and incident responses can be submitted as reviewable operational briefs",
+        "review feedback is separated from generated hints and bound to evidence refs"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P6-01",
+      "priority": "P6",
+      "title": "Refine native Tutor stepper presentation",
+      "status": "planned",
+      "area": "interface",
+      "owner": "CognisphereTutor",
+      "acceptance": [
+        "standard learning defaults to ordered Continue flow without requiring repeated chat prompts",
+        "each objective displays one current action at a time: learn, quiz, diagnosis, source drill, lab, or reflection"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "P6-02",
+      "priority": "P6",
+      "title": "Add learner and expert dashboards",
+      "status": "planned",
+      "area": "interface",
+      "owner": "CognisphereTutor",
+      "acceptance": [
+        "learner dashboard shows mastery, due reviews, evidence gaps, and next action",
+        "expert dashboard shows source-backed draft state, review queue, and approval bottlenecks"
       ],
       "evidence": []
     }

@@ -375,7 +375,8 @@ test("getAiInfraImprovementRoadmapSummary exposes expert remediation progress", 
   assert.equal(summary.total >= 10, true);
   assert.equal(summary.done >= 4, true);
   assert.equal(summary.byPriority.P0.total >= 1, true);
-  assert.equal(summary.nextTasks[0]?.status, "planned");
+  assert.equal(summary.inProgress >= 5, true);
+  assert.equal(["in_progress", "planned"].includes(summary.nextTasks[0]?.status || ""), true);
   assert.equal(
     roadmap.tasks.some((task) => task.title === "Upgrade real lifecycle lab count"),
     true,
