@@ -374,6 +374,8 @@ function MasteryPathStatusStrip({
   tr,
   onOpenPath,
   onOpenLabs,
+  onContinue,
+  continueDisabled,
 }: {
   title: string;
   pathId: string;
@@ -384,6 +386,8 @@ function MasteryPathStatusStrip({
   tr: GoalTranslator;
   onOpenPath: () => void;
   onOpenLabs: () => void;
+  onContinue: () => void;
+  continueDisabled: boolean;
 }) {
   const counts = map?.map.counts;
   const next = map?.next;
@@ -445,6 +449,15 @@ function MasteryPathStatusStrip({
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2 self-start md:self-auto">
+          <button
+            type="button"
+            onClick={onContinue}
+            disabled={continueDisabled}
+            className="inline-flex h-8 items-center gap-1.5 rounded-md bg-[var(--primary)] px-3 text-xs font-medium text-[var(--primary-foreground)] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-55"
+          >
+            <MessageCirclePlus className="h-3.5 w-3.5" />
+            {tr("继续", "Continue")}
+          </button>
           <button
             type="button"
             onClick={onOpenPath}
@@ -998,6 +1011,7 @@ export default function ChatPage() {
       setCapability,
     ],
   );
+
   // Time-of-day greeting: seeded once on mount from the user's local clock so
   // the heading stays stable while they're on the page. State (not useMemo)
   // because the random pick would otherwise mismatch SSR ↔ client hydration.
@@ -1825,6 +1839,37 @@ export default function ChatPage() {
       .catch(() => undefined);
   }, []);
 
+  const handleContinueMasteryPath = useCallback(() => {
+    if (!masteryPathParam || masteryProgressBusy || state.isStreaming) return;
+    setCapability("mastery_path");
+    pendingMasteryPathRef.current = masteryPathParam;
+    masteryAutoStartSentRef.current = true;
+    sendMessage(
+      "Continue the current mastery path in order.",
+      [],
+      {
+        mastery_path_id: masteryPathParam,
+        ...(pendingTutorSessionRef.current
+          ? { cognisphere_tutor_session_id: pendingTutorSessionRef.current }
+          : {}),
+      },
+      [],
+      [],
+      {
+        displayUserMessage: false,
+        persistUserMessage: false,
+      },
+    );
+    shouldAutoScrollRef.current = true;
+  }, [
+    masteryPathParam,
+    masteryProgressBusy,
+    sendMessage,
+    setCapability,
+    shouldAutoScrollRef,
+    state.isStreaming,
+  ]);
+
   const handleSend = useCallback(
     async (content: string) => {
       if (
@@ -2378,6 +2423,8 @@ export default function ChatPage() {
                 )
               }
               onOpenLabs={() => router.push("/space/ai-infra")}
+              onContinue={handleContinueMasteryPath}
+              continueDisabled={masteryProgressBusy || state.isStreaming}
             />
           ) : null}
           <div className="flex w-full flex-1 min-h-0 flex-col">
@@ -2424,8 +2471,8 @@ export default function ChatPage() {
                       <div className="grid gap-2 sm:grid-cols-3">
                         <button
                           type="button"
-                          disabled={masteryProgressBusy}
-                          onClick={() => void handleNewMasterySession("continue")}
+                          disabled={masteryProgressBusy || state.isStreaming}
+                          onClick={handleContinueMasteryPath}
                           className="flex min-w-0 items-center gap-2 rounded-md border border-[var(--primary)]/45 px-3 py-2 text-left text-xs text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                           <MessageCirclePlus className="h-4 w-4 shrink-0" />
