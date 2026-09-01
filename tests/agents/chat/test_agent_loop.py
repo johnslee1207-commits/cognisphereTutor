@@ -2229,6 +2229,69 @@ def test_mastery_overview_auto_advance_records_qualitative_pass(tmp_path, monkey
     assert context.metadata["mastery_overview_auto_advanced"] is True
 
 
+def test_formal_course_overview_is_not_auto_advanced(tmp_path, monkeypatch) -> None:
+    from cognispheretutor.capabilities.mastery import loop as mastery_loop
+    from cognispheretutor.learning.models import (
+        KnowledgePoint,
+        KnowledgeType,
+        LearningModule,
+        LearningProgress,
+    )
+    import cognispheretutor.learning.storage as storage_mod
+
+    real_store_cls = storage_mod.LearningStore
+    store = real_store_cls(tmp_path)
+    progress = LearningProgress(
+        book_id="csphere-ai_infra",
+        modules=[
+            LearningModule(
+                id="csphere-ai_infra-overview",
+                name="AI Infrastructure Knowledge Platform and Digital Twin Course",
+                order=0,
+                knowledge_points=[
+                    KnowledgePoint(
+                        id="ov-ai_infra-course_overview-v1",
+                        name="AI Infrastructure Knowledge Platform and Digital Twin Course",
+                        type=KnowledgeType.CONCEPT,
+                        module_id="csphere-ai_infra-overview",
+                    )
+                ],
+            ),
+            LearningModule(
+                id="csphere-ai_infra-objectives",
+                name="Learning objectives",
+                order=1,
+                knowledge_points=[
+                    KnowledgePoint(
+                        id="obj-runtime-readiness",
+                        name="Runtime readiness",
+                        type=KnowledgeType.CONCEPT,
+                        module_id="csphere-ai_infra-objectives",
+                    )
+                ],
+            ),
+        ],
+        knowledge_types={
+            "ov-ai_infra-course_overview-v1": KnowledgeType.CONCEPT,
+            "obj-runtime-readiness": KnowledgeType.CONCEPT,
+        },
+    )
+    store.save(progress)
+    monkeypatch.setattr(storage_mod, "LearningStore", lambda: real_store_cls(tmp_path))
+    context = UnifiedContext(
+        user_message="I understand the direction and want the systematic path.",
+        metadata={"mastery_mode": True, "mastery_path_id": "csphere-ai_infra"},
+    )
+
+    seed = mastery_loop._auto_advance_overview_if_ready(context)
+    updated = store.load("csphere-ai_infra")
+
+    assert seed == ""
+    assert updated is not None
+    assert "ov-ai_infra-course_overview-v1" not in updated.qualitative_mastery
+    assert "mastery_overview_auto_advanced" not in context.metadata
+
+
 def test_augment_tool_kwargs_injects_geogebra_image() -> None:
     pipeline = AgenticChatPipeline.__new__(AgenticChatPipeline)
     pipeline.language = "zh"

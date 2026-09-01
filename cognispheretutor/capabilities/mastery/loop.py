@@ -519,11 +519,22 @@ def _auto_advance_overview_if_ready(context: UnifiedContext) -> str:
 def _is_generated_overview_step(step: dict[str, Any]) -> bool:
     kp_id = str(step.get("knowledge_point_id") or "")
     module_id = str(step.get("module_id") or "")
-    name = str(step.get("knowledge_point_name") or "").lower()
-    return (
-        kp_id.startswith("ov-")
-        or module_id.endswith("-overview")
-        or ("cognisphere" in name and "certification" in name)
+    name = str(step.get("knowledge_point_name") or "")
+    normalized_name = name.lower().replace("·", " ")
+    formal_overview_markers = (
+        "course_overview",
+        "course overview",
+        "knowledge platform",
+        "digital twin course",
+    )
+    if any(marker in f"{kp_id} {module_id} {normalized_name}" for marker in formal_overview_markers):
+        return False
+    return kp_id in {"ov-overview"} or (
+        module_id.endswith("-overview")
+        and (
+            normalized_name.startswith("cognisphere")
+            or "cognisphere бд" in normalized_name
+        )
     )
 
 

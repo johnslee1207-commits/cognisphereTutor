@@ -121,6 +121,61 @@ def test_build_plugin_grounding_seed_uses_learner_goal_for_ranking(
     assert seed.index("Cloud Practitioner CLF-C02 exam guide") < seed.index("Multi-AZ RDS")
 
 
+def test_build_plugin_grounding_seed_includes_course_overview_manifest(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    from cognispheretutor.integrations.cognisphere import grounding
+
+    plugin_path = tmp_path / "plugins" / "ai_infra"
+    domain_dir = plugin_path / "manifests" / "domain"
+    domain_dir.mkdir(parents=True)
+    (domain_dir / "learning_surface.json").write_text(
+        json.dumps(
+            {
+                "course_overview": {
+                    "overview_id": "ai_infra.course_overview.v1",
+                    "title": "AI Infrastructure Knowledge Platform and Digital Twin Course",
+                    "teaching_purpose": (
+                        "This course trains learners to operate AI infrastructure "
+                        "with evidence-backed judgment."
+                    ),
+                    "learning_outcomes": [
+                        "Connect operational claims to sources and lab evidence."
+                    ],
+                    "content_design_rationale": [
+                        "Standard learning comes before Twin practice."
+                    ],
+                    "source_policy": "Course structure comes from the materialized plugin pack.",
+                    "review_status": "source_backed_draft_review_required",
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    class FakeRegistry:
+        def get_plugin(self, domain: str):
+            assert domain == "ai_infra"
+            return {"plugin": {"path": str(plugin_path)}}
+
+    monkeypatch.setattr(grounding, "PluginRegistryClient", FakeRegistry)
+    monkeypatch.setattr(grounding, "resolve_import_cache_dir", lambda domain: tmp_path / domain)
+
+    seed = grounding.build_plugin_grounding_seed(
+        domain="ai_infra",
+        objective={
+            "knowledge_point_id": "ov-ai_infra-course_overview-v1",
+            "knowledge_point_name": "AI Infrastructure Knowledge Platform and Digital Twin Course",
+        },
+    )
+
+    assert "AI Infrastructure Knowledge Platform and Digital Twin Course" in seed
+    assert "evidence-backed judgment" in seed
+    assert "Standard learning comes before Twin practice" in seed
+    assert "source_backed_draft_review_required" in seed
+
+
 def test_build_plugin_grounding_seed_reports_sparse_grounding(monkeypatch, tmp_path: Path) -> None:
     from cognispheretutor.integrations.cognisphere import grounding
 

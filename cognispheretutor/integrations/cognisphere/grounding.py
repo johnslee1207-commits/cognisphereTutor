@@ -32,9 +32,16 @@ _TEXT_KEYS = (
     "description",
     "purpose",
     "body",
+    "teaching_purpose",
+    "source_policy",
+    "review_status",
 )
 _LIST_TEXT_KEYS = (
     "teaching_points",
+    "target_learners",
+    "learning_outcomes",
+    "content_design_rationale",
+    "learning_method",
     "prerequisites",
     "related_concepts",
     "related_patterns",
@@ -103,9 +110,20 @@ def _load_domain_items(domain: str) -> list[dict[str, Any]]:
     plugin = record.get("plugin") if isinstance(record, dict) else {}
     plugin_path = Path(str((plugin or {}).get("path") or ""))
     if plugin_path.is_dir():
+        items.extend(_load_plugin_domain_items(plugin_path))
         items.extend(_load_plugin_package_items(plugin_path))
     items.extend(_load_import_cache_items(domain))
     return items
+
+
+def _load_plugin_domain_items(plugin_path: Path) -> list[dict[str, Any]]:
+    domain_dir = plugin_path / "manifests" / "domain"
+    if not domain_dir.is_dir():
+        return []
+    out: list[dict[str, Any]] = []
+    for name in ("learning_surface.json", "pack_metadata.json", "composition_roles.json"):
+        out.extend(_items_from_path(domain_dir / name, source="local plugin domain manifest"))
+    return out
 
 
 def _load_plugin_package_items(plugin_path: Path) -> list[dict[str, Any]]:
@@ -210,6 +228,7 @@ def _iter_candidate_objects(payload: Any) -> Iterable[dict[str, Any]]:
             "nodes",
             "entries",
             "excerpts",
+            "course_overview",
         ):
             value = payload.get(key)
             if isinstance(value, list):
@@ -219,9 +238,12 @@ def _iter_candidate_objects(payload: Any) -> Iterable[dict[str, Any]]:
                         yield item
             elif isinstance(value, dict):
                 yielded = True
-                for item in value.values():
-                    if isinstance(item, dict):
-                        yield item
+                if key == "course_overview":
+                    yield value
+                else:
+                    for item in value.values():
+                        if isinstance(item, dict):
+                            yield item
         if not yielded:
             yield payload
             for value in payload.values():
@@ -249,7 +271,13 @@ def _rank_items(items: list[dict[str, Any]], query: str) -> list[dict[str, Any]]
 
 
 def _render_item(item: dict[str, Any]) -> dict[str, Any]:
-    body = str(item.get("body") or item.get("description") or item.get("summary") or "").strip()
+    body = str(
+        item.get("body")
+        or item.get("teaching_purpose")
+        or item.get("description")
+        or item.get("summary")
+        or ""
+    ).strip()
     rendered = {
         "id": item.get("unit_id")
         or item.get("package_id")
@@ -266,13 +294,25 @@ def _render_item(item: dict[str, Any]) -> dict[str, Any]:
     }
     if body:
         rendered["body"] = body[:1200]
-    teaching_points = item.get("teaching_points")
+    teaching_points = item.get("teaching_points") or item.get("learning_outcomes")
     if isinstance(teaching_points, list) and teaching_points:
         rendered["teaching_points"] = [str(point) for point in teaching_points[:6]]
-    for key in ("prerequisites", "related_concepts", "related_patterns", "certifications"):
+    for key in (
+        "target_learners",
+        "content_design_rationale",
+        "learning_method",
+        "prerequisites",
+        "related_concepts",
+        "related_patterns",
+        "certifications",
+    ):
         value = item.get(key)
         if isinstance(value, list) and value:
             rendered[key] = [str(v) for v in value[:8]]
+    for key in ("source_policy", "review_status"):
+        value = item.get(key)
+        if isinstance(value, str) and value.strip():
+            rendered[key] = value.strip()[:1200]
     return {k: v for k, v in rendered.items() if v not in (None, "", [])}
 
 
