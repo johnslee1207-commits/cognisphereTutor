@@ -6,6 +6,7 @@ import {
   assessAiInfraSourceDocumentDrill,
   filterAiInfraCoursePaths,
   getAiInfraCourseContextStats,
+  getAiInfraCourseGuide,
   getAiInfraCoverageSummary,
   findAiInfraKnowledgeUnit,
   getAiInfraCourseProgress,
@@ -24,6 +25,17 @@ import type { AiInfraLab } from "../lib/ai-infra-twin-api";
 
 const knowledge: AiInfraPluginKnowledge = {
   learning_surface: {
+    course_guide: {
+      guide_id: "ai_infra.course_guide.v1",
+      recommended_sequence: [
+        { phase_id: "phase.standard-foundation", label: "Standard foundation" },
+        { phase_id: "phase.platform-operations", label: "Platform operations" },
+      ],
+      mastery_milestones: [
+        { milestone_id: "m0.orientation", label: "Orientation complete", level: "beginner" },
+      ],
+      claim_boundary_rules: ["A benchmark claim requires workload shape."],
+    },
     lesson_cards: [
       {
         lesson_id: "lesson.inference",
@@ -128,6 +140,19 @@ const knowledge: AiInfraPluginKnowledge = {
     ],
   },
 };
+
+test("getAiInfraCourseGuide resolves guide from learning surface or top level", () => {
+  const guide = getAiInfraCourseGuide(knowledge);
+  assert.equal(guide?.guide_id, "ai_infra.course_guide.v1");
+  assert.equal(guide?.recommended_sequence?.length, 2);
+  assert.equal(guide?.mastery_milestones?.[0]?.label, "Orientation complete");
+
+  const topLevel = getAiInfraCourseGuide({
+    course_guide: { guide_id: "top.guide" },
+    learning_surface: { course_guide: { guide_id: "nested.guide" } },
+  });
+  assert.equal(topLevel?.guide_id, "top.guide");
+});
 
 function lab(overrides: Partial<AiInfraLab>): AiInfraLab {
   return {

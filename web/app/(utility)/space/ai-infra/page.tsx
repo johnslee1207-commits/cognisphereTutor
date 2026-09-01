@@ -42,6 +42,7 @@ import {
   findAiInfraKnowledgeUnit,
   extractAiInfraPluginKnowledge,
   getAiInfraCourseContextStats,
+  getAiInfraCourseGuide,
   getAiInfraCourseProgress,
   getAiInfraCoverageSummary,
   getAiInfraImprovementRoadmap,
@@ -272,6 +273,10 @@ export default function AiInfraTwinPage() {
     pluginKnowledge?.course_paths ||
     pluginKnowledge?.learning_surface?.course_paths ||
     [];
+  const courseGuide = useMemo(
+    () => getAiInfraCourseGuide(pluginKnowledge),
+    [pluginKnowledge],
+  );
   const priorityCoursePaths = useMemo(
     () => getPriorityAiInfraCoursePaths(pluginKnowledge),
     [pluginKnowledge],
@@ -1213,6 +1218,60 @@ export default function AiInfraTwinPage() {
               <MiniStat label={tr("故障", "Failures")} value={coverageSummary.failureModeCount} />
               <MiniStat label={tr("证据", "Evidence")} value={coverageSummary.evidenceRequirementCount} />
             </div>
+
+            {courseGuide && (
+              <div className="mb-3 rounded-md border border-[var(--border)] bg-[var(--muted)]/15 p-2">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="truncate text-xs font-medium text-[var(--foreground)]">
+                      {courseGuide.title || tr("AI Infra 课程导学", "AI Infra course guide")}
+                    </div>
+                    <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-[var(--muted-foreground)]">
+                      {courseGuide.learner_contract ||
+                        tr(
+                          "按 mastery gate 顺序推进；Tutor 负责教学与评分，Twin 负责实验和证据。",
+                          "Advance through mastery gates; Tutor teaches and grades, while the Twin supplies labs and evidence.",
+                        )}
+                    </p>
+                  </div>
+                  <span className="shrink-0 rounded-md border border-[var(--border)] px-2 py-1 text-[10px] text-[var(--muted-foreground)]">
+                    {courseGuide.review_status || "review_required"}
+                  </span>
+                </div>
+                <div className="mt-2 grid grid-cols-4 gap-1.5">
+                  {(courseGuide.recommended_sequence || []).slice(0, 4).map((phase, index) => (
+                    <div
+                      key={phase.phase_id || phase.label || index}
+                      className="min-w-0 rounded-md border border-[var(--border)] bg-[var(--background)]/60 px-2 py-1.5"
+                      title={[phase.purpose, phase.tutor_mode, phase.twin_mode].filter(Boolean).join("\n")}
+                    >
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="min-w-0 truncate text-[10px] font-medium text-[var(--foreground)]">
+                          {phase.label || phase.phase_id}
+                        </span>
+                        <span className="shrink-0 text-[10px] text-[var(--muted-foreground)]">
+                          {index + 1}
+                        </span>
+                      </div>
+                      <div className="mt-0.5 line-clamp-2 text-[10px] text-[var(--muted-foreground)]">
+                        {phase.purpose || phase.audience || phase.tutor_mode}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {(courseGuide.mastery_milestones || []).slice(0, 5).map((milestone) => (
+                    <span
+                      key={milestone.milestone_id || milestone.label}
+                      className="rounded-full border border-[var(--border)] bg-[var(--background)]/60 px-2 py-1 text-[10px] text-[var(--muted-foreground)]"
+                      title={(milestone.learner_can || milestone.review_evidence || []).join("\n")}
+                    >
+                      {milestone.label || milestone.milestone_id}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <label className="mb-2 flex h-8 items-center gap-2 rounded-md border border-[var(--border)] px-2 text-[11px] text-[var(--muted-foreground)]">
               <Search className="h-3.5 w-3.5 shrink-0" />

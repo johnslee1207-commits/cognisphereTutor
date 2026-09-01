@@ -84,18 +84,50 @@ export interface AiInfraCoursePath {
   review_status?: string;
 }
 
+export interface AiInfraCourseGuidePhase {
+  phase_id?: string;
+  label?: string;
+  audience?: string;
+  purpose?: string;
+  exit_evidence?: string[];
+  tutor_mode?: string;
+  twin_mode?: string;
+}
+
+export interface AiInfraCourseGuideMilestone {
+  milestone_id?: string;
+  label?: string;
+  level?: string;
+  learner_can?: string[];
+  review_evidence?: string[];
+}
+
+export interface AiInfraCourseGuide {
+  guide_id?: string;
+  title?: string;
+  learner_contract?: string;
+  recommended_sequence?: AiInfraCourseGuidePhase[];
+  interface_principles?: string[];
+  assessment_pattern?: string[];
+  mastery_milestones?: AiInfraCourseGuideMilestone[];
+  claim_boundary_rules?: string[];
+  review_status?: string;
+}
+
 export interface AiInfraPluginKnowledge {
   pack_metadata?: { title?: string; version?: string };
   tracks?: unknown[];
   learning_surface?: {
     lesson_cards?: AiInfraLessonCard[];
     knowledge_unit_cards?: AiInfraKnowledgeUnitCard[];
+    course_guide?: AiInfraCourseGuide;
     trusted_source_coverage?: AiInfraPluginKnowledge["trusted_source_coverage"];
     standard_learning_assets?: AiInfraPluginKnowledge["standard_learning_assets"];
     course_paths?: AiInfraCoursePath[];
   };
   lesson_cards?: AiInfraLessonCard[];
   knowledge_units?: AiInfraKnowledgeUnitCard[];
+  course_guide?: AiInfraCourseGuide;
   topic_families?: unknown[];
   course_paths?: AiInfraCoursePath[];
   twin_backend?: { default_base_url?: string; guided_learning_url?: string };
@@ -319,6 +351,12 @@ export function getAiInfraCoursePaths(
   knowledge: AiInfraPluginKnowledge | undefined,
 ): AiInfraCoursePath[] {
   return knowledge?.course_paths || knowledge?.learning_surface?.course_paths || [];
+}
+
+export function getAiInfraCourseGuide(
+  knowledge: AiInfraPluginKnowledge | undefined,
+): AiInfraCourseGuide | undefined {
+  return knowledge?.course_guide || knowledge?.learning_surface?.course_guide;
 }
 
 export function getPriorityAiInfraCoursePaths(
