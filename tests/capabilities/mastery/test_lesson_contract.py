@@ -152,6 +152,34 @@ def test_lesson_contract_teaches_course_overview_as_system_introduction() -> Non
     assert any("source boundary" in item for item in payload["must_teach"])
 
 
+def test_lesson_contract_teaches_course_guide_as_learning_method() -> None:
+    seed = build_lesson_contract_seed(
+        domain="ai_infra",
+        learner_goal="systematic beginner path",
+        next_step=NextStep(
+            action="assess",
+            knowledge_point_id="guide-ai_infra-course_guide-v1",
+            knowledge_point_name="How to Learn AI Infrastructure with Tutor and the Twin",
+            knowledge_point_type="concept",
+            status="learning",
+        ),
+        map_summary={"counts": {"total": 77}, "modules": []},
+    )
+
+    payload = _payload(seed)
+
+    assert payload["current_objective"]["display_name"] == (
+        "How to Learn AI Infrastructure with Tutor and the Twin"
+    )
+    guide_items = [item for item in payload["must_teach"] if "course guide" in item]
+    assert guide_items
+    assert "advances in order" in guide_items[0]
+    assert "Continue" in guide_items[0]
+    assert "when chat is appropriate" in guide_items[0]
+    assert "when Twin labs open" in guide_items[0]
+    assert "lab-backed evidence" in guide_items[0]
+
+
 def test_lesson_contract_requires_free_response_after_foundation_ramp() -> None:
     seed = build_lesson_contract_seed(
         domain="aws_certification",

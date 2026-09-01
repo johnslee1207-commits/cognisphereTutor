@@ -158,6 +158,13 @@ def test_build_plugin_grounding_seed_includes_course_overview_manifest(
                     "interface_principles": [
                         "Use Tutor's native chat and mastery path as the primary learning surface."
                     ],
+                    "mastery_milestones": [
+                        {
+                            "milestone_id": "m0.orientation",
+                            "label": "Orientation complete",
+                            "learner_can": ["Use Continue as the default path action."],
+                        }
+                    ],
                     "claim_boundary_rules": [
                         "A benchmark claim requires workload shape, environment profile, run metadata, and evidence bundle."
                     ],
@@ -188,6 +195,7 @@ def test_build_plugin_grounding_seed_includes_course_overview_manifest(
     assert "Standard learning comes before Twin practice" in seed
     assert "The learner advances in order through mastery-gated objectives" in seed
     assert "Tutor's native chat and mastery path" in seed
+    assert "Orientation complete" in seed
     assert "benchmark claim requires workload shape" in seed
     assert "source_backed_draft_review_required" in seed
 

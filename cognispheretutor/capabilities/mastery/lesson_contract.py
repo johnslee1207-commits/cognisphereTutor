@@ -153,6 +153,12 @@ def _must_teach(next_step: NextStep, modules: list[Any]) -> list[str]:
             "content design, rationale for the sequence, standard-learning-before-Twin "
             "method, and source boundary before the first quick check."
         )
+    if _is_course_guide_objective(next_step):
+        items.append(
+            "For the course guide, teach how the learner advances in order, why Continue "
+            "is the default path action, when chat is appropriate, when Twin labs open, "
+            "and how source-backed lessons differ from lab-backed evidence."
+        )
     if next_step.status == "new":
         items.append("Briefly orient the learner before checking prior knowledge.")
     if modules:
@@ -347,6 +353,18 @@ def _is_overview_objective(next_step: NextStep) -> bool:
         )
     )
     return "overview" in text or "course overview" in text
+
+
+def _is_course_guide_objective(next_step: NextStep) -> bool:
+    text = _normalize_label(
+        " ".join(
+            [
+                next_step.knowledge_point_id or "",
+                next_step.knowledge_point_name or "",
+            ]
+        )
+    )
+    return "course guide" in text or "how to learn" in text
 
 
 def _normalize_label(text: str) -> str:

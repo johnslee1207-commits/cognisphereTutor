@@ -214,6 +214,18 @@ def modules_from_knowledge(
     ]
     _add_module("overview", overview_name, overview_items, KnowledgeType.CONCEPT, id_prefix="ov")
 
+    course_guide = data.get("course_guide") or surface.get("course_guide")
+    if isinstance(course_guide, dict) and course_guide:
+        guide_name = _item_name(course_guide, "How to learn this course")
+        guide_id = course_guide.get("guide_id") or course_guide.get("id") or "course-guide"
+        _add_module(
+            "course-guide",
+            "Course guide",
+            [{"id": guide_id, "name": guide_name}],
+            KnowledgeType.CONCEPT,
+            id_prefix="guide",
+        )
+
     _add_module("patterns", "Patterns", patterns, KnowledgeType.CONCEPT, id_prefix="pat")
     _add_module("skills", "Skills", skills, KnowledgeType.PROCEDURE, id_prefix="sk")
     _add_module("objectives", "Learning objectives", objectives, KnowledgeType.CONCEPT, id_prefix="obj")

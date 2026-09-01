@@ -117,6 +117,11 @@ def test_modules_from_knowledge_uses_course_overview_as_first_module() -> None:
                     "overview_id": "ai_infra.course_overview.v1",
                     "title": "AI Infrastructure Knowledge Platform and Digital Twin Course",
                     "teaching_purpose": "Explain why standard learning comes before Twin practice.",
+                },
+                "course_guide": {
+                    "guide_id": "ai_infra.course_guide.v1",
+                    "title": "How to Learn AI Infrastructure with Tutor and the Twin",
+                    "learner_contract": "The learner advances in order.",
                 }
             },
             "learning_loop": ["orient", "concept"],
@@ -128,6 +133,11 @@ def test_modules_from_knowledge_uses_course_overview_as_first_module() -> None:
     assert modules[0].knowledge_points[0].id == "ov-ai_infra-course_overview-v1"
     assert modules[0].knowledge_points[0].name == (
         "AI Infrastructure Knowledge Platform and Digital Twin Course"
+    )
+    assert modules[1].name == "Course guide"
+    assert modules[1].knowledge_points[0].id == "guide-ai_infra-course_guide-v1"
+    assert modules[1].knowledge_points[0].name == (
+        "How to Learn AI Infrastructure with Tutor and the Twin"
     )
 
 

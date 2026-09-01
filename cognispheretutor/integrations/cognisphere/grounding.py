@@ -46,6 +46,7 @@ _LIST_TEXT_KEYS = (
     "recommended_sequence",
     "interface_principles",
     "assessment_pattern",
+    "mastery_milestones",
     "claim_boundary_rules",
     "exit_evidence",
     "prerequisites",
@@ -312,6 +313,7 @@ def _render_item(item: dict[str, Any]) -> dict[str, Any]:
         "recommended_sequence",
         "interface_principles",
         "assessment_pattern",
+        "mastery_milestones",
         "claim_boundary_rules",
         "exit_evidence",
         "prerequisites",
@@ -321,7 +323,7 @@ def _render_item(item: dict[str, Any]) -> dict[str, Any]:
     ):
         value = item.get(key)
         if isinstance(value, list) and value:
-            rendered[key] = [str(v) for v in value[:8]]
+            rendered[key] = [_list_item_text(v) for v in value[:8]]
     for key in ("source_policy", "review_status"):
         value = item.get(key)
         if isinstance(value, str) and value.strip():
@@ -339,6 +341,29 @@ def _objective_query(objective: dict[str, Any], *, learner_goal: str = "") -> st
         objective.get("module_name"),
     ]
     return " ".join(str(part) for part in parts if part).strip()
+
+
+def _list_item_text(value: Any) -> str:
+    if not isinstance(value, dict):
+        return str(value)
+    label = (
+        value.get("label")
+        or value.get("title")
+        or value.get("name")
+        or value.get("milestone_id")
+        or value.get("phase_id")
+        or value.get("id")
+    )
+    details = []
+    for key in ("purpose", "learner_can", "exit_evidence", "review_evidence"):
+        nested = value.get(key)
+        if isinstance(nested, list):
+            details.extend(str(item) for item in nested[:3] if item not in (None, ""))
+        elif isinstance(nested, str) and nested.strip():
+            details.append(nested.strip())
+    parts = [str(label)] if label else []
+    parts.extend(details)
+    return " — ".join(parts) if parts else str(value)
 
 
 def _item_text(item: dict[str, Any]) -> str:
