@@ -322,6 +322,31 @@ class MasteryQuizTool(BaseTool):
                 content=f"Unknown objective {kp_id!r}; call mastery_status for valid ids.",
                 success=False,
             )
+        existing = progress.pending_question
+        if existing is not None:
+            if existing.knowledge_point_id == kp_id:
+                return _json_result(
+                    {
+                        "status": "already_pending",
+                        "knowledge_point_id": existing.knowledge_point_id,
+                        "question": existing.prompt,
+                        "options": existing.options,
+                        "instruction": (
+                            "A mastery question is already registered for this objective. "
+                            "Present the existing question with ask_user if it has not been "
+                            "shown yet; otherwise call mastery_grade with the learner's answer. "
+                            "Do not create or ask a duplicate question."
+                        ),
+                    },
+                    meta_key="mastery_quiz",
+                )
+            return ToolResult(
+                content=(
+                    "Another mastery question is already awaiting an answer. Grade or clear "
+                    "the existing pending question before registering a new one."
+                ),
+                success=False,
+            )
         pending = PendingQuestion(
             question_id=uuid.uuid4().hex,
             knowledge_point_id=kp_id,
