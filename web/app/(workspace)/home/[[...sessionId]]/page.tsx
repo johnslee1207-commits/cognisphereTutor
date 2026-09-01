@@ -116,8 +116,10 @@ import {
 import { isCognispherePathId, masteryChatHref } from "@/lib/cognisphere-learning-api";
 import {
   listProgressBackups,
+  fetchMasteryMap,
   redoProgress,
   restoreProgress,
+  type MasteryMapResult,
 } from "@/lib/learning-api";
 
 const NotebookRecordPicker = dynamic(
@@ -327,6 +329,10 @@ function cognispherePathTitle(pathId: string): string {
   return `${domain.replaceAll("_", " ")} Learning Path`;
 }
 
+function cognispherePathDomain(pathId: string): string {
+  return pathId.startsWith("csphere-") ? pathId.slice("csphere-".length) : pathId;
+}
+
 function progressLooksLikeAwsCertification(progress: unknown): boolean {
   const modules = Array.isArray((progress as { modules?: unknown[] })?.modules)
     ? ((progress as { modules?: unknown[] }).modules ?? [])
@@ -349,6 +355,118 @@ function progressLooksLikeAwsCertification(progress: unknown): boolean {
     "saa-c03",
     "dva-c02",
   ].some((signal) => text.includes(signal));
+}
+
+type GoalTranslator = (cn: string, en: string) => string;
+
+function formatMasteryValue(value?: number): string {
+  if (typeof value !== "number" || !Number.isFinite(value)) return "--";
+  return `${Math.round(value * 100)}%`;
+}
+
+function MasteryPathStatusStrip({
+  title,
+  pathId,
+  map,
+  loading,
+  error,
+  isAiInfra,
+  tr,
+  onOpenPath,
+  onOpenLabs,
+}: {
+  title: string;
+  pathId: string;
+  map: MasteryMapResult | null;
+  loading: boolean;
+  error: string | null;
+  isAiInfra: boolean;
+  tr: GoalTranslator;
+  onOpenPath: () => void;
+  onOpenLabs: () => void;
+}) {
+  const counts = map?.map.counts;
+  const next = map?.next;
+  const progressText = counts
+    ? `${counts.mastered}/${counts.total}`
+    : loading
+      ? tr("同步中", "Syncing")
+      : "--";
+  const sourceText = isAiInfra
+    ? tr(
+        "可信上下文：AI Infra plugin pack + Cognisphere materialized + Twin evidence",
+        "Trusted context: AI Infra plugin pack + Cognisphere materialized + Twin evidence",
+      )
+    : tr(
+        "可信上下文：Cognisphere plugin pack",
+        "Trusted context: Cognisphere plugin pack",
+      );
+  const objectiveName =
+    next?.knowledge_point_name ||
+    (map?.map.complete
+      ? tr("学习路径已完成", "Path complete")
+      : tr("等待开始", "Ready to start"));
+  const objectiveMeta = next
+    ? [
+        next.knowledge_point_type,
+        next.status,
+        `${formatMasteryValue(next.mastery)} / ${formatMasteryValue(next.threshold)}`,
+      ]
+        .filter(Boolean)
+        .join(" · ")
+    : pathId;
+
+  return (
+    <div className="border-b border-[var(--border)] bg-[var(--background)]/95 px-4 py-2">
+      <div className="mx-auto flex w-full max-w-[960px] flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--muted)]/45">
+            <GraduationCap className="h-4 w-4 text-[var(--primary)]" />
+          </div>
+          <div className="min-w-0">
+            <div className="flex min-w-0 flex-wrap items-center gap-2 text-xs">
+              <span className="font-medium text-[var(--foreground)]">{title}</span>
+              <span className="rounded-full border border-[var(--border)] px-2 py-0.5 text-[var(--muted-foreground)]">
+                {tr("已掌握", "Mastered")} {progressText}
+              </span>
+              {error ? (
+                <span className="rounded-full border border-red-500/30 px-2 py-0.5 text-red-600">
+                  {tr("状态暂不可用", "Status unavailable")}
+                </span>
+              ) : null}
+            </div>
+            <div className="mt-1 min-w-0 text-xs text-[var(--muted-foreground)]">
+              <span className="font-medium text-[var(--foreground)]">{objectiveName}</span>
+              <span className="mx-2 text-[var(--border)]">|</span>
+              <span>{objectiveMeta}</span>
+              <span className="mx-2 text-[var(--border)]">|</span>
+              <span>{sourceText}</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex shrink-0 items-center gap-2 self-start md:self-auto">
+          <button
+            type="button"
+            onClick={onOpenPath}
+            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--border)] px-2.5 text-xs text-[var(--foreground)] hover:bg-[var(--accent)]"
+          >
+            <Compass className="h-3.5 w-3.5" />
+            {tr("路径", "Path")}
+          </button>
+          {isAiInfra ? (
+            <button
+              type="button"
+              onClick={onOpenLabs}
+              className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--border)] px-2.5 text-xs text-[var(--foreground)] hover:bg-[var(--accent)]"
+            >
+              <Microscope className="h-3.5 w-3.5" />
+              {tr("证据", "Evidence")}
+            </button>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -596,6 +714,10 @@ export default function ChatPage() {
   const [masteryProgressBusy, setMasteryProgressBusy] = useState(false);
   const [masteryProgressNotice, setMasteryProgressNotice] = useState<string | null>(null);
   const [masteryProgressError, setMasteryProgressError] = useState<string | null>(null);
+  const [masteryMap, setMasteryMap] = useState<MasteryMapResult | null>(null);
+  const [masteryMapLoading, setMasteryMapLoading] = useState(false);
+  const [masteryMapError, setMasteryMapError] = useState<string | null>(null);
+  const [masteryMapRefreshKey, setMasteryMapRefreshKey] = useState(0);
   const [spaceMenuOpen, setSpaceMenuOpen] = useState(false);
   const [selectedNotebookRecords, setSelectedNotebookRecords] = useState<
     SelectedRecord[]
@@ -708,6 +830,46 @@ export default function ChatPage() {
     }
   }, [capabilityNeedsConfig, ensureActivityPanelOpen]);
   const hasMessages = state.messages.length > 0;
+  useEffect(() => {
+    if (!masteryPathParam) {
+      setMasteryMap(null);
+      setMasteryMapError(null);
+      setMasteryMapLoading(false);
+      return;
+    }
+    if (state.isStreaming) return;
+
+    let cancelled = false;
+    setMasteryMapLoading(true);
+    setMasteryMapError(null);
+    void fetchMasteryMap(masteryPathParam)
+      .then((result) => {
+        if (cancelled) return;
+        setMasteryMap(result);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setMasteryMapError(
+          err instanceof Error
+            ? err.message
+            : goalTr("无法读取学习进度", "Could not read learning progress"),
+        );
+      })
+      .finally(() => {
+        if (!cancelled) setMasteryMapLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    goalTr,
+    masteryMapRefreshKey,
+    masteryPathParam,
+    state.isStreaming,
+    state.messages.length,
+  ]);
+
   const handleResetMasteryProgress = useCallback(async () => {
     if (!masteryPathParam || masteryProgressBusy) return;
     const ok = window.confirm(
@@ -723,6 +885,7 @@ export default function ChatPage() {
     try {
       const result = await redoProgress(masteryPathParam);
       setCapability("mastery_path");
+      setMasteryMapRefreshKey((value) => value + 1);
       setMasteryProgressNotice(
         result.backup?.backup_id
           ? goalTr(
@@ -764,6 +927,7 @@ export default function ChatPage() {
       if (!ok) return;
       await restoreProgress(masteryPathParam);
       setCapability("mastery_path");
+      setMasteryMapRefreshKey((value) => value + 1);
       setMasteryProgressNotice(
         goalTr("已恢复最近一次学习进度。", "Restored the latest learning progress."),
       );
@@ -794,6 +958,7 @@ export default function ChatPage() {
           );
           if (!ok) return;
           await redoProgress(masteryPathParam);
+          setMasteryMapRefreshKey((value) => value + 1);
         }
         newSession();
         setCapability("mastery_path");
@@ -2195,6 +2360,25 @@ export default function ChatPage() {
                 {masteryProgressError || masteryProgressNotice}
               </div>
             </div>
+          ) : null}
+          {masteryPathParam ? (
+            <MasteryPathStatusStrip
+              title={masteryPathTitle}
+              pathId={masteryPathParam}
+              map={masteryMap}
+              loading={masteryMapLoading}
+              error={masteryMapError}
+              isAiInfra={isAiInfraMasteryPath}
+              tr={goalTr}
+              onOpenPath={() =>
+                router.push(
+                  `/space/learning?domains=${encodeURIComponent(
+                    cognispherePathDomain(masteryPathParam),
+                  )}`,
+                )
+              }
+              onOpenLabs={() => router.push("/space/ai-infra")}
+            />
           ) : null}
           <div className="flex w-full flex-1 min-h-0 flex-col">
             {sessionLoading ? (
