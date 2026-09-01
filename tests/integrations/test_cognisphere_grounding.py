@@ -148,6 +148,19 @@ def test_build_plugin_grounding_seed_includes_course_overview_manifest(
                     ],
                     "source_policy": "Course structure comes from the materialized plugin pack.",
                     "review_status": "source_backed_draft_review_required",
+                },
+                "course_guide": {
+                    "guide_id": "ai_infra.course_guide.v1",
+                    "title": "How to Learn AI Infrastructure with Tutor and the Twin",
+                    "learner_contract": (
+                        "The learner advances in order through mastery-gated objectives."
+                    ),
+                    "interface_principles": [
+                        "Use Tutor's native chat and mastery path as the primary learning surface."
+                    ],
+                    "claim_boundary_rules": [
+                        "A benchmark claim requires workload shape, environment profile, run metadata, and evidence bundle."
+                    ],
                 }
             }
         ),
@@ -173,6 +186,9 @@ def test_build_plugin_grounding_seed_includes_course_overview_manifest(
     assert "AI Infrastructure Knowledge Platform and Digital Twin Course" in seed
     assert "evidence-backed judgment" in seed
     assert "Standard learning comes before Twin practice" in seed
+    assert "The learner advances in order through mastery-gated objectives" in seed
+    assert "Tutor's native chat and mastery path" in seed
+    assert "benchmark claim requires workload shape" in seed
     assert "source_backed_draft_review_required" in seed
 
 

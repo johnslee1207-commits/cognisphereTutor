@@ -32,6 +32,7 @@ _TEXT_KEYS = (
     "description",
     "purpose",
     "body",
+    "learner_contract",
     "teaching_purpose",
     "source_policy",
     "review_status",
@@ -42,6 +43,11 @@ _LIST_TEXT_KEYS = (
     "learning_outcomes",
     "content_design_rationale",
     "learning_method",
+    "recommended_sequence",
+    "interface_principles",
+    "assessment_pattern",
+    "claim_boundary_rules",
+    "exit_evidence",
     "prerequisites",
     "related_concepts",
     "related_patterns",
@@ -229,6 +235,7 @@ def _iter_candidate_objects(payload: Any) -> Iterable[dict[str, Any]]:
             "entries",
             "excerpts",
             "course_overview",
+            "course_guide",
         ):
             value = payload.get(key)
             if isinstance(value, list):
@@ -238,7 +245,7 @@ def _iter_candidate_objects(payload: Any) -> Iterable[dict[str, Any]]:
                         yield item
             elif isinstance(value, dict):
                 yielded = True
-                if key == "course_overview":
+                if key in {"course_overview", "course_guide"}:
                     yield value
                 else:
                     for item in value.values():
@@ -274,6 +281,7 @@ def _render_item(item: dict[str, Any]) -> dict[str, Any]:
     body = str(
         item.get("body")
         or item.get("teaching_purpose")
+        or item.get("learner_contract")
         or item.get("description")
         or item.get("summary")
         or ""
@@ -301,6 +309,11 @@ def _render_item(item: dict[str, Any]) -> dict[str, Any]:
         "target_learners",
         "content_design_rationale",
         "learning_method",
+        "recommended_sequence",
+        "interface_principles",
+        "assessment_pattern",
+        "claim_boundary_rules",
+        "exit_evidence",
         "prerequisites",
         "related_concepts",
         "related_patterns",
