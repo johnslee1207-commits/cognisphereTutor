@@ -159,6 +159,20 @@
         "automatic scorer agreement with expert scoring is reported"
       ],
       "evidence": []
+    },
+    {
+      "id": "P5-03",
+      "priority": "P5",
+      "title": "Align with leading learning methods",
+      "status": "in_progress",
+      "area": "learning_effectiveness",
+      "owner": "CognisphereLearningPlugins + CognisphereTutor",
+      "acceptance": [
+        "course guide exposes mastery learning, retrieval and spacing, active learning, deliberate practice, and project or scenario-based learning alignment",
+        "Tutor WebUI renders method alignment and remaining gaps",
+        "alignment items remain source-backed draft until expert review"
+      ],
+      "evidence": []
     }
   ]
 }

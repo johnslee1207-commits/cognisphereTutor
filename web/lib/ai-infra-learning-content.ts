@@ -102,6 +102,15 @@ export interface AiInfraCourseGuideMilestone {
   review_evidence?: string[];
 }
 
+export interface AiInfraLeadingMethodAlignment {
+  method_id?: string;
+  method?: string;
+  external_reference?: string;
+  implemented_as?: string[];
+  remaining_gap?: string;
+  evidence_refs?: string[];
+}
+
 export interface AiInfraCourseGuide {
   guide_id?: string;
   title?: string;
@@ -111,6 +120,7 @@ export interface AiInfraCourseGuide {
   assessment_pattern?: string[];
   mastery_milestones?: AiInfraCourseGuideMilestone[];
   claim_boundary_rules?: string[];
+  leading_method_alignment?: AiInfraLeadingMethodAlignment[];
   review_status?: string;
 }
 

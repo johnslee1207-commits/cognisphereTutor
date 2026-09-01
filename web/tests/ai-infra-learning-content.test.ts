@@ -35,6 +35,19 @@ const knowledge: AiInfraPluginKnowledge = {
         { milestone_id: "m0.orientation", label: "Orientation complete", level: "beginner" },
       ],
       claim_boundary_rules: ["A benchmark claim requires workload shape."],
+      leading_method_alignment: [
+        {
+          method_id: "method.mastery-learning",
+          method: "Mastery learning",
+          implemented_as: ["Tutor mastery gates block progression."],
+          remaining_gap: "Add reviewer dashboard.",
+        },
+        {
+          method_id: "method.retrieval-spacing",
+          method: "Retrieval and spacing",
+          implemented_as: ["Review queue classifies due, soon, and later units."],
+        },
+      ],
     },
     lesson_cards: [
       {
@@ -146,6 +159,7 @@ test("getAiInfraCourseGuide resolves guide from learning surface or top level", 
   assert.equal(guide?.guide_id, "ai_infra.course_guide.v1");
   assert.equal(guide?.recommended_sequence?.length, 2);
   assert.equal(guide?.mastery_milestones?.[0]?.label, "Orientation complete");
+  assert.equal(guide?.leading_method_alignment?.[0]?.method, "Mastery learning");
 
   const topLevel = getAiInfraCourseGuide({
     course_guide: { guide_id: "top.guide" },

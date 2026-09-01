@@ -1270,6 +1270,28 @@ export default function AiInfraTwinPage() {
                     </span>
                   ))}
                 </div>
+                <div className="mt-2 grid grid-cols-1 gap-1.5 md:grid-cols-5">
+                  {(courseGuide.leading_method_alignment || []).slice(0, 5).map((method) => (
+                    <div
+                      key={method.method_id || method.method}
+                      className="min-w-0 rounded-md border border-[var(--border)] bg-[var(--background)]/60 px-2 py-1.5"
+                      title={[
+                        method.external_reference,
+                        method.remaining_gap,
+                        ...(method.evidence_refs || []),
+                      ]
+                        .filter(Boolean)
+                        .join("\n")}
+                    >
+                      <div className="truncate text-[10px] font-medium text-[var(--foreground)]">
+                        {method.method || method.method_id}
+                      </div>
+                      <div className="mt-0.5 line-clamp-2 text-[10px] text-[var(--muted-foreground)]">
+                        {(method.implemented_as || [method.remaining_gap || ""]).join(" · ")}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 

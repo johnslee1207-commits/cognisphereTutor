@@ -48,6 +48,7 @@ _LIST_TEXT_KEYS = (
     "assessment_pattern",
     "mastery_milestones",
     "claim_boundary_rules",
+    "leading_method_alignment",
     "exit_evidence",
     "prerequisites",
     "related_concepts",
@@ -315,6 +316,7 @@ def _render_item(item: dict[str, Any]) -> dict[str, Any]:
         "assessment_pattern",
         "mastery_milestones",
         "claim_boundary_rules",
+        "leading_method_alignment",
         "exit_evidence",
         "prerequisites",
         "related_concepts",
@@ -350,12 +352,21 @@ def _list_item_text(value: Any) -> str:
         value.get("label")
         or value.get("title")
         or value.get("name")
+        or value.get("method")
         or value.get("milestone_id")
         or value.get("phase_id")
         or value.get("id")
     )
     details = []
-    for key in ("purpose", "learner_can", "exit_evidence", "review_evidence"):
+    for key in (
+        "purpose",
+        "learner_can",
+        "exit_evidence",
+        "review_evidence",
+        "implemented_as",
+        "remaining_gap",
+        "evidence_refs",
+    ):
         nested = value.get(key)
         if isinstance(nested, list):
             details.extend(str(item) for item in nested[:3] if item not in (None, ""))

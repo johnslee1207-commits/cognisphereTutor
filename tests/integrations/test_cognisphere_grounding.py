@@ -168,6 +168,16 @@ def test_build_plugin_grounding_seed_includes_course_overview_manifest(
                     "claim_boundary_rules": [
                         "A benchmark claim requires workload shape, environment profile, run metadata, and evidence bundle."
                     ],
+                    "leading_method_alignment": [
+                        {
+                            "method_id": "method.mastery-learning",
+                            "method": "Mastery learning",
+                            "implemented_as": [
+                                "Tutor mastery gates block progression until evidence clears the current objective."
+                            ],
+                            "remaining_gap": "Add reviewer dashboard.",
+                        }
+                    ],
                 }
             }
         ),
@@ -197,6 +207,8 @@ def test_build_plugin_grounding_seed_includes_course_overview_manifest(
     assert "Tutor's native chat and mastery path" in seed
     assert "Orientation complete" in seed
     assert "benchmark claim requires workload shape" in seed
+    assert "Mastery learning" in seed
+    assert "Tutor mastery gates block progression" in seed
     assert "source_backed_draft_review_required" in seed
 
 
