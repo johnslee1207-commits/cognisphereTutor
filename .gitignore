@@ -16,6 +16,10 @@ cognispheretutor/services/rag/eg_only_for_analysis/
 /site/
 .claude
 .agents/
+.aetheros/
+.opencode/
+.mcp.json
+opencode.jsonc
 
 # LaTeX build artifacts
 *.aux
