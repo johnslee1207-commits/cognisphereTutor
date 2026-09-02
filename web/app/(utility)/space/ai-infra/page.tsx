@@ -205,31 +205,46 @@ export default function AiInfraTwinPage() {
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
-    try {
-      const [nextStatus, nextLabs, nextEvidence, nextHandshake] = await Promise.all([
+    const [statusResult, labsResult, evidenceResult, handshakeResult] =
+      await Promise.allSettled([
         fetchAiInfraStatus(),
         fetchAiInfraLabs(),
         fetchAiInfraEvidence(),
         runCognisphereHandshake({ domain: "ai_infra", checkMode: "full" }),
       ]);
-      setStatus(nextStatus);
-      setLabs(nextLabs);
-      setEvidence(nextEvidence);
-      setPluginHandshake(nextHandshake);
-      setSelected((prev) => {
-        const preferred = prev && nextLabs.find((lab) => lab.labId === prev.labId);
-        return preferred || nextLabs[0] || null;
-      });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "AI Infra Twin unavailable");
-      setStatus(null);
-      setLabs([]);
-      setEvidence([]);
-      setSelected(null);
-      setPluginHandshake(null);
-    } finally {
-      setLoading(false);
+
+    const nextStatus = statusResult.status === "fulfilled" ? statusResult.value : null;
+    const nextLabs = labsResult.status === "fulfilled" ? labsResult.value : [];
+    const nextEvidence = evidenceResult.status === "fulfilled" ? evidenceResult.value : [];
+    const nextHandshake =
+      handshakeResult.status === "fulfilled" ? handshakeResult.value : null;
+
+    setStatus(nextStatus);
+    setLabs(nextLabs);
+    setEvidence(nextEvidence);
+    setPluginHandshake(nextHandshake);
+    setSelected((prev) => {
+      const preferred = prev && nextLabs.find((lab) => lab.labId === prev.labId);
+      return preferred || nextLabs[0] || null;
+    });
+
+    const messages = [
+      statusResult.status === "rejected" ? statusResult.reason : null,
+      labsResult.status === "rejected" ? labsResult.reason : null,
+      evidenceResult.status === "rejected" ? evidenceResult.reason : null,
+      handshakeResult.status === "rejected" ? handshakeResult.reason : null,
+    ]
+      .filter(Boolean)
+      .map((err) => (err instanceof Error ? err.message : String(err)));
+
+    if (messages.length > 0 && !nextHandshake) {
+      setError(messages[0] || "AI Infra learning services unavailable");
+    } else if (messages.length > 0 && !nextStatus?.ok) {
+      setError(null);
+    } else {
+      setError(null);
     }
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -248,6 +263,14 @@ export default function AiInfraTwinPage() {
   const handshakeSummary = pluginHandshake?.summary as
     | { tutor_ready?: boolean; issue_count?: number }
     | undefined;
+  const runtimeMode = status?.runtime_mode || (status?.ok ? "full_twin" : "content_only");
+  const labRuntimeAvailable = Boolean(status?.lab_runtime_available && status?.ok);
+  const runtimeMessage =
+    status?.learner_message ||
+    tr(
+      "AI Infra 课程内容可用。启动 AetherAI-Infra-Twin 后可以运行实验并生成证据包。",
+      "AI Infra course content is available. Start AetherAI-Infra-Twin to run labs and generate evidence bundles.",
+    );
   const pluginKnowledge = useMemo(
     () => extractAiInfraPluginKnowledge(pluginHandshake),
     [pluginHandshake],
@@ -674,6 +697,26 @@ export default function AiInfraTwinPage() {
           </div>
         )}
 
+        <section
+          className={`mb-3 rounded-lg border p-3 text-xs ${
+            labRuntimeAvailable
+              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+              : "border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+          }`}
+        >
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-medium">
+              {runtimeMode === "full_twin"
+                ? tr("完整 Twin 模式", "Full Twin mode")
+                : tr("内容学习模式", "Content-only mode")}
+            </span>
+            <span className="shrink-0 rounded-full border border-current/30 px-1.5 py-0.5 text-[10px] uppercase">
+              {runtimeMode}
+            </span>
+          </div>
+          <p className="mt-1 leading-relaxed">{runtimeMessage}</p>
+        </section>
+
         {activeTab === "learn" && (
           <section className="mb-4 rounded-lg border border-[var(--border)] p-3">
             <div className="text-[11px] uppercase text-[var(--muted-foreground)]">
@@ -916,14 +959,19 @@ export default function AiInfraTwinPage() {
                 <button
                   type="button"
                   onClick={() => void handleRun()}
-                  disabled={!selected || running}
+                  disabled={!selected || running || !labRuntimeAvailable}
+                  title={
+                    labRuntimeAvailable
+                      ? tr("运行当前 Lab", "Run current lab")
+                      : runtimeMessage
+                  }
                   className="inline-flex items-center gap-1.5 rounded-md bg-[var(--primary)] px-3 py-2 text-sm text-[var(--primary-foreground)] disabled:opacity-50"
                 >
                   {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
                   {tr("运行 Lab", "Run Lab")}
                 </button>
               )}
-              {activeTab === "labs" && embedUrl && (
+              {activeTab === "labs" && embedUrl && labRuntimeAvailable && (
                 <a
                   href={embedUrl}
                   target="_blank"
@@ -2019,7 +2067,12 @@ export default function AiInfraTwinPage() {
                             </div>
                             {selectedUnitEvidenceCandidates.length === 0 ? (
                               <div className="text-[10px] text-[var(--muted-foreground)]">
-                                {tr("运行关联 Twin Lab 后可绑定证据。", "Run a linked Twin lab before binding evidence.")}
+                                {labRuntimeAvailable
+                                  ? tr("运行关联 Twin Lab 后可绑定证据。", "Run a linked Twin lab before binding evidence.")
+                                  : tr(
+                                      "当前为内容学习模式；启动 AetherAI-Infra-Twin 后可绑定新证据。",
+                                      "Content-only mode is active; start AetherAI-Infra-Twin before binding fresh evidence.",
+                                    )}
                               </div>
                             ) : null}
                           </div>

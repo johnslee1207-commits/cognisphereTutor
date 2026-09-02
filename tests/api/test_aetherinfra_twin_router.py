@@ -39,9 +39,33 @@ def test_status_collects_summary_curriculum_and_maturity(monkeypatch: pytest.Mon
     result = asyncio.run(aetherinfra_twin.status())
 
     assert result["ok"] is True
+    assert result["runtime_mode"] == "full_twin"
+    assert result["lab_runtime_available"] is True
+    assert result["content_runtime_available"] is True
     assert result["summary"]["counts"]["labs"] == 21
     assert result["curriculum"]["kind"] == "CurriculumSummary"
     assert result["maturity"]["kind"] == "LabMaturityReport"
+
+
+def test_status_degrades_to_content_only_when_twin_is_unavailable(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from cognispheretutor.integrations.aetherinfra_twin import AetherInfraTwinError
+
+    class BrokenClient(FakeClient):
+        def get_json(self, path: str):
+            raise AetherInfraTwinError("offline")
+
+    monkeypatch.setattr(aetherinfra_twin, "default_client", lambda: BrokenClient())
+
+    result = asyncio.run(aetherinfra_twin.status())
+
+    assert result["ok"] is False
+    assert result["runtime_mode"] == "content_only"
+    assert result["lab_runtime_available"] is False
+    assert result["content_runtime_available"] is True
+    assert "run_lab" in result["unavailable_features"]
+    assert "course content is available" in result["learner_message"]
 
 
 def test_lab_adds_embed_url(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -86,6 +110,8 @@ def test_unavailable_twin_maps_to_503(monkeypatch: pytest.MonkeyPatch) -> None:
     with pytest.raises(HTTPException) as exc:
         asyncio.run(aetherinfra_twin.labs())
     assert exc.value.status_code == 503
+    assert exc.value.detail["runtime_mode"] == "content_only"
+    assert exc.value.detail["content_runtime_available"] is True
 
 
 def test_learning_workspace_round_trips_state(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:

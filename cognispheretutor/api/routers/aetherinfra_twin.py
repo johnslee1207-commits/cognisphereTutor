@@ -19,6 +19,12 @@ from cognispheretutor.services.path_service import get_path_service
 
 router = APIRouter()
 
+CONTENT_ONLY_MESSAGE = (
+    "AI Infra course content is available through CognisphereLearningPlugins. "
+    "Start AetherAI-Infra-Twin to run labs, open the Twin console, and generate "
+    "evidence bundles."
+)
+
 
 class DiagnosisRequest(BaseModel):
     selected_diagnosis: str = Field(..., min_length=1, max_length=200)
@@ -78,7 +84,11 @@ async def _call(method: str, path: str, payload: dict[str, Any] | None = None):
             detail={
                 "ok": False,
                 "code": "aetherinfra_twin_unavailable",
+                "runtime_mode": "content_only",
+                "lab_runtime_available": False,
+                "content_runtime_available": True,
                 "message": "AI Infra Twin lab engine is unavailable",
+                "learner_message": CONTENT_ONLY_MESSAGE,
                 "detail": str(exc),
                 "base_url": client.base_url,
             },
@@ -99,8 +109,25 @@ async def status() -> dict[str, Any]:
         maturity = await asyncio.to_thread(client.get_json, "/api/lab-maturity")  # type: ignore[assignment]
     except AetherInfraTwinError as exc:
         issues.append(str(exc))
+    ok = not issues
     return {
-        "ok": not issues,
+        "ok": ok,
+        "runtime_mode": "full_twin" if ok else "content_only",
+        "lab_runtime_available": ok,
+        "content_runtime_available": True,
+        "learner_message": (
+            "AI Infra Twin is connected. Labs, evidence bundles, and diagnosis scoring are available."
+            if ok
+            else CONTENT_ONLY_MESSAGE
+        ),
+        "unavailable_features": []
+        if ok
+        else [
+            "run_lab",
+            "evidence_bundle_generation",
+            "diagnosis_scoring",
+            "twin_webui",
+        ],
         "base_url": client.base_url,
         "embed_url": client.embed_url(),
         "summary": summary,

@@ -68,6 +68,11 @@ export interface AiInfraLearningWorkspaceResult {
 
 export interface AiInfraStatus {
   ok: boolean;
+  runtime_mode?: "content_only" | "full_twin" | string;
+  lab_runtime_available?: boolean;
+  content_runtime_available?: boolean;
+  learner_message?: string;
+  unavailable_features?: string[];
   base_url: string;
   embed_url: string;
   summary: {
