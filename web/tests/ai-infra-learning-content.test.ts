@@ -15,6 +15,7 @@ import {
   getAiInfraLearningModeView,
   getAiInfraReviewQueue,
   getAiInfraReviewStageSummary,
+  getAiInfraRemediationRoute,
   getAiInfraSpacedReviewQueue,
   getAiInfraUnitMasteryState,
   getPriorityAiInfraCoursePaths,
@@ -492,4 +493,34 @@ test("assessAiInfraDiagnosisResponse checks claim shape and rubric signals", () 
 
   assert.equal(weak.passed, false);
   assert.deepEqual(weak.missingClaimKeys, ["symptom", "evidence"]);
+});
+
+test("getAiInfraRemediationRoute maps weak evidence work to targeted next steps", () => {
+  const unit = findAiInfraKnowledgeUnit(knowledge, "unit.container");
+  const diagnosis = assessAiInfraDiagnosisResponse(
+    {
+      expected_claim_shape: {
+        "confirmed fact": "observable evidence",
+        "unsupported claim": "claim without proof",
+        "next safe experiment": "bounded validation",
+      },
+    },
+    "container cleanup happened",
+  );
+  const sourceDocument = assessAiInfraSourceDocumentDrill(unit, "I used a local guess.");
+
+  const route = getAiInfraRemediationRoute({
+    unit,
+    quizCorrect: true,
+    diagnosis,
+    sourceDocument,
+    hasLabEvidence: false,
+    reflectionNote: "",
+  });
+
+  assert.equal(route.unitId, "unit.container");
+  assert.equal(route.nextMode, "capstone");
+  assert.equal(route.errorSignals[0]?.type, "expert_reasoning");
+  assert.ok(route.errorSignals.some((signal) => signal.type === "source_grounding"));
+  assert.ok(route.errorSignals.some((signal) => signal.type === "evidence_binding"));
 });

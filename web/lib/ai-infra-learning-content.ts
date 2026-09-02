@@ -233,6 +233,21 @@ export interface AiInfraSpacedReviewQueueItem extends AiInfraReviewQueueItem {
   priority: number;
 }
 
+export type AiInfraLearningErrorType =
+  | "concept_recall"
+  | "evidence_binding"
+  | "source_grounding"
+  | "claim_boundary"
+  | "safe_execution"
+  | "expert_reasoning";
+
+export interface AiInfraLearningErrorSignal {
+  type: AiInfraLearningErrorType;
+  label: string;
+  severity: "low" | "medium" | "high";
+  remediation: string;
+}
+
 export interface AiInfraDiagnosisResponseAssessment {
   scorePct: number;
   passed: boolean;
@@ -248,6 +263,13 @@ export interface AiInfraSourceDocumentDrillAssessment {
   matchedDocuments: string[];
   matchedEvidenceRequirements: string[];
   feedback: string;
+}
+
+export interface AiInfraRemediationRoute {
+  unitId?: string;
+  nextMode: AiInfraLearningMode;
+  nextAction: string;
+  errorSignals: AiInfraLearningErrorSignal[];
 }
 
 export interface AiInfraReviewStageSummary {
@@ -742,6 +764,108 @@ export function getAiInfraSpacedReviewQueue(params: {
     })
     .sort((a, b) => a.priority - b.priority);
   return items.slice(0, params.limit ?? 6);
+}
+
+export function classifyAiInfraLearningErrors(params: {
+  unit: AiInfraKnowledgeUnitCard | null | undefined;
+  quizCorrect?: boolean;
+  diagnosis?: AiInfraDiagnosisResponseAssessment | null;
+  sourceDocument?: AiInfraSourceDocumentDrillAssessment | null;
+  hasLabEvidence?: boolean;
+  reflectionNote?: string;
+}): AiInfraLearningErrorSignal[] {
+  const unit = params.unit;
+  const signals: AiInfraLearningErrorSignal[] = [];
+  if (!unit) return signals;
+
+  if (!params.quizCorrect) {
+    signals.push({
+      type: "concept_recall",
+      label: "Concept recall is not yet reliable",
+      severity: "medium",
+      remediation: "Return to the Learn step and answer the active-recall quiz again.",
+    });
+  }
+  if (params.diagnosis && !params.diagnosis.passed) {
+    const missing = params.diagnosis.missingClaimKeys;
+    signals.push({
+      type: missing.some((key) => normalizeForSearch(key).includes("boundary"))
+        ? "claim_boundary"
+        : "expert_reasoning",
+      label: "Diagnosis claim structure is incomplete",
+      severity: "high",
+      remediation: "Use the Diagnosis step to separate facts, hypotheses, unsupported claims, safe action, and validation.",
+    });
+  }
+  if (params.sourceDocument && !params.sourceDocument.passed) {
+    signals.push({
+      type: params.sourceDocument.matchedDocuments.length === 0
+        ? "source_grounding"
+        : "claim_boundary",
+      label: "Trusted-source grounding is thin",
+      severity: "medium",
+      remediation: "Use the Source Drill step and cite a candidate document plus the claim boundary it supports.",
+    });
+  }
+  if ((unit.standard_learning?.twin_practice?.lab_refs || unit.lab_refs || []).length && !params.hasLabEvidence) {
+    signals.push({
+      type: "evidence_binding",
+      label: "Twin evidence is not bound",
+      severity: "high",
+      remediation: "Run or inspect the bounded lab and attach the evidence bundle before marking mastery.",
+    });
+  }
+  if (textTokens(unit.evidence_requirements || []).some((token) => token.includes("cleanup")) && !params.hasLabEvidence) {
+    signals.push({
+      type: "safe_execution",
+      label: "Cleanup or readiness evidence is missing",
+      severity: "high",
+      remediation: "Collect readiness and cleanup proof before making an execution claim.",
+    });
+  }
+  if (normalizedLength(params.reflectionNote) < 20) {
+    signals.push({
+      type: "expert_reasoning",
+      label: "Reflection does not state residual uncertainty",
+      severity: "low",
+      remediation: "Use Reflection to state what was proven, what remains uncertain, and the next safe experiment.",
+    });
+  }
+  return signals;
+}
+
+export function getAiInfraRemediationRoute(params: {
+  unit: AiInfraKnowledgeUnitCard | null | undefined;
+  quizCorrect?: boolean;
+  diagnosis?: AiInfraDiagnosisResponseAssessment | null;
+  sourceDocument?: AiInfraSourceDocumentDrillAssessment | null;
+  hasLabEvidence?: boolean;
+  reflectionNote?: string;
+}): AiInfraRemediationRoute {
+  const signals = classifyAiInfraLearningErrors(params);
+  const first = signals[0];
+  const modeByType: Record<AiInfraLearningErrorType, AiInfraLearningMode> = {
+    concept_recall: "learn",
+    evidence_binding: "guided_practice",
+    source_grounding: "learn",
+    claim_boundary: "guided_practice",
+    safe_execution: "guided_practice",
+    expert_reasoning: "capstone",
+  };
+  const fallback = getAiInfraUnitMasteryState({
+    unit: params.unit,
+    quizCorrect: params.quizCorrect,
+    diagnosisPassed: params.diagnosis?.passed,
+    sourceDocumentPassed: params.sourceDocument?.passed,
+    reflectionNote: params.reflectionNote,
+    hasLabEvidence: params.hasLabEvidence,
+  });
+  return {
+    unitId: params.unit?.unit_id,
+    nextMode: first ? modeByType[first.type] : "learn",
+    nextAction: first?.remediation || fallback.nextAction,
+    errorSignals: signals,
+  };
 }
 
 export function getAiInfraReviewStageSummary(

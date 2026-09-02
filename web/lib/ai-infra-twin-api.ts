@@ -46,6 +46,19 @@ export interface AiInfraDiagnosisAssessment {
   [key: string]: unknown;
 }
 
+export interface AiInfraCapstoneFlow {
+  flowId?: string;
+  title?: string;
+  purpose?: string;
+  stepCount?: number;
+  steps?: unknown[];
+  rubricRef?: string;
+  ontologyRef?: string;
+  authoringPatternsRef?: string;
+  forbiddenClaims?: string[];
+  path?: string;
+}
+
 export interface AiInfraLearningWorkspaceState {
   selected_course_id: string | null;
   selected_unit_id: string | null;
@@ -81,8 +94,16 @@ export interface AiInfraStatus {
       scenarios?: number;
       evidence?: number;
       simulations?: number;
+      capstoneFlows?: number;
     };
     profile?: string;
+  };
+  capstone_flows?: {
+    kind?: string;
+    spec?: {
+      count?: number;
+      flows?: AiInfraCapstoneFlow[];
+    };
   };
   curriculum: {
     spec?: {
