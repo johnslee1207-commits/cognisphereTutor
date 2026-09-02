@@ -24,6 +24,12 @@
 | AP Calculus | `cognispheretutor/integrations/cognisphere/bundled_packs/ap_calculus_bundle.json` | 22 个目标 |
 | LeetCode | `cognispheretutor/integrations/cognisphere/bundled_packs/leetcode_bundle.json` | 7 个目标 |
 
+AI Infrastructure 课程不是 Tutor 单仓内置课程。它通过
+`CognisphereLearningPlugins` 提供课程包，并通过可选的
+`AetherAI-Infra-Twin` 提供真实/仿真/回放实验、证据包和孪生 WebUI。只安装
+Tutor + LearningPlugins 时可以学习课程内容；完整实验体验需要三个仓库同时部署。
+部署说明见 [docs/AI_INFRA_THREE_REPO_DEPLOYMENT_ZH.md](docs/AI_INFRA_THREE_REPO_DEPLOYMENT_ZH.md)。
+
 ## 普通用户快速开始
 
 ### 1. 准备环境
