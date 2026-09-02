@@ -125,6 +125,18 @@ const knowledge: AiInfraPluginKnowledge = {
     ],
     course_paths: [
       {
+        course_path_id: "ai_infra.course.twin_methods_capstone.v1",
+        domain: "general_ai_infra",
+        title: "Twin Methods, Evidence Modes, and Expert Reasoning",
+        unit_refs: ["unit.method"],
+      },
+      {
+        course_path_id: "ai_infra.course.general_ai_infra.v1",
+        domain: "general_ai_infra",
+        title: "AI Infra Architecture and Evidence Literacy",
+        unit_refs: ["unit.general"],
+      },
+      {
         course_path_id: "course.observability",
         domain: "observability",
         title: "Observability",
@@ -235,10 +247,16 @@ test("getPriorityAiInfraCoursePaths promotes the first interactive AI infra path
   const courses = getPriorityAiInfraCoursePaths(knowledge);
 
   assert.deepEqual(
-    courses.slice(0, 3).map((course) => course.domain),
-    ["containers", "observability", "inference_serving"],
+    courses.slice(0, 6).map((course) => course.course_path_id),
+    [
+      "ai_infra.course.twin_methods_capstone.v1",
+      "ai_infra.course.general_ai_infra.v1",
+      "course.containers",
+      "course.observability",
+      "course.inference",
+      "course.security",
+    ],
   );
-  assert.equal(courses[3]?.domain, "security_governance");
 });
 
 test("findAiInfraKnowledgeUnit resolves full units from course path refs", () => {
@@ -275,7 +293,7 @@ test("getAiInfraCourseProgress computes completed unit percentage", () => {
 test("getAiInfraCoverageSummary counts sources, labs, docs, and completion", () => {
   const summary = getAiInfraCoverageSummary(knowledge, new Set(["unit.container"]));
 
-  assert.equal(summary.courseCount, 4);
+  assert.equal(summary.courseCount, 6);
   assert.equal(summary.unitCount, 2);
   assert.equal(summary.completedUnitCount, 1);
   assert.equal(summary.completionPct, 50);

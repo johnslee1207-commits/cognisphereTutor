@@ -319,6 +319,11 @@ const PRIORITY_COURSE_DOMAINS = [
   "inference_serving",
 ];
 
+const PRIORITY_COURSE_PATH_IDS = [
+  "ai_infra.course.twin_methods_capstone.v1",
+  "ai_infra.course.general_ai_infra.v1",
+];
+
 export function getAiInfraImprovementRoadmap(): AiInfraImprovementRoadmap {
   return roadmapManifest as AiInfraImprovementRoadmap;
 }
@@ -373,12 +378,20 @@ export function getPriorityAiInfraCoursePaths(
   knowledge: AiInfraPluginKnowledge | undefined,
 ): AiInfraCoursePath[] {
   const courses = getAiInfraCoursePaths(knowledge);
+  const byId = new Map(courses.map((course) => [course.course_path_id, course]));
   const byDomain = new Map(courses.map((course) => [course.domain, course]));
-  return [
+  const promoted = [
+    ...PRIORITY_COURSE_PATH_IDS.map((id) => byId.get(id)).filter(
+      (course): course is AiInfraCoursePath => Boolean(course),
+    ),
     ...PRIORITY_COURSE_DOMAINS.map((domain) => byDomain.get(domain)).filter(
       (course): course is AiInfraCoursePath => Boolean(course),
     ),
-    ...courses.filter((course) => !PRIORITY_COURSE_DOMAINS.includes(course.domain || "")),
+  ];
+  const promotedIds = new Set(promoted.map((course) => course.course_path_id));
+  return [
+    ...promoted,
+    ...courses.filter((course) => !promotedIds.has(course.course_path_id)),
   ];
 }
 

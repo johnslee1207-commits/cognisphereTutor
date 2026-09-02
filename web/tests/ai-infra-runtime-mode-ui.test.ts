@@ -1,12 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 
-const here = dirname(fileURLToPath(import.meta.url));
 const pageSource = readFileSync(
-  join(here, "..", "app", "(utility)", "space", "ai-infra", "page.tsx"),
+  join(process.cwd(), "app", "(utility)", "space", "ai-infra", "page.tsx"),
   "utf8",
 );
 
