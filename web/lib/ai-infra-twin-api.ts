@@ -59,6 +59,27 @@ export interface AiInfraCapstoneFlow {
   path?: string;
 }
 
+export interface AiInfraMaturityRoadmap {
+  kind?: string;
+  spec?: {
+    assessment?: {
+      area?: string;
+      score?: number;
+      status?: string;
+      evidence?: string[];
+      gaps?: string[];
+    }[];
+    phases?: {
+      phase?: string;
+      title?: string;
+      targetMaturity?: number;
+      tasks?: string[];
+      exitEvidence?: string[];
+    }[];
+    nextImmediateTasks?: string[];
+  };
+}
+
 export interface AiInfraLearningWorkspaceState {
   selected_course_id: string | null;
   selected_unit_id: string | null;
@@ -105,6 +126,7 @@ export interface AiInfraStatus {
       flows?: AiInfraCapstoneFlow[];
     };
   };
+  maturity_roadmap?: AiInfraMaturityRoadmap;
   curriculum: {
     spec?: {
       tracks?: { id: string; title: string; roles: string[] }[];
@@ -138,6 +160,24 @@ export async function fetchAiInfraStatus(): Promise<AiInfraStatus> {
   const res = await apiFetch(apiUrl("/api/v1/learning/ai-infra-twin/status"));
   if (!res.ok) throw new Error(`AI Infra Twin status failed: ${res.status}`);
   return res.json() as Promise<AiInfraStatus>;
+}
+
+export async function fetchAiInfraCapstoneFlows(): Promise<{
+  kind?: string;
+  spec?: { count?: number; flows?: AiInfraCapstoneFlow[] };
+}> {
+  const res = await apiFetch(apiUrl("/api/v1/learning/ai-infra-twin/capstone-flows"));
+  if (!res.ok) throw new Error(`AI Infra Twin capstone flows failed: ${res.status}`);
+  return res.json() as Promise<{
+    kind?: string;
+    spec?: { count?: number; flows?: AiInfraCapstoneFlow[] };
+  }>;
+}
+
+export async function fetchAiInfraMaturityRoadmap(): Promise<AiInfraMaturityRoadmap> {
+  const res = await apiFetch(apiUrl("/api/v1/learning/ai-infra-twin/maturity-roadmap"));
+  if (!res.ok) throw new Error(`AI Infra Twin maturity roadmap failed: ${res.status}`);
+  return res.json() as Promise<AiInfraMaturityRoadmap>;
 }
 
 export async function fetchAiInfraLabs(): Promise<AiInfraLab[]> {

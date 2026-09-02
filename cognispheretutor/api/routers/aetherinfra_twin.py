@@ -104,11 +104,13 @@ async def status() -> dict[str, Any]:
     curriculum: dict[str, Any] = {}
     maturity: dict[str, Any] = {}
     capstone_flows: dict[str, Any] = {}
+    maturity_roadmap: dict[str, Any] = {}
     try:
         summary = await asyncio.to_thread(client.get_json, "/api/summary")  # type: ignore[assignment]
         curriculum = await asyncio.to_thread(client.get_json, "/api/curriculum")  # type: ignore[assignment]
         maturity = await asyncio.to_thread(client.get_json, "/api/lab-maturity")  # type: ignore[assignment]
         capstone_flows = await asyncio.to_thread(client.get_json, "/api/capstone-flows")  # type: ignore[assignment]
+        maturity_roadmap = await asyncio.to_thread(client.get_json, "/api/maturity-roadmap")  # type: ignore[assignment]
     except AetherInfraTwinError as exc:
         issues.append(str(exc))
     ok = not issues
@@ -136,6 +138,7 @@ async def status() -> dict[str, Any]:
         "curriculum": curriculum,
         "maturity": maturity,
         "capstone_flows": capstone_flows,
+        "maturity_roadmap": maturity_roadmap,
         "issues": issues,
     }
 
@@ -158,6 +161,11 @@ async def maturity():
 @router.get("/capstone-flows")
 async def capstone_flows():
     return await _call("GET", "/api/capstone-flows")
+
+
+@router.get("/maturity-roadmap")
+async def maturity_roadmap():
+    return await _call("GET", "/api/maturity-roadmap")
 
 
 @router.get("/evidence")

@@ -23,6 +23,8 @@ class FakeClient:
             return {"kind": "LabMaturityReport"}
         if path == "/api/capstone-flows":
             return {"kind": "CapstoneFlowList", "spec": {"count": 1}}
+        if path == "/api/maturity-roadmap":
+            return {"kind": "AiInfraMaturityRoadmap", "spec": {"assessment": [], "phases": []}}
         if path == "/api/tutor/labs":
             return [{"labId": "lab.container.docker-lifecycle"}]
         if path == "/api/tutor/labs/lab.container.docker-lifecycle":
@@ -48,6 +50,7 @@ def test_status_collects_summary_curriculum_and_maturity(monkeypatch: pytest.Mon
     assert result["curriculum"]["kind"] == "CurriculumSummary"
     assert result["maturity"]["kind"] == "LabMaturityReport"
     assert result["capstone_flows"]["kind"] == "CapstoneFlowList"
+    assert result["maturity_roadmap"]["kind"] == "AiInfraMaturityRoadmap"
 
 
 def test_capstone_flows_are_proxied(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -56,6 +59,14 @@ def test_capstone_flows_are_proxied(monkeypatch: pytest.MonkeyPatch) -> None:
     result = asyncio.run(aetherinfra_twin.capstone_flows())
 
     assert result["kind"] == "CapstoneFlowList"
+
+
+def test_maturity_roadmap_is_proxied(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(aetherinfra_twin, "default_client", lambda: FakeClient())
+
+    result = asyncio.run(aetherinfra_twin.maturity_roadmap())
+
+    assert result["kind"] == "AiInfraMaturityRoadmap"
 
 
 def test_status_degrades_to_content_only_when_twin_is_unavailable(
