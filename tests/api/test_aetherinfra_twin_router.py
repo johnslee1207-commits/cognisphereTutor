@@ -193,8 +193,70 @@ def test_learning_event_append_persists_evaluation_ledger(
 
     assert result["ok"] is True
     assert loaded["state"]["learning_events"][0]["event_type"] == "transfer_challenge"
+    assert loaded["state"]["learning_events"][0]["event_key"].startswith("transfer_challenge:")
     assert loaded["state"]["learning_events"][0]["score"] == 0.82
     assert loaded["state"]["learning_events"][0]["error_types"] == ["claim_boundary"]
+
+
+def test_learning_event_append_is_idempotent_for_same_event(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FakePathService:
+        def get_workspace_dir(self):
+            return tmp_path
+
+    monkeypatch.setattr(aetherinfra_twin, "get_path_service", lambda: FakePathService())
+    payload = aetherinfra_twin.LearningEventRequest(
+        event_key="quiz:unit.runtime:q1:A",
+        event_type="post_check",
+        unit_id="unit.runtime",
+        score=1,
+        notes="quiz:q1:A",
+    )
+
+    first = asyncio.run(aetherinfra_twin.append_learning_event("default", payload))
+    second = asyncio.run(aetherinfra_twin.append_learning_event("default", payload))
+
+    assert len(first["state"]["learning_events"]) == 1
+    assert len(second["state"]["learning_events"]) == 1
+    assert second["state"]["learning_events"][0]["event_key"] == "quiz:unit.runtime:q1:A"
+
+
+def test_learning_workspace_save_merges_existing_learning_events(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FakePathService:
+        def get_workspace_dir(self):
+            return tmp_path
+
+    monkeypatch.setattr(aetherinfra_twin, "get_path_service", lambda: FakePathService())
+    existing_event = aetherinfra_twin.LearningEventRequest(
+        event_key="event:existing",
+        event_type="source_drill",
+        unit_id="unit.runtime",
+        score=0.7,
+    )
+    asyncio.run(aetherinfra_twin.append_learning_event("default", existing_event))
+
+    payload = aetherinfra_twin.LearningWorkspaceSaveRequest(
+        state=aetherinfra_twin.LearningWorkspaceState(
+            selected_course_id="course.runtime",
+            learning_events=[
+                {
+                    "event_key": "event:new",
+                    "event_type": "post_check",
+                    "unit_id": "unit.runtime",
+                    "score": 1,
+                }
+            ],
+        )
+    )
+    saved = asyncio.run(aetherinfra_twin.save_learning_workspace("default", payload))
+    event_keys = {event["event_key"] for event in saved["state"]["learning_events"]}
+
+    assert event_keys == {"event:existing", "event:new"}
 
 
 def test_learning_evaluation_summarizes_workspace_events(

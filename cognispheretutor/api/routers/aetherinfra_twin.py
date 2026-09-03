@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import time
 from collections import Counter
@@ -52,6 +53,7 @@ class LearningWorkspaceSaveRequest(BaseModel):
 
 
 class LearningEventRequest(BaseModel):
+    event_key: str | None = Field(default=None, max_length=160)
     event_type: str = Field(..., min_length=1, max_length=80)
     unit_id: str | None = Field(default=None, max_length=300)
     course_id: str | None = Field(default=None, max_length=200)
@@ -153,6 +155,60 @@ def _summarize_learning_workspace(state: dict[str, Any]) -> dict[str, Any]:
             reverse=True,
         )[:10],
     }
+
+
+def _learning_event_key(event: dict[str, Any]) -> str:
+    explicit = str(event.get("event_key") or "").strip()
+    if explicit:
+        return explicit[:160]
+    payload = {
+        "event_type": event.get("event_type"),
+        "unit_id": event.get("unit_id"),
+        "course_id": event.get("course_id"),
+        "score": event.get("score"),
+        "error_types": sorted(str(item) for item in event.get("error_types", [])),
+        "evidence_refs": sorted(str(item) for item in event.get("evidence_refs", [])),
+        "notes": str(event.get("notes") or "")[:500],
+    }
+    digest = hashlib.sha256(
+        json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
+    ).hexdigest()[:16]
+    event_type = str(event.get("event_type") or "event").replace(" ", "_")
+    unit_id = str(event.get("unit_id") or "global").replace(" ", "_")
+    return f"{event_type}:{unit_id}:{digest}"[:160]
+
+
+def _normalize_learning_event(event: dict[str, Any]) -> dict[str, Any]:
+    normalized = {
+        "event_key": _learning_event_key(event),
+        "event_type": str(event.get("event_type") or ""),
+        "unit_id": event.get("unit_id"),
+        "course_id": event.get("course_id"),
+        "score": event.get("score"),
+        "error_types": [str(item) for item in event.get("error_types", [])],
+        "evidence_refs": [str(item) for item in event.get("evidence_refs", [])],
+        "notes": str(event.get("notes") or "")[:2000],
+        "created_at": event.get("created_at") or time.time(),
+    }
+    return normalized
+
+
+def _merge_learning_events(*event_lists: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    merged: dict[str, dict[str, Any]] = {}
+    order: list[str] = []
+    for events in event_lists:
+        for event in events:
+            if not isinstance(event, dict):
+                continue
+            normalized = _normalize_learning_event(event)
+            key = normalized["event_key"]
+            if key not in merged:
+                order.append(key)
+                merged[key] = normalized
+                continue
+            if float(normalized.get("created_at") or 0) >= float(merged[key].get("created_at") or 0):
+                merged[key] = normalized
+    return sorted((merged[key] for key in order), key=lambda item: float(item.get("created_at") or 0))
 
 
 async def _call(method: str, path: str, payload: dict[str, Any] | None = None):
@@ -301,12 +357,18 @@ async def save_learning_workspace(
     workspace_id: str,
     payload: LearningWorkspaceSaveRequest,
 ) -> dict[str, Any]:
+    existing_state, _existing_updated_at = _load_workspace_state(workspace_id)
+    next_state = payload.state.model_dump(mode="json")
+    next_state["learning_events"] = _merge_learning_events(
+        existing_state.get("learning_events", []),
+        next_state.get("learning_events", []),
+    )
     path = _workspace_state_path(workspace_id)
     updated_at = time.time()
     data = {
         "workspace_id": workspace_id,
         "updated_at": updated_at,
-        "state": payload.state.model_dump(mode="json"),
+        "state": next_state,
     }
     atomic_write_text(path, json.dumps(data, ensure_ascii=False, indent=2))
     return {
@@ -324,6 +386,7 @@ async def append_learning_event(
 ) -> dict[str, Any]:
     state, _updated_at = _load_workspace_state(workspace_id)
     event = {
+        "event_key": payload.event_key,
         "event_type": payload.event_type,
         "unit_id": payload.unit_id,
         "course_id": payload.course_id,
@@ -333,7 +396,7 @@ async def append_learning_event(
         "notes": payload.notes,
         "created_at": time.time(),
     }
-    state.setdefault("learning_events", []).append(event)
+    state["learning_events"] = _merge_learning_events(state.get("learning_events", []), [event])
     path = _workspace_state_path(workspace_id)
     updated_at = time.time()
     atomic_write_text(

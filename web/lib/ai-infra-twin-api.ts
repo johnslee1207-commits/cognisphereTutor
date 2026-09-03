@@ -81,6 +81,7 @@ export interface AiInfraMaturityRoadmap {
 }
 
 export interface AiInfraLearningEvent {
+  event_key?: string | null;
   event_type: string;
   unit_id?: string | null;
   course_id?: string | null;
