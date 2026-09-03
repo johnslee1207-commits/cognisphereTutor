@@ -1,0 +1,109 @@
+# California Electrical Career 课程包实施计划
+
+本文基于 `DeepTutor_California_Electrical_Career_Domain_Pack_v1.0.md`，记录当前在 Tutor 中落地的第一版范围和后续开发路线。
+
+## 当前已实现
+
+已新增内置课程包：
+
+```text
+cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json
+```
+
+该 pack 可被 Learning Space 的课程库自动发现，并可导入为：
+
+```text
+csphere-california_electrical_career
+```
+
+第一版包含 6 个模块、39 个学习目标：
+
+1. Career Orientation
+2. Shared Electrical Foundations
+3. ETI / IBEW Local 11 Apprenticeship Entrance
+4. California General Electrician
+5. California C-10 Electrical Trade
+6. California Contractor Law and Business
+
+## 官方来源基线
+
+2026-09-03 已核对以下官方来源：
+
+- ETI / LAETT Inside Wireman 页面：aptitude test 包含 mathematical reasoning、numerical reasoning、reading comprehension、mechanical reasoning、paper folding；考试时长 2 小时 20 分钟；PEF 可占最终评分最高 40%。
+- California DIR / DLSE Test Info：General Electrician 为 100 题、4 小时 30 分钟；权重为 Safety 6%、Electrical System Requirements 22%、Installation 66%、Maintenance and Repair 6%。
+- California DIR / DLSE General Electrician eligibility：GE 申请要求 8,000 小时 qualifying work。
+- CSLB C-10 Study Guide：C-10 trade blueprint 覆盖 Planning and Estimating、Rough Wiring、Finish Wiring and Trim、Startup/Troubleshooting/Maintenance、Safety。
+- CSLB Studying for the Examination：contractor applicant 需要准备 Law & Business 和 trade examination。
+
+## 为什么先做课程 seed
+
+这份 domain pack 的完整目标很大，包括官方资料摄取、知识图谱、个性化诊断、原创题库、错因模型、模拟考试、证据报告和版本更新 watch。
+
+当前 Tutor 已经具备 bundled pack distribution/import layer 和 Mastery Path 教学流，因此第一阶段最合适的落地点是：
+
+- 先让普通用户能在课程库看到这门课
+- 先生成可学习的 Mastery Path
+- 先验证从职业目标到学习目标的基本路径
+- 后续再逐步增加诊断、练习、模拟考试和法规/蓝图更新能力
+
+## 后续开发路线
+
+### M1 Apprentice Track
+
+- aptitude diagnostic
+- math/numerical/reading/mechanical/spatial 原创练习
+- timed mixed practice
+- PEF preparation coach
+
+### M2 California GE Core
+
+- 28 个 GE 细分模块
+- NEC navigation mastery
+- open-book reference navigation phases
+- GE blueprint-weighted sectional practice
+
+### M3 C-10 Trade
+
+- planning and estimating
+- blueprint reasoning
+- material/labor calculation
+- startup, troubleshooting, maintenance
+- C-10 blueprint mock
+
+### M4 Law & Business
+
+- licensing scenario practice
+- contract/change order scenarios
+- employment/payroll/tax/insurance
+- liens/public works/safety compliance
+- Law & Business mock
+
+### M5 Adaptive Tutor
+
+- learner model
+- error taxonomy memory
+- dynamic remediation plan
+- readiness score
+
+### M6 Governance
+
+- official source watch
+- blueprint version diff
+- affected lesson/question impact analysis
+- evidence report
+
+## 当前边界
+
+当前实现不是题库，也不是完整执照考试模拟器。它是一个可进入学习体验的第一版课程包：
+
+- 可以添加课程
+- 可以生成学习路径
+- 可以逐步进入 Mastery Path
+- 可以作为后续题库、诊断和模拟考试的骨架
+
+不包含：
+
+- 泄露真题
+- 付费题库内容
+- NEC 全文
+- 可替代官方资格审查或法律建议的内容

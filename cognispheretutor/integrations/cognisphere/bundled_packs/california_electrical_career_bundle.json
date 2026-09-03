@@ -1,0 +1,474 @@
+{
+  "bundle_id": "california_electrical_career.deeptutor_handoff.v1",
+  "domain": "california_electrical_career",
+  "plugin_id": "cognisphere.domain.california_electrical_career.plugin.v1",
+  "exported_at": "2026-09-03T00:00:00+00:00",
+  "bundle_schema_version": "1",
+  "knowledge": {
+    "course_overview": {
+      "overview_id": "california-electrical-career-overview",
+      "name": "California Electrical Career",
+      "description": "Personalized learning path for ETI/IBEW Local 11 apprenticeship entrance, California General Electrician certification, C-10 Electrical Contractor trade exam, and Law & Business preparation."
+    },
+    "certification_tracks": [
+      {
+        "track_id": "cec.apprenticeship_entrance",
+        "label": "ETI / IBEW Local 11 Apprenticeship Entrance",
+        "level": "foundational"
+      },
+      {
+        "track_id": "cec.general_electrician",
+        "label": "California General Electrician Certification",
+        "level": "core"
+      },
+      {
+        "track_id": "cec.c10_trade",
+        "label": "California C-10 Electrical Contractor Trade",
+        "level": "advanced"
+      },
+      {
+        "track_id": "cec.law_business",
+        "label": "California Contractor Law and Business",
+        "level": "advanced"
+      }
+    ],
+    "topic_families": [
+      {
+        "topic_family_id": "apprenticeship_aptitude",
+        "label": "Apprenticeship aptitude reasoning"
+      },
+      {
+        "topic_family_id": "general_electrician_blueprint",
+        "label": "General Electrician exam blueprint"
+      },
+      {
+        "topic_family_id": "nec_navigation",
+        "label": "NEC navigation and code lookup"
+      },
+      {
+        "topic_family_id": "c10_trade_blueprint",
+        "label": "C-10 planning, wiring, troubleshooting, and safety"
+      },
+      {
+        "topic_family_id": "law_business_scenarios",
+        "label": "Contractor law and business scenarios"
+      }
+    ],
+    "concepts": [
+      {
+        "concept_id": "career_graph",
+        "name": "Electrical career progression: applicant to apprentice to journey-level electrician to contractor"
+      },
+      {
+        "concept_id": "official_blueprints",
+        "name": "Official exam blueprints and source-version tracking"
+      },
+      {
+        "concept_id": "readiness_score",
+        "name": "Exam readiness beyond raw accuracy"
+      },
+      {
+        "concept_id": "error_taxonomy",
+        "name": "Electrical learning error taxonomy"
+      }
+    ],
+    "skills": [
+      {
+        "skill_id": "shared.arithmetic_algebra",
+        "name": "Arithmetic, algebra, ratios, percentages, and units",
+        "level": "foundational"
+      },
+      {
+        "skill_id": "shared.electrical_fundamentals",
+        "name": "Ohm's Law, power, AC/DC, series and parallel circuits",
+        "level": "foundational"
+      },
+      {
+        "skill_id": "shared.drawings_tools_safety",
+        "name": "Electrical drawings, tools, materials, safety, and troubleshooting",
+        "level": "foundational"
+      },
+      {
+        "skill_id": "ge.nec_navigation",
+        "name": "Question understanding -> code topic classification -> NEC article/table navigation -> answer verification",
+        "level": "core"
+      },
+      {
+        "skill_id": "c10.estimating_planning",
+        "name": "Scope interpretation, quantity takeoff, estimating, sequencing, and constructability",
+        "level": "advanced"
+      },
+      {
+        "skill_id": "law.scenario_judgment",
+        "name": "Licensing, contracts, liens, employment, insurance, public works, and compliance scenario judgment",
+        "level": "advanced"
+      }
+    ],
+    "rules": [
+      {
+        "rule_id": "rights.no_leaked_questions",
+        "name": "Do not use leaked, recalled, paid, or copyrighted exam-bank questions"
+      },
+      {
+        "rule_id": "rights.no_nec_fulltext",
+        "name": "Do not distribute copyrighted NEC full text as course data"
+      },
+      {
+        "rule_id": "source.official_blueprints_versioned",
+        "name": "Exam counts, durations, topic weights, eligibility, and reference editions must be source-versioned"
+      }
+    ],
+    "mastery_modules": [
+      {
+        "id": "csphere-california_electrical_career-orientation",
+        "name": "Career Orientation",
+        "order": 0,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "cec-career-overview",
+            "name": "Choose a career goal: ETI apprenticeship, California GE, C-10, or electrical contractor",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-orientation"
+          },
+          {
+            "id": "cec-career-graph",
+            "name": "Understand the career graph from applicant to contractor",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-orientation"
+          },
+          {
+            "id": "cec-official-source-discipline",
+            "name": "Use official blueprints and versioned source facts instead of recalled exam questions",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-orientation"
+          },
+          {
+            "id": "cec-diagnostic-readiness-loop",
+            "name": "Diagnostic -> gap analysis -> learning plan -> practice -> error memory -> readiness gate",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-orientation"
+          }
+        ]
+      },
+      {
+        "id": "csphere-california_electrical_career-shared-foundations",
+        "name": "Shared Electrical Foundations",
+        "order": 1,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "cec-foundation-arithmetic",
+            "name": "Fractions, decimals, percentages, ratios, proportions, and unit conversion",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-shared-foundations"
+          },
+          {
+            "id": "cec-foundation-algebra",
+            "name": "Algebra and word-problem setup for electrical calculations",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-shared-foundations"
+          },
+          {
+            "id": "cec-foundation-ohms-law",
+            "name": "Ohm's Law, power, voltage, current, and resistance",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-shared-foundations"
+          },
+          {
+            "id": "cec-foundation-circuits",
+            "name": "AC/DC, series circuits, parallel circuits, and measurement basics",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-shared-foundations"
+          },
+          {
+            "id": "cec-foundation-drawings-tools",
+            "name": "Electrical drawings, tools, materials, and jobsite safety vocabulary",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-shared-foundations"
+          },
+          {
+            "id": "cec-foundation-troubleshooting",
+            "name": "Basic troubleshooting: symptoms, measurements, likely causes, and safe verification",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-shared-foundations"
+          }
+        ]
+      },
+      {
+        "id": "csphere-california_electrical_career-apprenticeship",
+        "name": "ETI / IBEW Local 11 Apprenticeship Entrance",
+        "order": 2,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "cec-apprentice-baseline-diagnostic",
+            "name": "Baseline diagnostic for apprenticeship readiness",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-apprenticeship"
+          },
+          {
+            "id": "cec-apprentice-math-reasoning",
+            "name": "Mathematical reasoning for aptitude testing",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-apprenticeship"
+          },
+          {
+            "id": "cec-apprentice-numerical-reasoning",
+            "name": "Numerical reasoning, sequences, and data interpretation",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-apprenticeship"
+          },
+          {
+            "id": "cec-apprentice-reading",
+            "name": "Reading comprehension for technical instructions",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-apprenticeship"
+          },
+          {
+            "id": "cec-apprentice-mechanical",
+            "name": "Mechanical reasoning: force, levers, pulleys, gears, and motion",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-apprenticeship"
+          },
+          {
+            "id": "cec-apprentice-spatial",
+            "name": "Spatial reasoning and paper folding",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-apprenticeship"
+          },
+          {
+            "id": "cec-apprentice-timed-practice",
+            "name": "Timed mixed practice for a 2 hour 20 minute aptitude test",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-apprenticeship"
+          },
+          {
+            "id": "cec-apprentice-pef",
+            "name": "Personal Experience Form preparation and evidence organization",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-apprenticeship"
+          }
+        ]
+      },
+      {
+        "id": "csphere-california_electrical_career-ge",
+        "name": "California General Electrician",
+        "order": 3,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "cec-ge-blueprint",
+            "name": "GE exam blueprint: 100 questions, 4 hours 30 minutes, and four weighted domains",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-ge"
+          },
+          {
+            "id": "cec-ge-eligibility",
+            "name": "GE eligibility baseline: 8,000 qualifying hours across electrical work areas",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-ge"
+          },
+          {
+            "id": "cec-ge-theory",
+            "name": "Electrical theory, symbols, diagrams, feeders, branch circuits, motors, protection, grounding, and bonding",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-ge"
+          },
+          {
+            "id": "cec-ge-installation",
+            "name": "Installation domain: wiring methods, equipment, occupancies, lighting, HVAC, low voltage, devices, communications, and fire systems",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-ge"
+          },
+          {
+            "id": "cec-ge-sizing",
+            "name": "Box sizing, conduit sizing, conductor sizing, service sizing, panelboards, clearances, terminations, and overcurrent devices",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-ge"
+          },
+          {
+            "id": "cec-ge-maintenance-repair",
+            "name": "Maintenance and repair: testing equipment, devices, branch circuits, and overcurrent devices",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-ge"
+          },
+          {
+            "id": "cec-ge-nec-navigation",
+            "name": "Open-book NEC navigation: classify topic, find article/table/exception, calculate, and verify",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-ge"
+          },
+          {
+            "id": "cec-ge-mastery-dimensions",
+            "name": "Track knowledge mastery, NEC navigation mastery, calculation mastery, timed accuracy, and lookup time",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-ge"
+          },
+          {
+            "id": "cec-ge-section-full-mock",
+            "name": "Sectional practice and full GE mock using blueprint-weighted coverage",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-ge"
+          }
+        ]
+      },
+      {
+        "id": "csphere-california_electrical_career-c10-trade",
+        "name": "California C-10 Electrical Trade",
+        "order": 4,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "cec-c10-blueprint",
+            "name": "C-10 trade blueprint: planning and estimating, rough wiring, finish wiring, startup/troubleshooting/maintenance, and safety",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-c10-trade"
+          },
+          {
+            "id": "cec-c10-planning-estimating",
+            "name": "Plans, specifications, quantity takeoff, material selection, labor, markup, margin, and sequencing",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-c10-trade"
+          },
+          {
+            "id": "cec-c10-electrical-calculations",
+            "name": "Contractor-level electrical calculations for load, feeders, branch circuits, voltage drop, motors, transformers, and grounding",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-c10-trade"
+          },
+          {
+            "id": "cec-c10-rough-wiring",
+            "name": "Rough wiring, raceways, panels, wiring methods, equipment installation, and constructability reasoning",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-c10-trade"
+          },
+          {
+            "id": "cec-c10-special-systems",
+            "name": "PV, wind, generator, battery, capacitor, energy production, and storage systems",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-c10-trade"
+          },
+          {
+            "id": "cec-c10-finish-startup",
+            "name": "Finish devices, trim, labeling, sealants, startup, testing, troubleshooting, maintenance, and repair",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-c10-trade"
+          },
+          {
+            "id": "cec-c10-blueprint-practice",
+            "name": "Blueprint reasoning and full C-10 trade mock using CSLB blueprint weights",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-c10-trade"
+          }
+        ]
+      },
+      {
+        "id": "csphere-california_electrical_career-law-business",
+        "name": "California Contractor Law and Business",
+        "order": 5,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "cec-law-exam-structure",
+            "name": "Contractor exam structure: Law & Business plus trade examination",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-law-business"
+          },
+          {
+            "id": "cec-law-business-organization",
+            "name": "Business organization, licensing, business finance, payroll, tax, insurance, and employment requirements",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-law-business"
+          },
+          {
+            "id": "cec-law-contracts-bidding",
+            "name": "Contracts, bidding, change orders, public works, mechanics liens, safety, and compliance",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-law-business"
+          },
+          {
+            "id": "cec-law-scenario-practice",
+            "name": "Scenario practice for licensing, contracts, employee issues, liens, public works, and business judgment",
+            "type": "procedure",
+            "module_id": "csphere-california_electrical_career-law-business"
+          },
+          {
+            "id": "cec-law-readiness",
+            "name": "Law & Business readiness using scenario judgment rather than memorization only",
+            "type": "concept",
+            "module_id": "csphere-california_electrical_career-law-business"
+          }
+        ]
+      }
+    ],
+    "official_sources": [
+      {
+        "source_id": "laett.inside_wireman.2026-01-26",
+        "authority": "Electrical Training Institute / LAETT",
+        "url": "https://www.laett.com/index.cfm?page=Inside20Wireman&zone=/unionactive/view_page.cfm",
+        "verified_at": "2026-09-03",
+        "claims": [
+          "Inside Wireman applicants take an aptitude test with mathematical reasoning, numerical reasoning, reading comprehension, mechanical reasoning, and paper folding.",
+          "The aptitude test time is 2 hours 20 minutes.",
+          "The Personal Experience Form can constitute up to 40% of the final score."
+        ]
+      },
+      {
+        "source_id": "ca_dir.general_electrician.testinfo.2026-09-03",
+        "authority": "California DIR / DLSE Electrician Certification Unit",
+        "url": "https://www.dir.ca.gov/dlse/ECU/ECU_TestInfo.htm",
+        "verified_at": "2026-09-03",
+        "claims": [
+          "General Electrician exam has 100 questions.",
+          "General Electrician exam time is 4 hours 30 minutes.",
+          "General Electrician content outline weights are Safety 6%, Electrical System Requirements 22%, Installation 66%, Maintenance and Repair 6%."
+        ]
+      },
+      {
+        "source_id": "ca_dir.general_electrician.eligibility.2026-09-03",
+        "authority": "California DIR / DLSE Electrician Certification Unit",
+        "url": "https://www.dir.ca.gov/dlse/ecu/1a.html",
+        "verified_at": "2026-09-03",
+        "claims": [
+          "General Electrician certification application requires 8,000 hours of qualifying work for an electrical contractor installing, constructing, or maintaining NEC-covered electrical systems."
+        ]
+      },
+      {
+        "source_id": "cslb.c10.study_guide.2024-06-01",
+        "authority": "California Contractors State License Board",
+        "url": "https://www.cslb.ca.gov/resources/studyguides/c10studyguide.pdf",
+        "verified_at": "2026-09-03",
+        "claims": [
+          "C-10 Electrical Study Guide blueprint applies to exams scheduled on or after 2024-06-01.",
+          "C-10 trade weights are Planning and Estimating 28%, Rough Wiring 27%, Finish Wiring and Trim 11%, Startup/Troubleshooting/Maintenance 16%, Safety 18%."
+        ]
+      },
+      {
+        "source_id": "cslb.exam.study_overview.2026-09-03",
+        "authority": "California Contractors State License Board",
+        "url": "https://www.cslb.ca.gov/contractors/applicants/contractors_license/exam_application/Studying_For_Exam.aspx",
+        "verified_at": "2026-09-03",
+        "claims": [
+          "Contractor license applicants generally prepare for both the Law & Business examination and the trade examination."
+        ]
+      }
+    ],
+    "pack_metadata": {
+      "source": "DeepTutor_California_Electrical_Career_Domain_Pack_v1.0.md",
+      "stage": "M0/MVP seed",
+      "objective_count": 39,
+      "note": "First bundled Tutor-ready seed. Original question banks, deterministic generators, mock exam engine, and live official-source update watch are planned follow-up runtime capabilities."
+    }
+  },
+  "safety": {
+    "no_answer_keys": true,
+    "no_full_solution_dump": true,
+    "tutor_asks_not_spoils": true,
+    "source_of_truth": "cognisphere_plugin_pack",
+    "verified_code_solutions_included": false,
+    "full_official_problem_statements_included": false,
+    "no_leaked_exam_questions": true,
+    "no_copyrighted_nec_fulltext": true
+  }
+}

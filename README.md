@@ -1,7 +1,7 @@
 # cognisphereTutor Learning Packs Starter
 
 一个面向普通学习者的本地 AI 学习项目：内置 **AWS Certification**、
-**AP Calculus**、**LeetCode** 三个学习包，让用户
+**AP Calculus**、**LeetCode**、**California Electrical Career** 学习包，让用户
 下载本仓库后即可进入课程学习、Mastery Path、Quick Quiz 和学习进度追踪。
 
 ## 项目起点
@@ -9,7 +9,7 @@
 本仓的目标是提供一个可直接使用的本地 AI 学习体验：
 
 - 普通用户只下载本仓库即可开始 AWS 初级认证学习。
-- AWS/AP/LeetCode 学习包随项目分发，不需要额外下载 Cognisphere 或
+- AWS/AP/LeetCode/California Electrical Career 学习包随项目分发，不需要额外下载 Cognisphere 或
   CognisphereLearningPlugins。
 - Learning Space 中以“课程库”呈现，不暴露 plugin、domain、compose、seed 等
   工程术语。
@@ -23,6 +23,20 @@
 | AWS Certification | `cognispheretutor/integrations/cognisphere/bundled_packs/aws_certification_bundle.json` | 6 个模块 / 46 个目标 |
 | AP Calculus | `cognispheretutor/integrations/cognisphere/bundled_packs/ap_calculus_bundle.json` | 22 个目标 |
 | LeetCode | `cognispheretutor/integrations/cognisphere/bundled_packs/leetcode_bundle.json` | 7 个目标 |
+| California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 |
+
+California Electrical Career 当前是第一阶段课程 seed，覆盖：
+
+- ETI / IBEW Local 11 apprenticeship entrance
+- California General Electrician certification
+- California C-10 Electrical Contractor trade exam
+- California Contractor Law & Business
+- shared electrical fundamentals and NEC navigation
+
+后续可继续扩展为诊断、参数化原创题、NEC open-book simulator、Mock Exam engine、
+error taxonomy memory、readiness score 和 official source watch。
+实施计划见
+[guides/CALIFORNIA_ELECTRICAL_CAREER_PACK_PLAN_ZH.md](guides/CALIFORNIA_ELECTRICAL_CAREER_PACK_PLAN_ZH.md)。
 
 AI Infrastructure 课程不是 Tutor 单仓内置课程。它通过
 `CognisphereLearningPlugins` 提供课程包，并通过可选的
@@ -139,7 +153,7 @@ data/user/workspace/learning/
   loop、Quick Quiz、学习进度与 UI。
 - **Domain Pack：** 负责领域知识、课程结构、目标、参考资料元数据与领域运行时。
 
-内置 learning packs 是数据包，不把 AWS/AP/LeetCode 的专属教学逻辑硬编码到
+内置 learning packs 是数据包，不把 AWS/AP/LeetCode/California Electrical Career 的专属教学逻辑硬编码到
 Tutor 核心中。
 
 ## 开发者路径
@@ -193,7 +207,7 @@ npx tsc --noEmit
 ```text
 cognispheretutor/integrations/cognisphere/
   pack_distribution.py          # 内置 pack 发现、合并、导入
-  bundled_packs/                # AWS/AP/LeetCode 内置学习包
+  bundled_packs/                # AWS/AP/LeetCode/California Electrical Career 内置学习包
 
 cognispheretutor/learning/
   cognisphere_seed.py           # pack knowledge -> Mastery Path

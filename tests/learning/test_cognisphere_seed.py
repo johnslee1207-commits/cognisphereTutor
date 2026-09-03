@@ -350,10 +350,12 @@ def test_bundled_pack_status_and_import_without_external_plugins(
     assert status.status_code == 200, status.text
     status_body = status.json()
     assert status_body["ok"] is True
-    assert status_body["bundled_distribution"]["available"] >= 3
+    assert status_body["bundled_distribution"]["available"] >= 4
     bundled = {p["domain"]: p for p in status_body["plugins"]}
     assert bundled["aws_certification"]["source"] == "bundled_pack"
     assert bundled["aws_certification"]["valid"] is True
+    assert bundled["california_electrical_career"]["source"] == "bundled_pack"
+    assert bundled["california_electrical_career"]["valid"] is True
 
     seeded = client.post(
         "/api/v1/learning/cognisphere/import-and-seed",
@@ -376,6 +378,31 @@ def test_bundled_pack_status_and_import_without_external_plugins(
     )
     assert recommended.status_code == 200, recommended.text
     assert "aws_certification" in recommended.json()["recommended_domains"]
+
+    electrical = client.post(
+        "/api/v1/learning/cognisphere/import-and-seed",
+        json={"domain": "california_electrical_career", "seed_mastery_path": True},
+    )
+    assert electrical.status_code == 200, electrical.text
+    electrical_payload = electrical.json()
+    assert electrical_payload["import"]["distribution_source"] == "bundled_pack"
+    assert electrical_payload["mastery_path"]["path_id"] == "csphere-california_electrical_career"
+    assert electrical_payload["mastery_path"]["kp_count"] == 39
+    assert (store_root / "csphere-california_electrical_career.json").exists()
+
+    electrical_recommended = client.post(
+        "/api/v1/learning/cognisphere/recommend-from-goal",
+        json={
+            "goal": "I want to become a California electrician and prepare for GE and C-10",
+            "required_capabilities": ["deeptutor_export"],
+            "compose_and_seed": False,
+        },
+    )
+    assert electrical_recommended.status_code == 200, electrical_recommended.text
+    assert (
+        "california_electrical_career"
+        in electrical_recommended.json()["recommended_domains"]
+    )
 
 
 def test_runtime_plan_fallback_seeds_sparse_domain(
