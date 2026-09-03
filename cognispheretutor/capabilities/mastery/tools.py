@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from typing import TYPE_CHECKING, Any
 import uuid
 
@@ -70,6 +71,7 @@ MASTERY_TOOL_NAMES: tuple[str, ...] = (
 _QUESTION_TYPES = ("choice", "short", "open")
 _ALLOWED_KP_TYPES = {t.value for t in KnowledgeType}
 logger = logging.getLogger(__name__)
+_NUMBER_PATTERN = re.compile(r"-?\d+(?:,\d{3})*(?:\.\d+)?")
 
 
 def _new_service() -> LearningService:
@@ -170,6 +172,86 @@ def next_objective_for_start_point(
             if not is_mastered(progress, kp):
                 return _step_for_kp(progress, module, kp)
     return next_objective(progress, now=now)
+
+
+def _parse_number(value: str) -> float | None:
+    match = _NUMBER_PATTERN.search(str(value or ""))
+    if not match:
+        return None
+    try:
+        return float(match.group(0).replace(",", ""))
+    except ValueError:
+        return None
+
+
+def _numbers_close(left: float, right: float) -> bool:
+    return abs(left - right) <= max(0.01, abs(right) * 0.001)
+
+
+def _infer_numeric_answer(question: str) -> float | None:
+    text = " ".join(str(question or "").lower().replace(",", "").split())
+    match = re.search(
+        r"requires\s+(\d+(?:\.\d+)?)\s+feet.*?"
+        r"installs\s+(\d+(?:\.\d+)?)\s+feet.*?"
+        r"installs\s+(\d+(?:\.\d+)?)\s*%\s+of\s+the\s+remaining",
+        text,
+    )
+    if match:
+        total, first, pct = (float(value) for value in match.groups())
+        return first + (total - first) * (pct / 100.0)
+
+    match = re.search(
+        r"winds\s+(\d+(?:\.\d+)?)\s+feet\s+of\s+cable\s+in\s+(\d+(?:\.\d+)?)\s+minutes.*?"
+        r"in\s+(\d+(?:\.\d+)?)\s+minutes",
+        text,
+    )
+    if match:
+        feet, minutes, target_minutes = (float(value) for value in match.groups())
+        if minutes:
+            return feet / minutes * target_minutes
+
+    match = re.search(
+        r"(\d+(?:\.\d+)?)\s+(?:electricians|workers).*?"
+        r"in\s+(\d+(?:\.\d+)?)\s+hours.*?"
+        r"in\s+(\d+(?:\.\d+)?)\s+hours",
+        text,
+    )
+    if match:
+        workers, hours, target_hours = (float(value) for value in match.groups())
+        if target_hours:
+            return workers * hours / target_hours
+
+    return None
+
+
+def _validate_numeric_choice_answer(
+    *,
+    question: str,
+    expected_label: str,
+    options: dict[str, str],
+) -> str:
+    expected_value = _parse_number(options.get(expected_label, ""))
+    inferred = _infer_numeric_answer(question)
+    if inferred is None or expected_value is None:
+        return ""
+    matching_labels: list[str] = []
+    for label, body in options.items():
+        value = _parse_number(body)
+        if value is not None and _numbers_close(value, inferred):
+            matching_labels.append(label)
+    if not matching_labels:
+        return (
+            "The choice question appears to be a numeric word problem, but no option "
+            f"matches the computed answer ({inferred:g}). Revise the answer choices "
+            "before registering the quiz."
+        )
+    if expected_label not in matching_labels:
+        return (
+            f"The registered expected answer {expected_label} points to "
+            f"{expected_value:g}, but the computed answer is {inferred:g} "
+            f"({', '.join(matching_labels)}). Retry mastery_quiz with the correct label."
+        )
+    return ""
 
 
 def _question_bank_type(question_type: str) -> str:
@@ -417,6 +499,13 @@ class MasteryQuizTool(BaseTool):
                     ),
                     success=False,
                 )
+            numeric_error = _validate_numeric_choice_answer(
+                question=question,
+                expected_label=resolved_expected,
+                options=choice_options,
+            )
+            if numeric_error:
+                return ToolResult(content=numeric_error, success=False)
             expected = resolved_expected
             options = format_options(choice_options)
 

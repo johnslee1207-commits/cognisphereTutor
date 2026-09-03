@@ -196,6 +196,49 @@ async def test_status_start_action_clears_stale_pending_question(path_id):
 
 
 @pytest.mark.asyncio
+async def test_quiz_rejects_numeric_choice_when_correct_value_missing(path_id):
+    await _build_basic(path_id)
+    status = json.loads((await MasteryStatusTool().execute(_mastery_path_id=path_id)).content)
+
+    result = await MasteryQuizTool().execute(
+        _mastery_path_id=path_id,
+        knowledge_point_id=status["next"]["knowledge_point_id"],
+        question=(
+            "A job requires 250 feet of conduit. A crew installs 150 feet on the "
+            "first day, then installs 25% of the remaining length on the second "
+            "day. What is the total length of conduit installed after both days?"
+        ),
+        expected_answer="D",
+        question_type="choice",
+        options=["A: 140 feet", "B: 160 feet", "C: 180 feet", "D: 200 feet"],
+    )
+
+    assert result.success is False
+    assert "no option matches the computed answer (175)" in result.content
+
+
+@pytest.mark.asyncio
+async def test_quiz_accepts_numeric_choice_when_expected_label_matches(path_id):
+    await _build_basic(path_id)
+    status = json.loads((await MasteryStatusTool().execute(_mastery_path_id=path_id)).content)
+
+    result = await MasteryQuizTool().execute(
+        _mastery_path_id=path_id,
+        knowledge_point_id=status["next"]["knowledge_point_id"],
+        question=(
+            "A job requires 250 feet of conduit. A crew installs 150 feet on the "
+            "first day, then installs 25% of the remaining length on the second "
+            "day. What is the total length of conduit installed after both days?"
+        ),
+        expected_answer="C",
+        question_type="choice",
+        options=["A: 140 feet", "B: 160 feet", "C: 175 feet", "D: 200 feet"],
+    )
+
+    assert result.success is True
+
+
+@pytest.mark.asyncio
 async def test_no_path_id_fails_closed():
     result = await MasteryStatusTool().execute(_mastery_path_id="")
     assert result.success is False
