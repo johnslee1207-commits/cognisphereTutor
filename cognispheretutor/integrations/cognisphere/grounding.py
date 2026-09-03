@@ -62,6 +62,12 @@ _LIST_TEXT_KEYS = (
     "source_ref_ids",
     "lesson_sequence",
     "practice_modes",
+    "activity_modes",
+    "steps",
+    "learner_action",
+    "feedback_rule",
+    "exam_alignment",
+    "variation_policy",
 )
 _STOPWORDS = {
     "a",
@@ -238,6 +244,7 @@ def _iter_candidate_objects(payload: Any) -> Iterable[dict[str, Any]]:
             "patterns",
             "lesson_cards",
             "practice_blueprints",
+            "learning_activity_templates",
             "problems",
             "items",
             "classes",
@@ -337,6 +344,12 @@ def _render_item(item: dict[str, Any]) -> dict[str, Any]:
         "source_ref_ids",
         "lesson_sequence",
         "practice_modes",
+        "activity_modes",
+        "steps",
+        "learner_action",
+        "feedback_rule",
+        "exam_alignment",
+        "variation_policy",
     ):
         value = item.get(key)
         if isinstance(value, list) and value:

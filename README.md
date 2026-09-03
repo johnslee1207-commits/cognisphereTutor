@@ -23,7 +23,7 @@
 | AWS Certification | `cognispheretutor/integrations/cognisphere/bundled_packs/aws_certification_bundle.json` | 6 个模块 / 46 个目标 |
 | AP Calculus | `cognispheretutor/integrations/cognisphere/bundled_packs/ap_calculus_bundle.json` | 22 个目标 |
 | LeetCode | `cognispheretutor/integrations/cognisphere/bundled_packs/leetcode_bundle.json` | 7 个目标 |
-| California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 / 15 张 lesson cards / 4 个 practice blueprints |
+| California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 / 15 张 lesson cards / 4 个 practice blueprints / 8 个 activity templates |
 
 California Electrical Career 当前已从课程路径 seed 扩展为可进入 mini-lesson 的
 内容 seed，覆盖：
@@ -35,6 +35,9 @@ California Electrical Career 当前已从课程路径 seed 扩展为可进入 mi
 - shared electrical fundamentals and NEC navigation
 - apprenticeship aptitude、GE blueprint-weighted practice、C-10 closed-book
   practice、Law & Business scenario practice
+- mini-lesson + quick check、worked example、open-book navigation rehearsal、
+  scenario judgment、flashcard ladder、timed mixed set、field visualization、
+  document evidence coach 等学习形式
 
 后续 Tutor 侧可继续扩展为诊断、参数化原创题生成器、NEC open-book
 simulator、Mock Exam engine、error taxonomy memory 和 readiness score。官方

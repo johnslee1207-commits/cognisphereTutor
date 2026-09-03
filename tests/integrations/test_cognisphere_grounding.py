@@ -280,6 +280,68 @@ def test_build_plugin_grounding_seed_includes_materialized_lesson_cards(
     assert "ca_dir.electrician_certification_faq.2026-09-03" in seed
 
 
+def test_build_plugin_grounding_seed_includes_learning_activity_templates(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    from cognispheretutor.integrations.cognisphere import grounding
+
+    cache_dir = tmp_path / "imports" / "california_electrical_career"
+    cache_dir.mkdir(parents=True)
+    (cache_dir / "bundle.json").write_text(
+        json.dumps(
+            {
+                "domain": "california_electrical_career",
+                "knowledge": {
+                    "learning_activity_templates": [
+                        {
+                            "id": "cec-activity-open-book-navigation-rehearsal",
+                            "title": "Open-book NEC navigation rehearsal",
+                            "summary": (
+                                "Use for GE objectives where the learner must "
+                                "look up code efficiently rather than rely only on memory."
+                            ),
+                            "activity_modes": [
+                                "topic classification",
+                                "article/table route planning",
+                                "exception check",
+                            ],
+                            "steps": [
+                                "Present an original code-style scenario without copyrighted code text.",
+                                "Ask the learner to classify the topic.",
+                            ],
+                            "feedback_rule": [
+                                "Track concept accuracy and lookup strategy separately."
+                            ],
+                        }
+                    ]
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    class FakeRegistry:
+        def get_plugin(self, _domain: str):
+            return {"plugin": {"path": str(tmp_path / "missing_plugin")}}
+
+    monkeypatch.setattr(grounding, "PluginRegistryClient", FakeRegistry)
+    monkeypatch.setattr(grounding, "resolve_import_cache_dir", lambda domain: cache_dir)
+
+    seed = grounding.build_plugin_grounding_seed(
+        domain="california_electrical_career",
+        objective={
+            "knowledge_point_name": "GE NEC navigation",
+            "module_name": "California General Electrician",
+        },
+    )
+
+    assert "Open-book NEC navigation rehearsal" in seed
+    assert "topic classification" in seed
+    assert "without copyrighted code text" in seed
+    assert "lookup strategy separately" in seed
+
+
 def test_build_plugin_grounding_seed_reports_sparse_grounding(monkeypatch, tmp_path: Path) -> None:
     from cognispheretutor.integrations.cognisphere import grounding
 

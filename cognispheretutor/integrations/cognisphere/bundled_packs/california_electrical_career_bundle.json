@@ -726,6 +726,268 @@
         ]
       }
     ],
+    "learning_activity_templates": [
+      {
+        "id": "cec-activity-mini-lesson-quick-check",
+        "title": "Mini-lesson followed by one quick check",
+        "summary": "Default beginner flow for a new concept or procedure.",
+        "activity_modes": [
+          "short explanation",
+          "concrete example",
+          "multiple-choice quick check",
+          "brief feedback"
+        ],
+        "steps": [
+          "State the practical job or exam situation in one paragraph.",
+          "Teach the smallest useful concept with one original example.",
+          "Register one four-option quick check with one best answer.",
+          "If correct, move to the next learning objective; if incorrect, explain the error pattern and ask one replacement check."
+        ],
+        "learner_action": [
+          "Read the mini-lesson.",
+          "Answer one quick check.",
+          "Continue to the next objective after feedback."
+        ],
+        "feedback_rule": [
+          "Do not ask the learner to choose the assessment format.",
+          "Do not chain multiple quizzes after a correct early answer.",
+          "Use free response only for review checkpoints, fragile understanding, or learner request."
+        ],
+        "exam_alignment": [
+          "Matches multiple-choice exam rhythm while keeping Tutor teaching first."
+        ]
+      },
+      {
+        "id": "cec-activity-worked-example",
+        "title": "Worked example with hidden next step",
+        "summary": "Use for calculations, ratios, Ohm's Law, power, estimating, and blueprint arithmetic.",
+        "activity_modes": [
+          "worked example",
+          "step prediction",
+          "calculation check",
+          "error diagnosis"
+        ],
+        "steps": [
+          "Show the original scenario and identify known quantities.",
+          "Work the first step aloud.",
+          "Ask the learner to choose the next operation or expression.",
+          "Reveal the calculation and connect the result back to units and plausibility."
+        ],
+        "learner_action": [
+          "Pick the next operation.",
+          "Estimate whether the answer is reasonable.",
+          "Correct unit or setup errors."
+        ],
+        "feedback_rule": [
+          "When the learner misses, identify whether the error was concept, setup, unit conversion, arithmetic, or answer-choice trap."
+        ],
+        "exam_alignment": [
+          "Supports aptitude math, C-10 estimating math, and electrical calculation fluency."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "cslb.c10.study_guide.2026-03",
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-activity-open-book-navigation-rehearsal",
+        "title": "Open-book NEC navigation rehearsal",
+        "summary": "Use for GE objectives where the learner must look up code efficiently rather than rely only on memory.",
+        "activity_modes": [
+          "topic classification",
+          "article/table route planning",
+          "exception check",
+          "answer verification"
+        ],
+        "steps": [
+          "Present an original code-style scenario without copyrighted code text.",
+          "Ask the learner to classify the topic and predict the likely lookup area.",
+          "Ask what type of reference element matters: definition, article rule, table, note, or exception.",
+          "Close with a quick check about the navigation decision, not a copied code answer."
+        ],
+        "learner_action": [
+          "Classify the topic.",
+          "Choose the lookup route.",
+          "Explain what evidence would confirm the answer."
+        ],
+        "feedback_rule": [
+          "Track concept accuracy and lookup strategy separately.",
+          "Never reproduce NEC full text as course content."
+        ],
+        "exam_alignment": [
+          "Matches GE open-book preparation where test materials are provided at the test site."
+        ],
+        "source_ref_ids": [
+          "ca_dir.electrician_certification_faq.2026-09-03",
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-activity-scenario-judgment",
+        "title": "Contractor scenario judgment",
+        "summary": "Use for C-10 trade judgment, Law & Business, safety, public works, contracts, liens, and employee topics.",
+        "activity_modes": [
+          "role identification",
+          "obligation spotting",
+          "one-best-answer question",
+          "wrong-answer contrast"
+        ],
+        "steps": [
+          "Present a realistic original contractor scenario.",
+          "Ask who has the obligation and what decision must be made.",
+          "Offer four answer choices with plausible distractors.",
+          "Explain why the best answer fits the role, timing, document, or safety obligation."
+        ],
+        "learner_action": [
+          "Identify the role.",
+          "Spot the obligation or risk.",
+          "Choose the best answer."
+        ],
+        "feedback_rule": [
+          "Contrast the selected wrong answer with the best answer using one concrete distinction."
+        ],
+        "exam_alignment": [
+          "Matches closed-book CSLB trade and Law & Business multiple-choice style without using leaked or recalled questions."
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03",
+          "cslb.law_business.study_guide.2026-03",
+          "cslb.exam.study_overview.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-activity-flashcard-ladder",
+        "title": "Flashcard ladder for vocabulary and distinctions",
+        "summary": "Use when a learner needs fast recognition of terms before scenario practice.",
+        "activity_modes": [
+          "definition card",
+          "contrast card",
+          "classification card",
+          "spaced review"
+        ],
+        "steps": [
+          "Show one term or pair of confusing terms.",
+          "Ask the learner to choose the best short meaning or distinction.",
+          "Promote correct cards into spaced review and keep missed cards in the current set.",
+          "After three correct cards, return to lesson or scenario practice."
+        ],
+        "learner_action": [
+          "Recognize definitions.",
+          "Differentiate close terms.",
+          "Revisit missed cards later."
+        ],
+        "feedback_rule": [
+          "Keep flashcard sessions short; do not replace applied practice with memorization."
+        ],
+        "exam_alignment": [
+          "Useful for vocabulary-heavy topics such as safety terms, plan symbols, business roles, and code navigation terms."
+        ]
+      },
+      {
+        "id": "cec-activity-timed-mixed-set",
+        "title": "Timed mixed set",
+        "summary": "Use after basic accuracy is stable, especially for aptitude, GE sectional practice, C-10, and Law & Business review.",
+        "activity_modes": [
+          "timed set",
+          "pacing feedback",
+          "error taxonomy",
+          "targeted remediation"
+        ],
+        "steps": [
+          "Select a small mixed set aligned to the current track.",
+          "Use a time budget that is short enough to reveal pacing habits.",
+          "Grade for accuracy and error type.",
+          "Send the learner back to the weakest lesson card or drill."
+        ],
+        "learner_action": [
+          "Answer without overthinking every item.",
+          "Review misses by error type.",
+          "Repeat only the weak slice."
+        ],
+        "feedback_rule": [
+          "Do timed sets only after the learner has seen the relevant mini-lessons.",
+          "Do not treat speed as mastery when conceptual accuracy is unstable."
+        ],
+        "exam_alignment": [
+          "Supports timed aptitude preparation and later mock-exam readiness."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "cslb.c10.study_guide.2026-03",
+          "cslb.law_business.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-activity-field-visualization",
+        "title": "Field visualization prompt",
+        "summary": "Use for circuits, raceways, boxes, panels, grounding, tools, jobsite safety, and troubleshooting.",
+        "activity_modes": [
+          "mental model",
+          "diagram description",
+          "what-changes-if question",
+          "safety-first check"
+        ],
+        "steps": [
+          "Describe a simple field situation with physical components.",
+          "Ask the learner to visualize current path, conductor route, equipment position, or hazard.",
+          "Change one condition and ask what changes.",
+          "Close with one safety or plausibility check."
+        ],
+        "learner_action": [
+          "Build a mental picture.",
+          "Predict the effect of changing one condition.",
+          "Connect the visual model to a rule or calculation."
+        ],
+        "feedback_rule": [
+          "If the learner is confused, return to a simpler physical model before formulas."
+        ],
+        "exam_alignment": [
+          "Supports mechanical reasoning, circuits, rough wiring, troubleshooting, and safety scenario questions."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-activity-document-evidence-coach",
+        "title": "Document evidence coach",
+        "summary": "Use for PEF, GE experience, contractor qualifying experience, and learner readiness evidence.",
+        "activity_modes": [
+          "claim inventory",
+          "document matching",
+          "gap list",
+          "next action"
+        ],
+        "steps": [
+          "Ask the learner what claim they need to support.",
+          "List acceptable evidence categories at a high level without giving legal advice.",
+          "Separate documented, partially documented, and unsupported claims.",
+          "Create the next study or documentation task."
+        ],
+        "learner_action": [
+          "Inventory real experience.",
+          "Match each claim to evidence.",
+          "Avoid unsupported or exaggerated claims."
+        ],
+        "feedback_rule": [
+          "Keep eligibility and documentation guidance separate from exam teaching.",
+          "Tell the learner to verify formal requirements with the official administering body."
+        ],
+        "exam_alignment": [
+          "Supports application readiness for apprenticeship, GE, and contractor paths."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "ca_dir.general_electrician.eligibility.2026-09-03",
+          "cslb.contractor_experience.2026-09-03"
+        ]
+      }
+    ],
     "cognisphere_provenance_refs": [
       {
         "source_id": "laett.inside_wireman.2026-01-26",
@@ -841,8 +1103,9 @@
       "objective_count": 39,
       "lesson_card_count": 15,
       "practice_blueprint_count": 4,
+      "learning_activity_template_count": 8,
       "source_governance": "Official public sources, URLs, provenance, versions, and update watch are managed by Cognisphere. Tutor consumes materialized pack data only.",
-      "note": "Tutor-ready seed with materialized lesson cards and practice blueprints. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
+      "note": "Tutor-ready seed with materialized lesson cards, practice blueprints, and varied learning activity templates. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
     }
   },
   "safety": {
