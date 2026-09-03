@@ -16,10 +16,10 @@ cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_ca
 csphere-california_electrical_career
 ```
 
-当前版包含 6 个模块、39 个学习目标，并补充了 29 张可用于 Tutor
-mini-lesson 的 lesson cards、8 个 practice blueprint、8 个 learning
-activity templates、5 条 study sequences、6 张 scenario cards、3 组
-flashcard decks、3 个 readiness checkpoints 和 5 类 error taxonomy：
+当前版包含 6 个模块、39 个学习目标，并补充了 41 张可用于 Tutor
+mini-lesson 的 lesson cards、9 个 practice blueprint、8 个 learning
+activity templates、6 条 study sequences、16 张 scenario cards、6 组
+flashcard decks、4 个 readiness checkpoints 和 5 类 error taxonomy：
 
 1. Career Orientation
 2. Shared Electrical Foundations
@@ -69,12 +69,14 @@ flashcard decks、3 个 readiness checkpoints 和 5 类 error taxonomy：
 
 - Beginner first-week path
 - Inside Wireman apprenticeship entry path
+- Apprenticeship four-week sprint
 - California General Electrician core path
 - C-10 contractor trade path
 - Contractor Law and Business scenario path
 - aptitude ratio、Ohm's Law、NEC navigation、change order、public works、lockout/tagout 原创场景卡
-- electrical foundations、GE navigation、Law & Business scenario cues 闪卡组
-- foundations、GE navigation、C-10/Law readiness checkpoints
+- aptitude math、number patterns、table reading、technical reading、mechanical、spatial/paper folding 原创场景卡
+- electrical foundations、GE navigation、Law & Business scenario cues、apprenticeship math、apprenticeship mechanical、apprenticeship spatial/reading 闪卡组
+- foundations、apprenticeship entry sprint、GE navigation、C-10/Law readiness checkpoints
 - topic classification、unit/setup、safety sequencing、documentation boundary、memorization-over-navigation 错因分类
 
 ## Cognisphere 来源管理边界

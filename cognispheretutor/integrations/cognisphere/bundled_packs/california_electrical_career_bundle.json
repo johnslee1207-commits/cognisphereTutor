@@ -510,6 +510,222 @@
         ]
       },
       {
+        "id": "cec-lesson-apprentice-test-week-plan",
+        "title": "Apprenticeship entry: four-week test plan",
+        "summary": "For a near-term apprenticeship entrance selection, preparation should prioritize scoring reliability under time pressure.",
+        "body": "Teach a four-week plan around daily short reps: math setup, numerical patterns, technical reading, mechanical intuition, spatial folding, and mixed timed review. The learner should not try to learn the whole electrical trade before the entrance test. The goal is to recognize question type, choose a method, answer cleanly, and move on.",
+        "teaching_points": [
+          "Spend the first days diagnosing which section is weakest.",
+          "Use short daily sessions instead of one long cram session.",
+          "Practice mixed sets because the real selection rewards switching modes.",
+          "Keep an error log with the reason for each miss."
+        ],
+        "quick_check_prompts": [
+          "For a test next month, what should come first: deep NEC study, diagnosing aptitude section weaknesses, memorizing contractor law, or reading random exam dumps?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-arithmetic-speed",
+        "title": "Aptitude arithmetic speed",
+        "summary": "Entrance-test math needs fast, reliable arithmetic with fractions, decimals, percentages, ratios, and unit conversions.",
+        "body": "Teach arithmetic as recognition plus execution. The learner should identify the operation before calculating: combine, compare, scale, convert, or find a missing value. Emphasize scratch-work layout, estimating first, and rejecting impossible answer choices.",
+        "teaching_points": [
+          "Fractions and decimals should be convertible without panic.",
+          "Percent questions often mean multiply by 1 plus or minus the percent.",
+          "Ratio questions become easier when total parts are counted first.",
+          "Unit labels prevent many wrong operations."
+        ],
+        "quick_check_prompts": [
+          "A value increases by 20%. Which multiplier represents the new value: 0.20, 1.20, 2.00, or 20?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-algebra-setup",
+        "title": "Algebra setup for word problems",
+        "summary": "Most aptitude algebra errors happen before solving: the learner writes the wrong relationship.",
+        "body": "Teach the learner to translate words into an equation in three passes: what is unknown, what relationship is given, and what units must match. Keep equations simple and original. The learner should solve after the setup is correct, not before.",
+        "teaching_points": [
+          "Name the unknown before writing numbers.",
+          "Turn words such as total, difference, twice, per, and remaining into operations.",
+          "Check whether the answer fits the story.",
+          "If stuck, test answer choices by substitution."
+        ],
+        "quick_check_prompts": [
+          "If x is doubled and then 5 is added to get 17, which equation matches: x + 2 + 5 = 17, 2x + 5 = 17, 5x + 2 = 17, or 17x = 2 + 5?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-number-patterns",
+        "title": "Numerical reasoning and sequence patterns",
+        "summary": "Numerical reasoning rewards pattern testing: difference, multiplication, alternating pattern, grouping, and position-based rules.",
+        "body": "Teach a repeatable sequence checklist. First compare differences. If differences are not stable, compare ratios or multiplication. Then check alternating positions, paired groups, or a two-step rule. The learner should avoid staring at the numbers without testing a hypothesis.",
+        "teaching_points": [
+          "Start with first differences.",
+          "If differences change, check second differences or multiply/add patterns.",
+          "Odd/even positions may follow separate rules.",
+          "A wrong answer often follows only the last visible jump."
+        ],
+        "quick_check_prompts": [
+          "For 3, 6, 12, 24, __, which rule best fits: add 3, multiply by 2, subtract 3, or alternate plus 3 and plus 6?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-table-graph-reading",
+        "title": "Data tables and graph reading",
+        "summary": "Numerical reasoning may require reading a small table, comparing rates, and choosing the right denominator.",
+        "body": "Teach table reading as a two-step process: identify what each row/column means, then decide whether the question asks for total, difference, rate, percentage, or trend. Many misses come from using the wrong row or comparing raw counts when rates are needed.",
+        "teaching_points": [
+          "Read labels before reading numbers.",
+          "Ask whether the question wants a total, change, average, percentage, or ratio.",
+          "Use the same units before comparing values.",
+          "Circle the row and column being used in scratch work."
+        ],
+        "quick_check_prompts": [
+          "A table question asks for percent change. What must you identify first: old value and new value, answer choice C, the longest row label, or the page number?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-reading-technical",
+        "title": "Technical reading comprehension",
+        "summary": "Reading questions reward careful evidence, not outside knowledge or assumptions.",
+        "body": "Teach the learner to answer from the passage. First read the question stem, then scan for the relevant sentence, then eliminate choices that add claims not supported by the text. In technical reading, small words like except, always, only, before, and after can decide the answer.",
+        "teaching_points": [
+          "Use passage evidence rather than personal opinion.",
+          "Watch absolute words such as always, never, and only.",
+          "Sequence words such as before and after matter.",
+          "A correct answer may be plain rather than impressive."
+        ],
+        "quick_check_prompts": [
+          "In a reading question, which is safest: answer from passage evidence, use outside trade knowledge first, pick the technical-sounding choice, or ignore qualifiers?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-mechanical-levers",
+        "title": "Mechanical reasoning: levers and torque",
+        "summary": "Lever questions usually ask how force, distance from pivot, and balance relate.",
+        "body": "Teach levers with a simple rule: force farther from the pivot has more turning effect. The learner should identify the pivot, load, effort, and distances before choosing an answer. Avoid unnecessary formulas at first; build the physical intuition.",
+        "teaching_points": [
+          "Find the pivot first.",
+          "A longer arm can reduce required force.",
+          "Balance depends on force times distance.",
+          "If both force and distance change, compare turning effect."
+        ],
+        "quick_check_prompts": [
+          "On a lever, applying the same force farther from the pivot usually creates: more turning effect, less turning effect, no effect, or unrelated motion?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-mechanical-gears-pulleys",
+        "title": "Mechanical reasoning: gears, pulleys, and motion",
+        "summary": "Gear and pulley questions test direction, speed, force tradeoffs, and connected motion.",
+        "body": "Teach motion tracing. For gears, adjacent gears rotate opposite directions; linked belts or chains can preserve or reverse direction depending on configuration. For pulleys, more supporting rope segments can reduce required force but increase rope pulled. The learner should trace one connection at a time.",
+        "teaching_points": [
+          "Adjacent meshed gears reverse direction.",
+          "Bigger and smaller gears trade speed and torque.",
+          "Pulley systems often trade force for distance.",
+          "Trace direction step by step instead of guessing from the picture."
+        ],
+        "quick_check_prompts": [
+          "If two gears mesh directly and the first turns clockwise, the second usually turns: counterclockwise, clockwise, upward only, or not at all?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-spatial-rotation",
+        "title": "Spatial reasoning: rotation and orientation",
+        "summary": "Spatial questions require tracking shape features through rotation without changing the shape itself.",
+        "body": "Teach learners to anchor one distinctive feature, then rotate the whole object mentally. Do not compare every line at once. Use corners, holes, arrows, shaded areas, or asymmetry as anchors. Eliminate choices that mirror instead of rotate.",
+        "teaching_points": [
+          "Rotation preserves shape relationships.",
+          "Mirror images are common traps.",
+          "Anchor one unique feature before scanning choices.",
+          "Turn the page mentally, not the shape's internal geometry."
+        ],
+        "quick_check_prompts": [
+          "In a rotation problem, what stays the same: relationships between features, the answer choice order, the printed orientation, or the time limit?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-paper-folding",
+        "title": "Paper folding strategy",
+        "summary": "Paper folding questions test reflected positions, layers, holes/cuts, and unfold order.",
+        "body": "Teach folding as reverse simulation. Track the fold line, count layers, mark where a punch or cut passes through, then unfold one fold at a time in reverse. The learner should watch for symmetry and mirrored positions.",
+        "teaching_points": [
+          "Unfold in reverse order.",
+          "A punch through folded layers creates multiple marks.",
+          "Each unfold reflects the mark across the fold line.",
+          "Symmetry is helpful, but only across actual fold lines."
+        ],
+        "quick_check_prompts": [
+          "In paper folding, why can one punched hole become multiple holes after unfolding: because it passes through layers, because paper changes color, because holes move randomly, or because folds erase marks?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-timed-strategy",
+        "title": "Timed test strategy and skip rules",
+        "summary": "Aptitude performance depends on knowing when to solve, skip, mark, and return.",
+        "body": "Teach a practical pacing rule: easy points first, controlled attempts on medium questions, and fast skips for time traps. The learner should not let one puzzle consume the section. Review should focus on whether misses were knowledge, method, arithmetic, misread, spatial tracking, or pacing.",
+        "teaching_points": [
+          "Do not spend unlimited time on one item.",
+          "Mark and return when a method is not visible.",
+          "Use elimination to improve odds when time is short.",
+          "Review errors by type, not by shame."
+        ],
+        "quick_check_prompts": [
+          "If one spatial question is consuming too much time, what is usually better: mark and return, abandon the whole test, spend ten minutes on it, or ignore all easier questions?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-test-day-routine",
+        "title": "Test-day routine",
+        "summary": "The final week should protect sleep, documents, timing, and confidence rather than introduce many new topics.",
+        "body": "Teach a calm test-day routine: verify instructions, location, identification, allowed materials, arrival time, and any required portal steps from official communications. The final study day should use light mixed review and error-log refresh, not heavy new learning.",
+        "teaching_points": [
+          "Official emails and portals control real logistics.",
+          "Sleep and arrival buffer are part of test readiness.",
+          "Use the final day for review, not brand-new concepts.",
+          "Bring only what official instructions allow."
+        ],
+        "quick_check_prompts": [
+          "In the final 24 hours, what is most useful: verify official instructions and do light review, start a brand-new topic marathon, search leaked questions, or ignore documents?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
         "id": "cec-lesson-ge-eligibility",
         "title": "General Electrician eligibility baseline",
         "summary": "General Electrician certification requires qualifying work experience and California-specific application rules.",
@@ -932,6 +1148,30 @@
           "untimed concept drill",
           "timed mixed set",
           "review by error type"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-practice-apprenticeship-four-week-sprint",
+        "title": "Apprenticeship four-week sprint practice",
+        "summary": "Generate original daily mixed practice for a learner preparing for apprenticeship entry selection early next month.",
+        "practice_modes": [
+          "day 1 diagnostic across all aptitude sections",
+          "daily arithmetic and algebra warmup",
+          "numerical pattern and table drill",
+          "technical reading evidence drill",
+          "mechanical one-connection tracing",
+          "spatial rotation and paper-folding drill",
+          "twice-weekly timed mixed set",
+          "weekly error-log review and remediation"
+        ],
+        "variation_policy": [
+          "Rotate section focus daily while keeping one mixed review block.",
+          "Increase time pressure only after method accuracy is stable.",
+          "Generate original questions; do not use leaked, recalled, paid, or copyrighted exam-bank items.",
+          "Use explanations that identify error type: setup, arithmetic, pattern, misread, mechanical trace, spatial mirror, pacing, or documentation boundary."
         ],
         "source_ref_ids": [
           "laett.inside_wireman.2026-01-26"
@@ -1379,6 +1619,55 @@
         ]
       },
       {
+        "id": "cec-sequence-apprenticeship-four-week-sprint",
+        "title": "Apprenticeship four-week sprint",
+        "summary": "A near-term preparation sequence for a learner taking apprenticeship entry selection early next month.",
+        "objective_ids": [
+          "cec-apprentice-test-structure",
+          "cec-apprentice-math-reasoning",
+          "cec-apprentice-numerical-reasoning",
+          "cec-apprentice-reading",
+          "cec-apprentice-mechanical",
+          "cec-apprentice-spatial",
+          "cec-apprentice-timed-practice",
+          "cec-apprentice-pef"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-apprentice-test-week-plan",
+          "cec-lesson-apprentice-arithmetic-speed",
+          "cec-lesson-apprentice-algebra-setup",
+          "cec-lesson-apprentice-number-patterns",
+          "cec-lesson-apprentice-table-graph-reading",
+          "cec-lesson-apprentice-reading-technical",
+          "cec-lesson-apprentice-mechanical-levers",
+          "cec-lesson-apprentice-mechanical-gears-pulleys",
+          "cec-lesson-apprentice-spatial-rotation",
+          "cec-lesson-apprentice-paper-folding",
+          "cec-lesson-apprentice-timed-strategy",
+          "cec-lesson-pef",
+          "cec-lesson-apprentice-test-day-routine"
+        ],
+        "activity_template_ids": [
+          "cec-activity-mini-lesson-quick-check",
+          "cec-activity-worked-example",
+          "cec-activity-field-visualization",
+          "cec-activity-timed-mixed-set",
+          "cec-activity-document-evidence-coach"
+        ],
+        "checkpoint_prompts": [
+          "Week 1: Can the learner identify weakest section and solve basic arithmetic without unit confusion?",
+          "Week 2: Can the learner handle algebra setup, number patterns, and table reading?",
+          "Week 3: Can the learner answer mechanical and spatial questions using a repeatable method?",
+          "Week 4: Can the learner complete mixed timed sets and preserve accuracy under pressure?"
+        ],
+        "mastery_evidence": [
+          "daily error log with category",
+          "two mixed timed sets with improving pacing",
+          "PEF documentation inventory",
+          "final-week light review plan"
+        ]
+      },
+      {
         "id": "cec-sequence-ge-core",
         "title": "California General Electrician core path",
         "summary": "A GE route that separates eligibility, content knowledge, and open-book navigation speed.",
@@ -1521,6 +1810,256 @@
           "10 treats large bundles as one third of the total.",
           "15 assumes half the bundles are large.",
           "18 uses the small-bundle part instead of the large-bundle part."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-percent-increase",
+        "title": "Aptitude math: percentage increase",
+        "summary": "Original percentage problem for fast arithmetic setup.",
+        "scenario": [
+          "A practice score rises from 40 correct answers to 50 correct answers. What is the percent increase?"
+        ],
+        "choices": [
+          "A) 10%",
+          "B) 20%",
+          "C) 25%",
+          "D) 50%"
+        ],
+        "correct_rationale": [
+          "The increase is 10 over the old value 40, so 10/40 = 25%."
+        ],
+        "distractor_rationales": [
+          "10% uses the raw increase as a percent.",
+          "20% divides by the new value incorrectly.",
+          "50% treats the new score as the increase."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-algebra-cable",
+        "title": "Aptitude algebra: missing cable length",
+        "summary": "Original algebra setup problem for word-problem translation.",
+        "scenario": [
+          "A trainee cuts a cable into two pieces. The longer piece is 3 feet more than twice the shorter piece. Together they are 24 feet. How long is the shorter piece?"
+        ],
+        "choices": [
+          "A) 7 feet",
+          "B) 9 feet",
+          "C) 10.5 feet",
+          "D) 15 feet"
+        ],
+        "correct_rationale": [
+          "Let x be the shorter piece. x + (2x + 3) = 24, so 3x = 21 and x = 7."
+        ],
+        "distractor_rationales": [
+          "9 ignores the extra 3 feet.",
+          "10.5 halves the remaining length too early.",
+          "15 is the longer piece when the shorter is 6, not a valid setup."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-sequence-alternating",
+        "title": "Numerical reasoning: alternating sequence",
+        "summary": "Original sequence problem for recognizing two interleaved rules.",
+        "scenario": [
+          "Find the next number: 2, 10, 4, 20, 6, 30, __"
+        ],
+        "choices": [
+          "A) 8",
+          "B) 32",
+          "C) 40",
+          "D) 60"
+        ],
+        "correct_rationale": [
+          "Odd positions go 2, 4, 6, 8 while even positions go 10, 20, 30."
+        ],
+        "distractor_rationales": [
+          "32 continues neither interleaved rule.",
+          "40 would be the next even-position value after 30, not the next term here.",
+          "60 doubles 30 but ignores the alternating pattern."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-table-rate",
+        "title": "Numerical reasoning: table rate",
+        "summary": "Original table-reading problem focused on choosing the correct denominator.",
+        "scenario": [
+          "A crew installs 48 fixtures in 6 hours on Monday and 54 fixtures in 9 hours on Tuesday. Which day had the higher fixtures-per-hour rate?"
+        ],
+        "choices": [
+          "A) Monday",
+          "B) Tuesday",
+          "C) Same rate",
+          "D) Cannot compare because totals differ"
+        ],
+        "correct_rationale": [
+          "Monday is 48/6 = 8 fixtures per hour. Tuesday is 54/9 = 6 fixtures per hour. Monday is higher."
+        ],
+        "distractor_rationales": [
+          "Tuesday has more total fixtures but a lower hourly rate.",
+          "Same rate ignores hours.",
+          "Rates can compare different totals when units match."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-reading-sequence",
+        "title": "Reading comprehension: sequence words",
+        "summary": "Original technical-reading item focused on before/after qualifiers.",
+        "scenario": [
+          "Passage: Before a tool is returned to storage, it must be wiped clean and inspected for visible damage. If damage is found, report it to the supervisor instead of placing the tool back on the shelf. According to the passage, what happens before storage?"
+        ],
+        "choices": [
+          "A) Wipe and inspect the tool",
+          "B) Report every tool whether damaged or not",
+          "C) Place damaged tools directly on the shelf",
+          "D) Skip inspection if the tool looks clean"
+        ],
+        "correct_rationale": [
+          "The passage says the tool must be wiped clean and inspected before return to storage."
+        ],
+        "distractor_rationales": [
+          "Only damaged tools are reported.",
+          "Damaged tools are not placed back on the shelf.",
+          "The passage requires inspection."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-lever-effort",
+        "title": "Mechanical reasoning: lever effort",
+        "summary": "Original mechanical reasoning scenario for pivot-distance intuition.",
+        "scenario": [
+          "Two workers use the same pry bar. Worker A pushes close to the pivot. Worker B pushes farther from the pivot with the same force. Who creates more turning effect?"
+        ],
+        "choices": [
+          "A) Worker A",
+          "B) Worker B",
+          "C) Both always create zero turning effect",
+          "D) Distance from pivot never matters"
+        ],
+        "correct_rationale": [
+          "With the same force, pushing farther from the pivot creates more turning effect."
+        ],
+        "distractor_rationales": [
+          "Closer to the pivot gives less turning effect for the same force.",
+          "The pry bar can create turning effect.",
+          "Distance from pivot is central to lever reasoning."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-gear-direction",
+        "title": "Mechanical reasoning: gear direction",
+        "summary": "Original gear-tracing item.",
+        "scenario": [
+          "Gear A meshes directly with Gear B, and Gear B meshes directly with Gear C. If Gear A turns clockwise, which direction does Gear C turn?"
+        ],
+        "choices": [
+          "A) Clockwise",
+          "B) Counterclockwise",
+          "C) It cannot turn",
+          "D) Direction is unrelated"
+        ],
+        "correct_rationale": [
+          "A makes B turn counterclockwise; B makes C turn clockwise."
+        ],
+        "distractor_rationales": [
+          "Counterclockwise describes Gear B, not Gear C.",
+          "Meshed gears can transmit motion.",
+          "Direction is traceable from the gear connections."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-pulley-tradeoff",
+        "title": "Mechanical reasoning: pulley tradeoff",
+        "summary": "Original pulley question about force-distance tradeoff.",
+        "scenario": [
+          "A pulley setup reduces the force needed to lift a load. What tradeoff is usually introduced?"
+        ],
+        "choices": [
+          "A) More rope must be pulled",
+          "B) Gravity disappears",
+          "C) The load becomes weightless",
+          "D) The rope no longer moves"
+        ],
+        "correct_rationale": [
+          "Pulley systems can reduce required force, but the user often pulls more rope distance."
+        ],
+        "distractor_rationales": [
+          "Gravity does not disappear.",
+          "The load does not become weightless.",
+          "The rope must move for lifting to happen."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-spatial-mirror",
+        "title": "Spatial reasoning: rotation versus mirror",
+        "summary": "Original spatial reasoning item focused on a common trap.",
+        "scenario": [
+          "A shape is rotated 90 degrees clockwise. Which property must remain true?"
+        ],
+        "choices": [
+          "A) Distances between features stay the same",
+          "B) The shape becomes a mirror image",
+          "C) The number of corners changes",
+          "D) A hole disappears"
+        ],
+        "correct_rationale": [
+          "Rotation preserves distances and relationships between features."
+        ],
+        "distractor_rationales": [
+          "A mirror image is reflection, not rotation.",
+          "Rotation does not change the number of corners.",
+          "Rotation does not make a feature disappear."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-fold-one-hole",
+        "title": "Paper folding: one hole through layers",
+        "summary": "Original folding/unfolding reasoning item.",
+        "scenario": [
+          "A square sheet is folded once in half. A hole is punched through both layers near the folded edge. After unfolding, what should you expect?"
+        ],
+        "choices": [
+          "A) Two holes mirrored across the fold line",
+          "B) One hole only",
+          "C) No holes",
+          "D) Holes only outside the paper"
+        ],
+        "correct_rationale": [
+          "A punch through two folded layers appears as two mirrored holes after unfolding."
+        ],
+        "distractor_rationales": [
+          "One hole ignores the second layer.",
+          "Unfolding does not erase punched holes.",
+          "The holes remain on the paper."
         ],
         "source_ref_ids": [
           "laett.inside_wireman.2026-01-26"
@@ -1706,6 +2245,60 @@
           "cslb.law_business.study_guide.2026-03",
           "dir.public_works_contractors.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-flashcards-apprentice-math",
+        "title": "Apprenticeship math triggers",
+        "summary": "Fast recognition cards for arithmetic and algebra prompts.",
+        "cards": [
+          "Total parts: add all ratio parts before scaling.",
+          "Percent increase: increase divided by old value.",
+          "Percent multiplier: 1 plus or minus the percent as a decimal.",
+          "Per: divide to create a rate.",
+          "Twice: multiply the unknown by 2.",
+          "Remaining: total minus used amount.",
+          "Substitution: test answer choices in the equation when stuck.",
+          "Plausibility: estimate before trusting arithmetic."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-flashcards-apprentice-mechanical",
+        "title": "Apprenticeship mechanical triggers",
+        "summary": "Fast recognition cards for mechanical reasoning.",
+        "cards": [
+          "Lever pivot: find the fulcrum first.",
+          "Longer lever arm: more turning effect for the same force.",
+          "Meshed gears: adjacent gears rotate opposite directions.",
+          "Three meshed gears: first and third rotate the same direction.",
+          "Pulley tradeoff: less force usually means more rope distance.",
+          "Incline tradeoff: less force over a longer distance.",
+          "Fluid level: connected open liquid surfaces tend to level.",
+          "Trace one connection at a time."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-flashcards-apprentice-spatial-reading",
+        "title": "Apprenticeship spatial and reading triggers",
+        "summary": "Fast recognition cards for paper folding, rotation, and technical reading.",
+        "cards": [
+          "Rotation: relationships stay the same; orientation changes.",
+          "Reflection: mirror image across a line.",
+          "Fold line: marks reflect across it when unfolded.",
+          "Layer count: one punch can create multiple holes.",
+          "Unfold order: reverse the folding order.",
+          "Passage evidence: answer from text, not outside knowledge.",
+          "Qualifier: words like except, only, always, before, after matter.",
+          "Unsupported choice: sounds reasonable but adds a claim not in the passage."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
       }
     ],
     "readiness_checkpoints": [
@@ -1727,6 +2320,37 @@
           "Return to cec-lesson-ohms-law for concept confusion.",
           "Return to cec-lesson-shared-math for setup or unit errors.",
           "Return to cec-lesson-cal-osha-lockout for unsafe sequencing."
+        ]
+      },
+      {
+        "id": "cec-checkpoint-apprenticeship-entry-sprint",
+        "title": "Apprenticeship entry sprint readiness checkpoint",
+        "summary": "Use weekly for a learner taking apprenticeship selection early next month.",
+        "checkpoint_prompts": [
+          "Can the learner solve ratio, percent, algebra setup, and rate questions without hints?",
+          "Can the learner identify difference, multiplication, alternating, and grouped sequence patterns?",
+          "Can the learner answer a technical-reading item using only passage evidence?",
+          "Can the learner trace lever, gear, pulley, rotation, and folding questions without guessing?",
+          "Can the learner complete a short mixed set without losing pacing discipline?",
+          "Has the learner prepared a PEF documentation inventory and official-instruction checklist?"
+        ],
+        "mastery_evidence": [
+          "80% or better on recent arithmetic/algebra quick checks",
+          "70% or better on recent numerical reasoning cards",
+          "70% or better on reading/mechanical/spatial cards",
+          "no repeated safety or documentation-boundary errors",
+          "written skip/mark/return pacing rule",
+          "PEF evidence list reviewed"
+        ],
+        "remediation": [
+          "If math misses dominate, return to arithmetic speed and algebra setup lessons.",
+          "If mechanical misses dominate, use field visualization and one-connection tracing.",
+          "If spatial misses dominate, drill rotation versus reflection and one-fold paper unfolding.",
+          "If reading misses dominate, drill qualifier words and passage-only evidence.",
+          "If pacing misses dominate, switch to timed mixed sets with fewer questions."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
         ]
       },
       {
@@ -2038,13 +2662,13 @@
       "source": "DeepTutor_California_Electrical_Career_Domain_Pack_v1.0.md",
       "stage": "M0/M2 expanded content seed",
       "objective_count": 39,
-      "lesson_card_count": 29,
-      "practice_blueprint_count": 8,
+      "lesson_card_count": 41,
+      "practice_blueprint_count": 9,
       "learning_activity_template_count": 8,
-      "study_sequence_count": 5,
-      "scenario_card_count": 6,
-      "flashcard_deck_count": 3,
-      "readiness_checkpoint_count": 3,
+      "study_sequence_count": 6,
+      "scenario_card_count": 16,
+      "flashcard_deck_count": 6,
+      "readiness_checkpoint_count": 4,
       "error_taxonomy_count": 5,
       "source_governance": "Official public sources, URLs, provenance, versions, and update watch are managed by Cognisphere. Tutor consumes materialized pack data only.",
       "note": "Tutor-ready seed with materialized lesson cards, practice blueprints, varied learning activity templates, study sequences, scenario cards, flashcard decks, readiness checkpoints, and error taxonomy. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
