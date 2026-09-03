@@ -145,6 +145,7 @@ def test_learning_workspace_round_trips_state(tmp_path, monkeypatch: pytest.Monk
 
     empty = asyncio.run(aetherinfra_twin.get_learning_workspace("default"))
     assert empty["state"]["completed_units"] == {}
+    assert empty["state"]["learning_events"] == []
     assert empty["updated_at"] is None
 
     payload = aetherinfra_twin.LearningWorkspaceSaveRequest(
@@ -166,6 +167,34 @@ def test_learning_workspace_round_trips_state(tmp_path, monkeypatch: pytest.Monk
     assert loaded["state"]["quiz_answers"] == {"q1": "A"}
     assert loaded["state"]["completed_units"]["ai_infra.expert.containers.l1"] is True
     assert loaded["state"]["diagnosis_notes"]["ai_infra.expert.containers.l1"] == "bounded diagnosis"
+
+
+def test_learning_event_append_persists_evaluation_ledger(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FakePathService:
+        def get_workspace_dir(self):
+            return tmp_path
+
+    monkeypatch.setattr(aetherinfra_twin, "get_path_service", lambda: FakePathService())
+    payload = aetherinfra_twin.LearningEventRequest(
+        event_type="transfer_challenge",
+        unit_id="ai_infra.capstone.twin_method_p0.v1",
+        course_id="ai_infra.course.twin_methods_capstone.v1",
+        score=0.82,
+        error_types=["claim_boundary"],
+        evidence_refs=["runtime_out/run-1/evidence_bundle.json"],
+        notes="bounded claim, residual risk still thin",
+    )
+
+    result = asyncio.run(aetherinfra_twin.append_learning_event("default", payload))
+    loaded = asyncio.run(aetherinfra_twin.get_learning_workspace("default"))
+
+    assert result["ok"] is True
+    assert loaded["state"]["learning_events"][0]["event_type"] == "transfer_challenge"
+    assert loaded["state"]["learning_events"][0]["score"] == 0.82
+    assert loaded["state"]["learning_events"][0]["error_types"] == ["claim_boundary"]
 
 
 def test_learning_workspace_delete_resets_state(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:

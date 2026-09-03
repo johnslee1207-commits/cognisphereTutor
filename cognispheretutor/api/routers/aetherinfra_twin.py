@@ -43,10 +43,21 @@ class LearningWorkspaceState(BaseModel):
     source_document_notes: dict[str, str] = Field(default_factory=dict)
     evidence_bundles: dict[str, list[str]] = Field(default_factory=dict)
     review_ledger: dict[str, dict[str, str]] = Field(default_factory=dict)
+    learning_events: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class LearningWorkspaceSaveRequest(BaseModel):
     state: LearningWorkspaceState
+
+
+class LearningEventRequest(BaseModel):
+    event_type: str = Field(..., min_length=1, max_length=80)
+    unit_id: str | None = Field(default=None, max_length=300)
+    course_id: str | None = Field(default=None, max_length=200)
+    score: float | None = Field(default=None, ge=0, le=1)
+    error_types: list[str] = Field(default_factory=list)
+    evidence_refs: list[str] = Field(default_factory=list)
+    notes: str = Field(default="", max_length=2000)
 
 
 def _validate_workspace_id(workspace_id: str) -> None:
@@ -69,6 +80,18 @@ def _workspace_state_path(workspace_id: str):
 
 def _empty_workspace_state() -> dict[str, Any]:
     return LearningWorkspaceState().model_dump(mode="json")
+
+
+def _load_workspace_state(workspace_id: str) -> tuple[dict[str, Any], float | None]:
+    path = _workspace_state_path(workspace_id)
+    if not path.exists():
+        return _empty_workspace_state(), None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        state = LearningWorkspaceState.model_validate(data.get("state") or {})
+    except Exception as exc:
+        raise HTTPException(status_code=422, detail="Invalid workspace state") from exc
+    return state.model_dump(mode="json"), data.get("updated_at")
 
 
 async def _call(method: str, path: str, payload: dict[str, Any] | None = None):
@@ -203,24 +226,12 @@ async def submit_diagnosis(lab_id: str, payload: DiagnosisRequest) -> dict[str, 
 
 @router.get("/workspace/{workspace_id}")
 async def get_learning_workspace(workspace_id: str) -> dict[str, Any]:
-    path = _workspace_state_path(workspace_id)
-    if not path.exists():
-        return {
-            "ok": True,
-            "workspace_id": workspace_id,
-            "state": _empty_workspace_state(),
-            "updated_at": None,
-        }
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-        state = LearningWorkspaceState.model_validate(data.get("state") or {})
-    except Exception as exc:
-        raise HTTPException(status_code=422, detail="Invalid workspace state") from exc
+    state, updated_at = _load_workspace_state(workspace_id)
     return {
         "ok": True,
         "workspace_id": workspace_id,
-        "state": state.model_dump(mode="json"),
-        "updated_at": data.get("updated_at"),
+        "state": state,
+        "updated_at": updated_at,
     }
 
 
@@ -241,6 +252,46 @@ async def save_learning_workspace(
         "ok": True,
         "workspace_id": workspace_id,
         "state": data["state"],
+        "updated_at": updated_at,
+    }
+
+
+@router.post("/workspace/{workspace_id}/learning-events")
+async def append_learning_event(
+    workspace_id: str,
+    payload: LearningEventRequest,
+) -> dict[str, Any]:
+    state, _updated_at = _load_workspace_state(workspace_id)
+    event = {
+        "event_type": payload.event_type,
+        "unit_id": payload.unit_id,
+        "course_id": payload.course_id,
+        "score": payload.score,
+        "error_types": payload.error_types,
+        "evidence_refs": payload.evidence_refs,
+        "notes": payload.notes,
+        "created_at": time.time(),
+    }
+    state.setdefault("learning_events", []).append(event)
+    path = _workspace_state_path(workspace_id)
+    updated_at = time.time()
+    atomic_write_text(
+        path,
+        json.dumps(
+            {
+                "workspace_id": workspace_id,
+                "updated_at": updated_at,
+                "state": state,
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+    )
+    return {
+        "ok": True,
+        "workspace_id": workspace_id,
+        "event": event,
+        "state": state,
         "updated_at": updated_at,
     }
 

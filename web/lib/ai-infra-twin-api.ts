@@ -80,6 +80,17 @@ export interface AiInfraMaturityRoadmap {
   };
 }
 
+export interface AiInfraLearningEvent {
+  event_type: string;
+  unit_id?: string | null;
+  course_id?: string | null;
+  score?: number | null;
+  error_types?: string[];
+  evidence_refs?: string[];
+  notes?: string;
+  created_at?: number;
+}
+
 export interface AiInfraLearningWorkspaceState {
   selected_course_id: string | null;
   selected_unit_id: string | null;
@@ -91,6 +102,7 @@ export interface AiInfraLearningWorkspaceState {
   source_document_notes: Record<string, string>;
   evidence_bundles: Record<string, string[]>;
   review_ledger: Record<string, { completedAt?: string; lastReviewedAt?: string }>;
+  learning_events: AiInfraLearningEvent[];
 }
 
 export interface AiInfraLearningWorkspaceResult {
@@ -255,6 +267,26 @@ export async function saveAiInfraLearningWorkspace(
   );
   if (!res.ok) throw new Error(`AI Infra workspace save failed: ${res.status}`);
   return res.json() as Promise<AiInfraLearningWorkspaceResult>;
+}
+
+export async function appendAiInfraLearningEvent(
+  event: Omit<AiInfraLearningEvent, "created_at">,
+  workspaceId = "default",
+): Promise<AiInfraLearningWorkspaceResult & { event?: AiInfraLearningEvent }> {
+  const res = await apiFetch(
+    apiUrl(
+      `/api/v1/learning/ai-infra-twin/workspace/${encodeURIComponent(
+        workspaceId,
+      )}/learning-events`,
+    ),
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(event),
+    },
+  );
+  if (!res.ok) throw new Error(`AI Infra learning event append failed: ${res.status}`);
+  return res.json() as Promise<AiInfraLearningWorkspaceResult & { event?: AiInfraLearningEvent }>;
 }
 
 export async function deleteAiInfraLearningWorkspace(

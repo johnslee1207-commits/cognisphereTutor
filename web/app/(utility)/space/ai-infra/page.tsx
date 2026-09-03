@@ -32,6 +32,7 @@ import {
   type AiInfraDiagnosisAssessment,
   type AiInfraEvidence,
   type AiInfraLab,
+  type AiInfraLearningEvent,
   type AiInfraLearningWorkspaceState as ServerAiInfraLearningWorkspaceState,
   type AiInfraStatus,
 } from "@/lib/ai-infra-twin-api";
@@ -80,6 +81,7 @@ interface AiInfraLearningWorkspaceState {
   sourceDocumentNotes: Record<string, string>;
   evidenceBundles: Record<string, string[]>;
   reviewLedger: Record<string, AiInfraReviewLedgerEntry>;
+  learningEvents: AiInfraLearningEvent[];
 }
 
 export default function AiInfraTwinPage() {
@@ -109,6 +111,7 @@ export default function AiInfraTwinPage() {
   const [sourceDocumentNotes, setSourceDocumentNotes] = useState<Record<string, string>>({});
   const [evidenceBundles, setEvidenceBundles] = useState<Record<string, string[]>>({});
   const [reviewLedger, setReviewLedger] = useState<Record<string, AiInfraReviewLedgerEntry>>({});
+  const [learningEvents, setLearningEvents] = useState<AiInfraLearningEvent[]>([]);
   const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
   const [workspaceSyncState, setWorkspaceSyncState] = useState<"local" | "synced" | "offline">("local");
   const [error, setError] = useState<string | null>(null);
@@ -128,6 +131,7 @@ export default function AiInfraTwinPage() {
         sourceDocumentNotes: {},
         evidenceBundles: {},
         reviewLedger: {},
+        learningEvents: [],
       },
     );
     setSelectedCourseId(stored.selectedCourseId);
@@ -140,6 +144,7 @@ export default function AiInfraTwinPage() {
     setSourceDocumentNotes(stored.sourceDocumentNotes || {});
     setEvidenceBundles(stored.evidenceBundles || {});
     setReviewLedger(stored.reviewLedger || {});
+    setLearningEvents(stored.learningEvents || []);
     setWorkspaceHydrated(true);
     void fetchAiInfraLearningWorkspace(AI_INFRA_WORKSPACE_ID)
       .then((result) => {
@@ -158,6 +163,7 @@ export default function AiInfraTwinPage() {
         setSourceDocumentNotes(next.sourceDocumentNotes);
         setEvidenceBundles(next.evidenceBundles);
         setReviewLedger(next.reviewLedger);
+        setLearningEvents(next.learningEvents);
         saveToStorage<AiInfraLearningWorkspaceState>(
           AI_INFRA_WORKSPACE_STORAGE_KEY,
           next,
@@ -180,6 +186,7 @@ export default function AiInfraTwinPage() {
       sourceDocumentNotes,
       evidenceBundles,
       reviewLedger,
+      learningEvents,
     };
     saveToStorage<AiInfraLearningWorkspaceState>(AI_INFRA_WORKSPACE_STORAGE_KEY, state);
     void saveAiInfraLearningWorkspace(
@@ -193,6 +200,7 @@ export default function AiInfraTwinPage() {
     completedUnits,
     diagnosisNotes,
     evidenceBundles,
+    learningEvents,
     quizAnswers,
     reviewLedger,
     reflectionNotes,
@@ -2415,6 +2423,7 @@ function workspaceStateFromServer(
     sourceDocumentNotes: state.source_document_notes || {},
     evidenceBundles: state.evidence_bundles || {},
     reviewLedger: state.review_ledger || {},
+    learningEvents: state.learning_events || [],
   };
 }
 
@@ -2432,6 +2441,7 @@ function workspaceStateToServer(
     source_document_notes: state.sourceDocumentNotes,
     evidence_bundles: state.evidenceBundles,
     review_ledger: state.reviewLedger,
+    learning_events: state.learningEvents,
   };
 }
 
