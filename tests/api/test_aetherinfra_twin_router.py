@@ -197,6 +197,57 @@ def test_learning_event_append_persists_evaluation_ledger(
     assert loaded["state"]["learning_events"][0]["error_types"] == ["claim_boundary"]
 
 
+def test_learning_evaluation_summarizes_workspace_events(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FakePathService:
+        def get_workspace_dir(self):
+            return tmp_path
+
+    monkeypatch.setattr(aetherinfra_twin, "get_path_service", lambda: FakePathService())
+    for payload in (
+        aetherinfra_twin.LearningEventRequest(
+            event_type="pre_check",
+            unit_id="unit.runtime",
+            score=0.5,
+            evidence_refs=["run-pre"],
+            error_types=["concept"],
+        ),
+        aetherinfra_twin.LearningEventRequest(
+            event_type="post_check",
+            unit_id="unit.runtime",
+            score=0.9,
+            evidence_refs=["run-post"],
+        ),
+        aetherinfra_twin.LearningEventRequest(
+            event_type="transfer_challenge",
+            unit_id="unit.runtime",
+            score=0.8,
+            evidence_refs=["run-transfer"],
+            error_types=["claim_boundary"],
+        ),
+        aetherinfra_twin.LearningEventRequest(
+            event_type="expert_agreement",
+            unit_id="unit.runtime",
+            score=0.75,
+            evidence_refs=["review-1"],
+        ),
+    ):
+        asyncio.run(aetherinfra_twin.append_learning_event("default", payload))
+
+    result = asyncio.run(aetherinfra_twin.learning_evaluation("default"))
+    summary = result["summary"]
+
+    assert summary["event_count"] == 4
+    assert summary["average_score"] == 0.738
+    assert summary["evidence_ref_count"] == 4
+    assert summary["evidence_covered_unit_count"] == 1
+    assert summary["required_stage_counts"]["transferChallenge"] == 1
+    assert summary["required_stage_counts"]["expertAgreement"] == 1
+    assert summary["error_type_counts"]["claim_boundary"] == 1
+
+
 def test_learning_workspace_delete_resets_state(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
     class FakePathService:
         def get_workspace_dir(self):

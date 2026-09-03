@@ -112,6 +112,32 @@ export interface AiInfraLearningWorkspaceResult {
   updated_at?: number | null;
 }
 
+export interface AiInfraLearningEvaluationSummary {
+  event_count: number;
+  scored_event_count: number;
+  average_score?: number | null;
+  completed_unit_count: number;
+  evidence_ref_count: number;
+  evidence_covered_unit_count: number;
+  required_stage_counts: {
+    preCheck?: number;
+    postCheck?: number;
+    transferChallenge?: number;
+    expertAgreement?: number;
+  };
+  event_type_counts: Record<string, number>;
+  error_type_counts: Record<string, number>;
+  weakest_error_types: string[];
+  latest_events: AiInfraLearningEvent[];
+}
+
+export interface AiInfraLearningEvaluationResult {
+  ok: boolean;
+  workspace_id: string;
+  updated_at?: number | null;
+  summary: AiInfraLearningEvaluationSummary;
+}
+
 export interface AiInfraStatus {
   ok: boolean;
   runtime_mode?: "content_only" | "full_twin" | string;
@@ -287,6 +313,20 @@ export async function appendAiInfraLearningEvent(
   );
   if (!res.ok) throw new Error(`AI Infra learning event append failed: ${res.status}`);
   return res.json() as Promise<AiInfraLearningWorkspaceResult & { event?: AiInfraLearningEvent }>;
+}
+
+export async function fetchAiInfraLearningEvaluation(
+  workspaceId = "default",
+): Promise<AiInfraLearningEvaluationResult> {
+  const res = await apiFetch(
+    apiUrl(
+      `/api/v1/learning/ai-infra-twin/workspace/${encodeURIComponent(
+        workspaceId,
+      )}/learning-evaluation`,
+    ),
+  );
+  if (!res.ok) throw new Error(`AI Infra learning evaluation failed: ${res.status}`);
+  return res.json() as Promise<AiInfraLearningEvaluationResult>;
 }
 
 export async function deleteAiInfraLearningWorkspace(

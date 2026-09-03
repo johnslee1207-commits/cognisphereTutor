@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import time
+from collections import Counter
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
@@ -60,6 +61,12 @@ class LearningEventRequest(BaseModel):
     notes: str = Field(default="", max_length=2000)
 
 
+TRANSFER_EVENT_TYPES = {"transfer_challenge", "capstone_transfer"}
+EXPERT_EVENT_TYPES = {"expert_agreement", "expert_review"}
+PRE_EVENT_TYPES = {"pre_check", "pretest"}
+POST_EVENT_TYPES = {"post_check", "posttest"}
+
+
 def _validate_workspace_id(workspace_id: str) -> None:
     if (
         not workspace_id
@@ -92,6 +99,60 @@ def _load_workspace_state(workspace_id: str) -> tuple[dict[str, Any], float | No
     except Exception as exc:
         raise HTTPException(status_code=422, detail="Invalid workspace state") from exc
     return state.model_dump(mode="json"), data.get("updated_at")
+
+
+def _summarize_learning_workspace(state: dict[str, Any]) -> dict[str, Any]:
+    events = [event for event in state.get("learning_events", []) if isinstance(event, dict)]
+    event_types = Counter(str(event.get("event_type") or "") for event in events)
+    error_types = Counter(
+        str(error)
+        for event in events
+        for error in event.get("error_types", [])
+        if str(error)
+    )
+    evidence_refs = [
+        str(ref)
+        for event in events
+        for ref in event.get("evidence_refs", [])
+        if str(ref)
+    ]
+    scored_events = [event for event in events if isinstance(event.get("score"), (int, float))]
+    scores = [float(event["score"]) for event in scored_events]
+    completed_units = state.get("completed_units", {}) or {}
+    evidence_bundles = state.get("evidence_bundles", {}) or {}
+    covered_units = {
+        str(event.get("unit_id"))
+        for event in events
+        if event.get("unit_id") and (event.get("evidence_refs") or event.get("score") is not None)
+    }
+    covered_units.update(
+        str(unit_id)
+        for unit_id, refs in evidence_bundles.items()
+        if refs
+    )
+    stage_counts = {
+        "preCheck": sum(event_types[event_type] for event_type in PRE_EVENT_TYPES),
+        "postCheck": sum(event_types[event_type] for event_type in POST_EVENT_TYPES),
+        "transferChallenge": sum(event_types[event_type] for event_type in TRANSFER_EVENT_TYPES),
+        "expertAgreement": sum(event_types[event_type] for event_type in EXPERT_EVENT_TYPES),
+    }
+    return {
+        "event_count": len(events),
+        "scored_event_count": len(scored_events),
+        "average_score": round(sum(scores) / len(scores), 3) if scores else None,
+        "completed_unit_count": sum(1 for value in completed_units.values() if value is True),
+        "evidence_ref_count": len(set(evidence_refs)),
+        "evidence_covered_unit_count": len(covered_units),
+        "required_stage_counts": stage_counts,
+        "event_type_counts": dict(sorted(event_types.items())),
+        "error_type_counts": dict(sorted(error_types.items())),
+        "weakest_error_types": [name for name, _count in error_types.most_common(5)],
+        "latest_events": sorted(
+            events,
+            key=lambda event: float(event.get("created_at") or 0),
+            reverse=True,
+        )[:10],
+    }
 
 
 async def _call(method: str, path: str, payload: dict[str, Any] | None = None):
@@ -293,6 +354,17 @@ async def append_learning_event(
         "event": event,
         "state": state,
         "updated_at": updated_at,
+    }
+
+
+@router.get("/workspace/{workspace_id}/learning-evaluation")
+async def learning_evaluation(workspace_id: str) -> dict[str, Any]:
+    state, updated_at = _load_workspace_state(workspace_id)
+    return {
+        "ok": True,
+        "workspace_id": workspace_id,
+        "updated_at": updated_at,
+        "summary": _summarize_learning_workspace(state),
     }
 
 
