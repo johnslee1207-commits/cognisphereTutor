@@ -15,6 +15,7 @@ import {
   BarChart3,
   BookOpenCheck,
   BrainCircuit,
+  Calculator,
   Clapperboard,
   Code2,
   Compass,
@@ -32,6 +33,7 @@ import {
   RotateCcw,
   Sparkles,
   Target,
+  Timer,
   Undo2,
   type LucideIcon,
 } from "lucide-react";
@@ -389,16 +391,107 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
         },
       },
       {
-        id: "apprenticeship_entry",
+        id: "apprenticeship_diagnostic",
         icon: ListChecks,
-        title: { zh: "Apprenticeship 入学选拔", en: "Apprenticeship entry" },
+        title: { zh: "入学诊断", en: "Entry diagnostic" },
         blurb: {
-          zh: "优先练 aptitude math、reading、mechanical、spatial、timed set 和 PEF 文件准备。",
-          en: "Prioritize aptitude math, reading, mechanical, spatial, timed sets, and PEF documents.",
+          zh: "先做基线诊断，确认 math、reading、mechanical、spatial 的薄弱点。",
+          en: "Start with a baseline check across math, reading, mechanical, and spatial skills.",
         },
         prompt: {
-          zh: "Start from ETI / IBEW Local 11 Apprenticeship Entrance. I need practical preparation for an upcoming entry selection. Teach one mini-lesson, ask a multiple-choice quick quiz, grade it, then continue to the next needed lesson.",
-          en: "Start from ETI / IBEW Local 11 Apprenticeship Entrance. I need practical preparation for an upcoming entry selection. Teach one mini-lesson, ask a multiple-choice quick quiz, grade it, then continue to the next needed lesson.",
+          zh: "Start from the apprenticeship entry baseline diagnostic. Teach briefly, run one diagnostic-style quick quiz, grade it, then continue from the biggest gap.",
+          en: "Start from the apprenticeship entry baseline diagnostic. Teach briefly, run one diagnostic-style quick quiz, grade it, then continue from the biggest gap.",
+        },
+      },
+      {
+        id: "apprenticeship_math",
+        icon: Calculator,
+        title: { zh: "Math reasoning", en: "Math reasoning" },
+        blurb: {
+          zh: "比例、百分比、代数设式、速算和文字题建模。",
+          en: "Ratios, percentages, algebra setup, quick arithmetic, and word-problem modeling.",
+        },
+        prompt: {
+          zh: "Start directly from Mathematical reasoning for aptitude testing. Teach the first math reasoning mini-lesson, then give a graded multiple-choice quick quiz.",
+          en: "Start directly from Mathematical reasoning for aptitude testing. Teach the first math reasoning mini-lesson, then give a graded multiple-choice quick quiz.",
+        },
+      },
+      {
+        id: "apprenticeship_numerical",
+        icon: BarChart3,
+        title: { zh: "Numerical reasoning", en: "Numerical reasoning" },
+        blurb: {
+          zh: "数列、表格、图表、趋势判断和数据解释。",
+          en: "Sequences, tables, charts, trend judgment, and data interpretation.",
+        },
+        prompt: {
+          zh: "Start directly from Numerical reasoning, sequences, and data interpretation. Teach one mini-lesson and follow with a graded quick quiz.",
+          en: "Start directly from Numerical reasoning, sequences, and data interpretation. Teach one mini-lesson and follow with a graded quick quiz.",
+        },
+      },
+      {
+        id: "apprenticeship_reading",
+        icon: BookOpenCheck,
+        title: { zh: "Reading comprehension", en: "Reading comprehension" },
+        blurb: {
+          zh: "技术说明、条件限制、关键词定位和题干陷阱。",
+          en: "Technical instructions, constraints, keyword location, and question traps.",
+        },
+        prompt: {
+          zh: "Start directly from Reading comprehension for technical instructions. Teach one mini-lesson and follow with a certification-style quick quiz.",
+          en: "Start directly from Reading comprehension for technical instructions. Teach one mini-lesson and follow with a certification-style quick quiz.",
+        },
+      },
+      {
+        id: "apprenticeship_mechanical",
+        icon: BrainCircuit,
+        title: { zh: "Mechanical physics", en: "Mechanical physics" },
+        blurb: {
+          zh: "力、杠杆、滑轮、齿轮、运动方向和机械直觉。",
+          en: "Force, levers, pulleys, gears, motion direction, and mechanical intuition.",
+        },
+        prompt: {
+          zh: "Start directly from Mechanical reasoning: force, levers, pulleys, gears, and motion. Teach one practical mini-lesson and then give a quick quiz.",
+          en: "Start directly from Mechanical reasoning: force, levers, pulleys, gears, and motion. Teach one practical mini-lesson and then give a quick quiz.",
+        },
+      },
+      {
+        id: "apprenticeship_spatial",
+        icon: Compass,
+        title: { zh: "Spatial reasoning", en: "Spatial reasoning" },
+        blurb: {
+          zh: "图形旋转、折纸、视角转换和空间判断。",
+          en: "Shape rotation, paper folding, perspective shifts, and spatial judgment.",
+        },
+        prompt: {
+          zh: "Start directly from Spatial reasoning and paper folding. Teach one mini-lesson with a visual-thinking method, then give a quick quiz.",
+          en: "Start directly from Spatial reasoning and paper folding. Teach one mini-lesson with a visual-thinking method, then give a quick quiz.",
+        },
+      },
+      {
+        id: "apprenticeship_timed",
+        icon: Timer,
+        title: { zh: "Timed mixed practice", en: "Timed mixed practice" },
+        blurb: {
+          zh: "按入学选拔节奏做混合题，训练取舍和时间管理。",
+          en: "Practice mixed sets with pacing, triage, and time management.",
+        },
+        prompt: {
+          zh: "Start directly from Timed mixed practice for the apprenticeship aptitude test. Give a short pacing lesson, then a timed-style quick quiz.",
+          en: "Start directly from Timed mixed practice for the apprenticeship aptitude test. Give a short pacing lesson, then a timed-style quick quiz.",
+        },
+      },
+      {
+        id: "apprenticeship_pef",
+        icon: FileSearch,
+        title: { zh: "PEF preparation", en: "PEF preparation" },
+        blurb: {
+          zh: "整理 Personal Experience Form 的经历证据和表达。",
+          en: "Organize Personal Experience Form evidence and wording.",
+        },
+        prompt: {
+          zh: "Start directly from Personal Experience Form preparation and evidence organization. Teach one mini-lesson, then give a practical checklist-style quick check.",
+          en: "Start directly from Personal Experience Form preparation and evidence organization. Teach one mini-lesson, then give a practical checklist-style quick check.",
         },
       },
       {

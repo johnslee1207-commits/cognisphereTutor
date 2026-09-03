@@ -153,6 +153,46 @@ async def test_status_honors_selected_start_point(path_id):
 
 
 @pytest.mark.asyncio
+async def test_status_honors_selected_apprenticeship_subtopic(path_id):
+    await MasteryBuildTool().execute(
+        _mastery_path_id=path_id,
+        mode="replace",
+        modules=[
+            {
+                "id": "csphere-california_electrical_career-apprenticeship",
+                "name": "ETI / IBEW Local 11 Apprenticeship Entrance",
+                "knowledge_points": [
+                    {
+                        "id": "cec-apprentice-math-reasoning",
+                        "name": "Mathematical reasoning for aptitude testing",
+                        "type": "procedure",
+                    },
+                    {
+                        "id": "cec-apprentice-reading",
+                        "name": "Reading comprehension for technical instructions",
+                        "type": "procedure",
+                    },
+                ],
+            },
+        ],
+    )
+
+    payload = json.loads(
+        (
+            await MasteryStatusTool().execute(
+                _mastery_path_id=path_id,
+                _mastery_start_point="apprenticeship_reading",
+            )
+        ).content
+    )
+
+    assert payload["requested_start_point"] == "apprenticeship_reading"
+    assert payload["next"]["knowledge_point_name"] == (
+        "Reading comprehension for technical instructions"
+    )
+
+
+@pytest.mark.asyncio
 async def test_status_start_action_clears_stale_pending_question(path_id):
     await MasteryBuildTool().execute(
         _mastery_path_id=path_id,

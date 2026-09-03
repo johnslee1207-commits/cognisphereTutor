@@ -111,6 +111,28 @@ _START_POINT_MODULE_SIGNALS: dict[str, tuple[str, ...]] = {
     "aws_beginner": ("cloud foundations", "cloud practitioner", "certification overview"),
 }
 
+_START_POINT_KP_IDS: dict[str, str] = {
+    "apprenticeship_diagnostic": "cec-apprentice-baseline-diagnostic",
+    "apprenticeship_math": "cec-apprentice-math-reasoning",
+    "apprenticeship_numerical": "cec-apprentice-numerical-reasoning",
+    "apprenticeship_reading": "cec-apprentice-reading",
+    "apprenticeship_mechanical": "cec-apprentice-mechanical",
+    "apprenticeship_spatial": "cec-apprentice-spatial",
+    "apprenticeship_timed": "cec-apprentice-timed-practice",
+    "apprenticeship_pef": "cec-apprentice-pef",
+}
+
+_START_POINT_KP_SIGNALS: dict[str, tuple[str, ...]] = {
+    "apprenticeship_diagnostic": ("baseline diagnostic", "apprenticeship readiness"),
+    "apprenticeship_math": ("mathematical reasoning", "aptitude testing"),
+    "apprenticeship_numerical": ("numerical reasoning", "sequences", "data interpretation"),
+    "apprenticeship_reading": ("reading comprehension", "technical instructions"),
+    "apprenticeship_mechanical": ("mechanical reasoning", "levers", "pulleys", "gears"),
+    "apprenticeship_spatial": ("spatial reasoning", "paper folding"),
+    "apprenticeship_timed": ("timed mixed practice", "aptitude test"),
+    "apprenticeship_pef": ("personal experience form", "evidence organization"),
+}
+
 
 def _module_matches_start_point(module: LearningModule, start_point: str) -> bool:
     signals = _START_POINT_MODULE_SIGNALS.get(start_point, ())
@@ -118,6 +140,46 @@ def _module_matches_start_point(module: LearningModule, start_point: str) -> boo
         return False
     haystack = f"{module.id} {module.name}".lower()
     return any(signal in haystack for signal in signals)
+
+
+def _step_for_selected_kp(progress: Any, kp_id: str) -> NextStep | None:
+    selected_seen = False
+    for module in sorted(progress.modules, key=lambda item: item.order):
+        for kp in module.knowledge_points:
+            if kp.id == kp_id:
+                selected_seen = True
+                if not is_mastered(progress, kp):
+                    return _step_for_kp(progress, module, kp)
+                continue
+            if selected_seen and module.id == kp.module_id and not is_mastered(progress, kp):
+                return _step_for_kp(progress, module, kp)
+    return None
+
+
+def _kp_matches_start_point(kp: KnowledgePoint, start_point: str) -> bool:
+    if kp.id == _START_POINT_KP_IDS.get(start_point, ""):
+        return True
+    signals = _START_POINT_KP_SIGNALS.get(start_point, ())
+    if not signals:
+        return False
+    haystack = f"{kp.id} {kp.name}".lower()
+    return any(signal in haystack for signal in signals)
+
+
+def _step_for_selected_start_point_kp(progress: Any, start_point: str) -> NextStep | None:
+    selected_seen = False
+    selected_module_id = ""
+    for module in sorted(progress.modules, key=lambda item: item.order):
+        for kp in module.knowledge_points:
+            if _kp_matches_start_point(kp, start_point):
+                selected_seen = True
+                selected_module_id = module.id
+                if not is_mastered(progress, kp):
+                    return _step_for_kp(progress, module, kp)
+                continue
+            if selected_seen and module.id == selected_module_id and not is_mastered(progress, kp):
+                return _step_for_kp(progress, module, kp)
+    return None
 
 
 def _step_for_kp(progress: Any, module: LearningModule, kp: KnowledgePoint) -> NextStep:
@@ -152,6 +214,13 @@ def next_objective_for_start_point(
     normalized = str(start_point or "").strip().lower()
     if not normalized:
         return next_objective(progress, now=now)
+    if normalized in _START_POINT_KP_IDS:
+        selected_step = _step_for_selected_kp(
+            progress,
+            _START_POINT_KP_IDS.get(normalized, ""),
+        ) or _step_for_selected_start_point_kp(progress, normalized)
+        if selected_step is not None:
+            return selected_step
     pending = progress.pending_question
     if pending is not None:
         module = next((m for m in progress.modules if m.id == pending.module_id), None)
