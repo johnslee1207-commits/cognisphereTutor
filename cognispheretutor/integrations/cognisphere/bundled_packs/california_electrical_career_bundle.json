@@ -423,6 +423,66 @@
         ]
       },
       {
+        "id": "cec-lesson-career-graph",
+        "title": "Career graph from applicant to contractor",
+        "summary": "The learner should see the electrical career as a staged graph: applicant, apprentice, worker certification, journey-level competence, contractor license, and business responsibility.",
+        "body": "Teach the graph as a set of routes, not one automatic ladder. An apprenticeship helps someone enter paid trade training. General Electrician certification is a California worker credential tied to qualifying work. A C-10 contractor path adds trade judgment, business law, qualifying experience, and license responsibilities.",
+        "teaching_points": [
+          "Apprenticeship entrance is about selection readiness and documented eligibility.",
+          "Worker certification and contractor licensing are different legal roles.",
+          "Shared electrical foundations support every route.",
+          "A learner can study now while formal eligibility evidence accumulates over time."
+        ],
+        "quick_check_prompts": [
+          "Which path most directly combines trade work with business responsibility: apprenticeship applicant, General Electrician worker certification, C-10 contractor, or paper-folding practice?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "ca_dir.electrician_certification_program.2026-09-03",
+          "cslb.contractor_experience.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-official-source-discipline",
+        "title": "Official source discipline",
+        "summary": "High-stakes exam and admissions facts should come from current official sources, not recalled questions or old internet summaries.",
+        "body": "Teach the learner to separate stable learning concepts from update-sensitive facts. Topic weights, time limits, eligibility, allowed materials, application windows, and source editions must be verified against current official pages. Practice should use original questions shaped by blueprints, not leaked or recalled test items.",
+        "teaching_points": [
+          "Official sources control exam structure and eligibility claims.",
+          "Blueprints guide study weighting without revealing live exam questions.",
+          "Recalled or leaked questions are unreliable and should not be used.",
+          "Tutor can teach from materialized claims while Cognisphere manages source freshness."
+        ],
+        "quick_check_prompts": [
+          "For a real exam time limit, which source type is safest: current official page, copied forum memory, an old screenshot, or a random quiz bank?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "cslb.c10.study_guide.2026-03",
+          "cslb.law_business.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-diagnostic-readiness-loop",
+        "title": "Diagnostic to readiness loop",
+        "summary": "The learning flow should repeatedly diagnose, teach, practice, tag errors, remediate, and then advance.",
+        "body": "Teach the loop as the learner's operating system. First diagnose the objective and weakest skill. Then give a mini-lesson, a worked example, a quick quiz, and targeted feedback. Every miss gets an error tag and a repair task. Advancement depends on evidence, not just finishing a page.",
+        "teaching_points": [
+          "A diagnostic finds the next useful lesson.",
+          "Quick quizzes should be graded immediately.",
+          "Error memory prevents repeating the same miss.",
+          "Readiness gates decide whether to advance, review, or switch practice mode."
+        ],
+        "quick_check_prompts": [
+          "After a wrong quick-quiz answer, what should Tutor do next: tag the error and remediate, ignore it, advance blindly, or ask for unrelated goals?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "cslb.exam.study_overview.2026-09-03"
+        ]
+      },
+      {
         "id": "cec-lesson-shared-math",
         "title": "Electrical math starts with units, ratios, and proportional thinking",
         "summary": "Before code lookup or estimating, learners need reliable arithmetic, fractions, decimals, percentages, ratios, proportions, and unit conversion.",
@@ -438,6 +498,84 @@
         "source_ref_ids": [
           "laett.inside_wireman.2026-01-26",
           "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-foundation-algebra-word-problems",
+        "title": "Algebra and word-problem setup",
+        "summary": "Electrical calculations often fail because the learner solves before naming the unknown, units, and relationship.",
+        "body": "Teach a simple setup ritual: identify the unknown, list given quantities with units, write the relationship, solve one step at a time, and check plausibility. Use this for conduit length, voltage, current, resistance, loads, material takeoff, and business math.",
+        "teaching_points": [
+          "Unknown first, equation second, arithmetic third.",
+          "Words such as per, total, remaining, increase, and twice signal operations.",
+          "Units reveal whether the answer is a length, rate, percent, current, or cost.",
+          "Substitution is useful when multiple-choice answers are numeric."
+        ],
+        "quick_check_prompts": [
+          "If the problem says 'twice the shorter length plus 3 feet', what should be written before solving: 2x + 3, x/2 - 3, 3x only, or no equation?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-foundation-measurement-basics",
+        "title": "AC/DC and measurement basics",
+        "summary": "Before troubleshooting, learners need a plain-language model of AC, DC, meter choice, expected value, and safe verification.",
+        "body": "Teach measurement as evidence gathering. DC has one polarity direction; AC alternates. A meter reading only helps when the learner knows what should be present and where to measure. Safety comes before opening equipment or touching conductors.",
+        "teaching_points": [
+          "AC and DC describe different voltage/current behavior.",
+          "A measurement point must match the question being asked.",
+          "Expected value matters before interpreting a meter reading.",
+          "Safe verification is part of the procedure, not an optional extra."
+        ],
+        "quick_check_prompts": [
+          "Why is an expected value useful before using a meter: it lets you interpret the reading, it replaces safety, it removes units, or it proves every circuit is off?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "calosha.title8.3314.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-foundation-drawings-tools-safety",
+        "title": "Drawings, tools, materials, and safety vocabulary",
+        "summary": "Beginners need vocabulary for plans, symbols, raceways, conductors, boxes, devices, tools, PPE, hazards, and jobsite instructions.",
+        "body": "Teach vocabulary as recognition in context. A plan tells what is intended, a symbol compresses information, materials become the installed system, and tools change how work is performed. Safety words should be learned early because instructions and warnings often decide the first correct action.",
+        "teaching_points": [
+          "Symbols and drawings help locate devices, circuits, and equipment.",
+          "Tools and materials should be named by use, not memorized as isolated lists.",
+          "PPE, hazard, lockout, energized, de-energized, and verify are core safety words.",
+          "Reading jobsite instructions is part of trade readiness."
+        ],
+        "quick_check_prompts": [
+          "Which word most directly means proving a condition rather than assuming it: verify, guess, rush, or decorate?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "laett.inside_wireman.2026-01-26",
+          "calosha.lockout_publication.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-foundation-basic-troubleshooting",
+        "title": "Basic troubleshooting for beginners",
+        "summary": "Troubleshooting should move from symptom to safe verification to measurement to likely cause, not from panic to random replacement.",
+        "body": "Teach a beginner workflow: state the symptom, identify hazards, verify safe conditions, choose a measurement, compare expected and actual readings, isolate the likely cause, correct one thing, and verify the result. This same pattern supports GE, C-10, and jobsite learning.",
+        "teaching_points": [
+          "Symptoms describe what is observed.",
+          "Measurements compare actual conditions with expected conditions.",
+          "Changing multiple things at once makes the cause harder to know.",
+          "Verification after correction prevents false confidence."
+        ],
+        "quick_check_prompts": [
+          "A light circuit fails. What is the best first learning move: state the symptom and verify safe conditions, replace random parts, ignore measurements, or change every connection?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.c10.study_guide.2026-03",
+          "calosha.title8.3314.2026-09-03"
         ]
       },
       {
@@ -951,6 +1089,83 @@
         ]
       },
       {
+        "id": "cec-lesson-ge-sizing-calculation",
+        "title": "GE sizing and calculation workflow",
+        "summary": "Sizing questions require the learner to identify the item being sized, the governing condition, the units, and the verification step.",
+        "body": "Teach sizing as a procedure, not a memorized answer. The learner should ask what is being sized: box, raceway, conductor, service, panelboard, clearance, termination, or overcurrent device. Then identify the condition, choose the route, calculate or compare, and verify the final answer against the prompt.",
+        "teaching_points": [
+          "Sizing starts by naming the object being sized.",
+          "The same numbers can lead to different routes for boxes, raceways, conductors, or services.",
+          "Clearance and termination questions often hinge on condition words.",
+          "Final verification should compare units and exact prompt constraints."
+        ],
+        "quick_check_prompts": [
+          "Before sizing a conductor, what should the learner identify first: the object and condition, the longest answer, a random table, or the previous question?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-lesson-ge-maintenance-repair",
+        "title": "GE maintenance and repair reasoning",
+        "summary": "Maintenance/repair questions reward safe diagnosis, test-equipment choice, component recognition, and verification.",
+        "body": "Teach maintenance and repair as scenario logic. A learner should identify the failed behavior, isolate hazards, choose the right measurement, compare expected and actual values, narrow the likely device or circuit issue, and verify after correction.",
+        "teaching_points": [
+          "Maintenance questions are often smaller in blueprint weight but high leverage for practical skill.",
+          "Testing equipment is only useful when paired with a hypothesis.",
+          "Branch circuits, devices, and overcurrent protection should be diagnosed systematically.",
+          "Safe verification closes the repair loop."
+        ],
+        "quick_check_prompts": [
+          "A breaker trips repeatedly. What is better first: diagnose conditions safely, replace every device, ignore the symptom, or assume the breaker is always bad?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "ca_dir.eccc.general_curriculum.2018",
+          "calosha.title8.3314.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-ge-mastery-dimensions",
+        "title": "GE mastery dimensions",
+        "summary": "GE readiness should track concept knowledge, code navigation, calculation accuracy, timed accuracy, and lookup time separately.",
+        "body": "Teach the learner that one score is not enough. A learner may know the concept but look it up too slowly, calculate correctly but classify the topic incorrectly, or finish quickly while missing exceptions. Tutor should keep separate evidence streams so remediation is precise.",
+        "teaching_points": [
+          "Concept mastery explains why an answer is plausible.",
+          "Navigation mastery finds the right source route efficiently.",
+          "Calculation mastery handles units and arithmetic.",
+          "Timed accuracy and lookup time show exam readiness under pressure."
+        ],
+        "quick_check_prompts": [
+          "If a learner knows the concept but takes too long finding the rule, which dimension is weak: navigation speed, concept meaning, handwriting, or PEF documentation?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "ca_dir.electrician_certification_faq.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-ge-section-full-mock",
+        "title": "GE sectional practice and full mock",
+        "summary": "Practice should move from single-domain drills to blueprint-weighted mixed sets and then a full mock only after route accuracy is stable.",
+        "body": "Teach a progression: first classify the domain, then do focused drills, then do small mixed sets, then sectional practice, and finally a full GE mock. After each session, score not only correct answers but also route choice, lookup time, calculation setup, and repeated error tags.",
+        "teaching_points": [
+          "Blueprint-weighted practice prevents overstudying favorite topics.",
+          "Sectional practice isolates weak domains before a full mock.",
+          "Full mocks are useful only when reviewed deeply afterward.",
+          "Wrong answers should create remediation tasks."
+        ],
+        "quick_check_prompts": [
+          "When should a learner move to a full GE mock: after some route accuracy and sectional stability, before learning any topic, after one lucky quiz, or instead of review?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "ca_dir.electrician_certification_faq.2026-09-03"
+        ]
+      },
+      {
         "id": "cec-lesson-c10-blueprint",
         "title": "C-10 trade exam is closed-book contractor trade judgment",
         "summary": "C-10 preparation should combine planning, rough wiring, finish work, startup/troubleshooting, maintenance, and safety.",
@@ -962,6 +1177,43 @@
         ],
         "quick_check_prompts": [
           "Is the C-10 trade exam open-book or closed-book according to the CSLB study guide?"
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-c10-electrical-calculations",
+        "title": "C-10 electrical calculation workflow",
+        "summary": "C-10 calculations should connect load, feeders, branch circuits, voltage drop, motors, transformers, grounding, and estimating decisions.",
+        "body": "Teach contractor calculations as decision support. The learner should identify the system, choose the quantity, set up units, compute cleanly, and decide what the answer means for material, labor, safety, or sequence. Closed-book practice should emphasize repeatable setups.",
+        "teaching_points": [
+          "A calculation answer should support a contractor decision.",
+          "Load, feeder, branch, motor, transformer, and grounding questions need different setup routes.",
+          "Voltage drop and estimating calculations are common places for unit errors.",
+          "Closed-book readiness depends on pattern recognition and practice."
+        ],
+        "quick_check_prompts": [
+          "In a C-10 calculation, why write units before arithmetic: to choose the right setup, to slow down for no reason, to avoid reading plans, or to replace safety?"
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03",
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-lesson-c10-blueprint-practice",
+        "title": "C-10 blueprint-weighted practice",
+        "summary": "C-10 practice should mirror CSLB section weights while staying original and closed-book.",
+        "body": "Teach practice planning from the blueprint: planning/estimating, rough wiring, finish wiring/trim, startup/troubleshooting/maintenance, and safety. The learner should see a mixed contractor scenario, classify the section, solve or decide, then review the error type.",
+        "teaching_points": [
+          "Closed-book practice should build durable contractor judgment.",
+          "Planning and rough wiring should receive substantial practice time.",
+          "Safety cannot be treated as a tiny afterthought even if it is one section.",
+          "Mock review should separate content gaps from calculation and scenario-reading errors."
+        ],
+        "quick_check_prompts": [
+          "Why use blueprint-weighted C-10 practice: to match official topic emphasis, to copy real exam questions, to avoid safety, or to skip estimating?"
         ],
         "source_ref_ids": [
           "cslb.c10.study_guide.2026-03"
@@ -1014,6 +1266,24 @@
         ],
         "quick_check_prompts": [
           "Which Law & Business section is most directly about hiring, supervising, training, payroll, and records?"
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-law-business-organization",
+        "title": "Business organization and licensing cues",
+        "summary": "Law & Business learners should recognize entity, license, finance, payroll, tax, insurance, and employment cues before choosing an answer.",
+        "body": "Teach the learner to classify the scenario first. Is the question about business setup, license status, money, workers, insurance, tax, or records? The correct answer often depends on the legal or business role, not trade intuition.",
+        "teaching_points": [
+          "Business organization and licensing are role-definition topics.",
+          "Finance, payroll, tax, and insurance are related but distinct obligations.",
+          "Employment scenarios often turn on worker status and required records.",
+          "Scenario classification should happen before answer selection."
+        ],
+        "quick_check_prompts": [
+          "A question mentions hiring a worker and payroll records. Which topic family is most likely: employment requirements, paper folding, transformer sizing, or gear direction?"
         ],
         "source_ref_ids": [
           "cslb.law_business.study_guide.2026-03"
@@ -1270,6 +1540,44 @@
           "dir.prevailing_wage.2026-09-03",
           "dir.public_works_apprenticeship.2026-09-03",
           "dir.certified_payroll.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-law-scenario-practice",
+        "title": "Law & Business scenario practice",
+        "summary": "Scenario practice should teach the learner to classify the issue, identify the responsible party, and choose the best compliant action.",
+        "body": "Teach a repeated scenario method: identify the parties, project type, document or duty, timing, and risk. Then choose the answer that best satisfies the obligation. Review wrong answers by whether the error was section classification, role confusion, timing, document evidence, or overgeneralization.",
+        "teaching_points": [
+          "Start with who is acting and what role they have.",
+          "Look for documents: license, contract, change order, payroll, insurance, lien, or public works record.",
+          "Timing can change the correct answer.",
+          "Wrong-answer review should name the scenario cue that was missed."
+        ],
+        "quick_check_prompts": [
+          "In a Law & Business scenario, what should be identified first: parties and duty, wire color only, paper folds, or a memorized slogan?"
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03",
+          "dir.public_works_contractors.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-law-readiness",
+        "title": "Law & Business readiness",
+        "summary": "Readiness means the learner can make scenario judgments across sections, not merely recite isolated terms.",
+        "body": "Teach readiness as consistent performance across mixed scenarios. A learner should classify the section, explain why the chosen action fits, reject attractive wrong answers, and keep an error log. Mixed practice should include business organization, finance, employment, insurance, liens, contracts, public works, and safety.",
+        "teaching_points": [
+          "Mixed scenarios reveal whether the learner can transfer knowledge.",
+          "One-best-answer questions require rejecting partially true choices.",
+          "Public works and employment scenarios often need extra attention to records.",
+          "Readiness gates should be based on evidence across sections."
+        ],
+        "quick_check_prompts": [
+          "What best shows Law & Business readiness: correct mixed scenario reasoning, memorizing one definition, ignoring wrong answers, or only studying trade wiring?"
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03",
+          "cslb.exam.study_overview.2026-09-03"
         ]
       },
       {
@@ -1744,13 +2052,20 @@
           "cec-foundation-arithmetic",
           "cec-foundation-ohms-law",
           "cec-foundation-circuits",
-          "cec-foundation-tools-safety"
+          "cec-foundation-drawings-tools"
         ],
         "lesson_card_ids": [
           "cec-lesson-career-orientation",
+          "cec-lesson-career-graph",
+          "cec-lesson-official-source-discipline",
+          "cec-lesson-diagnostic-readiness-loop",
           "cec-lesson-shared-math",
+          "cec-lesson-foundation-algebra-word-problems",
           "cec-lesson-ohms-law",
           "cec-lesson-circuits",
+          "cec-lesson-foundation-measurement-basics",
+          "cec-lesson-foundation-drawings-tools-safety",
+          "cec-lesson-foundation-basic-troubleshooting",
           "cec-lesson-cal-osha-lockout"
         ],
         "activity_template_ids": [
@@ -1774,7 +2089,7 @@
         "title": "Inside Wireman apprenticeship entry path",
         "summary": "A focused route for aptitude readiness and PEF evidence organization.",
         "objective_ids": [
-          "cec-apprentice-test-structure",
+          "cec-apprentice-baseline-diagnostic",
           "cec-apprentice-math-reasoning",
           "cec-apprentice-numerical-reasoning",
           "cec-apprentice-reading",
@@ -1810,7 +2125,7 @@
         "title": "Apprenticeship four-week sprint",
         "summary": "A near-term preparation sequence for a learner taking apprenticeship entry selection early next month.",
         "objective_ids": [
-          "cec-apprentice-test-structure",
+          "cec-apprentice-baseline-diagnostic",
           "cec-apprentice-math-reasoning",
           "cec-apprentice-numerical-reasoning",
           "cec-apprentice-reading",
@@ -1921,11 +2236,15 @@
           "cec-lesson-ge-exam-logistics",
           "cec-lesson-electrical-symbols-diagrams",
           "cec-lesson-conductors-raceways",
+          "cec-lesson-ge-sizing-calculation",
           "cec-lesson-grounding-bonding",
           "cec-lesson-overcurrent-protection",
           "cec-lesson-motors-transformers",
+          "cec-lesson-ge-maintenance-repair",
           "cec-lesson-testing-troubleshooting",
-          "cec-lesson-nec-navigation"
+          "cec-lesson-nec-navigation",
+          "cec-lesson-ge-mastery-dimensions",
+          "cec-lesson-ge-section-full-mock"
         ],
         "activity_template_ids": [
           "cec-activity-mini-lesson-quick-check",
@@ -1961,10 +2280,12 @@
         "lesson_card_ids": [
           "cec-lesson-c10-blueprint",
           "cec-lesson-c10-estimating",
+          "cec-lesson-c10-electrical-calculations",
           "cec-lesson-c10-rough-finish",
           "cec-lesson-special-systems-energy",
           "cec-lesson-testing-troubleshooting",
-          "cec-lesson-c10-safety"
+          "cec-lesson-c10-safety",
+          "cec-lesson-c10-blueprint-practice"
         ],
         "activity_template_ids": [
           "cec-activity-scenario-judgment",
@@ -1997,11 +2318,14 @@
         ],
         "lesson_card_ids": [
           "cec-lesson-law-blueprint",
+          "cec-lesson-law-business-organization",
           "cec-lesson-contractor-experience",
           "cec-lesson-law-contracts-change-orders",
           "cec-lesson-law-employment-payroll",
           "cec-lesson-law-liens-insurance-finance",
-          "cec-lesson-public-works"
+          "cec-lesson-public-works",
+          "cec-lesson-law-scenario-practice",
+          "cec-lesson-law-readiness"
         ],
         "activity_template_ids": [
           "cec-activity-scenario-judgment",
@@ -2631,6 +2955,108 @@
         ]
       },
       {
+        "id": "cec-scenario-career-route",
+        "title": "Career orientation: route choice",
+        "summary": "Original beginner scenario for choosing the right career track.",
+        "scenario": [
+          "A learner has no electrical experience and wants paid training while learning the trade. Which route best matches that immediate goal?"
+        ],
+        "choices": [
+          "A) Apprenticeship entrance",
+          "B) C-10 contractor license tomorrow",
+          "C) Public works payroll reporting first",
+          "D) NEC full mock only"
+        ],
+        "correct_rationale": [
+          "Apprenticeship entrance best matches paid training while learning for a beginner."
+        ],
+        "distractor_rationales": [
+          "C-10 is a contractor path requiring broader eligibility and business responsibility.",
+          "Payroll reporting is a contractor compliance topic, not the beginner entry route.",
+          "A full mock does not replace choosing the right path."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-foundation-units",
+        "title": "Foundation math: unit check",
+        "summary": "Original unit-conversion and plausibility scenario.",
+        "scenario": [
+          "A learner calculates 6 feet + 18 inches as 24 feet. What error happened?"
+        ],
+        "choices": [
+          "A) Unit conversion error",
+          "B) Reading qualifier error",
+          "C) Gear direction error",
+          "D) PEF deadline error"
+        ],
+        "correct_rationale": [
+          "18 inches is 1.5 feet, so adding it as 18 feet is a unit conversion error."
+        ],
+        "distractor_rationales": [
+          "No reading qualifier controls this calculation.",
+          "There are no gears in the scenario.",
+          "This is not an application deadline issue."
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-scenario-ge-sizing-route",
+        "title": "GE sizing: route first",
+        "summary": "Original GE scenario about classifying a sizing question before lookup.",
+        "scenario": [
+          "A practice item asks for the correct raceway choice under a specific installation condition. What should the learner identify first?"
+        ],
+        "choices": [
+          "A) The wiring method/raceway category and condition",
+          "B) The contractor payroll tax rate",
+          "C) The paper-folding symmetry",
+          "D) The longest answer choice"
+        ],
+        "correct_rationale": [
+          "Raceway questions start by classifying the wiring method/raceway category and installation condition."
+        ],
+        "distractor_rationales": [
+          "Payroll tax is a Law & Business topic.",
+          "Paper folding belongs to aptitude spatial reasoning.",
+          "Answer length is not evidence."
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-scenario-c10-markup-margin",
+        "title": "C-10 estimating: markup versus margin",
+        "summary": "Original estimating scenario for business math awareness.",
+        "scenario": [
+          "A contractor adds 20% to a $1,000 estimated cost to set a price of $1,200. Which concept was directly applied?"
+        ],
+        "choices": [
+          "A) Markup on cost",
+          "B) Margin as percent of price",
+          "C) Voltage drop",
+          "D) Lockout/tagout"
+        ],
+        "correct_rationale": [
+          "The contractor added a percentage to cost, which is markup on cost."
+        ],
+        "distractor_rationales": [
+          "Margin compares profit to selling price, not simply the added percent on cost.",
+          "Voltage drop is an electrical calculation topic.",
+          "Lockout/tagout is safety procedure."
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03",
+          "cslb.law_business.study_guide.2026-03"
+        ]
+      },
+      {
         "id": "cec-scenario-public-works-payroll",
         "title": "Public works: certified payroll clue",
         "summary": "Law and Business public works recognition scenario.",
@@ -2686,6 +3112,24 @@
     ],
     "flashcard_decks": [
       {
+        "id": "cec-flashcards-career-orientation",
+        "title": "Career orientation cues",
+        "summary": "Cards for choosing the right learning route before studying details.",
+        "cards": [
+          "Apprenticeship entrance: selection readiness, aptitude reasoning, and admissions documents.",
+          "General Electrician: California worker certification with qualifying experience and open-book exam navigation.",
+          "C-10: contractor trade classification with closed-book trade judgment.",
+          "Law & Business: contractor business exam covering organization, finance, employment, contracts, public works, and safety.",
+          "Eligibility: formal requirement; not the same as study readiness.",
+          "Blueprint: official topic map for practice weighting."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "ca_dir.electrician_certification_program.2026-09-03",
+          "cslb.exam.study_overview.2026-09-03"
+        ]
+      },
+      {
         "id": "cec-flashcards-electrical-foundations",
         "title": "Electrical foundations vocabulary",
         "summary": "Short recognition cards for early electrical concepts.",
@@ -2699,6 +3143,23 @@
         ],
         "source_ref_ids": [
           "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-flashcards-foundation-math-safety",
+        "title": "Foundation math and safety habits",
+        "summary": "Cards for setup discipline, unit awareness, and safety-first thinking.",
+        "cards": [
+          "Unknown: name what the problem asks for before calculating.",
+          "Unit conversion: convert inches, feet, amps, volts, watts, and percent before comparing.",
+          "Plausibility: estimate whether the answer could make sense.",
+          "Symptom: what is observed before troubleshooting.",
+          "Expected value: what a measurement should show if the system is normal.",
+          "Verify: prove a condition; do not merely assume it."
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "calosha.title8.3314.2026-09-03"
         ]
       },
       {
@@ -2716,6 +3177,39 @@
         "source_ref_ids": [
           "ca_dir.electrician_certification_faq.2026-09-03",
           "nfpa.nec.overview.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-flashcards-ge-mastery",
+        "title": "GE mastery dimensions",
+        "summary": "Cards for separating GE readiness signals.",
+        "cards": [
+          "Concept accuracy: can explain why an answer is plausible.",
+          "Topic classification: routes the question to the right domain.",
+          "Lookup route: finds the right reference path efficiently.",
+          "Calculation setup: uses correct units and quantity.",
+          "Timed accuracy: preserves correctness under section pressure.",
+          "Lookup time: measures open-book speed separately from knowledge."
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "ca_dir.electrician_certification_faq.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-flashcards-c10-trade",
+        "title": "C-10 trade practice cues",
+        "summary": "Cards for contractor trade practice and closed-book judgment.",
+        "cards": [
+          "Planning and estimating: read scope, plans, specs, quantity, material, labor, and risk.",
+          "Rough wiring: infrastructure before final surfaces and trim.",
+          "Finish wiring: devices, trim, labeling, terminations, testing, and handoff.",
+          "Startup/troubleshooting: symptom, safety, measurement, hypothesis, correction, verification.",
+          "Special systems: PV, generator, battery, and storage can remain energy sources.",
+          "Closed-book: build decision patterns, not lookup dependence."
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03"
         ]
       },
       {
@@ -2843,6 +3337,33 @@
       }
     ],
     "readiness_checkpoints": [
+      {
+        "id": "cec-checkpoint-full-course-map",
+        "title": "Full course map checkpoint",
+        "summary": "Use after orientation to confirm the learner understands the five modules and the next best study route.",
+        "checkpoint_prompts": [
+          "Can the learner distinguish apprenticeship entrance, General Electrician certification, C-10 trade, and Law & Business?",
+          "Can the learner name why shared foundations come before advanced exam practice?",
+          "Can the learner explain why official blueprints and source versions control exam facts?",
+          "Can the learner state the learning loop: diagnostic, lesson, quick quiz, error tag, remediation, readiness gate?"
+        ],
+        "mastery_evidence": [
+          "route classification is correct",
+          "shared-foundation purpose is clear",
+          "official-source discipline is accepted",
+          "learner can continue into either apprenticeship sprint or foundation lessons"
+        ],
+        "remediation": [
+          "If route confusion remains, return to career graph and route-choice scenarios.",
+          "If source confusion remains, return to official source discipline.",
+          "If learning-loop confusion remains, return to diagnostic readiness loop."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "ca_dir.electrician_certification_program.2026-09-03",
+          "cslb.exam.study_overview.2026-09-03"
+        ]
+      },
       {
         "id": "cec-checkpoint-foundations",
         "title": "Foundations readiness checkpoint",
@@ -3292,13 +3813,13 @@
       "source": "DeepTutor_California_Electrical_Career_Domain_Pack_v1.0.md",
       "stage": "M0/M2 expanded content seed",
       "objective_count": 39,
-      "lesson_card_count": 49,
+      "lesson_card_count": 65,
       "practice_blueprint_count": 10,
       "learning_activity_template_count": 8,
       "study_sequence_count": 7,
-      "scenario_card_count": 26,
-      "flashcard_deck_count": 9,
-      "readiness_checkpoint_count": 5,
+      "scenario_card_count": 30,
+      "flashcard_deck_count": 13,
+      "readiness_checkpoint_count": 6,
       "error_taxonomy_count": 5,
       "source_governance": "Official public sources, URLs, provenance, versions, and update watch are managed by Cognisphere. Tutor consumes materialized pack data only.",
       "note": "Tutor-ready seed with materialized lesson cards, practice blueprints, varied learning activity templates, study sequences, scenario cards, flashcard decks, readiness checkpoints, and error taxonomy. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
