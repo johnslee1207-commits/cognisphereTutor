@@ -110,6 +110,9 @@ class MasteryPathCapability(BaseCapability):
     async def run(self, context: UnifiedContext, stream: StreamBus) -> None:
         context.metadata["mastery_mode"] = True
         context.metadata["mastery_path_id"] = resolve_mastery_path_id(context)
+        start_point = str(context.config_overrides.get("mastery_start_point") or "").strip()
+        if start_point:
+            context.metadata["mastery_start_point"] = start_point
         pipeline = AgenticChatPipeline(language=context.language)
         await pipeline.run(context, stream)
 

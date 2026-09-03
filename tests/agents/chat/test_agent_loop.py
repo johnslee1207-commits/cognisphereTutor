@@ -1858,12 +1858,17 @@ def test_augment_tool_kwargs_injects_mastery_path_id() -> None:
     pipeline = AgenticChatPipeline.__new__(AgenticChatPipeline)
     context = UnifiedContext(
         user_message="teach",
-        metadata={"mastery_mode": True, "mastery_path_id": "book-1"},
+        metadata={
+            "mastery_mode": True,
+            "mastery_path_id": "book-1",
+            "mastery_start_point": "apprenticeship_entry",
+        },
     )
 
     augmented = pipeline._augment_tool_kwargs("mastery_status", {}, context)
 
     assert augmented["_mastery_path_id"] == "book-1"
+    assert augmented["_mastery_start_point"] == "apprenticeship_entry"
 
 
 def test_mastery_path_id_resolves_from_config_override() -> None:

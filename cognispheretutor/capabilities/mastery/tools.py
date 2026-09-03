@@ -43,12 +43,15 @@ from cognispheretutor.learning.models import (
 )
 from cognispheretutor.learning.policy import (
     QUALITATIVE_TYPES,
+    NextStep,
     display_mastery,
+    due_reviews,
     find_knowledge_point,
     gate_threshold,
     is_mastered,
     map_summary,
     next_objective,
+    objective_status,
 )
 
 if TYPE_CHECKING:
@@ -86,6 +89,83 @@ def _resolve_session_id(kwargs: dict[str, Any]) -> str:
 
 def _resolve_turn_id(kwargs: dict[str, Any]) -> str:
     return str(kwargs.get("_turn_id") or "").strip()
+
+
+def _resolve_start_point(kwargs: dict[str, Any]) -> str:
+    return str(kwargs.get("_mastery_start_point") or "").strip().lower()
+
+
+_START_POINT_MODULE_SIGNALS: dict[str, tuple[str, ...]] = {
+    "newcomer_sprint": ("career orientation", "shared electrical foundations"),
+    "apprenticeship_entry": ("apprenticeship entrance", "ibew", "eti"),
+    "shared_foundations": ("shared electrical foundations",),
+    "ge": ("general electrician",),
+    "c10": ("c-10", "c10 electrical trade"),
+    "law_business": ("law and business", "law & business", "contractor law"),
+    "aws_beginner": ("cloud foundations", "cloud practitioner", "certification overview"),
+}
+
+
+def _module_matches_start_point(module: LearningModule, start_point: str) -> bool:
+    signals = _START_POINT_MODULE_SIGNALS.get(start_point, ())
+    if not signals:
+        return False
+    haystack = f"{module.id} {module.name}".lower()
+    return any(signal in haystack for signal in signals)
+
+
+def _step_for_kp(progress: Any, module: LearningModule, kp: KnowledgePoint) -> NextStep:
+    status = objective_status(progress, kp)
+    gate = "qualitative" if kp.type in QUALITATIVE_TYPES else "quantitative"
+    action = "probe" if status == "new" else ("assess" if gate == "qualitative" else "practice")
+    return NextStep(
+        action=action,
+        module_id=module.id,
+        module_name=module.name,
+        knowledge_point_id=kp.id,
+        knowledge_point_name=kp.name,
+        knowledge_point_type=kp.type.value,
+        status=status,
+        gate=gate,
+        mastery=display_mastery(progress, kp),
+        threshold=gate_threshold(kp.type),
+        reason=(
+            "Learner selected this start point; use the first unmastered objective "
+            "inside the matching module instead of asking them to choose a scope."
+        ),
+    )
+
+
+def next_objective_for_start_point(
+    progress: Any,
+    start_point: str,
+    *,
+    now: float | None = None,
+) -> NextStep:
+    """Select the next step within a learner-chosen module when possible."""
+    normalized = str(start_point or "").strip().lower()
+    if not normalized:
+        return next_objective(progress, now=now)
+    pending = progress.pending_question
+    if pending is not None:
+        module = next((m for m in progress.modules if m.id == pending.module_id), None)
+        if module is not None and _module_matches_start_point(module, normalized):
+            return next_objective(progress, now=now)
+        return next_objective(progress, now=now)
+
+    for review in due_reviews(progress, now=now):
+        kp, module_id, _module_name = find_knowledge_point(progress, review.knowledge_point_id)
+        module = next((m for m in progress.modules if m.id == module_id), None)
+        if kp is not None and module is not None and _module_matches_start_point(module, normalized):
+            return _step_for_kp(progress, module, kp)
+
+    for module in sorted(progress.modules, key=lambda item: item.order):
+        if not _module_matches_start_point(module, normalized):
+            continue
+        for kp in module.knowledge_points:
+            if not is_mastered(progress, kp):
+                return _step_for_kp(progress, module, kp)
+    return next_objective(progress, now=now)
 
 
 def _question_bank_type(question_type: str) -> str:
@@ -208,9 +288,26 @@ class MasteryStatusTool(BaseTool):
             )
         payload = {
             "status": "active",
-            "next": next_objective(progress).to_dict(),
-            "map": map_summary(progress),
         }
+        start_point = _resolve_start_point(kwargs)
+        if start_point and progress.pending_question is not None:
+            pending_module = next(
+                (m for m in progress.modules if m.id == progress.pending_question.module_id),
+                None,
+            )
+            if pending_module is not None and not _module_matches_start_point(
+                pending_module, start_point
+            ):
+                service.clear_pending_question(progress)
+                payload["cleared_pending_question"] = True
+        payload.update(
+            {
+                "next": next_objective_for_start_point(progress, start_point).to_dict(),
+                "map": map_summary(progress),
+            }
+        )
+        if start_point:
+            payload["requested_start_point"] = start_point
         return _json_result(payload, meta_key="mastery_status")
 
 

@@ -52,6 +52,9 @@ class MasteryLoopCapability:
         if self.is_active(context) and tool_name in MASTERY_TOOL_NAMES:
             updated = dict(kwargs)
             updated["_mastery_path_id"] = str(context.metadata.get("mastery_path_id") or "").strip()
+            updated["_mastery_start_point"] = str(
+                context.metadata.get("mastery_start_point") or ""
+            ).strip()
             updated["_session_id"] = str(context.session_id or "").strip()
             updated["_turn_id"] = str(context.metadata.get("turn_id") or "").strip()
             return updated
@@ -185,6 +188,7 @@ def _deterministic_mastery_status(context: UnifiedContext) -> str:
     if not path_id:
         return ""
     try:
+        from cognispheretutor.capabilities.mastery.tools import next_objective_for_start_point
         from cognispheretutor.learning.policy import map_summary, next_objective
         from cognispheretutor.learning.service import LearningService
         from cognispheretutor.learning.storage import LearningStore
@@ -197,11 +201,19 @@ def _deterministic_mastery_status(context: UnifiedContext) -> str:
             }
         else:
             full_map = map_summary(progress)
+            start_point = str(context.metadata.get("mastery_start_point") or "").strip()
+            next_step = next_objective_for_start_point(
+                progress,
+                start_point,
+            )
             payload = {
                 "status": "active",
-                "next": next_objective(progress).to_dict(),
-                "map": _compact_mastery_map(full_map, next_objective(progress).to_dict()),
+                "next": next_step.to_dict(),
+                "map": _compact_mastery_map(full_map, next_step.to_dict()),
             }
+            if start_point:
+                payload["requested_start_point"] = start_point
+                payload["default_next"] = next_objective(progress).to_dict()
     except Exception:
         return ""
     return (
@@ -267,7 +279,7 @@ def _deterministic_plugin_grounding(context: UnifiedContext) -> str:
         from cognispheretutor.integrations.cognisphere.grounding import (
             build_plugin_grounding_seed,
         )
-        from cognispheretutor.learning.policy import next_objective
+        from cognispheretutor.capabilities.mastery.tools import next_objective_for_start_point
         from cognispheretutor.learning.service import LearningService
         from cognispheretutor.learning.storage import LearningStore
 
@@ -275,7 +287,10 @@ def _deterministic_plugin_grounding(context: UnifiedContext) -> str:
         if not any(module.knowledge_points for module in progress.modules):
             objective: dict[str, Any] = {}
         else:
-            objective = next_objective(progress).to_dict()
+            objective = next_objective_for_start_point(
+                progress,
+                str(context.metadata.get("mastery_start_point") or "").strip(),
+            ).to_dict()
         return build_plugin_grounding_seed(
             domain=domain,
             objective=objective,
@@ -292,17 +307,22 @@ def _deterministic_lesson_contract(context: UnifiedContext) -> str:
         from cognispheretutor.capabilities.mastery.lesson_contract import (
             build_lesson_contract_seed,
         )
-        from cognispheretutor.learning.policy import map_summary, next_objective
+        from cognispheretutor.capabilities.mastery.tools import next_objective_for_start_point
+        from cognispheretutor.learning.policy import map_summary
         from cognispheretutor.learning.service import LearningService
         from cognispheretutor.learning.storage import LearningStore
 
         progress = LearningService(LearningStore()).get_or_create(path_id)
         if not any(module.knowledge_points for module in progress.modules):
             return ""
+        start_point = str(context.metadata.get("mastery_start_point") or "").strip()
         return build_lesson_contract_seed(
             domain=domain,
             learner_goal=context.user_message,
-            next_step=next_objective(progress),
+            next_step=next_objective_for_start_point(
+                progress,
+                start_point,
+            ),
             map_summary=map_summary(progress),
         )
     except Exception:

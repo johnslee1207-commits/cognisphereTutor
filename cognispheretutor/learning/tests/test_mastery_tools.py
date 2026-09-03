@@ -122,6 +122,37 @@ async def test_status_points_at_first_objective(path_id):
 
 
 @pytest.mark.asyncio
+async def test_status_honors_selected_start_point(path_id):
+    await MasteryBuildTool().execute(
+        _mastery_path_id=path_id,
+        mode="replace",
+        modules=[
+            {
+                "name": "Career Orientation",
+                "knowledge_points": [{"name": "Choose a career goal", "type": "concept"}],
+            },
+            {
+                "name": "ETI / IBEW Local 11 Apprenticeship Entrance",
+                "knowledge_points": [{"name": "Baseline diagnostic", "type": "procedure"}],
+            },
+        ],
+    )
+
+    payload = json.loads(
+        (
+            await MasteryStatusTool().execute(
+                _mastery_path_id=path_id,
+                _mastery_start_point="apprenticeship_entry",
+            )
+        ).content
+    )
+
+    assert payload["requested_start_point"] == "apprenticeship_entry"
+    assert payload["next"]["module_name"] == "ETI / IBEW Local 11 Apprenticeship Entrance"
+    assert payload["next"]["knowledge_point_name"] == "Baseline diagnostic"
+
+
+@pytest.mark.asyncio
 async def test_no_path_id_fails_closed():
     result = await MasteryStatusTool().execute(_mastery_path_id="")
     assert result.success is False

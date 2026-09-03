@@ -13,6 +13,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import {
   BarChart3,
+  BookOpenCheck,
   BrainCircuit,
   Clapperboard,
   Code2,
@@ -23,12 +24,14 @@ import {
   GraduationCap,
   Image as ImageIcon,
   Lightbulb,
+  ListChecks,
   MessageCirclePlus,
   MessageSquare,
   Microscope,
   PenLine,
   RotateCcw,
   Sparkles,
+  Target,
   Undo2,
   type LucideIcon,
 } from "lucide-react";
@@ -359,6 +362,135 @@ function progressLooksLikeAwsCertification(progress: unknown): boolean {
 
 type GoalTranslator = (cn: string, en: string) => string;
 
+interface MasteryStartingPoint {
+  id: string;
+  icon: LucideIcon;
+  title: { zh: string; en: string };
+  blurb: { zh: string; en: string };
+  prompt: { zh: string; en: string };
+  tone?: "primary" | "default";
+}
+
+function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
+  if (pathId === "csphere-california_electrical_career") {
+    return [
+      {
+        id: "newcomer_sprint",
+        icon: Target,
+        tone: "primary",
+        title: { zh: "14 天新手冲刺", en: "14-day newcomer sprint" },
+        blurb: {
+          zh: "从职业路线、基础电学、数学到 apprenticeship 入学题型，直接进入每日短课和快测。",
+          en: "Start with route choice, foundations, math, and apprenticeship-style daily quick checks.",
+        },
+        prompt: {
+          zh: "Start from the 14-day newcomer sprint for California Electrical Career. Skip broad orientation beyond two sentences. Teach the first needed mini-lesson, then give a graded quick quiz and continue one by one.",
+          en: "Start from the 14-day newcomer sprint for California Electrical Career. Skip broad orientation beyond two sentences. Teach the first needed mini-lesson, then give a graded quick quiz and continue one by one.",
+        },
+      },
+      {
+        id: "apprenticeship_entry",
+        icon: ListChecks,
+        title: { zh: "Apprenticeship 入学选拔", en: "Apprenticeship entry" },
+        blurb: {
+          zh: "优先练 aptitude math、reading、mechanical、spatial、timed set 和 PEF 文件准备。",
+          en: "Prioritize aptitude math, reading, mechanical, spatial, timed sets, and PEF documents.",
+        },
+        prompt: {
+          zh: "Start from ETI / IBEW Local 11 Apprenticeship Entrance. I need practical preparation for an upcoming entry selection. Teach one mini-lesson, ask a multiple-choice quick quiz, grade it, then continue to the next needed lesson.",
+          en: "Start from ETI / IBEW Local 11 Apprenticeship Entrance. I need practical preparation for an upcoming entry selection. Teach one mini-lesson, ask a multiple-choice quick quiz, grade it, then continue to the next needed lesson.",
+        },
+      },
+      {
+        id: "shared_foundations",
+        icon: BookOpenCheck,
+        title: { zh: "电工基础", en: "Electrical foundations" },
+        blurb: {
+          zh: "从单位、比例、代数、欧姆定律、电路、测量、安全和故障排查开始。",
+          en: "Start with units, ratios, algebra, Ohm's Law, circuits, measurement, safety, and troubleshooting.",
+        },
+        prompt: {
+          zh: "Start from Shared Electrical Foundations. Teach the first foundation mini-lesson with a worked example and a quick quiz. Do not ask me to choose a broad career goal first.",
+          en: "Start from Shared Electrical Foundations. Teach the first foundation mini-lesson with a worked example and a quick quiz. Do not ask me to choose a broad career goal first.",
+        },
+      },
+      {
+        id: "ge",
+        icon: Compass,
+        title: { zh: "California GE", en: "California GE" },
+        blurb: {
+          zh: "进入 General Electrician 蓝图、开卷 NEC 导航、计算和 sectional practice。",
+          en: "Enter the General Electrician blueprint, open-book NEC navigation, calculations, and sectional practice.",
+        },
+        prompt: {
+          zh: "Start from California General Electrician. Use the GE blueprint and begin with the first necessary mini-lesson, then quick quiz. Do not start with career orientation unless needed.",
+          en: "Start from California General Electrician. Use the GE blueprint and begin with the first necessary mini-lesson, then quick quiz. Do not start with career orientation unless needed.",
+        },
+      },
+      {
+        id: "c10",
+        icon: BrainCircuit,
+        title: { zh: "C-10 Trade", en: "C-10 trade" },
+        blurb: {
+          zh: "闭卷 trade 判断：估算、rough/finish wiring、特殊系统、启动、排障、安全。",
+          en: "Closed-book trade judgment: estimating, rough/finish wiring, special systems, startup, troubleshooting, and safety.",
+        },
+        prompt: {
+          zh: "Start from California C-10 Electrical Trade. Teach the first contractor trade mini-lesson, then give a graded quick quiz and continue in blueprint order.",
+          en: "Start from California C-10 Electrical Trade. Teach the first contractor trade mini-lesson, then give a graded quick quiz and continue in blueprint order.",
+        },
+      },
+      {
+        id: "law_business",
+        icon: FileSearch,
+        title: { zh: "Law & Business", en: "Law & Business" },
+        blurb: {
+          zh: "从合同、雇佣、保险、liens、public works 和场景判断进入。",
+          en: "Start with contracts, employment, insurance, liens, public works, and scenario judgment.",
+        },
+        prompt: {
+          zh: "Start from California Contractor Law and Business. Teach through scenario judgment with multiple-choice quick checks. Do not begin with broad orientation.",
+          en: "Start from California Contractor Law and Business. Teach through scenario judgment with multiple-choice quick checks. Do not begin with broad orientation.",
+        },
+      },
+    ];
+  }
+  if (pathId === "csphere-aws_certification") {
+    return [
+      {
+        id: "aws_beginner",
+        icon: Target,
+        tone: "primary",
+        title: { zh: "AWS 初学者路线", en: "AWS beginner path" },
+        blurb: {
+          zh: "从 Cloud Practitioner 基础概念开始，每节课后直接 quick quiz。",
+          en: "Start with Cloud Practitioner foundations and use a quick quiz after each lesson.",
+        },
+        prompt: {
+          zh: "Start from the AWS beginner certification path. Teach the first needed mini-lesson, then give a graded quick quiz. Do not ask me to choose the learning scope again.",
+          en: "Start from the AWS beginner certification path. Teach the first needed mini-lesson, then give a graded quick quiz. Do not ask me to choose the learning scope again.",
+        },
+      },
+    ];
+  }
+  return [
+    {
+      id: "continue",
+      icon: MessageCirclePlus,
+      tone: "primary",
+      title: { zh: "继续下一课", en: "Continue next lesson" },
+      blurb: {
+        zh: "按当前 Mastery Path 的下一个目标继续。",
+        en: "Continue with the next objective in the current Mastery Path.",
+      },
+      prompt: {
+        zh: "Continue the current mastery path in order. Teach the next mini-lesson, then give a graded quick quiz.",
+        en: "Continue the current mastery path in order. Teach the next mini-lesson, then give a graded quick quiz.",
+      },
+    },
+  ];
+}
+
 function formatMasteryValue(value?: number): string {
   if (typeof value !== "number" || !Number.isFinite(value)) return "--";
   return `${Math.round(value * 100)}%`;
@@ -529,6 +661,114 @@ function MasteryPathStatusStrip({
   );
 }
 
+function MasteryStartingPointPanel({
+  title,
+  pathId,
+  tr,
+  disabled,
+  onSelect,
+  onContinue,
+  onRestart,
+  onRestore,
+}: {
+  title: string;
+  pathId: string;
+  tr: GoalTranslator;
+  disabled: boolean;
+  onSelect: (point: MasteryStartingPoint) => void;
+  onContinue: () => void;
+  onRestart: () => void;
+  onRestore: () => void;
+}) {
+  const points = masteryStartingPointsForPath(pathId);
+  return (
+    <div className="mx-auto flex w-full max-w-[760px] flex-col gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)]/70 p-4">
+      <div className="flex items-start gap-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--muted)]/35">
+          <Target className="h-4 w-4 text-[var(--primary)]" />
+        </div>
+        <div className="min-w-0">
+          <div className="text-sm font-medium text-[var(--foreground)]">
+            {tr("选择开始位置", "Choose where to start")}
+          </div>
+          <p className="mt-1 text-xs leading-relaxed text-[var(--muted-foreground)]">
+            {tr(
+              "不用从头开始。选择你现在最需要的内容，Tutor 会直接进入 mini-lesson 和 quick quiz。",
+              "You do not need to start from the beginning. Pick what you need now; Tutor will jump into a mini-lesson and quick quiz.",
+            )}
+          </p>
+        </div>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-2">
+        {points.map((point) => {
+          const Icon = point.icon;
+          const primary = point.tone === "primary";
+          return (
+            <button
+              key={point.id}
+              type="button"
+              disabled={disabled}
+              onClick={() => onSelect(point)}
+              className={`flex min-h-[86px] items-start gap-3 rounded-md border px-3 py-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                primary
+                  ? "border-[var(--primary)]/50 bg-[var(--primary)]/10 hover:bg-[var(--primary)]/15"
+                  : "border-[var(--border)] hover:bg-[var(--accent)]"
+              }`}
+              title={tr(point.title.zh, point.title.en)}
+            >
+              <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--background)]">
+                <Icon className="h-4 w-4 text-[var(--primary)]" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-medium text-[var(--foreground)]">
+                  {tr(point.title.zh, point.title.en)}
+                </span>
+                <span className="mt-1 block text-xs leading-relaxed text-[var(--muted-foreground)]">
+                  {tr(point.blurb.zh, point.blurb.en)}
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border)] pt-3">
+        <div className="min-w-0 truncate text-xs text-[var(--muted-foreground)]">
+          {title}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={onContinue}
+            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--border)] px-2.5 text-xs text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <MessageCirclePlus className="h-3.5 w-3.5" />
+            {tr("从当前进度继续", "Continue progress")}
+          </button>
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={onRestart}
+            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--border)] px-2.5 text-xs text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            {tr("新会话从头", "New session restart")}
+          </button>
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={onRestore}
+            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--border)] px-2.5 text-xs text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Undo2 className="h-3.5 w-3.5" />
+            {tr("恢复备份", "Restore backup")}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /*  Chat page                                                         */
 /* ------------------------------------------------------------------ */
@@ -580,6 +820,7 @@ export default function ChatPage() {
   const pendingCapabilityRef = useRef<string | null | undefined>(undefined);
   const pendingTutorSessionRef = useRef<string | null | undefined>(undefined);
   const pendingMasteryPathRef = useRef<string | null | undefined>(undefined);
+  const pendingMasteryStartPointRef = useRef<string>("");
   const pendingMasteryAutoStartRef = useRef<string | null | undefined>(undefined);
   const masteryAutoStartSentRef = useRef(false);
   if (pendingAgentRef.current === undefined) {
@@ -1890,6 +2131,7 @@ export default function ChatPage() {
     if (!masteryPathParam || masteryProgressBusy || state.isStreaming) return;
     setCapability("mastery_path");
     pendingMasteryPathRef.current = masteryPathParam;
+    pendingMasteryStartPointRef.current = "";
     masteryAutoStartSentRef.current = true;
     sendMessage(
       "Continue the current mastery path in order.",
@@ -1916,6 +2158,44 @@ export default function ChatPage() {
     shouldAutoScrollRef,
     state.isStreaming,
   ]);
+
+  const handleStartMasteryAtPoint = useCallback(
+    (point: MasteryStartingPoint) => {
+      if (!masteryPathParam || masteryProgressBusy || state.isStreaming) return;
+      setCapability("mastery_path");
+      pendingMasteryPathRef.current = masteryPathParam;
+      pendingMasteryStartPointRef.current = point.id;
+      masteryAutoStartSentRef.current = true;
+      const startPrompt = goalTr(point.prompt.zh, point.prompt.en);
+      sendMessage(
+        startPrompt,
+        [],
+        {
+          mastery_path_id: masteryPathParam,
+          mastery_start_point: point.id,
+          ...(pendingTutorSessionRef.current
+            ? { cognisphere_tutor_session_id: pendingTutorSessionRef.current }
+            : {}),
+        },
+        [],
+        [],
+        {
+          displayUserMessage: false,
+          persistUserMessage: false,
+        },
+      );
+      shouldAutoScrollRef.current = true;
+    },
+    [
+      goalTr,
+      masteryPathParam,
+      masteryProgressBusy,
+      sendMessage,
+      setCapability,
+      shouldAutoScrollRef,
+      state.isStreaming,
+    ],
+  );
 
   const handleSend = useCallback(
     async (content: string) => {
@@ -1966,6 +2246,9 @@ export default function ChatPage() {
         config = {
           ...(config ?? {}),
           mastery_path_id: masteryPathId,
+          ...(pendingMasteryStartPointRef.current
+            ? { mastery_start_point: pendingMasteryStartPointRef.current }
+            : {}),
           ...(pendingTutorSessionRef.current
             ? { cognisphere_tutor_session_id: pendingTutorSessionRef.current }
             : {}),
@@ -2497,108 +2780,17 @@ export default function ChatPage() {
                       {masteryPathTitle || t(welcomeGreeting)}
                     </h1>
                   </div>
-                  {isAiInfraMasteryPath ? (
-                    <div className="mx-auto flex w-full max-w-[620px] flex-col gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)]/70 p-4">
-                      <div className="flex items-start gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--muted)]/35">
-                          <GraduationCap className="h-4 w-4 text-[var(--primary)]" />
-                        </div>
-                        <div className="min-w-0">
-                          <div className="text-sm font-medium text-[var(--foreground)]">
-                            {goalTr("按顺序学习 AI Infra", "Learn AI Infra in order")}
-                          </div>
-                          <p className="mt-1 text-xs leading-relaxed text-[var(--muted-foreground)]">
-                            {goalTr(
-                              "先用 Mastery Path 建立概念、边界和判断力；需要证据时再进入 Twin Lab 运行实验。",
-                              "Use Mastery Path first for concepts, boundaries, and judgment; open Twin Lab when you need evidence.",
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="grid gap-2 sm:grid-cols-3">
-                        <button
-                          type="button"
-                          disabled={masteryProgressBusy || state.isStreaming}
-                          onClick={handleContinueMasteryPath}
-                          className="flex min-w-0 items-center gap-2 rounded-md border border-[var(--primary)]/45 px-3 py-2 text-left text-xs text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          <MessageCirclePlus className="h-4 w-4 shrink-0" />
-                          <span className="min-w-0 truncate">
-                            {goalTr("继续下一课", "Continue next lesson")}
-                          </span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => router.push("/space/learning?domains=ai_infra")}
-                          className="flex min-w-0 items-center gap-2 rounded-md border border-[var(--border)] px-3 py-2 text-left text-xs text-[var(--foreground)] hover:bg-[var(--accent)]"
-                        >
-                          <Compass className="h-4 w-4 shrink-0" />
-                          <span className="min-w-0 truncate">
-                            {goalTr("查看学习路径", "View path map")}
-                          </span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => router.push("/space/ai-infra")}
-                          className="flex min-w-0 items-center gap-2 rounded-md border border-[var(--border)] px-3 py-2 text-left text-xs text-[var(--foreground)] hover:bg-[var(--accent)]"
-                        >
-                          <Microscope className="h-4 w-4 shrink-0" />
-                          <span className="min-w-0 truncate">
-                            {goalTr("打开实验证据", "Open lab evidence")}
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  ) : null}
                   {masteryPathParam && (
-                    <div className="mx-auto flex w-full max-w-[560px] flex-col items-stretch gap-2 rounded-lg border border-[var(--border)] bg-[var(--card)]/70 p-3">
-                      <div className="flex flex-col gap-2 sm:flex-row">
-                        <button
-                          type="button"
-                          disabled={masteryProgressBusy}
-                          onClick={() => void handleNewMasterySession("continue")}
-                          className="inline-flex flex-1 items-center justify-center gap-2 rounded-md border border-[var(--border)] px-3 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          <MessageCirclePlus className="h-4 w-4" />
-                          {goalTr("新会话继续下一步", "New session, next step")}
-                        </button>
-                        <button
-                          type="button"
-                          disabled={masteryProgressBusy}
-                          onClick={() => void handleNewMasterySession("restart")}
-                          className="inline-flex flex-1 items-center justify-center gap-2 rounded-md bg-[var(--primary)] px-3 py-2 text-sm text-[var(--primary-foreground)] hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          <RotateCcw className="h-4 w-4" />
-                          {goalTr("新会话从头开始", "New session, restart")}
-                        </button>
-                      </div>
-                      <div className="flex items-center justify-center gap-3 text-xs">
-                        <button
-                          type="button"
-                          disabled={masteryProgressBusy}
-                          onClick={handleRestoreMasteryProgress}
-                          className="inline-flex items-center gap-1 text-[var(--primary)] hover:underline disabled:opacity-50"
-                        >
-                          <Undo2 className="h-3.5 w-3.5" />
-                          {goalTr("恢复最近备份", "Restore latest backup")}
-                        </button>
-                        {masteryProgressBusy && (
-                          <span className="text-[var(--muted-foreground)]">
-                            {goalTr("处理中…", "Working...")}
-                          </span>
-                        )}
-                      </div>
-                      {masteryProgressNotice && (
-                        <p className="text-center text-xs text-green-600">
-                          {masteryProgressNotice}
-                        </p>
-                      )}
-                      {masteryProgressError && (
-                        <p className="text-center text-xs text-red-500">
-                          {masteryProgressError}
-                        </p>
-                      )}
-                    </div>
+                    <MasteryStartingPointPanel
+                      title={masteryPathTitle}
+                      pathId={masteryPathParam}
+                      tr={goalTr}
+                      disabled={masteryProgressBusy || state.isStreaming}
+                      onSelect={handleStartMasteryAtPoint}
+                      onContinue={handleContinueMasteryPath}
+                      onRestart={() => void handleNewMasterySession("restart")}
+                      onRestore={handleRestoreMasteryProgress}
+                    />
                   )}
                   {!masteryPathParam && <LearningGoalEntry tr={goalTr} />}
                 </div>
