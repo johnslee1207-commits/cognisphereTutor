@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 import {
   fetchAiInfraEvidence,
   fetchAiInfraLab,
+  fetchAiInfraLearningEvaluation,
   fetchAiInfraLearningWorkspace,
   fetchAiInfraLabs,
   fetchAiInfraStatus,
@@ -32,6 +33,7 @@ import {
   type AiInfraDiagnosisAssessment,
   type AiInfraEvidence,
   type AiInfraLab,
+  type AiInfraLearningEvaluationSummary,
   type AiInfraLearningEvent,
   type AiInfraLearningWorkspaceState as ServerAiInfraLearningWorkspaceState,
   type AiInfraStatus,
@@ -112,6 +114,8 @@ export default function AiInfraTwinPage() {
   const [evidenceBundles, setEvidenceBundles] = useState<Record<string, string[]>>({});
   const [reviewLedger, setReviewLedger] = useState<Record<string, AiInfraReviewLedgerEntry>>({});
   const [learningEvents, setLearningEvents] = useState<AiInfraLearningEvent[]>([]);
+  const [learningEvaluation, setLearningEvaluation] =
+    useState<AiInfraLearningEvaluationSummary | null>(null);
   const [workspaceHydrated, setWorkspaceHydrated] = useState(false);
   const [workspaceSyncState, setWorkspaceSyncState] = useState<"local" | "synced" | "offline">("local");
   const [error, setError] = useState<string | null>(null);
@@ -213,12 +217,13 @@ export default function AiInfraTwinPage() {
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
-    const [statusResult, labsResult, evidenceResult, handshakeResult] =
+    const [statusResult, labsResult, evidenceResult, handshakeResult, evaluationResult] =
       await Promise.allSettled([
         fetchAiInfraStatus(),
         fetchAiInfraLabs(),
         fetchAiInfraEvidence(),
         runCognisphereHandshake({ domain: "ai_infra", checkMode: "full" }),
+        fetchAiInfraLearningEvaluation(AI_INFRA_WORKSPACE_ID),
       ]);
 
     const nextStatus = statusResult.status === "fulfilled" ? statusResult.value : null;
@@ -226,11 +231,14 @@ export default function AiInfraTwinPage() {
     const nextEvidence = evidenceResult.status === "fulfilled" ? evidenceResult.value : [];
     const nextHandshake =
       handshakeResult.status === "fulfilled" ? handshakeResult.value : null;
+    const nextEvaluation =
+      evaluationResult.status === "fulfilled" ? evaluationResult.value.summary : null;
 
     setStatus(nextStatus);
     setLabs(nextLabs);
     setEvidence(nextEvidence);
     setPluginHandshake(nextHandshake);
+    setLearningEvaluation(nextEvaluation);
     setSelected((prev) => {
       const preferred = prev && nextLabs.find((lab) => lab.labId === prev.labId);
       return preferred || nextLabs[0] || null;
@@ -481,6 +489,20 @@ export default function AiInfraTwinPage() {
       selectedUnitHasLabEvidence,
     ],
   );
+  const evaluationScorePct =
+    learningEvaluation?.average_score == null
+      ? 0
+      : Math.round(learningEvaluation.average_score * 100);
+  const transferEventCount =
+    learningEvaluation?.required_stage_counts.transferChallenge ?? 0;
+  const expertAgreementCount =
+    learningEvaluation?.required_stage_counts.expertAgreement ?? 0;
+  const learningEvaluationNextGate =
+    transferEventCount <= 0
+      ? tr("下一成熟度门槛：完成迁移挑战事件", "Next maturity gate: complete a transfer challenge event")
+      : expertAgreementCount <= 0
+        ? tr("下一成熟度门槛：补充专家一致性评审", "Next maturity gate: add expert agreement review")
+        : tr("学习评估闭环已覆盖迁移和专家评审", "Learning evaluation loop covers transfer and expert review");
   const expertUnits = useMemo(
     () =>
       knowledgeUnits.filter((unit) =>
@@ -657,6 +679,8 @@ export default function AiInfraTwinPage() {
     setSourceDocumentNotes({});
     setEvidenceBundles({});
     setReviewLedger({});
+    setLearningEvents([]);
+    setLearningEvaluation(null);
   }, [priorityCoursePaths]);
   const workspaceTabs: { id: AiInfraWorkspaceTab; label: string }[] = [
     { id: "learn", label: tr("学习", "Learn") },
@@ -745,6 +769,60 @@ export default function AiInfraTwinPage() {
             </div>
             <div className="mt-2 rounded-md border border-[var(--border)] px-2 py-1 text-[10px] text-[var(--muted-foreground)]">
               {selectedUnitMastery.nextAction}
+            </div>
+          </section>
+        )}
+
+        {activeTab === "learn" && (
+          <section className="mb-4 rounded-lg border border-[var(--border)] p-3">
+            <div className="flex items-center justify-between gap-2">
+              <div className="min-w-0">
+                <div className="text-[11px] uppercase text-[var(--muted-foreground)]">
+                  {tr("学习证据闭环", "Learning evidence loop")}
+                </div>
+                <div className="mt-1 truncate text-sm font-medium text-[var(--foreground)]">
+                  {learningEvaluationNextGate}
+                </div>
+              </div>
+              <span
+                className={`shrink-0 rounded-full border px-1.5 py-0.5 text-[10px] ${
+                  transferEventCount > 0 && expertAgreementCount > 0
+                    ? "border-emerald-500/40 text-emerald-500"
+                    : "border-amber-500/40 text-amber-500"
+                }`}
+              >
+                {transferEventCount > 0 && expertAgreementCount > 0 ? "closed" : "open"}
+              </span>
+            </div>
+            <div className="mt-2 grid grid-cols-2 gap-1">
+              <MiniStat label={tr("事件", "Events")} value={learningEvaluation?.event_count ?? 0} />
+              <MiniStat label={tr("均分", "Avg")} value={evaluationScorePct} />
+              <MiniStat
+                label={tr("证据", "Evidence")}
+                value={learningEvaluation?.evidence_ref_count ?? 0}
+              />
+              <MiniStat
+                label={tr("覆盖单元", "Units")}
+                value={learningEvaluation?.evidence_covered_unit_count ?? 0}
+              />
+            </div>
+            <div className="mt-2 flex flex-wrap gap-1">
+              <StagePill
+                label={tr("迁移", "Transfer")}
+                value={transferEventCount}
+              />
+              <StagePill
+                label={tr("专家", "Expert")}
+                value={expertAgreementCount}
+              />
+              {(learningEvaluation?.weakest_error_types || []).slice(0, 2).map((item) => (
+                <span
+                  key={item}
+                  className="max-w-full truncate rounded-md border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--muted-foreground)]"
+                >
+                  {item}
+                </span>
+              ))}
             </div>
           </section>
         )}
@@ -2386,6 +2464,21 @@ function MiniStat({ label, value }: { label: string; value: number }) {
         {value}
       </div>
     </div>
+  );
+}
+
+function StagePill({ label, value }: { label: string; value: number }) {
+  const complete = value > 0;
+  return (
+    <span
+      className={`rounded-md border px-1.5 py-0.5 text-[10px] ${
+        complete
+          ? "border-emerald-500/40 text-emerald-500"
+          : "border-amber-500/40 text-amber-500"
+      }`}
+    >
+      {label} {value}
+    </span>
   );
 }
 

@@ -11,7 +11,14 @@ const pageSource = readFileSync(
 test("AI infra page loads Twin and plugin status independently", () => {
   assert.match(pageSource, /Promise\.allSettled/);
   assert.match(pageSource, /runCognisphereHandshake\(\{ domain: "ai_infra"/);
+  assert.match(pageSource, /fetchAiInfraLearningEvaluation\(AI_INFRA_WORKSPACE_ID\)/);
   assert.match(pageSource, /const nextHandshake =/);
+});
+
+test("AI infra page exposes learning evaluation evidence loop", () => {
+  assert.match(pageSource, /学习证据闭环/);
+  assert.match(pageSource, /Learning evidence loop/);
+  assert.match(pageSource, /Next maturity gate: complete a transfer challenge event/);
 });
 
 test("AI infra Run Lab control is disabled in content-only mode", () => {
