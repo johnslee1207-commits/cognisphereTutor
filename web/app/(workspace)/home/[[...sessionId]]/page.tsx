@@ -682,7 +682,7 @@ function MasteryStartingPointPanel({
 }) {
   const points = masteryStartingPointsForPath(pathId);
   return (
-    <div className="mx-auto flex w-full max-w-[760px] flex-col gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)]/70 p-4">
+    <div className="mx-auto flex w-full max-w-[720px] flex-col gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)]/70 p-4 shadow-sm">
       <div className="flex items-start gap-3">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--muted)]/35">
           <Target className="h-4 w-4 text-[var(--primary)]" />
@@ -699,7 +699,7 @@ function MasteryStartingPointPanel({
           </p>
         </div>
       </div>
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid gap-2 lg:grid-cols-2">
         {points.map((point) => {
           const Icon = point.icon;
           const primary = point.tone === "primary";
@@ -709,7 +709,7 @@ function MasteryStartingPointPanel({
               type="button"
               disabled={disabled}
               onClick={() => onSelect(point)}
-              className={`flex min-h-[86px] items-start gap-3 rounded-md border px-3 py-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+              className={`flex min-h-[96px] items-start gap-3 rounded-md border px-3 py-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                 primary
                   ? "border-[var(--primary)]/50 bg-[var(--primary)]/10 hover:bg-[var(--primary)]/15"
                   : "border-[var(--border)] hover:bg-[var(--accent)]"
@@ -731,8 +731,8 @@ function MasteryStartingPointPanel({
           );
         })}
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border)] pt-3">
-        <div className="min-w-0 truncate text-xs text-[var(--muted-foreground)]">
+      <div className="flex flex-col gap-2 border-t border-[var(--border)] pt-3 md:flex-row md:items-center md:justify-between">
+        <div className="min-w-0 text-xs text-[var(--muted-foreground)]">
           {title}
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -2765,8 +2765,8 @@ export default function ChatPage() {
                 </div>
               </div>
             ) : !hasMessages ? (
-              <div className="flex w-full flex-1 min-h-0 items-end justify-center pb-10 animate-fade-in px-6">
-                <div className="w-full max-w-[768px] flex flex-col items-stretch gap-5">
+              <div className="w-full flex-1 min-h-0 overflow-y-auto px-6 py-8 animate-fade-in">
+                <div className="mx-auto flex w-full max-w-[760px] flex-col items-stretch gap-5">
                   <div className="flex items-center justify-center gap-4">
                     <img
                       src="/logo_black.png"
@@ -2776,7 +2776,7 @@ export default function ChatPage() {
                       className="h-10 w-10 select-none"
                       draggable={false}
                     />
-                    <h1 className="font-serif text-[40px] font-medium leading-[1.1] tracking-[-0.015em] text-[var(--foreground)]">
+                    <h1 className="min-w-0 text-center font-serif text-[28px] font-medium leading-tight text-[var(--foreground)] md:text-[34px]">
                       {masteryPathTitle || t(welcomeGreeting)}
                     </h1>
                   </div>
@@ -2849,86 +2849,88 @@ export default function ChatPage() {
               </div>
             )}
 
-            <ChatComposer
-              composerRef={composerRef}
-              capMenuRef={capMenuRef}
-              capBtnRef={capBtnRef}
-              spaceMenuRef={spaceMenuRef}
-              spaceBtnRef={spaceBtnRef}
-              dragCounter={dragCounter}
-              dragging={dragging}
-              capMenuOpen={capMenuOpen}
-              spaceMenuOpen={spaceMenuOpen}
-              hasMessages={hasMessages}
-              attachments={attachments}
-              attachmentError={attachmentError}
-              activeCap={activeCap}
-              knowledgeBases={kbOptions}
-              connectedAgents={agentOptions}
-              selectedAgent={selectedAgent}
-              onSelectAgent={handleSelectAgent}
-              subagentBudget={subagentBudget}
-              onSubagentBudgetChange={setSubagentBudget}
-              llmOptions={llmOptions}
-              activeLLMDefault={activeLLMDefault}
-              llmSelection={state.llmSelection}
-              llmOptionsLoading={llmOptionsLoading}
-              llmOptionsError={llmOptionsError}
-              selectedBookReferences={selectedBookReferences}
-              selectedNotebookRecords={selectedNotebookRecords}
-              selectedHistorySessions={selectedHistorySessions}
-              selectedAgentSessions={selectedAgentSessions}
-              selectedQuestionEntries={selectedQuestionEntries}
-              notebookReferenceGroups={notebookReferenceGroups}
-              selectedPersona={null}
-              selectedMemoryFiles={selectedMemoryFiles}
-              selectedKnowledgeBases={selectedKbOnly}
-              isStreaming={state.isStreaming}
-              isVisualizeMode={isVisualizeMode}
-              capabilityNeedsConfig={capabilityNeedsConfig}
-              capabilityConfigConfirmed={capabilityConfigConfirmed}
-              onRequestConfigConfirm={ensureActivityPanelOpen}
-              capabilities={CAPABILITIES}
-              onSetCapMenuOpen={setCapMenuOpen}
-              onSetSpaceMenuOpen={setSpaceMenuOpen}
-              onToggleKB={handleToggleKB}
-              onSelectLLM={setLLMSelection}
-              onSelectNotebookPicker={handleSelectNotebookPicker}
-              onSelectBookPicker={handleSelectBookPicker}
-              onSelectHistoryPicker={handleSelectHistoryPicker}
-              onSelectAgentsPicker={handleSelectAgentsPicker}
-              onSelectQuestionBankPicker={handleSelectQuestionBankPicker}
-              onSelectPersonaPicker={handleSelectPersonaPicker}
-              onSelectMemoryPicker={handleSelectMemoryPicker}
-              onClearPersona={handleClearPersona}
-              personaSelection={state.personaSelection}
-              onPersonaSelectionChange={setPersonaSelection}
-              personaSelectorOpen={personaSelectorOpen}
-              onPersonaSelectorOpenChange={setPersonaSelectorOpen}
-              onToggleMemoryFile={handleToggleMemoryFile}
-              onSend={handleSend}
-              onRemoveAttachment={removeAttachment}
-              onPreviewAttachment={handlePreviewPendingAttachment}
-              onRemoveHistory={handleRemoveHistory}
-              onRemoveAgent={handleRemoveAgent}
-              onRemoveBookReference={handleRemoveBookReference}
-              onRemoveNotebook={handleRemoveNotebook}
-              onRemoveQuestion={handleRemoveQuestion}
-              onDragEnter={handleDragEnter}
-              onDragLeave={handleDragLeave}
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-              onPaste={handlePaste}
-              onAddFiles={handleAddFiles}
-              onSelectCapability={handleSelectCapability}
-              onCancelStreaming={cancelStreamingTurn}
-              prefillInputRef={prefillInputRef}
-            />
+            {(!masteryPathParam || hasMessages) && (
+              <ChatComposer
+                composerRef={composerRef}
+                capMenuRef={capMenuRef}
+                capBtnRef={capBtnRef}
+                spaceMenuRef={spaceMenuRef}
+                spaceBtnRef={spaceBtnRef}
+                dragCounter={dragCounter}
+                dragging={dragging}
+                capMenuOpen={capMenuOpen}
+                spaceMenuOpen={spaceMenuOpen}
+                hasMessages={hasMessages}
+                attachments={attachments}
+                attachmentError={attachmentError}
+                activeCap={activeCap}
+                knowledgeBases={kbOptions}
+                connectedAgents={agentOptions}
+                selectedAgent={selectedAgent}
+                onSelectAgent={handleSelectAgent}
+                subagentBudget={subagentBudget}
+                onSubagentBudgetChange={setSubagentBudget}
+                llmOptions={llmOptions}
+                activeLLMDefault={activeLLMDefault}
+                llmSelection={state.llmSelection}
+                llmOptionsLoading={llmOptionsLoading}
+                llmOptionsError={llmOptionsError}
+                selectedBookReferences={selectedBookReferences}
+                selectedNotebookRecords={selectedNotebookRecords}
+                selectedHistorySessions={selectedHistorySessions}
+                selectedAgentSessions={selectedAgentSessions}
+                selectedQuestionEntries={selectedQuestionEntries}
+                notebookReferenceGroups={notebookReferenceGroups}
+                selectedPersona={null}
+                selectedMemoryFiles={selectedMemoryFiles}
+                selectedKnowledgeBases={selectedKbOnly}
+                isStreaming={state.isStreaming}
+                isVisualizeMode={isVisualizeMode}
+                capabilityNeedsConfig={capabilityNeedsConfig}
+                capabilityConfigConfirmed={capabilityConfigConfirmed}
+                onRequestConfigConfirm={ensureActivityPanelOpen}
+                capabilities={CAPABILITIES}
+                onSetCapMenuOpen={setCapMenuOpen}
+                onSetSpaceMenuOpen={setSpaceMenuOpen}
+                onToggleKB={handleToggleKB}
+                onSelectLLM={setLLMSelection}
+                onSelectNotebookPicker={handleSelectNotebookPicker}
+                onSelectBookPicker={handleSelectBookPicker}
+                onSelectHistoryPicker={handleSelectHistoryPicker}
+                onSelectAgentsPicker={handleSelectAgentsPicker}
+                onSelectQuestionBankPicker={handleSelectQuestionBankPicker}
+                onSelectPersonaPicker={handleSelectPersonaPicker}
+                onSelectMemoryPicker={handleSelectMemoryPicker}
+                onClearPersona={handleClearPersona}
+                personaSelection={state.personaSelection}
+                onPersonaSelectionChange={setPersonaSelection}
+                personaSelectorOpen={personaSelectorOpen}
+                onPersonaSelectorOpenChange={setPersonaSelectorOpen}
+                onToggleMemoryFile={handleToggleMemoryFile}
+                onSend={handleSend}
+                onRemoveAttachment={removeAttachment}
+                onPreviewAttachment={handlePreviewPendingAttachment}
+                onRemoveHistory={handleRemoveHistory}
+                onRemoveAgent={handleRemoveAgent}
+                onRemoveBookReference={handleRemoveBookReference}
+                onRemoveNotebook={handleRemoveNotebook}
+                onRemoveQuestion={handleRemoveQuestion}
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                onPaste={handlePaste}
+                onAddFiles={handleAddFiles}
+                onSelectCapability={handleSelectCapability}
+                onCancelStreaming={cancelStreamingTurn}
+                prefillInputRef={prefillInputRef}
+              />
+            )}
             <div
               aria-hidden="true"
               className="shrink-0"
               style={{
-                flexGrow: hasMessages ? 0 : 1.4,
+                flexGrow: hasMessages || masteryPathParam ? 0 : 1.4,
                 transition: "flex-grow 650ms cubic-bezier(0.16, 1, 0.3, 1)",
               }}
             />
