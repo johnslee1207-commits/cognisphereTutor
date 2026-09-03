@@ -1777,6 +1777,152 @@
           "dir.public_works_apprenticeship.2026-09-03",
           "dir.certified_payroll.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-practice-error-clinic",
+        "title": "Error clinic and remediation loop",
+        "summary": "Generate a short review session from the learner's last two error tags, then give one targeted reteach and two new original checks.",
+        "practice_modes": [
+          "error_tag_sort",
+          "micro_reteach",
+          "similar_but_not_identical_retry",
+          "confidence_rating",
+          "advance_or_remediate_decision"
+        ],
+        "target_skills": [
+          "topic classification",
+          "unit setup",
+          "misread qualifier repair",
+          "safety sequencing",
+          "documentation boundary",
+          "lookup route speed"
+        ],
+        "generation_rules": [
+          "Never simply repeat the missed item.",
+          "Name the exact error tag before reteaching.",
+          "Keep the remediation task small enough to finish in one turn.",
+          "Advance only after the learner passes a similar-but-new check."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "cslb.c10.study_guide.2026-03",
+          "cslb.law_business.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-practice-worked-example-ladder",
+        "title": "Worked-example ladder",
+        "summary": "Generate a three-step worked example: model the first step, ask the learner for the next step, then ask a parallel multiple-choice item.",
+        "practice_modes": [
+          "teacher_models_first_step",
+          "learner_next_step",
+          "parallel_quick_quiz",
+          "rationale_feedback"
+        ],
+        "target_skills": [
+          "math setup",
+          "Ohm's Law",
+          "sizing route",
+          "estimating setup",
+          "scenario classification"
+        ],
+        "generation_rules": [
+          "Use concrete numbers or facts only when they are original and source-safe.",
+          "Make the first example easier than the final quick check.",
+          "Explain why each distractor is attractive but wrong.",
+          "Use units and plain-language interpretation."
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-practice-feynman-explain-back",
+        "title": "Feynman explain-back with optional quiz",
+        "summary": "Ask the learner to explain a concept in plain language, but allow a multiple-choice fallback when free response would slow momentum.",
+        "practice_modes": [
+          "plain_language_explain_back",
+          "multiple_choice_fallback",
+          "true_false_solid_check",
+          "short_reteach"
+        ],
+        "target_skills": [
+          "career route explanation",
+          "source discipline",
+          "electrical concept meaning",
+          "safety logic",
+          "business scenario reasoning"
+        ],
+        "generation_rules": [
+          "Use free response for concept consolidation, not as a mandatory gate after every mini-lesson.",
+          "Offer multiple-choice or true/false when the learner needs faster progress.",
+          "Require explain-back only for repeated misconceptions or readiness checkpoints.",
+          "Keep feedback direct and specific."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.law_business.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-practice-mock-debrief",
+        "title": "Mock debrief and next-plan generator",
+        "summary": "After a sectional or mixed mock, generate a concise score review, top error tags, and the next three study actions.",
+        "practice_modes": [
+          "score_by_domain",
+          "error_tag_frequency",
+          "time_pressure_review",
+          "three_action_next_plan"
+        ],
+        "target_skills": [
+          "GE blueprint review",
+          "C-10 blueprint review",
+          "Law & Business scenario review",
+          "apprenticeship timed practice"
+        ],
+        "generation_rules": [
+          "Do not report only a raw score.",
+          "Separate knowledge, calculation, reading, navigation, safety, and pacing errors.",
+          "Recommend the smallest useful next session.",
+          "Keep official exam logistics source-backed."
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "cslb.c10.study_guide.2026-03",
+          "cslb.law_business.study_guide.2026-03",
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-practice-spaced-mixed-review",
+        "title": "Spaced mixed review",
+        "summary": "Generate a short mixed review that includes one old mastered item, one recent lesson item, and one weak-tag remediation item.",
+        "practice_modes": [
+          "old_mastered_recall",
+          "recent_lesson_check",
+          "weak_tag_retry",
+          "confidence_update"
+        ],
+        "target_skills": [
+          "long-term retention",
+          "transfer across tracks",
+          "error memory",
+          "readiness confidence"
+        ],
+        "generation_rules": [
+          "Include at least one item from a previous module when possible.",
+          "Make review short enough to appear after a normal lesson.",
+          "Prefer multiple-choice or true/false for fast checks.",
+          "Use free response only when a concept needs explanation."
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.exam.study_overview.2026-09-03",
+          "gan.aptitude_test.2026-09-03"
+        ]
       }
     ],
     "learning_activity_templates": [
@@ -2213,6 +2359,73 @@
           "updated error log with remediation actions",
           "official-instruction and document checklist completed",
           "final 24-hour light review plan"
+        ]
+      },
+      {
+        "id": "cec-sequence-fourteen-day-newcomer-sprint",
+        "title": "14-day newcomer sprint",
+        "summary": "A concrete two-week route for a learner who needs fast entry into electrical foundations and apprenticeship-style aptitude readiness.",
+        "objective_ids": [
+          "cec-career-overview",
+          "cec-career-graph",
+          "cec-official-source-discipline",
+          "cec-diagnostic-readiness-loop",
+          "cec-foundation-arithmetic",
+          "cec-foundation-algebra",
+          "cec-foundation-ohms-law",
+          "cec-foundation-circuits",
+          "cec-foundation-drawings-tools",
+          "cec-foundation-troubleshooting",
+          "cec-apprentice-baseline-diagnostic",
+          "cec-apprentice-math-reasoning",
+          "cec-apprentice-numerical-reasoning",
+          "cec-apprentice-reading",
+          "cec-apprentice-mechanical",
+          "cec-apprentice-spatial",
+          "cec-apprentice-timed-practice",
+          "cec-apprentice-pef"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-career-orientation",
+          "cec-lesson-career-graph",
+          "cec-lesson-official-source-discipline",
+          "cec-lesson-diagnostic-readiness-loop",
+          "cec-lesson-shared-math",
+          "cec-lesson-foundation-algebra-word-problems",
+          "cec-lesson-ohms-law",
+          "cec-lesson-circuits",
+          "cec-lesson-foundation-measurement-basics",
+          "cec-lesson-foundation-drawings-tools-safety",
+          "cec-lesson-foundation-basic-troubleshooting",
+          "cec-lesson-apprentice-gan-section-map",
+          "cec-lesson-apprentice-arithmetic-speed",
+          "cec-lesson-apprentice-number-patterns",
+          "cec-lesson-apprentice-reading-elimination",
+          "cec-lesson-apprentice-mechanical-levers",
+          "cec-lesson-apprentice-mechanical-gears-pulleys",
+          "cec-lesson-apprentice-paper-folding",
+          "cec-lesson-apprentice-timed-strategy",
+          "cec-lesson-apprentice-document-checklist",
+          "cec-lesson-apprentice-pef-14-day-workflow"
+        ],
+        "activity_template_ids": [
+          "cec-activity-mini-lesson-quick-check",
+          "cec-activity-worked-example",
+          "cec-activity-timed-mixed-set",
+          "cec-activity-document-evidence-coach"
+        ],
+        "checkpoint_prompts": [
+          "Day 1-2: Can the learner choose the right route and explain source discipline?",
+          "Day 3-5: Can the learner handle units, algebra setup, Ohm's Law, and circuit path basics?",
+          "Day 6-10: Can the learner solve original aptitude math, reading, mechanical, and spatial checks?",
+          "Day 11-14: Can the learner complete timed mixed checks and organize application evidence?"
+        ],
+        "mastery_evidence": [
+          "daily three-item quick quiz",
+          "two worked-example next-step responses",
+          "one timed mixed set",
+          "top two error tags with remediation",
+          "document and PEF checklist started"
         ]
       },
       {
@@ -3108,6 +3321,209 @@
           "calosha.title8.3314.2026-09-03",
           "calosha.lockout_publication.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-scenario-foundation-ohms-law-power",
+        "title": "Foundation: power from voltage and current",
+        "summary": "Original calculation item for P = V x I setup.",
+        "scenario": [
+          "A small load uses 120 volts and 2 amps. What is the power?"
+        ],
+        "choices": [
+          "A) 60 watts",
+          "B) 122 watts",
+          "C) 240 watts",
+          "D) 240 ohms"
+        ],
+        "correct_rationale": [
+          "Power equals voltage times current, so 120 x 2 = 240 watts."
+        ],
+        "distractor_rationales": [
+          "60 divides instead of multiplying.",
+          "122 adds voltage and current.",
+          "240 ohms uses the wrong unit for power."
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-scenario-foundation-series-path",
+        "title": "Foundation: series current path",
+        "summary": "Original concept item for circuit path recognition.",
+        "scenario": [
+          "A circuit has only one path for current. If one load opens, all loads stop operating. Which circuit type is described?"
+        ],
+        "choices": [
+          "A) Series",
+          "B) Parallel",
+          "C) Public works",
+          "D) PEF"
+        ],
+        "correct_rationale": [
+          "A series circuit has one current path, so an open interrupts the entire path."
+        ],
+        "distractor_rationales": [
+          "Parallel circuits have multiple paths.",
+          "Public works is a contractor compliance topic.",
+          "PEF is an apprenticeship application evidence form."
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-scenario-ge-blueprint-weight",
+        "title": "GE blueprint: study weighting",
+        "summary": "Original scenario about using official exam weights.",
+        "scenario": [
+          "A GE learner has 10 study hours this week and wants to allocate by official emphasis. Which domain should usually get the largest block?"
+        ],
+        "choices": [
+          "A) Installation",
+          "B) Safety only",
+          "C) Maintenance and Repair only",
+          "D) Random equal time for every favorite topic"
+        ],
+        "correct_rationale": [
+          "The GE blueprint gives Installation the largest weight, so it should usually get the largest practice block."
+        ],
+        "distractor_rationales": [
+          "Safety matters, but it is not the largest weighted domain.",
+          "Maintenance and Repair is smaller than Installation.",
+          "Blueprint weighting should guide allocation."
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-ge-lookup-time",
+        "title": "GE mastery: lookup time",
+        "summary": "Original open-book readiness item.",
+        "scenario": [
+          "A learner answers GE concept questions correctly but spends too long finding references during practice. What should be trained next?"
+        ],
+        "choices": [
+          "A) NEC navigation route and lookup speed",
+          "B) Ignore the issue because open-book means unlimited time",
+          "C) Memorize leaked questions",
+          "D) Stop practicing calculations forever"
+        ],
+        "correct_rationale": [
+          "Open-book exams still require efficient navigation and time control."
+        ],
+        "distractor_rationales": [
+          "Open-book does not remove time pressure.",
+          "Leaked questions are unsafe and unreliable.",
+          "Calculations may still appear and should not be abandoned."
+        ],
+        "source_ref_ids": [
+          "ca_dir.electrician_certification_faq.2026-09-03",
+          "ca_dir.general_electrician.testinfo.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-c10-rough-sequence",
+        "title": "C-10: rough wiring sequence",
+        "summary": "Original scenario about construction sequence reasoning.",
+        "scenario": [
+          "A wall will soon be closed. Which task is most likely a rough-wiring priority before closure?"
+        ],
+        "choices": [
+          "A) Install concealed raceway or cable paths required behind the wall",
+          "B) Final decorative cover plates only",
+          "C) Certified payroll submission only",
+          "D) Paper-folding practice"
+        ],
+        "correct_rationale": [
+          "Rough wiring includes infrastructure that must be in place before surfaces close."
+        ],
+        "distractor_rationales": [
+          "Decorative cover plates are finish-stage work.",
+          "Certified payroll is a Law & Business public works topic.",
+          "Paper folding is an aptitude topic."
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-c10-special-energy",
+        "title": "C-10: special energy source",
+        "summary": "Original special-systems safety item.",
+        "scenario": [
+          "A site has utility power plus a battery energy storage system. What assumption should the learner avoid?"
+        ],
+        "choices": [
+          "A) That turning off utility power removes every energy source",
+          "B) That labels and isolation matter",
+          "C) That stored energy can affect safety planning",
+          "D) That startup checks may be needed"
+        ],
+        "correct_rationale": [
+          "Battery storage can remain an energy source, so utility disconnect alone may not remove every hazard."
+        ],
+        "distractor_rationales": [
+          "Labels and isolation do matter.",
+          "Stored energy can affect safety planning.",
+          "Startup checks may be needed."
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03",
+          "calosha.title8.3314.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-law-insurance-lien",
+        "title": "Law & Business: insurance versus lien",
+        "summary": "Original topic-classification scenario.",
+        "scenario": [
+          "A prompt asks how a contractor manages payment-security rights after unpaid work. Which topic family is most likely?"
+        ],
+        "choices": [
+          "A) Mechanics liens",
+          "B) Insurance only",
+          "C) Paper folding",
+          "D) Parallel circuits"
+        ],
+        "correct_rationale": [
+          "Payment-security rights point to mechanics lien concepts rather than insurance."
+        ],
+        "distractor_rationales": [
+          "Insurance manages risk, not payment-security rights in this cue.",
+          "Paper folding is an aptitude task.",
+          "Parallel circuits are electrical theory."
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03",
+          "cslb.law_book.2026"
+        ]
+      },
+      {
+        "id": "cec-scenario-law-employment-status",
+        "title": "Law & Business: worker-status cue",
+        "summary": "Original employment scenario for classification practice.",
+        "scenario": [
+          "A scenario focuses on who controls the worker's schedule, tools, supervision, and payroll treatment. Which Law & Business area is likely involved?"
+        ],
+        "choices": [
+          "A) Employment requirements",
+          "B) Raceway fill only",
+          "C) Paper folding only",
+          "D) Gear ratio only"
+        ],
+        "correct_rationale": [
+          "Schedule, tools, supervision, and payroll treatment are worker-status and employment clues."
+        ],
+        "distractor_rationales": [
+          "Raceway fill is a trade/code topic.",
+          "Paper folding is aptitude spatial reasoning.",
+          "Gear ratio is mechanical reasoning."
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03"
+        ]
       }
     ],
     "flashcard_decks": [
@@ -3362,6 +3778,36 @@
           "laett.inside_wireman.2026-01-26",
           "ca_dir.electrician_certification_program.2026-09-03",
           "cslb.exam.study_overview.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-checkpoint-newcomer-sprint",
+        "title": "14-day newcomer sprint checkpoint",
+        "summary": "Use at the end of the two-week newcomer sprint to route the learner into apprenticeship final-week practice, GE foundations, C-10, or Law & Business.",
+        "checkpoint_prompts": [
+          "Can the learner solve basic unit, ratio, percent, and algebra setup checks without repeated setup errors?",
+          "Can the learner explain voltage, current, resistance, power, and one current-path difference?",
+          "Can the learner answer reading and mechanical/spatial quick checks with a named method?",
+          "Can the learner classify whether the next route should be apprenticeship, GE, C-10, or Law & Business?",
+          "Does the learner have an error log and document checklist that can drive the next session?"
+        ],
+        "mastery_evidence": [
+          "80% or better on foundation math quick checks",
+          "one correct Ohm's Law or circuit concept explanation",
+          "one passed reading/mechanical/spatial mixed set",
+          "route choice matches learner goal and eligibility situation",
+          "error log has at least two actionable repair items"
+        ],
+        "remediation": [
+          "If setup errors remain, repeat worked-example ladder for units and algebra.",
+          "If concept language is weak, repeat explain-back with multiple-choice fallback.",
+          "If aptitude timing is weak, move to daily selection set before full timed practice.",
+          "If route choice is unclear, repeat career orientation cues and source discipline."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "ca_dir.eccc.general_curriculum.2018",
+          "gan.aptitude_test.2026-09-03"
         ]
       },
       {
@@ -3814,12 +4260,12 @@
       "stage": "M0/M2 expanded content seed",
       "objective_count": 39,
       "lesson_card_count": 65,
-      "practice_blueprint_count": 10,
+      "practice_blueprint_count": 15,
       "learning_activity_template_count": 8,
-      "study_sequence_count": 7,
-      "scenario_card_count": 30,
+      "study_sequence_count": 8,
+      "scenario_card_count": 38,
       "flashcard_deck_count": 13,
-      "readiness_checkpoint_count": 6,
+      "readiness_checkpoint_count": 7,
       "error_taxonomy_count": 5,
       "source_governance": "Official public sources, URLs, provenance, versions, and update watch are managed by Cognisphere. Tutor consumes materialized pack data only.",
       "note": "Tutor-ready seed with materialized lesson cards, practice blueprints, varied learning activity templates, study sequences, scenario cards, flashcard decks, readiness checkpoints, and error taxonomy. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
