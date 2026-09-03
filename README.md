@@ -23,7 +23,7 @@
 | AWS Certification | `cognispheretutor/integrations/cognisphere/bundled_packs/aws_certification_bundle.json` | 6 个模块 / 46 个目标 |
 | AP Calculus | `cognispheretutor/integrations/cognisphere/bundled_packs/ap_calculus_bundle.json` | 22 个目标 |
 | LeetCode | `cognispheretutor/integrations/cognisphere/bundled_packs/leetcode_bundle.json` | 7 个目标 |
-| California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 / 29 张 lesson cards / 8 个 practice blueprints / 8 个 activity templates |
+| California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 / 29 张 lesson cards / 8 个 practice blueprints / 8 个 activity templates / 5 条 study sequences |
 
 California Electrical Career 当前已从课程路径 seed 扩展为可进入 mini-lesson 的
 内容 seed，覆盖：
@@ -38,6 +38,10 @@ California Electrical Career 当前已从课程路径 seed 扩展为可进入 mi
 - mini-lesson + quick check、worked example、open-book navigation rehearsal、
   scenario judgment、flashcard ladder、timed mixed set、field visualization、
   document evidence coach 等学习形式
+- beginner first week、apprenticeship entry、GE core、C-10 contractor、Law &
+  Business 五条连续学习序列
+- 原创 scenario cards、flashcard decks、readiness checkpoints 和 error taxonomy，
+  用于后续错因分析与个性化复习
 - GE 图纸/导线与管道/接地 bonding/过流保护/电机变压器/故障排查，
   C-10 rough/finish wiring、special systems，以及 Law & Business 的合同、
   employment/payroll、liens/insurance/finance、public works 和 Cal/OSHA safety

@@ -1306,6 +1306,517 @@
         ]
       }
     ],
+    "study_sequences": [
+      {
+        "id": "cec-sequence-beginner-first-week",
+        "title": "Beginner first-week path",
+        "summary": "A gentle first-week route for a learner with no electrical background.",
+        "objective_ids": [
+          "cec-career-overview",
+          "cec-career-graph",
+          "cec-foundation-arithmetic",
+          "cec-foundation-ohms-law",
+          "cec-foundation-circuits",
+          "cec-foundation-tools-safety"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-career-orientation",
+          "cec-lesson-shared-math",
+          "cec-lesson-ohms-law",
+          "cec-lesson-circuits",
+          "cec-lesson-cal-osha-lockout"
+        ],
+        "activity_template_ids": [
+          "cec-activity-mini-lesson-quick-check",
+          "cec-activity-worked-example",
+          "cec-activity-field-visualization"
+        ],
+        "checkpoint_prompts": [
+          "Can the learner explain voltage/current/resistance in plain language?",
+          "Can the learner solve a one-step percentage or ratio problem?",
+          "Can the learner describe why safety comes before troubleshooting?"
+        ],
+        "mastery_evidence": [
+          "3 correct quick checks across concept, calculation, and safety",
+          "one short learner explanation of the cloud-style career path replaced by the electrical career path",
+          "no unresolved safety-first misconception"
+        ]
+      },
+      {
+        "id": "cec-sequence-apprenticeship-entry",
+        "title": "Inside Wireman apprenticeship entry path",
+        "summary": "A focused route for aptitude readiness and PEF evidence organization.",
+        "objective_ids": [
+          "cec-apprentice-test-structure",
+          "cec-apprentice-math-reasoning",
+          "cec-apprentice-numerical-reasoning",
+          "cec-apprentice-reading",
+          "cec-apprentice-mechanical",
+          "cec-apprentice-spatial",
+          "cec-apprentice-timed-practice",
+          "cec-apprentice-pef"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-apprentice-aptitude",
+          "cec-lesson-shared-math",
+          "cec-lesson-pef"
+        ],
+        "activity_template_ids": [
+          "cec-activity-worked-example",
+          "cec-activity-field-visualization",
+          "cec-activity-timed-mixed-set",
+          "cec-activity-document-evidence-coach"
+        ],
+        "checkpoint_prompts": [
+          "Can the learner classify an aptitude question type quickly?",
+          "Can the learner keep accuracy stable under short time pressure?",
+          "Can the learner separate documented experience from unsupported claims?"
+        ],
+        "mastery_evidence": [
+          "aptitude mixed-set accuracy trend",
+          "PEF documentation gap list",
+          "timed pacing reflection"
+        ]
+      },
+      {
+        "id": "cec-sequence-ge-core",
+        "title": "California General Electrician core path",
+        "summary": "A GE route that separates eligibility, content knowledge, and open-book navigation speed.",
+        "objective_ids": [
+          "cec-ge-eligibility",
+          "cec-ge-blueprint",
+          "cec-ge-theory",
+          "cec-ge-installation",
+          "cec-ge-sizing",
+          "cec-ge-maintenance-repair",
+          "cec-ge-nec-navigation",
+          "cec-ge-mastery-dimensions",
+          "cec-ge-section-full-mock"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-ge-eligibility",
+          "cec-lesson-ge-blueprint",
+          "cec-lesson-ge-exam-logistics",
+          "cec-lesson-electrical-symbols-diagrams",
+          "cec-lesson-conductors-raceways",
+          "cec-lesson-grounding-bonding",
+          "cec-lesson-overcurrent-protection",
+          "cec-lesson-motors-transformers",
+          "cec-lesson-testing-troubleshooting",
+          "cec-lesson-nec-navigation"
+        ],
+        "activity_template_ids": [
+          "cec-activity-mini-lesson-quick-check",
+          "cec-activity-open-book-navigation-rehearsal",
+          "cec-activity-worked-example",
+          "cec-activity-timed-mixed-set"
+        ],
+        "checkpoint_prompts": [
+          "Can the learner identify whether a GE question is safety, system requirements, installation, or maintenance?",
+          "Can the learner choose a likely code lookup route before calculating?",
+          "Can the learner explain the difference between concept accuracy and lookup speed?"
+        ],
+        "mastery_evidence": [
+          "blueprint classification quick check",
+          "NEC navigation route check",
+          "one calculation ladder drill",
+          "one troubleshooting scenario"
+        ]
+      },
+      {
+        "id": "cec-sequence-c10-contractor",
+        "title": "C-10 contractor trade path",
+        "summary": "A C-10 route for closed-book trade judgment, estimating, wiring sequence, startup, troubleshooting, and safety.",
+        "objective_ids": [
+          "cec-c10-blueprint",
+          "cec-c10-planning-estimating",
+          "cec-c10-electrical-calculations",
+          "cec-c10-rough-wiring",
+          "cec-c10-special-systems",
+          "cec-c10-finish-startup",
+          "cec-c10-blueprint-practice"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-c10-blueprint",
+          "cec-lesson-c10-estimating",
+          "cec-lesson-c10-rough-finish",
+          "cec-lesson-special-systems-energy",
+          "cec-lesson-testing-troubleshooting",
+          "cec-lesson-c10-safety"
+        ],
+        "activity_template_ids": [
+          "cec-activity-scenario-judgment",
+          "cec-activity-worked-example",
+          "cec-activity-field-visualization",
+          "cec-activity-timed-mixed-set"
+        ],
+        "checkpoint_prompts": [
+          "Can the learner distinguish planning/estimating from rough wiring and finish wiring?",
+          "Can the learner solve a small estimating setup without confusing markup and margin?",
+          "Can the learner choose a safety-first action in a troubleshooting scenario?"
+        ],
+        "mastery_evidence": [
+          "closed-book scenario check",
+          "estimating calculation setup",
+          "rough/finish sequencing check",
+          "safety-first troubleshooting check"
+        ]
+      },
+      {
+        "id": "cec-sequence-law-business",
+        "title": "Contractor Law and Business scenario path",
+        "summary": "A scenario-first route for Law and Business sections, with public-works recognition and documentation habits.",
+        "objective_ids": [
+          "cec-law-exam-structure",
+          "cec-law-business-organization",
+          "cec-law-contracts-bidding",
+          "cec-law-scenario-practice",
+          "cec-law-readiness"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-law-blueprint",
+          "cec-lesson-contractor-experience",
+          "cec-lesson-law-contracts-change-orders",
+          "cec-lesson-law-employment-payroll",
+          "cec-lesson-law-liens-insurance-finance",
+          "cec-lesson-public-works"
+        ],
+        "activity_template_ids": [
+          "cec-activity-scenario-judgment",
+          "cec-activity-flashcard-ladder",
+          "cec-activity-document-evidence-coach",
+          "cec-activity-timed-mixed-set"
+        ],
+        "checkpoint_prompts": [
+          "Can the learner identify which Law and Business section a scenario belongs to?",
+          "Can the learner distinguish contract authorization from simply doing extra work?",
+          "Can the learner spot a public works clue and name the likely compliance family?"
+        ],
+        "mastery_evidence": [
+          "section-classification quick checks",
+          "contract/change-order scenario",
+          "employment/payroll scenario",
+          "public works recognition scenario"
+        ]
+      }
+    ],
+    "scenario_cards": [
+      {
+        "id": "cec-scenario-aptitude-ratio-wire",
+        "title": "Aptitude ratio: wire bundles",
+        "summary": "Original aptitude-style ratio scenario for beginner arithmetic practice.",
+        "scenario": [
+          "A trainee sorts wire bundles. For every 3 small bundles, there are 2 large bundles. If there are 30 bundles total, how many are large?"
+        ],
+        "choices": [
+          "A) 10",
+          "B) 12",
+          "C) 15",
+          "D) 18"
+        ],
+        "correct_rationale": [
+          "The ratio has 5 total parts. 30 divided by 5 is 6 per part. Large bundles are 2 parts, so 12."
+        ],
+        "distractor_rationales": [
+          "10 treats large bundles as one third of the total.",
+          "15 assumes half the bundles are large.",
+          "18 uses the small-bundle part instead of the large-bundle part."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-ohms-law-current",
+        "title": "Ohm's Law: current change",
+        "summary": "Conceptual circuit reasoning without a calculator.",
+        "scenario": [
+          "A circuit keeps the same voltage, but resistance increases. What should happen to current?"
+        ],
+        "choices": [
+          "A) Current increases",
+          "B) Current decreases",
+          "C) Current stays exactly the same",
+          "D) Current becomes unrelated to voltage"
+        ],
+        "correct_rationale": [
+          "From V = I x R, if V stays fixed and R increases, I must decrease."
+        ],
+        "distractor_rationales": [
+          "Increasing current would require voltage to rise or resistance to fall.",
+          "Current would stay the same only if the voltage changed with resistance.",
+          "Current remains related to voltage and resistance."
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-scenario-nec-navigation-route",
+        "title": "NEC navigation: classify before lookup",
+        "summary": "Open-book navigation drill that avoids reproducing code text.",
+        "scenario": [
+          "A GE practice question asks about an installation condition in a damp location. What is the best first move?"
+        ],
+        "choices": [
+          "A) Guess from a memorized number",
+          "B) Classify the location and equipment topic before choosing a reference route",
+          "C) Skip definitions and exceptions",
+          "D) Pick the most technical-looking answer"
+        ],
+        "correct_rationale": [
+          "Open-book navigation starts by classifying the topic and condition so the learner can choose the right reference route."
+        ],
+        "distractor_rationales": [
+          "Guessing loses the advantage of open-book source use.",
+          "Definitions and exceptions often matter in location-based questions.",
+          "Technical-looking wording is not evidence."
+        ],
+        "source_ref_ids": [
+          "ca_dir.electrician_certification_faq.2026-09-03",
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-scenario-c10-change-order",
+        "title": "C-10 scenario: extra work request",
+        "summary": "Contract/change-order judgment scenario.",
+        "scenario": [
+          "During a project, a customer asks the contractor to add several outlets not included in the agreed scope. What is the safest business habit before doing the extra work?"
+        ],
+        "choices": [
+          "A) Complete the extra work and hope payment is agreed later",
+          "B) Document and authorize the scope and price change before proceeding",
+          "C) Remove the original scope from the records",
+          "D) Treat it as a safety inspection issue only"
+        ],
+        "correct_rationale": [
+          "A change order habit protects scope, price, schedule, and expectations before extra work begins."
+        ],
+        "distractor_rationales": [
+          "Doing work first creates payment and expectation risk.",
+          "Deleting the original scope destroys the reference point.",
+          "Safety may still matter, but the question is about scope change control."
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-public-works-payroll",
+        "title": "Public works: certified payroll clue",
+        "summary": "Law and Business public works recognition scenario.",
+        "scenario": [
+          "A contractor is working on a public project and the prompt mentions worker classifications, hours, and wage reporting. Which topic family is most likely being tested?"
+        ],
+        "choices": [
+          "A) Certified payroll / prevailing wage compliance",
+          "B) Paper folding",
+          "C) Transformer secondary voltage only",
+          "D) Finish device trim color"
+        ],
+        "correct_rationale": [
+          "Public project context plus worker classifications, hours, and wage reporting points to public works payroll and wage compliance."
+        ],
+        "distractor_rationales": [
+          "Paper folding belongs to aptitude testing.",
+          "Transformer voltage is an electrical theory/calculation topic.",
+          "Trim color is not the compliance family signaled by the facts."
+        ],
+        "source_ref_ids": [
+          "dir.public_works_contractors.2026-09-03",
+          "dir.certified_payroll.2026-09-03",
+          "dir.prevailing_wage.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-lockout-first",
+        "title": "Safety: lockout/tagout first",
+        "summary": "Hazardous-energy safety scenario for troubleshooting habits.",
+        "scenario": [
+          "A machine has stopped unexpectedly and a worker is preparing to service it. What concern should be addressed before hands-on work begins?"
+        ],
+        "choices": [
+          "A) Prevent unexpected energization and verify hazardous energy control",
+          "B) Choose the fastest replacement part",
+          "C) Ignore all labels",
+          "D) Start with business finance calculations"
+        ],
+        "correct_rationale": [
+          "Safety-first troubleshooting requires hazardous energy control before servicing or repair activity."
+        ],
+        "distractor_rationales": [
+          "Speed is not the first concern when hazardous energy may be present.",
+          "Labels and procedures are part of hazard control.",
+          "Business finance is unrelated to the immediate safety decision."
+        ],
+        "source_ref_ids": [
+          "calosha.title8.3314.2026-09-03",
+          "calosha.lockout_publication.2026-09-03"
+        ]
+      }
+    ],
+    "flashcard_decks": [
+      {
+        "id": "cec-flashcards-electrical-foundations",
+        "title": "Electrical foundations vocabulary",
+        "summary": "Short recognition cards for early electrical concepts.",
+        "cards": [
+          "Voltage: electrical pressure that helps drive current.",
+          "Current: flow of electric charge.",
+          "Resistance: opposition to current flow.",
+          "Power: rate of electrical work or energy use.",
+          "Series circuit: one current path.",
+          "Parallel circuit: multiple current paths."
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-flashcards-ge-navigation",
+        "title": "GE navigation vocabulary",
+        "summary": "Terms for open-book code navigation and topic classification.",
+        "cards": [
+          "Definition: a source-backed meaning that can change how a rule applies.",
+          "Article: a code organization unit for a topic family.",
+          "Table: structured values used for lookup or calculation.",
+          "Exception: a condition that changes a general rule.",
+          "Lookup route: the planned path from question facts to reference evidence.",
+          "Verification: checking the answer against the exact prompt conditions."
+        ],
+        "source_ref_ids": [
+          "ca_dir.electrician_certification_faq.2026-09-03",
+          "nfpa.nec.overview.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-flashcards-law-business",
+        "title": "Law and Business scenario cues",
+        "summary": "Recognition cards for contractor business-law topic families.",
+        "cards": [
+          "Bid: proposed price and scope before contract award.",
+          "Change order: documented change to agreed scope, price, or schedule.",
+          "Prevailing wage: wage compliance concept for public works.",
+          "Certified payroll: public works record/reporting concept.",
+          "Lien: payment-security topic family.",
+          "Insurance: risk-transfer topic family."
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03",
+          "dir.public_works_contractors.2026-09-03"
+        ]
+      }
+    ],
+    "readiness_checkpoints": [
+      {
+        "id": "cec-checkpoint-foundations",
+        "title": "Foundations readiness checkpoint",
+        "summary": "Use before moving from shared foundations into a specific track.",
+        "checkpoint_prompts": [
+          "Explain voltage, current, resistance, and power without formulas first.",
+          "Solve one ratio/percentage question and state the unit.",
+          "Choose the safest first step in a basic troubleshooting scenario."
+        ],
+        "mastery_evidence": [
+          "concept explanation is not purely memorized",
+          "calculation setup uses correct units",
+          "safety-first decision is correct"
+        ],
+        "remediation": [
+          "Return to cec-lesson-ohms-law for concept confusion.",
+          "Return to cec-lesson-shared-math for setup or unit errors.",
+          "Return to cec-lesson-cal-osha-lockout for unsafe sequencing."
+        ]
+      },
+      {
+        "id": "cec-checkpoint-ge-navigation",
+        "title": "GE navigation readiness checkpoint",
+        "summary": "Use before GE sectional or full mock practice.",
+        "checkpoint_prompts": [
+          "Classify three original GE prompts by blueprint domain.",
+          "For one open-book prompt, name the likely reference route before answering.",
+          "Explain one case where an exception or definition could change the answer."
+        ],
+        "mastery_evidence": [
+          "blueprint classification accuracy",
+          "lookup route quality",
+          "awareness of definitions, tables, and exceptions"
+        ],
+        "remediation": [
+          "Return to cec-lesson-ge-blueprint for weighting confusion.",
+          "Return to cec-lesson-nec-navigation for lookup route errors.",
+          "Return to cec-lesson-conductors-raceways or cec-lesson-ge-installation for category errors."
+        ]
+      },
+      {
+        "id": "cec-checkpoint-c10-law",
+        "title": "C-10 and Law readiness checkpoint",
+        "summary": "Use before mixed contractor exam practice.",
+        "checkpoint_prompts": [
+          "Classify a contractor scenario as trade, business finance, employment, contract, lien, public works, or safety.",
+          "Solve one estimating setup and identify whether it uses markup, margin, tax, or quantity takeoff.",
+          "Choose the best first action in a change-order or safety scenario."
+        ],
+        "mastery_evidence": [
+          "scenario topic classification",
+          "estimating setup accuracy",
+          "one-best-answer rationale"
+        ],
+        "remediation": [
+          "Return to cec-lesson-c10-estimating for math setup errors.",
+          "Return to cec-lesson-law-contracts-change-orders for scope-control errors.",
+          "Return to cec-lesson-public-works for compliance-cue misses."
+        ]
+      }
+    ],
+    "error_taxonomy": [
+      {
+        "id": "cec-error-topic-classification",
+        "title": "Topic classification error",
+        "summary": "The learner knows facts but routes the question to the wrong domain, code area, or Law and Business section.",
+        "remediation": [
+          "Ask the learner to underline the clue that determines the topic family.",
+          "Use a two-choice classification drill before asking for the final answer."
+        ]
+      },
+      {
+        "id": "cec-error-unit-setup",
+        "title": "Unit or setup error",
+        "summary": "The learner starts calculation before converting units or identifying the requested quantity.",
+        "remediation": [
+          "Require known/unknown/unit notation before arithmetic.",
+          "Use worked-example next-step prompts."
+        ]
+      },
+      {
+        "id": "cec-error-safety-sequencing",
+        "title": "Safety sequencing error",
+        "summary": "The learner chooses speed, replacement, or production before hazard control and verification.",
+        "remediation": [
+          "Return to safety-first scenario cards.",
+          "Ask what could hurt a person or property before technical diagnosis."
+        ]
+      },
+      {
+        "id": "cec-error-documentation-boundary",
+        "title": "Documentation boundary error",
+        "summary": "The learner confuses learning readiness with formal eligibility, application evidence, or project documentation.",
+        "remediation": [
+          "Separate study plan, eligibility, and official application steps.",
+          "Use document evidence coach templates."
+        ]
+      },
+      {
+        "id": "cec-error-memorization-over-navigation",
+        "title": "Memorization over navigation",
+        "summary": "The learner tries to memorize open-book answers instead of building a reliable lookup route.",
+        "remediation": [
+          "Use NEC navigation rehearsal.",
+          "Score route choice separately from final answer."
+        ]
+      }
+    ],
     "cognisphere_provenance_refs": [
       {
         "source_id": "laett.inside_wireman.2026-01-26",
@@ -1530,8 +2041,13 @@
       "lesson_card_count": 29,
       "practice_blueprint_count": 8,
       "learning_activity_template_count": 8,
+      "study_sequence_count": 5,
+      "scenario_card_count": 6,
+      "flashcard_deck_count": 3,
+      "readiness_checkpoint_count": 3,
+      "error_taxonomy_count": 5,
       "source_governance": "Official public sources, URLs, provenance, versions, and update watch are managed by Cognisphere. Tutor consumes materialized pack data only.",
-      "note": "Tutor-ready seed with materialized lesson cards, practice blueprints, and varied learning activity templates. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
+      "note": "Tutor-ready seed with materialized lesson cards, practice blueprints, varied learning activity templates, study sequences, scenario cards, flashcard decks, readiness checkpoints, and error taxonomy. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
     }
   },
   "safety": {

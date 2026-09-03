@@ -17,8 +17,9 @@ csphere-california_electrical_career
 ```
 
 当前版包含 6 个模块、39 个学习目标，并补充了 29 张可用于 Tutor
-mini-lesson 的 lesson cards、8 个 practice blueprint，以及 8 个 learning
-activity templates：
+mini-lesson 的 lesson cards、8 个 practice blueprint、8 个 learning
+activity templates、5 条 study sequences、6 张 scenario cards、3 组
+flashcard decks、3 个 readiness checkpoints 和 5 类 error taxonomy：
 
 1. Career Orientation
 2. Shared Electrical Foundations
@@ -64,6 +65,18 @@ activity templates：
 - field visualization prompt
 - document evidence coach
 
+新增连续学习与个性化复习数据：
+
+- Beginner first-week path
+- Inside Wireman apprenticeship entry path
+- California General Electrician core path
+- C-10 contractor trade path
+- Contractor Law and Business scenario path
+- aptitude ratio、Ohm's Law、NEC navigation、change order、public works、lockout/tagout 原创场景卡
+- electrical foundations、GE navigation、Law & Business scenario cues 闪卡组
+- foundations、GE navigation、C-10/Law readiness checkpoints
+- topic classification、unit/setup、safety sequencing、documentation boundary、memorization-over-navigation 错因分类
+
 ## Cognisphere 来源管理边界
 
 所有官方公开资料、URL、版本号、provenance、变更检测和事实验证都应由
@@ -101,6 +114,8 @@ lesson grounding 和 quick quiz 流程，因此第一阶段最合适的落地点
 - 先让每个主模块有可直接教学的 lesson cards
 - 先让后续练习引擎有 practice blueprint
 - 先让 Tutor 在同一课程里切换多种学习形式，而不是只有讲解/问答
+- 先让 Tutor 能按 study sequence 组织连续学习、按 readiness checkpoint 做阶段门控、
+  按 error taxonomy 做错因复习
 - 先验证从职业目标到学习目标的基本路径
 - 后续再逐步增加诊断、练习、模拟考试和法规/蓝图更新能力
 

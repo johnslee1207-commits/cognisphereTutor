@@ -342,6 +342,83 @@ def test_build_plugin_grounding_seed_includes_learning_activity_templates(
     assert "lookup strategy separately" in seed
 
 
+def test_build_plugin_grounding_seed_includes_sequences_and_scenario_cards(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    from cognispheretutor.integrations.cognisphere import grounding
+
+    cache_dir = tmp_path / "imports" / "california_electrical_career"
+    cache_dir.mkdir(parents=True)
+    (cache_dir / "bundle.json").write_text(
+        json.dumps(
+            {
+                "domain": "california_electrical_career",
+                "knowledge": {
+                    "study_sequences": [
+                        {
+                            "id": "cec-sequence-law-business",
+                            "title": "Contractor Law and Business scenario path",
+                            "summary": "A scenario-first route for Law and Business sections.",
+                            "checkpoint_prompts": [
+                                "Can the learner spot a public works clue?"
+                            ],
+                            "mastery_evidence": [
+                                "public works recognition scenario"
+                            ],
+                        }
+                    ],
+                    "scenario_cards": [
+                        {
+                            "id": "cec-scenario-public-works-payroll",
+                            "title": "Public works: certified payroll clue",
+                            "scenario": [
+                                "A contractor is working on a public project and the prompt mentions worker classifications, hours, and wage reporting."
+                            ],
+                            "choices": [
+                                "A) Certified payroll / prevailing wage compliance"
+                            ],
+                            "correct_rationale": [
+                                "Public project context plus worker classifications points to public works payroll."
+                            ],
+                        }
+                    ],
+                    "flashcard_decks": [
+                        {
+                            "id": "cec-flashcards-law-business",
+                            "title": "Law and Business scenario cues",
+                            "cards": [
+                                "Certified payroll: public works record/reporting concept."
+                            ],
+                        }
+                    ],
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    class FakeRegistry:
+        def get_plugin(self, _domain: str):
+            return {"plugin": {"path": str(tmp_path / "missing_plugin")}}
+
+    monkeypatch.setattr(grounding, "PluginRegistryClient", FakeRegistry)
+    monkeypatch.setattr(grounding, "resolve_import_cache_dir", lambda domain: cache_dir)
+
+    seed = grounding.build_plugin_grounding_seed(
+        domain="california_electrical_career",
+        objective={
+            "knowledge_point_name": "public works certified payroll",
+            "module_name": "California Contractor Law and Business",
+        },
+    )
+
+    assert "Contractor Law and Business scenario path" in seed
+    assert "Public works: certified payroll clue" in seed
+    assert "Law and Business scenario cues" in seed
+    assert "public works record/reporting concept" in seed
+
+
 def test_build_plugin_grounding_seed_reports_sparse_grounding(monkeypatch, tmp_path: Path) -> None:
     from cognispheretutor.integrations.cognisphere import grounding
 
