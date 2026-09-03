@@ -56,6 +56,12 @@ _LIST_TEXT_KEYS = (
     "recommended_problems",
     "certifications",
     "official_urls",
+    "key_takeaways",
+    "common_misconceptions",
+    "quick_check_prompts",
+    "source_ref_ids",
+    "lesson_sequence",
+    "practice_modes",
 )
 _STOPWORDS = {
     "a",
@@ -230,12 +236,15 @@ def _iter_candidate_objects(payload: Any) -> Iterable[dict[str, Any]]:
             "learning_objectives",
             "topic_families",
             "patterns",
+            "lesson_cards",
+            "practice_blueprints",
             "problems",
             "items",
             "classes",
             "nodes",
             "entries",
             "excerpts",
+            "cognisphere_provenance_refs",
             "course_overview",
             "course_guide",
         ):
@@ -322,6 +331,12 @@ def _render_item(item: dict[str, Any]) -> dict[str, Any]:
         "related_concepts",
         "related_patterns",
         "certifications",
+        "key_takeaways",
+        "common_misconceptions",
+        "quick_check_prompts",
+        "source_ref_ids",
+        "lesson_sequence",
+        "practice_modes",
     ):
         value = item.get(key)
         if isinstance(value, list) and value:

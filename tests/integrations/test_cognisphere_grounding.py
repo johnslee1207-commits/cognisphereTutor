@@ -212,6 +212,74 @@ def test_build_plugin_grounding_seed_includes_course_overview_manifest(
     assert "source_backed_draft_review_required" in seed
 
 
+def test_build_plugin_grounding_seed_includes_materialized_lesson_cards(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    from cognispheretutor.integrations.cognisphere import grounding
+
+    cache_dir = tmp_path / "imports" / "california_electrical_career"
+    cache_dir.mkdir(parents=True)
+    (cache_dir / "bundle.json").write_text(
+        json.dumps(
+            {
+                "domain": "california_electrical_career",
+                "knowledge": {
+                    "lesson_cards": [
+                        {
+                            "id": "cec-lesson-nec-navigation",
+                            "title": "NEC navigation as a separate skill",
+                            "body": (
+                                "Open-book GE preparation requires classification, "
+                                "article lookup, exception handling, calculation, "
+                                "and answer verification."
+                            ),
+                            "teaching_points": [
+                                "Open-book does not mean slow-book.",
+                            ],
+                            "quick_check_prompts": [
+                                "What should happen before calculation?"
+                            ],
+                            "source_ref_ids": [
+                                "ca_dir.electrician_certification_faq.2026-09-03"
+                            ],
+                        }
+                    ],
+                    "cognisphere_provenance_refs": [
+                        {
+                            "source_id": "ca_dir.electrician_certification_faq.2026-09-03",
+                            "claim_summaries": [
+                                "California electrician certification exams are open-book."
+                            ],
+                        }
+                    ],
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    class FakeRegistry:
+        def get_plugin(self, _domain: str):
+            return {"plugin": {"path": str(tmp_path / "missing_plugin")}}
+
+    monkeypatch.setattr(grounding, "PluginRegistryClient", FakeRegistry)
+    monkeypatch.setattr(grounding, "resolve_import_cache_dir", lambda domain: cache_dir)
+
+    seed = grounding.build_plugin_grounding_seed(
+        domain="california_electrical_career",
+        objective={
+            "knowledge_point_name": "Open-book NEC navigation",
+            "module_name": "California General Electrician",
+        },
+    )
+
+    assert "NEC navigation as a separate skill" in seed
+    assert "Open-book does not mean slow-book." in seed
+    assert "What should happen before calculation?" in seed
+    assert "ca_dir.electrician_certification_faq.2026-09-03" in seed
+
+
 def test_build_plugin_grounding_seed_reports_sparse_grounding(monkeypatch, tmp_path: Path) -> None:
     from cognispheretutor.integrations.cognisphere import grounding
 

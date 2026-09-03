@@ -402,6 +402,330 @@
         ]
       }
     ],
+    "lesson_cards": [
+      {
+        "id": "cec-lesson-career-orientation",
+        "title": "Start with the right California electrical goal",
+        "summary": "A beginner should first distinguish four related goals: entering apprenticeship, qualifying as a certified electrician, preparing for C-10 trade licensure, and passing Law & Business.",
+        "body": "Teach the learner that these tracks overlap but are not identical. Apprenticeship is an earn-while-you-learn training path. General Electrician certification is a worker certification path under California DIR. C-10 is a contractor license classification requiring business readiness and trade competence. Law & Business is a separate contractor exam area.",
+        "teaching_points": [
+          "Ask what role the learner wants: apprentice, employee electrician, contractor, or long-term owner.",
+          "Explain that a beginner can start with shared foundations before choosing a high-stakes exam path.",
+          "Separate eligibility facts from study content: eligibility is source-governed by Cognisphere; learning flow is Tutor-owned."
+        ],
+        "quick_check_prompts": [
+          "Which goal is closest to becoming a licensed contractor: apprenticeship entrance, GE certification, C-10, or a basic math diagnostic?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "ca_dir.electrician_certification_program.2026-09-03",
+          "cslb.exam.study_overview.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-shared-math",
+        "title": "Electrical math starts with units, ratios, and proportional thinking",
+        "summary": "Before code lookup or estimating, learners need reliable arithmetic, fractions, decimals, percentages, ratios, proportions, and unit conversion.",
+        "body": "Teach math as a field skill, not as abstract school review. The learner should translate word problems into quantities, units, relationships, and one operation at a time. Emphasize checking whether an answer is plausible before selecting a multiple-choice option.",
+        "teaching_points": [
+          "Use units to decide whether to multiply, divide, or convert.",
+          "Use ratio tables for material quantities and scale problems.",
+          "Treat percentages as multipliers, especially for tax, markup, discount, and exam weights."
+        ],
+        "quick_check_prompts": [
+          "A material costs $80 before 7.5% tax. Which expression represents the total: 80 + 0.075, 80 x 1.075, 80 / 0.075, or 80 x 0.075?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-ohms-law",
+        "title": "Ohm's Law and power as the first electrical reasoning model",
+        "summary": "Voltage, current, resistance, and power form the learner's first reusable model for circuits, troubleshooting, and exam calculations.",
+        "body": "Teach V = I x R and P = V x I as relationships between cause, flow, opposition, and work. Keep the lesson practical: if resistance rises while voltage stays fixed, current falls; if current rises at the same voltage, power rises. Use this as a bridge to series, parallel, motors, overcurrent devices, and troubleshooting.",
+        "teaching_points": [
+          "Voltage is electrical pressure, current is flow, resistance opposes flow.",
+          "Power connects electrical behavior to energy use and equipment load.",
+          "Most calculation errors come from wrong units or solving for the wrong variable."
+        ],
+        "quick_check_prompts": [
+          "If voltage stays the same and resistance increases, what happens to current?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-lesson-circuits",
+        "title": "Series, parallel, and combination circuits",
+        "summary": "Learners need to recognize how current paths change total resistance, voltage division, and power behavior.",
+        "body": "Teach the visual difference first: a series circuit has one path; a parallel circuit has multiple paths; a combination circuit mixes both. Then connect structure to calculation: series resistances add; parallel circuits create alternate current paths and need reciprocal or product-sum reasoning.",
+        "teaching_points": [
+          "Circuit shape determines the calculation method.",
+          "Parallel branches do not behave like a single series chain.",
+          "Combination circuits should be simplified in stages."
+        ],
+        "quick_check_prompts": [
+          "Which circuit type has only one current path: series, parallel, or combination?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-aptitude",
+        "title": "Inside Wireman aptitude test domains",
+        "summary": "The entrance test is not an electrical code exam; it checks math, numerical, reading, mechanical, and paper-folding reasoning under time pressure.",
+        "body": "Teach the learner to treat aptitude preparation as five repeatable reasoning modes. Do not overteach NEC or contractor law here. The immediate goal is speed and accuracy on unfamiliar problems, plus disciplined reading of instructions.",
+        "teaching_points": [
+          "Mathematical reasoning checks symbolic and word-problem setup.",
+          "Numerical reasoning checks patterns, data interpretation, and quantitative logic.",
+          "Reading comprehension checks careful extraction of meaning from technical text.",
+          "Mechanical and paper-folding tasks check physical and spatial reasoning."
+        ],
+        "quick_check_prompts": [
+          "Which topic belongs to the Inside Wireman aptitude test: mechanics, contractor liens, NEC table lookup, or payroll taxes?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-pef",
+        "title": "Personal Experience Form as evidence, not an essay",
+        "summary": "PEF preparation should focus on accurate, supported evidence for relevant work, education, military, and life experience.",
+        "body": "Teach learners to organize PEF materials by claim and documentation. The form can materially affect ranking, so Tutor should coach completeness, accuracy, and evidence organization without inventing experience or overstating qualifications.",
+        "teaching_points": [
+          "Each experience claim should have supporting documentation where available.",
+          "Accuracy matters because unsupported or inaccurate areas may not receive credit.",
+          "The learner should preserve original documents and submit within the required window."
+        ],
+        "quick_check_prompts": [
+          "For PEF preparation, what is the safest strategy: exaggerate experience, submit unsupported claims, organize documented evidence, or skip the form?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-ge-eligibility",
+        "title": "General Electrician eligibility baseline",
+        "summary": "General Electrician certification requires qualifying work experience and California-specific application rules.",
+        "body": "Teach eligibility separately from exam study. The learning plan can prepare knowledge, but eligibility evidence is a formal administrative requirement. The learner should understand the 8,000-hour baseline and the categories of work that may contribute to the total.",
+        "teaching_points": [
+          "GE certification is tied to work under electrical contractors on NEC-covered systems.",
+          "Experience must come from more than one eligible work area.",
+          "Some categories have maximum credit caps, so not every hour counts the same way."
+        ],
+        "quick_check_prompts": [
+          "Is GE eligibility only a matter of passing a knowledge quiz, or does it also require documented work experience?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.eligibility.2026-09-03",
+          "ca_dir.electrician_certification.categories.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-ge-blueprint",
+        "title": "General Electrician exam blueprint and study weighting",
+        "summary": "GE study should be weighted toward Installation because the official outline assigns it the largest share.",
+        "body": "Teach the learner to allocate time by exam weight: Safety is important but small in count, Electrical System Requirements is concept-heavy, Installation dominates the exam, and Maintenance/Repair is smaller but high-value for practical reasoning.",
+        "teaching_points": [
+          "Use blueprint weights to avoid studying every topic with equal time.",
+          "Installation should drive the largest practice block.",
+          "Safety and maintenance still need spaced review because misses there are often preventable."
+        ],
+        "quick_check_prompts": [
+          "Which GE domain should usually receive the most study time: Safety, Electrical System Requirements, Installation, or Maintenance and Repair?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-nec-navigation",
+        "title": "NEC navigation as a separate skill",
+        "summary": "Open-book GE preparation requires fast classification, article/table lookup, exception handling, calculation, and answer verification.",
+        "body": "Teach code navigation as a workflow. First identify the system or component in the question. Then classify the code topic, find the likely article/table, check definitions and exceptions, perform any calculation, and verify the selected option against the exact condition in the prompt.",
+        "teaching_points": [
+          "Open-book does not mean slow-book: lookup speed is part of mastery.",
+          "Definitions, tables, and exceptions often decide close answer choices.",
+          "The learner should track lookup time separately from concept accuracy."
+        ],
+        "quick_check_prompts": [
+          "In an open-book code question, what should happen before calculation: guess from memory, classify the code topic, ignore exceptions, or select the longest answer?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.electrician_certification_faq.2026-09-03",
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-lesson-ge-installation",
+        "title": "GE installation domain: from wiring method to occupancy context",
+        "summary": "Installation practice should connect wiring methods, equipment, occupancies, lighting, HVAC, low-voltage, communications, and fire/life-safety systems.",
+        "body": "Teach installation as applied classification. The learner should learn to ask: What system is being installed? What wiring method or equipment is involved? What occupancy or environment changes the rule? Is this a communication, fire, lighting, HVAC, or power question?",
+        "teaching_points": [
+          "Installation is the largest GE blueprint area.",
+          "Topic classification prevents wasting time in the wrong code article.",
+          "Special equipment and special occupancies change normal assumptions."
+        ],
+        "quick_check_prompts": [
+          "A question mentions an installation in a special occupancy. Should the learner treat it like ordinary wiring only, or check the occupancy-specific requirements?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-lesson-c10-blueprint",
+        "title": "C-10 trade exam is closed-book contractor trade judgment",
+        "summary": "C-10 preparation should combine planning, rough wiring, finish work, startup/troubleshooting, maintenance, and safety.",
+        "body": "Teach C-10 as a contractor trade exam rather than a worker certification exam. The learner must reason from plans, costs, materials, sequence, installation quality, troubleshooting, and safety without relying on reference materials during the test.",
+        "teaching_points": [
+          "Planning and Estimating and Rough Wiring are the two largest C-10 sections.",
+          "Closed-book testing rewards durable concepts and decision patterns.",
+          "Some questions require computation, so estimating math must be fluent."
+        ],
+        "quick_check_prompts": [
+          "Is the C-10 trade exam open-book or closed-book according to the CSLB study guide?"
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-c10-estimating",
+        "title": "C-10 estimating: scope, takeoff, material, labor, and risk",
+        "summary": "Planning and estimating questions test whether the learner can turn project information into quantities, costs, sequence, and code-aware decisions.",
+        "body": "Teach estimating as a disciplined chain: read plans and specifications, identify existing conditions, determine quantities, select materials, apply calculations, sequence the work, and account for project risks. Keep examples original and avoid copied exam items.",
+        "teaching_points": [
+          "Quantity takeoff must match the drawings and specifications.",
+          "Material selection depends on application, environment, and code constraints.",
+          "Markup and margin are different business ideas and should not be confused."
+        ],
+        "quick_check_prompts": [
+          "Which comes first in a takeoff problem: choosing an answer, reading the scope, applying sales tax, or ignoring drawings?"
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-c10-safety",
+        "title": "C-10 safety: lockout/tagout, PPE, tools, hazardous materials, and site conditions",
+        "summary": "Safety is a distinct C-10 blueprint section and also cuts across installation, troubleshooting, and maintenance decisions.",
+        "body": "Teach safety as an action filter: before energizing, testing, replacing, or troubleshooting, ask what could harm people or property. Reinforce lockout/tagout, PPE, tool condition, hazardous materials, and jobsite environment recognition.",
+        "teaching_points": [
+          "Safety questions often ask what should happen first.",
+          "The safest action may be procedural rather than technical.",
+          "Troubleshooting must not bypass de-energizing or verification habits."
+        ],
+        "quick_check_prompts": [
+          "Before troubleshooting energized equipment, what kind of concern should be evaluated first: speed, color coding only, safety control, or brand preference?"
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03",
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-lesson-law-blueprint",
+        "title": "Law & Business blueprint",
+        "summary": "The Law & Business exam covers seven sections: organization/licensing, finances, employment, insurance/liens, contracts, public works, and safety.",
+        "body": "Teach Law & Business as scenario judgment. The learner should identify the role, obligation, document, deadline, money flow, employee issue, or public-works rule in the prompt before choosing an answer.",
+        "teaching_points": [
+          "Contract Requirements and Execution and Employment Requirements carry the largest weights.",
+          "The exam is closed-book and multiple-choice with one best answer.",
+          "Business finance, insurance, liens, and safety should be learned through scenarios."
+        ],
+        "quick_check_prompts": [
+          "Which Law & Business section is most directly about hiring, supervising, training, payroll, and records?"
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-contractor-experience",
+        "title": "Contractor qualifying experience",
+        "summary": "CSLB contractor exam eligibility is not just study readiness; applicants need qualifying experience in the classification.",
+        "body": "Teach the difference between being ready to learn and being eligible to apply. The learner can study early, but the formal contractor exam path requires qualifying experience and supporting documentation when requested.",
+        "teaching_points": [
+          "CSLB states a four-year experience requirement for the classification.",
+          "Accepted roles include journey-level worker, foreman, supervising employee, contractor, or owner-builder.",
+          "Education or technical training may receive limited credit, but at least one year must be practical experience."
+        ],
+        "quick_check_prompts": [
+          "Can a learner become exam-ready before being application-eligible?"
+        ],
+        "source_ref_ids": [
+          "cslb.contractor_experience.2026-09-03"
+        ]
+      }
+    ],
+    "practice_blueprints": [
+      {
+        "id": "cec-practice-apprentice-aptitude",
+        "title": "Apprenticeship aptitude mixed practice",
+        "summary": "Generate original timed practice across math, numerical, reading, mechanical, and spatial reasoning.",
+        "practice_modes": [
+          "untimed concept drill",
+          "timed mixed set",
+          "review by error type"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-practice-ge-blueprint-weighted",
+        "title": "GE blueprint-weighted practice",
+        "summary": "Generate original GE practice weighted toward Installation, with separate tracking for concept accuracy and NEC navigation speed.",
+        "practice_modes": [
+          "topic classification",
+          "code navigation rehearsal",
+          "calculation drill",
+          "sectional mock"
+        ],
+        "source_ref_ids": [
+          "ca_dir.general_electrician.testinfo.2026-09-03",
+          "ca_dir.electrician_certification_faq.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-practice-c10-closed-book",
+        "title": "C-10 closed-book scenario and calculation practice",
+        "summary": "Generate original four-option questions for planning, estimating, wiring, troubleshooting, maintenance, and safety.",
+        "practice_modes": [
+          "single-topic drill",
+          "scenario judgment",
+          "calculation fluency",
+          "blueprint-weighted mock"
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-practice-law-business",
+        "title": "Law & Business scenario practice",
+        "summary": "Generate original contractor business-law scenarios across the seven CSLB study-guide sections.",
+        "practice_modes": [
+          "section drill",
+          "one-best-answer scenario",
+          "wrong-answer explanation",
+          "readiness review"
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03"
+        ]
+      }
+    ],
     "cognisphere_provenance_refs": [
       {
         "source_id": "laett.inside_wireman.2026-01-26",
@@ -411,6 +735,26 @@
           "Inside Wireman applicants take an aptitude test with mathematical reasoning, numerical reasoning, reading comprehension, mechanical reasoning, and paper folding.",
           "The aptitude test time is 2 hours 20 minutes.",
           "The Personal Experience Form can constitute up to 40% of the final score."
+        ]
+      },
+      {
+        "source_id": "ca_dir.electrician_certification_program.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "California DIR says persons performing electrician work for a C-10 licensed contractor must be certified under DLSE standards.",
+          "Electrician certification and exam applications are available online; electrician trainee online registration is not yet available as of the materialized source snapshot.",
+          "DIR announced new procedures for exams taken on or after 2026-06-01 administered by CPS HR Consulting."
+        ]
+      },
+      {
+        "source_id": "ca_dir.electrician_certification_faq.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "California electrician certification exams are open-book according to the DIR FAQ.",
+          "Test materials are provided at the test site.",
+          "DIR directs learners to the Test Info page and referenced content outline for study scope."
         ]
       },
       {
@@ -432,12 +776,43 @@
         ]
       },
       {
-        "source_id": "cslb.c10.study_guide.2024-06-01",
+        "source_id": "ca_dir.electrician_certification.categories.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "DIR lists electrician categories including General Electrician, Residential Electrician, Fire/Life/Safety Technician, Voice Data Video Technician, and Non-residential Lighting Technician.",
+          "The category page distinguishes candidates with required experience, some experience, registered apprenticeship, and no experience or related instruction."
+        ]
+      },
+      {
+        "source_id": "ca_dir.eccc.general_curriculum.2018",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "The ECCC general curriculum includes safety, tools/materials/handling, electrical theory, code requirements, conductors, raceways, lighting, overcurrent devices, grounding systems, plans/specifications, transformers, and testing.",
+          "Electrical theory topics include series, parallel, combination circuits, capacitance, rectifiers, harmonics, semiconductor devices, and amplifier basics.",
+          "Code-requirements training includes using a code book, recognizing definitions, exceptions, markings, wet/damp/dry locations, and special occupancies."
+        ]
+      },
+      {
+        "source_id": "cslb.c10.study_guide.2026-03",
         "managed_by": "Cognisphere",
         "materialized_at": "2026-09-03",
         "claim_summaries": [
           "C-10 Electrical Study Guide blueprint applies to exams scheduled on or after 2024-06-01.",
-          "C-10 trade weights are Planning and Estimating 28%, Rough Wiring 27%, Finish Wiring and Trim 11%, Startup/Troubleshooting/Maintenance 16%, Safety 18%."
+          "C-10 trade weights are Planning and Estimating 28%, Rough Wiring 27%, Finish Wiring and Trim 11%, Startup/Troubleshooting/Maintenance 16%, Safety 18%.",
+          "The C-10 trade examination is closed-book, multiple-choice, and has four choices per question.",
+          "Some C-10 questions require mathematical computation and a calculator is provided."
+        ]
+      },
+      {
+        "source_id": "cslb.law_business.study_guide.2026-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "The Law and Business examination is divided into Business Organization and Licensing 13%, Business Finances 15%, Employment Requirements 20%, Insurance and Liens 12%, Contract Requirements and Execution 21%, Public Works 5%, and Safety 14%.",
+          "The Law and Business exam is closed-book, multiple-choice, and has four choices per question.",
+          "Some Law and Business questions require mathematical computation and a calculator is provided."
         ]
       },
       {
@@ -445,16 +820,29 @@
         "managed_by": "Cognisphere",
         "materialized_at": "2026-09-03",
         "claim_summaries": [
-          "Contractor license applicants generally prepare for both the Law & Business examination and the trade examination."
+          "Contractor license applicants generally prepare for both the Law & Business examination and the trade examination.",
+          "CSLB study guides list topic areas, show approximate weights, include sample questions, and recommend resource materials."
+        ]
+      },
+      {
+        "source_id": "cslb.contractor_experience.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "CSLB says applicants must have at least four years of experience in the classification to qualify for the contractor examination.",
+          "Credit is given only for experience at journey level or as foreman, supervising employee, contractor, or owner-builder.",
+          "Education, technical training, or vocational training may receive credit up to three years, but at least one year must be practical experience."
         ]
       }
     ],
     "pack_metadata": {
       "source": "DeepTutor_California_Electrical_Career_Domain_Pack_v1.0.md",
-      "stage": "M0/MVP seed",
+      "stage": "M0/M1 content seed",
       "objective_count": 39,
+      "lesson_card_count": 15,
+      "practice_blueprint_count": 4,
       "source_governance": "Official public sources, URLs, provenance, versions, and update watch are managed by Cognisphere. Tutor consumes materialized pack data only.",
-      "note": "First bundled Tutor-ready seed. Original question banks, deterministic generators, mock exam engine, and learning interaction modes are planned follow-up Tutor capabilities."
+      "note": "Tutor-ready seed with materialized lesson cards and practice blueprints. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
     }
   },
   "safety": {

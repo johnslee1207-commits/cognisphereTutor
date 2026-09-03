@@ -16,7 +16,8 @@ cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_ca
 csphere-california_electrical_career
 ```
 
-第一版包含 6 个模块、39 个学习目标：
+当前版包含 6 个模块、39 个学习目标，并补充了 15 张可用于 Tutor
+mini-lesson 的 lesson cards，以及 4 个 practice blueprint：
 
 1. Career Orientation
 2. Shared Electrical Foundations
@@ -24,6 +25,22 @@ csphere-california_electrical_career
 4. California General Electrician
 5. California C-10 Electrical Trade
 6. California Contractor Law and Business
+
+新增 lesson cards 覆盖：
+
+- 职业路径选择和学习边界
+- 电工入门数学、Ohm's Law、series/parallel/combination circuits
+- Inside Wireman aptitude test 与 PEF 证据组织
+- GE eligibility、GE blueprint、NEC navigation、GE installation
+- C-10 blueprint、estimating、safety
+- Law & Business blueprint 和 contractor qualifying experience
+
+新增 practice blueprints 覆盖：
+
+- Apprenticeship aptitude mixed practice
+- GE blueprint-weighted practice
+- C-10 closed-book scenario and calculation practice
+- Law & Business scenario practice
 
 ## Cognisphere 来源管理边界
 
@@ -36,19 +53,27 @@ claim 摘要转化为学习体验。
 2026-09-03 当前 pack 依赖的 Cognisphere-managed claim refs 覆盖：
 
 - ETI / LAETT Inside Wireman 页面：aptitude test 包含 mathematical reasoning、numerical reasoning、reading comprehension、mechanical reasoning、paper folding；考试时长 2 小时 20 分钟；PEF 可占最终评分最高 40%。
+- California DIR Electrician Certification Program：C-10 contractor 下从事 electrician work 的人员需要符合 DLSE certification standards；2026-06-01 后考试调度流程使用 CPS HR Consulting；online application 已开放，trainee online registration 尚未开放。
+- California DIR Electrician Certification FAQ：electrician certification exam 为 open-book，测试材料由考点提供，学习范围应参考 Test Info / CIB outline。
 - California DIR / DLSE Test Info：General Electrician 为 100 题、4 小时 30 分钟；权重为 Safety 6%、Electrical System Requirements 22%、Installation 66%、Maintenance and Repair 6%。
 - California DIR / DLSE General Electrician eligibility：GE 申请要求 8,000 小时 qualifying work。
-- CSLB C-10 Study Guide：C-10 trade blueprint 覆盖 Planning and Estimating、Rough Wiring、Finish Wiring and Trim、Startup/Troubleshooting/Maintenance、Safety。
-- CSLB Studying for the Examination：contractor applicant 需要准备 Law & Business 和 trade examination。
+- California DIR ECCC General Electrician curriculum：覆盖 safety、tools/materials、electrical theory、code requirements、conductors、raceways、lighting、overcurrent devices、grounding、plans/specifications、transformers、testing 等。
+- CSLB C-10 Study Guide：C-10 trade blueprint 覆盖 Planning and Estimating、Rough Wiring、Finish Wiring and Trim、Startup/Troubleshooting/Maintenance、Safety；考试为 closed-book、multiple-choice、每题四个选项，部分题目需要计算。
+- CSLB Law & Business Study Guide：覆盖 Business Organization and Licensing、Business Finances、Employment Requirements、Insurance and Liens、Contract Requirements and Execution、Public Works、Safety；考试为 closed-book、multiple-choice、每题四个选项，部分题目需要计算。
+- CSLB Studying for the Examination：contractor applicant 需要准备 Law & Business 和 trade examination，study guide 会列出 topic areas、weights、sample questions 和 resources。
+- CSLB Qualifying Experience：contractor exam 通常要求 4 年 classification 相关经验；技术/职业培训最多可折抵 3 年，但至少 1 年必须是 practical experience。
 
 ## 为什么先做课程 seed
 
 这份 domain pack 的完整目标很大，包括官方资料摄取、知识图谱、个性化诊断、原创题库、错因模型、模拟考试、证据报告和版本更新 watch。
 
-当前 Tutor 已经具备 bundled pack distribution/import layer 和 Mastery Path 教学流，因此第一阶段最合适的落地点是：
+当前 Tutor 已经具备 bundled pack distribution/import layer、Mastery Path 教学流、
+lesson grounding 和 quick quiz 流程，因此第一阶段最合适的落地点是：
 
 - 先让普通用户能在课程库看到这门课
 - 先生成可学习的 Mastery Path
+- 先让每个主模块有可直接教学的 lesson cards
+- 先让后续练习引擎有 practice blueprint
 - 先验证从职业目标到学习目标的基本路径
 - 后续再逐步增加诊断、练习、模拟考试和法规/蓝图更新能力
 

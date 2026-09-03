@@ -23,20 +23,23 @@
 | AWS Certification | `cognispheretutor/integrations/cognisphere/bundled_packs/aws_certification_bundle.json` | 6 个模块 / 46 个目标 |
 | AP Calculus | `cognispheretutor/integrations/cognisphere/bundled_packs/ap_calculus_bundle.json` | 22 个目标 |
 | LeetCode | `cognispheretutor/integrations/cognisphere/bundled_packs/leetcode_bundle.json` | 7 个目标 |
-| California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 |
+| California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 / 15 张 lesson cards / 4 个 practice blueprints |
 
-California Electrical Career 当前是第一阶段课程 seed，覆盖：
+California Electrical Career 当前已从课程路径 seed 扩展为可进入 mini-lesson 的
+内容 seed，覆盖：
 
 - ETI / IBEW Local 11 apprenticeship entrance
 - California General Electrician certification
 - California C-10 Electrical Contractor trade exam
 - California Contractor Law & Business
 - shared electrical fundamentals and NEC navigation
+- apprenticeship aptitude、GE blueprint-weighted practice、C-10 closed-book
+  practice、Law & Business scenario practice
 
-后续 Tutor 侧可继续扩展为诊断、参数化原创题、NEC open-book simulator、Mock
-Exam engine、error taxonomy memory 和 readiness score。官方公开资料、URL、
-版本、provenance、事实验证和 update watch 由 Cognisphere 管理，Tutor 只消费
-已物化的 pack。
+后续 Tutor 侧可继续扩展为诊断、参数化原创题生成器、NEC open-book
+simulator、Mock Exam engine、error taxonomy memory 和 readiness score。官方
+公开资料、URL、版本、provenance、事实验证和 update watch 由 Cognisphere 管理，
+Tutor 只消费已物化的 pack。
 实施计划见
 [guides/CALIFORNIA_ELECTRICAL_CAREER_PACK_PLAN_ZH.md](guides/CALIFORNIA_ELECTRICAL_CAREER_PACK_PLAN_ZH.md)。
 
