@@ -33,8 +33,10 @@ California Electrical Career 当前是第一阶段课程 seed，覆盖：
 - California Contractor Law & Business
 - shared electrical fundamentals and NEC navigation
 
-后续可继续扩展为诊断、参数化原创题、NEC open-book simulator、Mock Exam engine、
-error taxonomy memory、readiness score 和 official source watch。
+后续 Tutor 侧可继续扩展为诊断、参数化原创题、NEC open-book simulator、Mock
+Exam engine、error taxonomy memory 和 readiness score。官方公开资料、URL、
+版本、provenance、事实验证和 update watch 由 Cognisphere 管理，Tutor 只消费
+已物化的 pack。
 实施计划见
 [guides/CALIFORNIA_ELECTRICAL_CAREER_PACK_PLAN_ZH.md](guides/CALIFORNIA_ELECTRICAL_CAREER_PACK_PLAN_ZH.md)。
 
@@ -151,7 +153,9 @@ data/user/workspace/learning/
 
 - **Tutor 核心：** 负责通用编排、课程包发现、导入、Mastery Path、Chat agent
   loop、Quick Quiz、学习进度与 UI。
-- **Domain Pack：** 负责领域知识、课程结构、目标、参考资料元数据与领域运行时。
+- **Domain Pack：** 负责领域知识、课程结构、学习目标与领域运行时。
+- **Cognisphere：** 负责官方公开资料、来源证据、版本、provenance、事实验证和
+  update watch。
 
 内置 learning packs 是数据包，不把 AWS/AP/LeetCode/California Electrical Career 的专属教学逻辑硬编码到
 Tutor 核心中。

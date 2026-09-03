@@ -402,13 +402,12 @@
         ]
       }
     ],
-    "official_sources": [
+    "cognisphere_provenance_refs": [
       {
         "source_id": "laett.inside_wireman.2026-01-26",
-        "authority": "Electrical Training Institute / LAETT",
-        "url": "https://www.laett.com/index.cfm?page=Inside20Wireman&zone=/unionactive/view_page.cfm",
-        "verified_at": "2026-09-03",
-        "claims": [
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
           "Inside Wireman applicants take an aptitude test with mathematical reasoning, numerical reasoning, reading comprehension, mechanical reasoning, and paper folding.",
           "The aptitude test time is 2 hours 20 minutes.",
           "The Personal Experience Form can constitute up to 40% of the final score."
@@ -416,10 +415,9 @@
       },
       {
         "source_id": "ca_dir.general_electrician.testinfo.2026-09-03",
-        "authority": "California DIR / DLSE Electrician Certification Unit",
-        "url": "https://www.dir.ca.gov/dlse/ECU/ECU_TestInfo.htm",
-        "verified_at": "2026-09-03",
-        "claims": [
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
           "General Electrician exam has 100 questions.",
           "General Electrician exam time is 4 hours 30 minutes.",
           "General Electrician content outline weights are Safety 6%, Electrical System Requirements 22%, Installation 66%, Maintenance and Repair 6%."
@@ -427,29 +425,26 @@
       },
       {
         "source_id": "ca_dir.general_electrician.eligibility.2026-09-03",
-        "authority": "California DIR / DLSE Electrician Certification Unit",
-        "url": "https://www.dir.ca.gov/dlse/ecu/1a.html",
-        "verified_at": "2026-09-03",
-        "claims": [
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
           "General Electrician certification application requires 8,000 hours of qualifying work for an electrical contractor installing, constructing, or maintaining NEC-covered electrical systems."
         ]
       },
       {
         "source_id": "cslb.c10.study_guide.2024-06-01",
-        "authority": "California Contractors State License Board",
-        "url": "https://www.cslb.ca.gov/resources/studyguides/c10studyguide.pdf",
-        "verified_at": "2026-09-03",
-        "claims": [
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
           "C-10 Electrical Study Guide blueprint applies to exams scheduled on or after 2024-06-01.",
           "C-10 trade weights are Planning and Estimating 28%, Rough Wiring 27%, Finish Wiring and Trim 11%, Startup/Troubleshooting/Maintenance 16%, Safety 18%."
         ]
       },
       {
         "source_id": "cslb.exam.study_overview.2026-09-03",
-        "authority": "California Contractors State License Board",
-        "url": "https://www.cslb.ca.gov/contractors/applicants/contractors_license/exam_application/Studying_For_Exam.aspx",
-        "verified_at": "2026-09-03",
-        "claims": [
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
           "Contractor license applicants generally prepare for both the Law & Business examination and the trade examination."
         ]
       }
@@ -458,7 +453,8 @@
       "source": "DeepTutor_California_Electrical_Career_Domain_Pack_v1.0.md",
       "stage": "M0/MVP seed",
       "objective_count": 39,
-      "note": "First bundled Tutor-ready seed. Original question banks, deterministic generators, mock exam engine, and live official-source update watch are planned follow-up runtime capabilities."
+      "source_governance": "Official public sources, URLs, provenance, versions, and update watch are managed by Cognisphere. Tutor consumes materialized pack data only.",
+      "note": "First bundled Tutor-ready seed. Original question banks, deterministic generators, mock exam engine, and learning interaction modes are planned follow-up Tutor capabilities."
     }
   },
   "safety": {

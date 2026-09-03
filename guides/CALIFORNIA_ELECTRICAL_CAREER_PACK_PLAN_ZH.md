@@ -25,9 +25,15 @@ csphere-california_electrical_career
 5. California C-10 Electrical Trade
 6. California Contractor Law and Business
 
-## 官方来源基线
+## Cognisphere 来源管理边界
 
-2026-09-03 已核对以下官方来源：
+所有官方公开资料、URL、版本号、provenance、变更检测和事实验证都应由
+Cognisphere 管理。Tutor 不维护官方 source registry，也不负责 watch 官方网页。
+
+Tutor 只消费 Cognisphere 已物化的 domain pack，并把其中的学习目标、课程结构和
+claim 摘要转化为学习体验。
+
+2026-09-03 当前 pack 依赖的 Cognisphere-managed claim refs 覆盖：
 
 - ETI / LAETT Inside Wireman 页面：aptitude test 包含 mathematical reasoning、numerical reasoning、reading comprehension、mechanical reasoning、paper folding；考试时长 2 小时 20 分钟；PEF 可占最终评分最高 40%。
 - California DIR / DLSE Test Info：General Electrician 为 100 题、4 小时 30 分钟；权重为 Safety 6%、Electrical System Requirements 22%、Installation 66%、Maintenance and Repair 6%。
@@ -85,12 +91,12 @@ csphere-california_electrical_career
 - dynamic remediation plan
 - readiness score
 
-### M6 Governance
+### M6 Cognisphere Governance Binding
 
-- official source watch
-- blueprint version diff
-- affected lesson/question impact analysis
-- evidence report
+- 消费 Cognisphere official source watch 结果
+- 消费 Cognisphere blueprint version diff
+- 根据 Cognisphere impact report 调整 Tutor 课程/题目
+- 在 Tutor 侧生成 learner evidence report，但 source evidence 仍引用 Cognisphere provenance
 
 ## 当前边界
 
@@ -107,3 +113,4 @@ csphere-california_electrical_career
 - 付费题库内容
 - NEC 全文
 - 可替代官方资格审查或法律建议的内容
+- 官方 source registry 或官方网页 update watch
