@@ -21,6 +21,16 @@ test("AI infra page exposes learning evaluation evidence loop", () => {
   assert.match(pageSource, /Next maturity gate: complete a transfer challenge event/);
 });
 
+test("AI infra page records learning evaluation events from learner actions", () => {
+  assert.match(pageSource, /appendAiInfraLearningEvent/);
+  assert.match(pageSource, /event_type: correct \? "post_check" : "pre_check"/);
+  assert.match(pageSource, /event_type: "diagnosis_drill"/);
+  assert.match(pageSource, /event_type: "source_drill"/);
+  assert.match(pageSource, /assessmentMode === "independent_lab"/);
+  assert.match(pageSource, /"transfer_challenge"/);
+  assert.match(pageSource, /event_type: "spaced_review"/);
+});
+
 test("AI infra Run Lab control is disabled in content-only mode", () => {
   assert.match(pageSource, /const labRuntimeAvailable =/);
   assert.match(pageSource, /disabled=\{!selected \|\| running \|\| !labRuntimeAvailable\}/);

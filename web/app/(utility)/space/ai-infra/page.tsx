@@ -25,6 +25,7 @@ import {
   fetchAiInfraLearningEvaluation,
   fetchAiInfraLearningWorkspace,
   fetchAiInfraLabs,
+  appendAiInfraLearningEvent,
   fetchAiInfraStatus,
   deleteAiInfraLearningWorkspace,
   runAiInfraLab,
@@ -662,6 +663,35 @@ export default function AiInfraTwinPage() {
       }
     },
     [selected, selectedEvidence],
+  );
+
+  const refreshLearningEvaluation = useCallback(async () => {
+    try {
+      const result = await fetchAiInfraLearningEvaluation(AI_INFRA_WORKSPACE_ID);
+      setLearningEvaluation(result.summary);
+    } catch {
+      setWorkspaceSyncState("offline");
+    }
+  }, []);
+
+  const recordLearningEvent = useCallback(
+    async (event: Omit<AiInfraLearningEvent, "created_at">) => {
+      const localEvent: AiInfraLearningEvent = {
+        ...event,
+        created_at: Date.now() / 1000,
+      };
+      setLearningEvents((prev) => [...prev, localEvent]);
+      try {
+        const result = await appendAiInfraLearningEvent(event, AI_INFRA_WORKSPACE_ID);
+        setLearningEvents(result.state.learning_events || []);
+        setLearningEvaluation(null);
+        await refreshLearningEvaluation();
+        setWorkspaceSyncState("synced");
+      } catch {
+        setWorkspaceSyncState("offline");
+      }
+    },
+    [refreshLearningEvaluation],
   );
 
   const handleResetLearningWorkspace = useCallback(() => {
@@ -1580,16 +1610,26 @@ export default function AiInfraTwinPage() {
                             </button>
                             <button
                               type="button"
-                              onClick={() =>
-                                item.unit.unit_id &&
+                              onClick={() => {
+                                if (!item.unit.unit_id) return;
+                                const unitId = item.unit.unit_id as string;
                                 setReviewLedger((prev) => ({
                                   ...prev,
-                                  [item.unit.unit_id as string]: {
-                                    ...(prev[item.unit.unit_id as string] || {}),
+                                  [unitId]: {
+                                    ...(prev[unitId] || {}),
                                     lastReviewedAt: new Date().toISOString(),
                                   },
-                                }))
-                              }
+                                }));
+                                void recordLearningEvent({
+                                  event_type: "spaced_review",
+                                  unit_id: unitId,
+                                  course_id: selectedCourse?.course_path_id || null,
+                                  score: item.mastery.scorePct / 100,
+                                  error_types: [],
+                                  evidence_refs: evidenceBundles[unitId] || [],
+                                  notes: `review:${item.reason}`,
+                                });
+                              }}
                               className="mt-1 rounded-md border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--muted-foreground)] hover:bg-[var(--accent)]"
                             >
                               {tr("记录复习", "Mark reviewed")}
@@ -1856,13 +1896,23 @@ export default function AiInfraTwinPage() {
                                     <button
                                       key={choice.id || choice.text}
                                       type="button"
-                                      onClick={() =>
-                                        selectedQuiz.question_id &&
+                                      onClick={() => {
+                                        if (!selectedQuiz.question_id) return;
+                                        const score = correct ? 1 : 0;
                                         setQuizAnswers((prev) => ({
                                           ...prev,
                                           [selectedQuiz.question_id as string]: choice.id || "",
-                                        }))
-                                      }
+                                        }));
+                                        void recordLearningEvent({
+                                          event_type: correct ? "post_check" : "pre_check",
+                                          unit_id: selectedUnit.unit_id || null,
+                                          course_id: selectedCourse?.course_path_id || null,
+                                          score,
+                                          error_types: correct ? [] : ["concept"],
+                                          evidence_refs: [],
+                                          notes: `quiz:${selectedQuiz.question_id}:${choice.id || ""}`,
+                                        });
+                                      }}
                                       className={`rounded-md border px-2 py-1 text-left text-[10px] transition-colors ${
                                         chosen
                                           ? correct
@@ -1945,6 +1995,20 @@ export default function AiInfraTwinPage() {
                                     [selectedUnit.unit_id as string]: event.target.value,
                                   }))
                                 }
+                                onBlur={(event) => {
+                                  if (!selectedUnit.unit_id || !event.currentTarget.value.trim()) return;
+                                  void recordLearningEvent({
+                                    event_type: "diagnosis_drill",
+                                    unit_id: selectedUnit.unit_id,
+                                    course_id: selectedCourse?.course_path_id || null,
+                                    score: selectedDiagnosisAssessment.scorePct / 100,
+                                    error_types: selectedDiagnosisAssessment.passed
+                                      ? []
+                                      : ["evidence", "claim_boundary"],
+                                    evidence_refs: selectedUnitEvidenceRefs,
+                                    notes: event.currentTarget.value.slice(0, 500),
+                                  });
+                                }}
                                 placeholder={tr(
                                   "按 symptom / evidence / claim strength / missing proof 写诊断结论。",
                                   "Write the diagnosis as symptom / evidence / claim strength / missing proof.",
@@ -2049,6 +2113,20 @@ export default function AiInfraTwinPage() {
                                     [selectedUnit.unit_id as string]: event.target.value,
                                   }))
                                 }
+                                onBlur={(event) => {
+                                  if (!selectedUnit.unit_id || !event.currentTarget.value.trim()) return;
+                                  void recordLearningEvent({
+                                    event_type: "source_drill",
+                                    unit_id: selectedUnit.unit_id,
+                                    course_id: selectedCourse?.course_path_id || null,
+                                    score: selectedSourceDocumentAssessment.scorePct / 100,
+                                    error_types: selectedSourceDocumentAssessment.passed
+                                      ? []
+                                      : ["source", "evidence"],
+                                    evidence_refs: selectedUnit.source_ids || [],
+                                    notes: event.currentTarget.value.slice(0, 500),
+                                  });
+                                }}
                                 placeholder={tr(
                                   "引用至少一个可信文档，并说明它支持哪项证据要求和主张边界。",
                                   "Reference at least one trusted document and tie it to evidence requirements and claim boundaries.",
@@ -2133,15 +2211,31 @@ export default function AiInfraTwinPage() {
                                     disabled={attached}
                                     onClick={() =>
                                       selectedUnit.unit_id &&
-                                      setEvidenceBundles((prev) => ({
-                                        ...prev,
-                                        [selectedUnit.unit_id as string]: Array.from(
-                                          new Set([
-                                            ...(prev[selectedUnit.unit_id as string] || []),
-                                            candidate.ref,
-                                          ]),
-                                        ),
-                                      }))
+                                      (() => {
+                                        const unitId = selectedUnit.unit_id as string;
+                                        setEvidenceBundles((prev) => ({
+                                          ...prev,
+                                          [unitId]: Array.from(
+                                            new Set([
+                                              ...(prev[unitId] || []),
+                                              candidate.ref,
+                                            ]),
+                                          ),
+                                        }));
+                                        void recordLearningEvent({
+                                          event_type:
+                                            assessmentMode === "independent_lab" ||
+                                            assessmentMode === "incident_challenge"
+                                              ? "transfer_challenge"
+                                              : "evidence_binding",
+                                          unit_id: unitId,
+                                          course_id: selectedCourse?.course_path_id || null,
+                                          score: 1,
+                                          error_types: [],
+                                          evidence_refs: [candidate.ref],
+                                          notes: `bound evidence:${candidate.label}`,
+                                        });
+                                      })()
                                     }
                                     className="max-w-full truncate rounded-md border border-[var(--border)] px-1.5 py-0.5 text-[10px] text-[var(--muted-foreground)] hover:bg-[var(--accent)] disabled:opacity-50"
                                     title={candidate.label}
@@ -2219,6 +2313,18 @@ export default function AiInfraTwinPage() {
                                 [selectedUnit.unit_id as string]: event.target.value,
                               }))
                             }
+                            onBlur={(event) => {
+                              if (!selectedUnit.unit_id || event.currentTarget.value.trim().length < 20) return;
+                              void recordLearningEvent({
+                                event_type: "reflection",
+                                unit_id: selectedUnit.unit_id,
+                                course_id: selectedCourse?.course_path_id || null,
+                                score: selectedUnitMastery.scorePct / 100,
+                                error_types: [],
+                                evidence_refs: selectedUnitEvidenceRefs,
+                                notes: event.currentTarget.value.slice(0, 500),
+                              });
+                            }}
                             placeholder={tr(
                               "写下可被当前证据支持的结论，以及还缺什么证明。",
                               "Write the claim supported by current evidence, and what proof is still missing.",
@@ -2255,6 +2361,15 @@ export default function AiInfraTwinPage() {
                                     completedAt: prev[unitId]?.completedAt || completedAt,
                                   },
                                 }));
+                                void recordLearningEvent({
+                                  event_type: "post_check",
+                                  unit_id: unitId,
+                                  course_id: selectedCourse?.course_path_id || null,
+                                  score: 1,
+                                  error_types: [],
+                                  evidence_refs: selectedUnitEvidenceRefs,
+                                  notes: `unit_completed:${selectedUnit.title || unitId}`,
+                                });
                               })()
                             }
                             className="mt-1.5 inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-[var(--primary)] px-2 py-1.5 text-[11px] text-[var(--primary-foreground)] disabled:opacity-50"
