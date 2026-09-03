@@ -16,8 +16,8 @@ cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_ca
 csphere-california_electrical_career
 ```
 
-当前版包含 6 个模块、39 个学习目标，并补充了 15 张可用于 Tutor
-mini-lesson 的 lesson cards、4 个 practice blueprint，以及 8 个 learning
+当前版包含 6 个模块、39 个学习目标，并补充了 29 张可用于 Tutor
+mini-lesson 的 lesson cards、8 个 practice blueprint，以及 8 个 learning
 activity templates：
 
 1. Career Orientation
@@ -35,6 +35,12 @@ activity templates：
 - GE eligibility、GE blueprint、NEC navigation、GE installation
 - C-10 blueprint、estimating、safety
 - Law & Business blueprint 和 contractor qualifying experience
+- GE exam logistics、symbols/diagrams、conductors/raceways、grounding/bonding、
+  overcurrent protection、motors/transformers、testing/troubleshooting
+- C-10 rough wiring vs finish wiring、special systems / energy storage
+- Law & Business contracts/change orders、employment/payroll、liens/insurance/finance
+- Public works、prevailing wage、apprenticeship requirements、certified payroll
+- Cal/OSHA hazardous energy / lockout-tagout safety
 
 新增 practice blueprints 覆盖：
 
@@ -42,6 +48,10 @@ activity templates：
 - GE blueprint-weighted practice
 - C-10 closed-book scenario and calculation practice
 - Law & Business scenario practice
+- GE NEC navigation sprints
+- Electrical calculation ladder
+- Testing and troubleshooting scenarios
+- Public works compliance scenarios
 
 新增 learning activity templates 覆盖：
 
@@ -70,10 +80,14 @@ claim 摘要转化为学习体验。
 - California DIR / DLSE Test Info：General Electrician 为 100 题、4 小时 30 分钟；权重为 Safety 6%、Electrical System Requirements 22%、Installation 66%、Maintenance and Repair 6%。
 - California DIR / DLSE General Electrician eligibility：GE 申请要求 8,000 小时 qualifying work。
 - California DIR ECCC General Electrician curriculum：覆盖 safety、tools/materials、electrical theory、code requirements、conductors、raceways、lighting、overcurrent devices、grounding、plans/specifications、transformers、testing 等。
+- DGS / California Building Standards Commission：Title 24 / California Electrical Code edition metadata 和代码引用边界由 Cognisphere 管理。
+- NFPA：NEC / NFPA 70 的 standards-body metadata 和概念引用由 Cognisphere 管理；Tutor 不分发 NEC 全文。
 - CSLB C-10 Study Guide：C-10 trade blueprint 覆盖 Planning and Estimating、Rough Wiring、Finish Wiring and Trim、Startup/Troubleshooting/Maintenance、Safety；考试为 closed-book、multiple-choice、每题四个选项，部分题目需要计算。
 - CSLB Law & Business Study Guide：覆盖 Business Organization and Licensing、Business Finances、Employment Requirements、Insurance and Liens、Contract Requirements and Execution、Public Works、Safety；考试为 closed-book、multiple-choice、每题四个选项，部分题目需要计算。
 - CSLB Studying for the Examination：contractor applicant 需要准备 Law & Business 和 trade examination，study guide 会列出 topic areas、weights、sample questions 和 resources。
 - CSLB Qualifying Experience：contractor exam 通常要求 4 年 classification 相关经验；技术/职业培训最多可折抵 3 年，但至少 1 年必须是 practical experience。
+- Cal/OSHA / OSHA：hazardous energy、lockout/tagout、电气安全用于安全情境练习。
+- California DIR Public Works：public works contractor responsibilities、prevailing wage、apprenticeship、certified payroll 用于 Law & Business 情境练习。
 
 ## 为什么先做课程 seed
 

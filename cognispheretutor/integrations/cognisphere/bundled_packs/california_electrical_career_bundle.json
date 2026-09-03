@@ -666,6 +666,261 @@
         "source_ref_ids": [
           "cslb.contractor_experience.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-lesson-ge-exam-logistics",
+        "title": "GE exam logistics and open-book discipline",
+        "summary": "Learners should understand exam logistics, scheduling authority, test-site materials, and why open-book still requires structured practice.",
+        "body": "Teach the exam process as part of readiness. The learner should separate three things: eligibility to apply, scheduling and candidate instructions, and content mastery. Open-book does not remove the need to know where topics live, because time pressure still punishes wandering through references.",
+        "teaching_points": [
+          "Candidate instructions and scheduling processes can change, so Tutor should cite Cognisphere provenance rather than rely on memory.",
+          "Open-book preparation should include lookup route rehearsal, not only concept flashcards.",
+          "The learner should verify formal scheduling and allowed-material rules with the administering source before an actual exam date."
+        ],
+        "quick_check_prompts": [
+          "Why is open-book GE practice still timed: because books are forbidden, because lookup route and decision speed matter, because all answers are memorized, or because no calculations appear?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.electrician_certification_program.2026-09-03",
+          "ca_dir.electrician_certification_faq.2026-09-03",
+          "ca_dir.electrician_candidate_bulletin.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-electrical-symbols-diagrams",
+        "title": "Symbols, plans, and diagrams",
+        "summary": "A learner must translate drawings and symbols into electrical systems before calculating or choosing code routes.",
+        "body": "Teach drawings as compressed jobsite instructions. Start by identifying the system, device, conductor path, panel or equipment boundary, then connect that picture to the question. The goal is not artistic drafting; it is reading enough of the diagram to know what work is being described.",
+        "teaching_points": [
+          "Symbols reduce field objects to plan language.",
+          "A plan question usually asks for location, connection, sequence, material, or code classification.",
+          "Misreading a symbol can send the learner to the wrong formula or reference section."
+        ],
+        "quick_check_prompts": [
+          "When a question includes a plan symbol, what should the learner identify first: the answer choice length, the represented device/system, the calculator key, or the exam timer?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-conductors-raceways",
+        "title": "Conductors, cables, raceways, and wiring methods",
+        "summary": "Conductors and raceways connect electrical theory to installation decisions, sizing, protection, and code navigation.",
+        "body": "Teach wiring methods as a classification problem. The learner should ask what is being carried, where it is installed, what protection is needed, whether the environment changes the choice, and whether the question is about conductor, cable, raceway, box, termination, or support.",
+        "teaching_points": [
+          "Conductor questions often combine ampacity, insulation, termination, protection, and environment.",
+          "Raceway questions often combine fill, support, bending, protection, and location.",
+          "The first decision is usually category classification, not arithmetic."
+        ],
+        "quick_check_prompts": [
+          "A wiring-method question should first be classified by what: the system and installation condition, the longest answer, the learner's favorite formula, or the page number alone?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "ca_dir.general_electrician.testinfo.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-grounding-bonding",
+        "title": "Grounding and bonding as safety logic",
+        "summary": "Grounding and bonding should be taught as fault-current and touch-voltage control, not as isolated vocabulary.",
+        "body": "Teach grounding and bonding through the safety question: if something fails, where does current go, and how are metal parts kept at a safer potential? The learner should distinguish normal current paths from fault paths and connect that distinction to equipment, conductors, raceways, and overcurrent devices.",
+        "teaching_points": [
+          "Grounding and bonding are safety and system-stability ideas before they are lookup topics.",
+          "Fault-current path reasoning helps explain why connections and continuity matter.",
+          "Many wrong answers confuse grounding, bonding, neutral conductors, and equipment grounding conductors."
+        ],
+        "quick_check_prompts": [
+          "In grounding/bonding reasoning, what is the main safety concern: paint color, fault-current path, brand selection, or payroll records?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-overcurrent-protection",
+        "title": "Overcurrent protection and circuit protection",
+        "summary": "Circuit protection connects loads, conductors, faults, equipment ratings, and safety-first troubleshooting.",
+        "body": "Teach overcurrent devices as protection, not merely switches. The learner should understand that protection must coordinate with conductor capacity, equipment, fault conditions, and the system purpose. For exam practice, ask whether the question is about sizing, location, coordination, operation, or maintenance.",
+        "teaching_points": [
+          "Overcurrent protection is a relationship between load, conductor, equipment, and fault behavior.",
+          "A tripping device is a clue, not a diagnosis by itself.",
+          "Troubleshooting should preserve safety controls before resetting or replacing parts."
+        ],
+        "quick_check_prompts": [
+          "A breaker trips repeatedly. What is the safest learning response: keep resetting, identify the cause, replace with a larger device automatically, or ignore the load?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "ca_dir.general_electrician.testinfo.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-motors-transformers",
+        "title": "Motors and transformers",
+        "summary": "Motors and transformers require learners to connect theory, sizing, protection, startup behavior, and troubleshooting.",
+        "body": "Teach motors as loads with startup behavior and protection needs, and transformers as devices that change voltage/current relationships while preserving power ideas within practical limits. Keep early lessons conceptual before moving into sizing and code navigation.",
+        "teaching_points": [
+          "Motor questions often involve starting current, control, overload, and protection.",
+          "Transformer questions often involve primary/secondary relationships and equipment ratings.",
+          "Both topics reward a stable mental model before formula selection."
+        ],
+        "quick_check_prompts": [
+          "Why should motor questions not be treated like simple resistive loads only: motors have startup/control/protection behavior, motors are never protected, motors ignore voltage, or motors are only paperwork?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-testing-troubleshooting",
+        "title": "Testing and troubleshooting workflow",
+        "summary": "Troubleshooting should follow safety, symptom, measurement, hypothesis, correction, and verification.",
+        "body": "Teach troubleshooting as a workflow. Start with the symptom, confirm safe conditions, choose the right test instrument, measure one thing at a time, form a hypothesis, correct the likely cause, and verify the system works. This prevents random part-swapping and unsafe shortcuts.",
+        "teaching_points": [
+          "The first troubleshooting step is often safety and verification, not replacement.",
+          "Measurements are useful only when the learner knows what value would be normal.",
+          "A good answer explains the next diagnostic step, not just a possible failed component."
+        ],
+        "quick_check_prompts": [
+          "In troubleshooting, what should happen before replacing parts: verify symptoms and safe test conditions, guess from memory, skip measurements, or change multiple variables at once?"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-c10-rough-finish",
+        "title": "C-10 rough wiring versus finish wiring",
+        "summary": "C-10 learners should distinguish hidden infrastructure work from visible final devices, trim, labeling, and startup checks.",
+        "body": "Teach rough wiring as the structural stage: raceways, boxes, panels, supports, conductors, and equipment placement before finish surfaces close. Teach finish wiring as devices, trim, labeling, terminations, testing, and handoff readiness. This distinction helps answer sequencing and constructability questions.",
+        "teaching_points": [
+          "Rough wiring decisions can be costly to fix after walls or ceilings close.",
+          "Finish wiring focuses on final devices, trims, labels, connections, and verification.",
+          "Sequencing questions often ask what must be installed, inspected, or verified before the next trade step."
+        ],
+        "quick_check_prompts": [
+          "Which task better fits finish wiring: setting concealed raceway before drywall, installing final devices and trim, excavating a trench, or calculating payroll tax?"
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-special-systems-energy",
+        "title": "Special systems: PV, batteries, generators, and storage",
+        "summary": "Energy-production and storage systems require extra attention to system role, source behavior, isolation, labeling, and safety.",
+        "body": "Teach special systems by asking what energy source is present, whether power can flow when utility power is off, what isolation or transfer behavior matters, and what safety labels or procedures should be considered. Keep the lesson at concept and scenario level unless a verified code reference is present.",
+        "teaching_points": [
+          "PV, generators, batteries, and storage change assumptions about where power comes from.",
+          "Isolation and labeling are central because multiple energy sources can be present.",
+          "C-10 preparation should connect special systems to planning, installation, startup, and safety."
+        ],
+        "quick_check_prompts": [
+          "Why do battery or PV systems require extra safety attention: they may remain an energy source, they never need labels, they remove all code concerns, or they are only business paperwork?"
+        ],
+        "source_ref_ids": [
+          "cslb.c10.study_guide.2026-03",
+          "ca_dir.eccc.general_curriculum.2018"
+        ]
+      },
+      {
+        "id": "cec-lesson-law-contracts-change-orders",
+        "title": "Contracts, bids, scope, and change orders",
+        "summary": "Law & Business learning should treat contracts and change orders as scope-control and risk-control tools.",
+        "body": "Teach contract scenarios around role, scope, price, timeline, changes, signatures, and documentation. A learner should not jump to a legal conclusion from one phrase; they should identify what document or obligation controls the situation and whether a change needs written approval.",
+        "teaching_points": [
+          "Bids and contracts define expectations, scope, and money.",
+          "Change orders should be treated as documented scope changes, not casual conversation.",
+          "Many scenario traps confuse doing the work with documenting authorization."
+        ],
+        "quick_check_prompts": [
+          "A customer asks for extra work outside the agreed scope. What should the contractor think about first: documented change authorization, ignoring cost, deleting the original scope, or skipping records?"
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03",
+          "cslb.exam.study_overview.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-law-employment-payroll",
+        "title": "Employment, payroll, and worker records",
+        "summary": "Employment topics are one of the largest Law & Business areas and should be practiced as role-and-record scenarios.",
+        "body": "Teach employment requirements by distinguishing employee from subcontractor, hiring from supervision, payroll from tax, and safety training from general onboarding. The learner should learn to spot the worker relationship and the record or obligation attached to it.",
+        "teaching_points": [
+          "Employment scenarios often ask who must keep a record or perform a required action.",
+          "Payroll, tax, insurance, and safety obligations are connected but not interchangeable.",
+          "Public works may add certified payroll and apprenticeship-related duties."
+        ],
+        "quick_check_prompts": [
+          "Which clue points most directly to an employment-requirements question: worker hiring and payroll records, raceway fill, transformer voltage, or paper folding?"
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03",
+          "dir.certified_payroll.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-law-liens-insurance-finance",
+        "title": "Insurance, liens, and business finance",
+        "summary": "Learners need scenario-level distinctions among risk transfer, payment security, cash flow, markup, margin, and business records.",
+        "body": "Teach this cluster through contrasts. Insurance manages risk; liens relate to payment rights and notices; finance tracks money, cost, cash flow, taxes, markup, and margin. The learner should identify which business problem the scenario is really asking about.",
+        "teaching_points": [
+          "Insurance is not the same as a lien or a tax record.",
+          "Markup and margin are different views of price and profit.",
+          "Payment-security scenarios require attention to timing, parties, and documents."
+        ],
+        "quick_check_prompts": [
+          "A question asks how a contractor protects payment rights on a project. Which topic family is most likely: liens, circuit resistance, PV isolation, or paper folding?"
+        ],
+        "source_ref_ids": [
+          "cslb.law_business.study_guide.2026-03",
+          "cslb.law_book.2026"
+        ]
+      },
+      {
+        "id": "cec-lesson-public-works",
+        "title": "Public works, prevailing wage, apprenticeship, and certified payroll",
+        "summary": "Public works questions require learners to recognize government-project duties beyond ordinary private contracting.",
+        "body": "Teach public works as an extra compliance layer. The learner should spot when a project is public works, then consider contractor registration, prevailing wage, certified payroll, and apprenticeship-related duties. Keep advice general and tell learners to verify live requirements with DIR for real projects.",
+        "teaching_points": [
+          "Public works status changes the compliance frame.",
+          "Prevailing wage, certified payroll, and apprenticeship requirements are separate but related duties.",
+          "A Law & Business scenario may hide a public-works clue in the project owner or funding context."
+        ],
+        "quick_check_prompts": [
+          "Which clue most strongly suggests public-works compliance: government/public project context, a parallel circuit, a paper-folding pattern, or a residential light switch only?"
+        ],
+        "source_ref_ids": [
+          "dir.public_works_contractors.2026-09-03",
+          "dir.prevailing_wage.2026-09-03",
+          "dir.public_works_apprenticeship.2026-09-03",
+          "dir.certified_payroll.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-cal-osha-lockout",
+        "title": "Cal/OSHA hazardous energy and lockout/tagout",
+        "summary": "Safety learning should include hazardous energy control as a procedural habit for electrical work and troubleshooting.",
+        "body": "Teach lockout/tagout as a safety workflow rather than a slogan. The learner should identify the energy source, isolate it, prevent unexpected energization, verify the condition, and restore only through a controlled process. Keep scenarios original and source-backed.",
+        "teaching_points": [
+          "Hazardous energy control is relevant before maintenance, servicing, and troubleshooting work.",
+          "Verification matters because assuming de-energized is not the same as proving it.",
+          "Safety answers often prioritize controlled procedure over speed."
+        ],
+        "quick_check_prompts": [
+          "What is the strongest reason for lockout/tagout practice: prevent unexpected energization, make paperwork longer, replace calculations, or avoid reading plans?"
+        ],
+        "source_ref_ids": [
+          "calosha.title8.3314.2026-09-03",
+          "calosha.lockout_publication.2026-09-03",
+          "osha.electrical_safety.2026-09-03"
+        ]
       }
     ],
     "practice_blueprints": [
@@ -723,6 +978,69 @@
         ],
         "source_ref_ids": [
           "cslb.law_business.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-practice-nec-navigation-sprints",
+        "title": "GE NEC navigation sprints",
+        "summary": "Generate original open-book navigation drills that score topic classification, lookup-route choice, exception awareness, and final verification separately.",
+        "practice_modes": [
+          "topic label selection",
+          "article/table route choice",
+          "exception awareness",
+          "lookup-time reflection"
+        ],
+        "source_ref_ids": [
+          "ca_dir.electrician_certification_faq.2026-09-03",
+          "ca_dir.general_electrician.testinfo.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-practice-electrical-calculation-ladder",
+        "title": "Electrical calculation ladder",
+        "summary": "Generate stepwise original calculation drills from unit conversion to Ohm's Law, power, conductor/raceway reasoning, motors, transformers, and estimating arithmetic.",
+        "practice_modes": [
+          "unit setup",
+          "formula choice",
+          "worked-example next step",
+          "plausibility check"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.c10.study_guide.2026-03"
+        ]
+      },
+      {
+        "id": "cec-practice-troubleshooting-scenarios",
+        "title": "Testing and troubleshooting scenarios",
+        "summary": "Generate original troubleshooting scenarios that require safety check, symptom classification, measurement choice, likely-cause reasoning, and verification.",
+        "practice_modes": [
+          "safety-first decision",
+          "instrument choice",
+          "symptom-to-cause reasoning",
+          "verification step"
+        ],
+        "source_ref_ids": [
+          "ca_dir.eccc.general_curriculum.2018",
+          "cslb.c10.study_guide.2026-03",
+          "calosha.title8.3314.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-practice-public-works-law",
+        "title": "Public works compliance scenarios",
+        "summary": "Generate original Law & Business scenarios for public works contractor registration, prevailing wage, apprenticeship duties, and certified payroll recognition.",
+        "practice_modes": [
+          "public/private project classification",
+          "prevailing wage clue spotting",
+          "certified payroll obligation",
+          "apprenticeship requirement recognition"
+        ],
+        "source_ref_ids": [
+          "dir.public_works_contractors.2026-09-03",
+          "dir.prevailing_wage.2026-09-03",
+          "dir.public_works_apprenticeship.2026-09-03",
+          "dir.certified_payroll.2026-09-03"
         ]
       }
     ],
@@ -1095,14 +1413,122 @@
           "Credit is given only for experience at journey level or as foreman, supervising employee, contractor, or owner-builder.",
           "Education, technical training, or vocational training may receive credit up to three years, but at least one year must be practical experience."
         ]
+      },
+      {
+        "source_id": "ca_dir.electrician_candidate_bulletin.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "DIR identifies candidate information and examination procedure updates for electrician certification applicants.",
+          "Candidate logistics and allowed-material rules should be treated as update-sensitive and verified before real exam scheduling."
+        ]
+      },
+      {
+        "source_id": "ca_dir.electrician_forms.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "DIR provides electrician certification forms and process references for certification applications and exam scheduling.",
+          "Tutor learning content should not replace official application instructions."
+        ]
+      },
+      {
+        "source_id": "dgs.title24.codes.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "The California Building Standards Commission maintains Title 24 code information, including California Electrical Code metadata.",
+          "Tutor should retain code edition metadata and citation pointers, not copyrighted code full text."
+        ]
+      },
+      {
+        "source_id": "nfpa.nec.overview.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "NFPA is the standards body for NFPA 70, the National Electrical Code.",
+          "Tutor may use NEC role and navigation concepts but must not redistribute NEC full text as pack content."
+        ]
+      },
+      {
+        "source_id": "calosha.title8.3314.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "California Title 8 section 3314 covers control of hazardous energy for cleaning, repairing, servicing, setting-up, and adjusting prime movers, machinery, and equipment.",
+          "Lockout/tagout learning content should emphasize hazardous energy control, isolation, verification, and controlled restoration."
+        ]
+      },
+      {
+        "source_id": "calosha.lockout_publication.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "Cal/OSHA provides lockout/tagout guidance that can support safety scenarios and training context.",
+          "Safety examples should be original scenario abstractions rather than copied publication text."
+        ]
+      },
+      {
+        "source_id": "osha.electrical_safety.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "OSHA provides federal electrical safety information useful for general hazard framing.",
+          "California-specific compliance claims should prefer California DIR or Cal/OSHA sources."
+        ]
+      },
+      {
+        "source_id": "dir.public_works_contractors.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "DIR public works contractor guidance covers responsibilities such as registration, prevailing wage, apprenticeship standards, and certified payroll.",
+          "Tutor should teach public works as a scenario-recognition layer within Law and Business preparation."
+        ]
+      },
+      {
+        "source_id": "dir.prevailing_wage.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "DIR prevailing wage guidance supports public works wage-compliance learning scenarios.",
+          "Detailed wage determinations are update-sensitive and should remain Cognisphere-managed source material."
+        ]
+      },
+      {
+        "source_id": "dir.public_works_apprenticeship.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "DIR public works apprenticeship guidance supports recognition of apprenticeship-related duties on public works projects.",
+          "Tutor should use the source for conceptual scenario practice, not as legal advice for a specific project."
+        ]
+      },
+      {
+        "source_id": "dir.certified_payroll.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "DIR certified payroll reporting guidance supports Law and Business scenarios involving public works record obligations.",
+          "Tutor should keep real-project compliance instructions behind source verification and official DIR references."
+        ]
+      },
+      {
+        "source_id": "cslb.law_book.2026",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "CSLB publishes a Contractors License Law and Reference Book for contractor law reference.",
+          "Tutor should use metadata and short reviewed summaries only, not redistribute raw book content."
+        ]
       }
     ],
     "pack_metadata": {
       "source": "DeepTutor_California_Electrical_Career_Domain_Pack_v1.0.md",
-      "stage": "M0/M1 content seed",
+      "stage": "M0/M2 expanded content seed",
       "objective_count": 39,
-      "lesson_card_count": 15,
-      "practice_blueprint_count": 4,
+      "lesson_card_count": 29,
+      "practice_blueprint_count": 8,
       "learning_activity_template_count": 8,
       "source_governance": "Official public sources, URLs, provenance, versions, and update watch are managed by Cognisphere. Tutor consumes materialized pack data only.",
       "note": "Tutor-ready seed with materialized lesson cards, practice blueprints, and varied learning activity templates. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
