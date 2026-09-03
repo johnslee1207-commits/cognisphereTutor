@@ -16,10 +16,10 @@ cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_ca
 csphere-california_electrical_career
 ```
 
-当前版包含 6 个模块、39 个学习目标，并补充了 41 张可用于 Tutor
-mini-lesson 的 lesson cards、9 个 practice blueprint、8 个 learning
-activity templates、6 条 study sequences、16 张 scenario cards、6 组
-flashcard decks、4 个 readiness checkpoints 和 5 类 error taxonomy：
+当前版包含 6 个模块、39 个学习目标，并补充了 75 张可用于 Tutor
+mini-lesson 的 lesson cards、19 个 practice blueprint、8 个 learning
+activity templates、8 条 study sequences、52 张 scenario cards、17 组
+flashcard decks、8 个 readiness checkpoints 和 5 类 error taxonomy：
 
 1. Career Orientation
 2. Shared Electrical Foundations
@@ -33,6 +33,13 @@ flashcard decks、4 个 readiness checkpoints 和 5 类 error taxonomy：
 - 职业路径选择和学习边界
 - 电工入门数学、Ohm's Law、series/parallel/combination circuits
 - Inside Wireman aptitude test 与 PEF 证据组织
+- Entrance Exam 题型边界：不假设全是选择题，按 multiple choice、numeric fill、
+  true/false、short evidence answer、visual reasoning prompt 混合训练
+- Entrance Exam math：fractions/decimals/percent bridge、word-problem equation setup
+- Entrance Exam numerical reasoning：sequence pattern map、table denominator
+- Entrance Exam reading：evidence ladder、qualifier/EXCEPT trap
+- Entrance Exam mechanical/spatial：force-distance tradeoff、motion tracing、
+  rotation-vs-reflection、reverse paper unfolding
 - GE eligibility、GE blueprint、NEC navigation、GE installation
 - C-10 blueprint、estimating、safety
 - Law & Business blueprint 和 contractor qualifying experience
@@ -53,6 +60,10 @@ flashcard decks、4 个 readiness checkpoints 和 5 类 error taxonomy：
 - Electrical calculation ladder
 - Testing and troubleshooting scenarios
 - Public works compliance scenarios
+- Entrance Exam rotating section drill
+- Entrance math without answer choices
+- Entrance reading evidence set
+- Mechanical and spatial reasoning lab
 
 新增 learning activity templates 覆盖：
 
@@ -75,6 +86,8 @@ flashcard decks、4 个 readiness checkpoints 和 5 类 error taxonomy：
 - Contractor Law and Business scenario path
 - aptitude ratio、Ohm's Law、NEC navigation、change order、public works、lockout/tagout 原创场景卡
 - aptitude math、number patterns、table reading、technical reading、mechanical、spatial/paper folding 原创场景卡
+- Entrance Exam numeric-fill、true/false、short-answer、reading-evidence、
+  mechanical/spatial visual reasoning 原创场景卡
 - electrical foundations、GE navigation、Law & Business scenario cues、apprenticeship math、apprenticeship mechanical、apprenticeship spatial/reading 闪卡组
 - foundations、apprenticeship entry sprint、GE navigation、C-10/Law readiness checkpoints
 - topic classification、unit/setup、safety sequencing、documentation boundary、memorization-over-navigation 错因分类

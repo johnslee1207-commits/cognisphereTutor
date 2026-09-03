@@ -1,0 +1,644 @@
+"""Enrich the bundled California Electrical Career pack with Entrance Exam content."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+PACK_PATH = Path(
+    "cognispheretutor/integrations/cognisphere/bundled_packs/"
+    "california_electrical_career_bundle.json"
+)
+
+SOURCE_REFS = [
+    "laett.inside_wireman.2026-01-26",
+    "gan.aptitude_test.2026-09-03",
+    "cceti.gan_how_to_apply.2026-09-03",
+]
+
+
+def append_unique(knowledge: dict, section: str, items: list[dict]) -> int:
+    records = knowledge.setdefault(section, [])
+    existing = {item.get("id") or item.get("source_id") for item in records}
+    added = 0
+    for item in items:
+        key = item.get("id") or item.get("source_id")
+        if key in existing:
+            continue
+        records.append(item)
+        existing.add(key)
+        added += 1
+    return added
+
+
+def lesson_cards() -> list[dict]:
+    return [
+        {
+            "id": "cec-lesson-entrance-exam-format-boundary",
+            "title": "Entrance Exam format: practice beyond multiple choice",
+            "summary": (
+                "Entrance Exam preparation should not assume every exercise is "
+                "multiple choice; Tutor uses multiple formats to build speed, "
+                "accuracy, and reasoning transfer."
+            ),
+            "body": (
+                "Teach that official selection materials describe tested abilities "
+                "and sections, but local administrations may vary in exact item "
+                "presentation. Tutor should train with multiple-choice checks for "
+                "fast grading, numeric-fill items for arithmetic, short reading "
+                "explanations for evidence discipline, and visual/spatial prompts "
+                "for paper-folding and mechanical reasoning. Do not present original "
+                "Tutor practice as leaked or official exam questions."
+            ),
+            "teaching_points": [
+                "Multiple choice is useful for quick grading, but it is not the only readiness format.",
+                "Math and numerical reasoning need no-choice calculation practice.",
+                "Reading comprehension needs passage evidence, not outside assumptions.",
+                "Mechanical and spatial reasoning need step-by-step tracing before answer-choice selection.",
+                "Tutor practice is original and source-grounded; it must not claim to reproduce official questions.",
+            ],
+            "quick_check_prompts": [
+                "Why should an Entrance Exam learner practice numeric-fill and short evidence answers?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-math-fractions-decimals",
+            "title": "Entrance math: fractions, decimals, and percent bridges",
+            "summary": (
+                "Fast aptitude math often depends on converting between fractions, "
+                "decimals, and percentages without losing the base quantity."
+            ),
+            "body": (
+                "Teach the bridge method: fraction to decimal, decimal to percent, "
+                "percent to multiplier. Always name the base before calculating. "
+                "For selection practice, emphasize mental estimates first, exact "
+                "arithmetic second, and answer plausibility last."
+            ),
+            "teaching_points": [
+                "One half is 0.5 and 50%; one fourth is 0.25 and 25%; one eighth is 0.125 and 12.5%.",
+                "Percent increase uses increase divided by original amount, not the new total.",
+                "A decrease uses a multiplier below 1; an increase uses a multiplier above 1.",
+                "Estimate before computing so impossible answers are rejected quickly.",
+            ],
+            "quick_check_prompts": [
+                "A length increases from 80 to 100. What is the percent increase, and what base did you use?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-math-equation-from-words",
+            "title": "Entrance math: turn words into equations",
+            "summary": (
+                "Word-problem misses often come from translating the sentence "
+                "incorrectly before any arithmetic begins."
+            ),
+            "body": (
+                "Use a four-step setup: define the unknown, mark total/change/rate "
+                "words, write one relationship, then solve or test choices. Teach "
+                "learners to slow down on words such as remaining, combined, per, "
+                "twice, difference, and more than."
+            ),
+            "teaching_points": [
+                "Define x in plain English before writing symbols.",
+                "Remaining means total minus used amount.",
+                "Per creates a rate: amount divided by unit.",
+                "Combined work or production often uses rates, not raw totals.",
+            ],
+            "quick_check_prompts": [
+                "Write an equation for: a worker has 12 more fittings than another worker, and together they have 64."
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-numerical-pattern-map",
+            "title": "Entrance numerical reasoning: pattern map",
+            "summary": (
+                "A repeatable pattern map helps the learner test common sequence "
+                "and data patterns before guessing."
+            ),
+            "body": (
+                "Teach a short sequence checklist: constant difference, changing "
+                "difference, multiplication/division, alternating two-track pattern, "
+                "grouping, and position rule. For tables, compare rates and changes "
+                "between rows instead of staring at isolated values."
+            ),
+            "teaching_points": [
+                "First differences reveal many arithmetic sequences.",
+                "Alternating patterns split odd and even positions into two mini-sequences.",
+                "Table questions often hide the relevant denominator.",
+                "If two rules fit, prefer the simpler rule that explains every shown term.",
+            ],
+            "quick_check_prompts": [
+                "For 3, 6, 4, 8, 6, 12, what two-track rule is being used?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-reading-evidence-ladder",
+            "title": "Entrance reading: evidence ladder",
+            "summary": (
+                "Reading comprehension should be answered from passage evidence in "
+                "a fixed order: locate, restate, compare, eliminate."
+            ),
+            "body": (
+                "Teach the evidence ladder. First locate the sentence that controls "
+                "the answer. Second restate it in simpler words. Third compare each "
+                "choice to that sentence. Fourth eliminate choices that add, reverse, "
+                "overstate, or ignore a condition."
+            ),
+            "teaching_points": [
+                "Do not answer from trade knowledge if the passage says something narrower.",
+                "Watch qualifiers: before, after, unless, except, only, first, required.",
+                "A choice can sound reasonable and still be unsupported.",
+                "For EXCEPT questions, mark the task before reading choices.",
+            ],
+            "quick_check_prompts": [
+                "What is the danger of choosing an answer because it sounds true but is not stated?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-mechanical-force-distance",
+            "title": "Mechanical reasoning: force-distance tradeoff",
+            "summary": (
+                "Many mechanical items reduce to a tradeoff: less force usually "
+                "means more distance, and more distance from a pivot increases turning effect."
+            ),
+            "body": (
+                "Teach learners to identify the moving part, the pivot or support, "
+                "the direction of force, and the tradeoff. For levers, farther from "
+                "the pivot generally needs less force. For ramps and pulleys, "
+                "mechanical advantage usually exchanges force for distance or rope length."
+            ),
+            "teaching_points": [
+                "Draw or imagine the pivot first.",
+                "Farther from a pivot gives more turning effect for the same force.",
+                "A longer ramp usually lowers required force but increases travel distance.",
+                "A pulley system can reduce pulling force while requiring more rope movement.",
+            ],
+            "quick_check_prompts": [
+                "Why does pushing farther from a hinge usually make a door easier to open?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-mechanical-motion-tracing",
+            "title": "Mechanical reasoning: trace motion one connection at a time",
+            "summary": (
+                "Gear, belt, and pulley mistakes often happen when the learner jumps "
+                "across the whole mechanism instead of tracing each connection."
+            ),
+            "body": (
+                "Teach one-connection tracing. Adjacent meshed gears reverse direction; "
+                "gears connected by an open belt turn the same direction; a crossed belt "
+                "reverses direction. Count reversals instead of relying on visual intuition alone."
+            ),
+            "teaching_points": [
+                "Meshed gears reverse direction at each contact.",
+                "An even number of gear contacts ends in the same direction as the first gear.",
+                "An odd number of gear contacts ends in the opposite direction.",
+                "Open belts and crossed belts behave differently; inspect the connection.",
+            ],
+            "quick_check_prompts": [
+                "If gear A meshes with B, and B meshes with C, does C turn the same direction as A?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-spatial-rotation-reflection",
+            "title": "Spatial reasoning: rotation is not reflection",
+            "summary": "A common spatial trap is treating a mirror image as a rotated object.",
+            "body": (
+                "Teach feature tracking. Pick an asymmetric feature, track its relative "
+                "position, and ask whether clockwise order around the shape stayed the same. "
+                "Rotation preserves the order of features; reflection reverses it."
+            ),
+            "teaching_points": [
+                "Rotation changes orientation but preserves left-right handedness.",
+                "Reflection reverses the order of features.",
+                "Track one marked corner or notch before looking at answer choices.",
+                "If a feature swaps sides as in a mirror, it is not just rotated.",
+            ],
+            "quick_check_prompts": [
+                "What stays the same during rotation but changes during reflection?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-paper-folding-unfold-order",
+            "title": "Paper folding: unfold in reverse order",
+            "summary": (
+                "Paper-folding problems become manageable when the learner reverses "
+                "the folds one at a time."
+            ),
+            "body": (
+                "Teach reverse unfolding. Label the final folded packet, undo the last "
+                "fold first, mirror holes or marks across that fold line, then undo the "
+                "previous fold. Do not try to visualize the whole unfolded paper at once."
+            ),
+            "teaching_points": [
+                "Unfold the last fold first.",
+                "Each unfolded layer mirrors marks across the fold line.",
+                "Count layers before deciding how many holes appear.",
+                "A mark on a fold line may duplicate differently from a mark away from the fold line.",
+            ],
+            "quick_check_prompts": [
+                "Why is reverse order safer than imagining the final unfolded page immediately?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-daily-cycle",
+            "title": "Entrance Exam daily cycle: lesson, drill, error memory, retest",
+            "summary": (
+                "Near-term preparation should alternate mini-lessons, short drills, "
+                "named error memory, and retesting rather than long passive reading."
+            ),
+            "body": (
+                "Use a daily cycle: one mini-lesson, one worked example, three to six "
+                "quick items, error label, then a retest later. The learner should know "
+                "whether each miss was arithmetic, translation, evidence, mechanism tracing, "
+                "spatial reversal, or pacing."
+            ),
+            "teaching_points": [
+                "Short frequent practice beats one long theory block for aptitude readiness.",
+                "Every miss needs a label so remediation can target the cause.",
+                "Retest the same skill after a delay to confirm the fix held.",
+                "Final-week study should protect test-day execution instead of adding too many new topics.",
+            ],
+            "quick_check_prompts": [
+                "Name one error label that sends you back to math setup and one that sends you to pacing practice."
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+    ]
+
+
+def practice_blueprints() -> list[dict]:
+    return [
+        {
+            "id": "cec-practice-entrance-section-rotation",
+            "title": "Entrance Exam rotating section drill",
+            "summary": (
+                "Rotate one focused section per day across math, numerical reasoning, "
+                "reading, mechanical, and spatial skills."
+            ),
+            "practice_modes": ["focused lesson-first drill", "mixed-format quick quiz", "error-label retest"],
+            "item_format_mix": [
+                "multiple_choice",
+                "numeric_fill",
+                "true_false",
+                "short_evidence_answer",
+                "visual_reasoning_prompt",
+            ],
+            "generation_rules": [
+                "Use only original practice items, never recalled or copyrighted exam questions.",
+                "Start each drill with the method card for that section.",
+                "Require explanation only after repeated misses or at checkpoint moments.",
+                "Attach an error label to every wrong answer.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-practice-entrance-math-no-choice",
+            "title": "Entrance math without answer choices",
+            "summary": (
+                "Generate numeric-fill arithmetic and algebra items so the learner "
+                "cannot rely only on elimination."
+            ),
+            "practice_modes": ["mental estimate", "numeric fill", "choice comparison after solving"],
+            "generation_rules": [
+                "Ask for the numeric answer first, then optionally show choices.",
+                "Keep arithmetic realistic for aptitude speed practice.",
+                "Include one ratio, one percent, one algebra setup, and one rate item per set.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-practice-entrance-reading-evidence-set",
+            "title": "Entrance reading evidence set",
+            "summary": (
+                "Generate short technical passages that require locating evidence, "
+                "handling qualifiers, and rejecting unsupported choices."
+            ),
+            "practice_modes": ["passage-only answer", "EXCEPT qualifier drill", "unsupported-choice elimination"],
+            "generation_rules": [
+                "Use short original passages about workplace instructions, scheduling, safety notices, or tool handling.",
+                "Do not require outside electrical knowledge.",
+                "After grading, identify the controlling phrase in the passage.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-practice-entrance-mechanical-spatial-lab",
+            "title": "Mechanical and spatial reasoning lab",
+            "summary": (
+                "Generate visual-thinking drills for levers, gears, pulleys, rotation, "
+                "reflection, and paper folding."
+            ),
+            "practice_modes": ["trace one connection", "predict direction", "reverse unfold", "rotation versus mirror"],
+            "generation_rules": [
+                "Keep diagrams textual or simple ASCII when no image renderer is available.",
+                "Grade the reasoning step, not only the final letter.",
+                "Separate mechanical misses from spatial misses in the error log.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+    ]
+
+
+def scenario_cards() -> list[dict]:
+    return [
+        {
+            "id": "cec-scenario-entrance-fraction-decimal-bridge",
+            "title": "Math bridge: fraction to percent",
+            "summary": "Original numeric-fill item for fraction, decimal, and percent fluency.",
+            "response_format": "numeric_fill",
+            "scenario": ["A conduit run is 3/8 complete. What percent of the run is complete?"],
+            "expected_answer": "37.5%",
+            "correct_rationale": ["3 divided by 8 is 0.375, which is 37.5%."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-percent-base",
+            "title": "Math trap: percent base",
+            "summary": "Original multiple-choice item about percent increase base quantity.",
+            "response_format": "multiple_choice",
+            "scenario": ["A practice score rises from 24 correct to 30 correct. What is the percent increase?"],
+            "choices": ["A) 6%", "B) 20%", "C) 25%", "D) 30%"],
+            "answer": "C",
+            "correct_rationale": ["The increase is 6. The base is the original 24. 6/24 = 25%."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-equation-fittings",
+            "title": "Algebra setup: fittings count",
+            "summary": "Original equation-setup item for word-problem translation.",
+            "response_format": "short_answer",
+            "scenario": [
+                "Box A has 12 more fittings than Box B. Together they have 64 fittings. Define x as the number in Box B and write the equation."
+            ],
+            "expected_answer": "x + (x + 12) = 64",
+            "correct_rationale": ["Box B is x. Box A is x + 12. Together means add them to get 64."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-rate-output",
+            "title": "Rate reasoning: parts per hour",
+            "summary": "Original rate item for numerical computation.",
+            "response_format": "numeric_fill",
+            "scenario": ["A trainee labels 45 parts in 15 minutes. At the same rate, how many parts can the trainee label in 1 hour?"],
+            "expected_answer": "180",
+            "correct_rationale": ["One hour is four 15-minute blocks. 45 times 4 is 180."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-sequence-second-difference",
+            "title": "Numerical pattern: changing difference",
+            "summary": "Original sequence item using second differences.",
+            "response_format": "multiple_choice",
+            "scenario": ["Find the next number: 2, 5, 10, 17, 26, ?"],
+            "choices": ["A) 35", "B) 36", "C) 37", "D) 38"],
+            "answer": "C",
+            "correct_rationale": ["The differences are 3, 5, 7, 9, so the next difference is 11. 26 + 11 = 37."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-reading-only-after",
+            "title": "Reading qualifier: only after",
+            "summary": "Original passage-evidence item about sequence and condition words.",
+            "response_format": "multiple_choice",
+            "scenario": [
+                "Passage: Submit the completed form only after the supervisor signs the verification line. Unsigned forms will be returned. Question: What must happen before submission?"
+            ],
+            "choices": ["A) The applicant pays a fee", "B) The supervisor signs the verification line", "C) The form is copied twice", "D) The applicant calls the office"],
+            "answer": "B",
+            "correct_rationale": ["The controlling words are only after the supervisor signs the verification line."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-reading-except-tool",
+            "title": "Reading EXCEPT: tool notice",
+            "summary": "Original EXCEPT item for careful answer-task handling.",
+            "response_format": "multiple_choice",
+            "scenario": [
+                "Passage: Bring a photo ID, two pencils, and your appointment notice. Calculators and phones are not permitted in the testing room. Question: All are required EXCEPT:"
+            ],
+            "choices": ["A) Photo ID", "B) Two pencils", "C) Appointment notice", "D) Calculator"],
+            "answer": "D",
+            "correct_rationale": ["The question asks EXCEPT. A calculator is not permitted, not required."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-mechanical-door-hinge",
+            "title": "Mechanical: door hinge leverage",
+            "summary": "Original true-false item about pivot distance.",
+            "response_format": "true_false",
+            "scenario": ["True or false: Pushing a door near the outer edge usually takes less force than pushing near the hinge."],
+            "answer": "True",
+            "correct_rationale": ["The outer edge is farther from the pivot, so the same push creates more turning effect."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-mechanical-ramp",
+            "title": "Mechanical: ramp tradeoff",
+            "summary": "Original mechanical reasoning item about force and distance tradeoff.",
+            "response_format": "multiple_choice",
+            "scenario": [
+                "Two ramps reach the same platform. Ramp A is short and steep. Ramp B is longer and less steep. Which usually requires less pushing force for the same load?"
+            ],
+            "choices": ["A) Ramp A", "B) Ramp B", "C) Both always require exactly the same force", "D) Neither because ramps do not affect force"],
+            "answer": "B",
+            "correct_rationale": ["The longer, less steep ramp usually reduces force but increases travel distance."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-gear-five",
+            "title": "Mechanical: five-gear chain",
+            "summary": "Original gear-direction item using reversal count.",
+            "response_format": "multiple_choice",
+            "scenario": ["Gear A meshes with B, B with C, C with D, and D with E. If A turns clockwise, which direction does E turn?"],
+            "choices": ["A) Clockwise", "B) Counterclockwise", "C) It does not turn", "D) Cannot tell from the connections"],
+            "answer": "A",
+            "correct_rationale": ["There are four gear contacts. Four reversals returns to the same direction as A."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-spatial-rotation-l",
+            "title": "Spatial: rotated L shape",
+            "summary": "Original short-answer item distinguishing rotation from reflection.",
+            "response_format": "short_answer",
+            "scenario": ["An L shape has its short foot pointing right. After a 90-degree clockwise rotation, does that foot point down, left, up, or right?"],
+            "expected_answer": "down",
+            "correct_rationale": ["A right-pointing feature rotated 90 degrees clockwise points down."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-fold-vertical-horizontal",
+            "title": "Paper folding: vertical then horizontal",
+            "summary": "Original paper-folding item using reverse unfold order.",
+            "response_format": "short_answer",
+            "scenario": [
+                "A square paper is folded left-to-right, then bottom-to-top. One hole is punched near the final folded packet corner away from both fold lines. When unfolded, how many matching holes appear?"
+            ],
+            "expected_answer": "4",
+            "correct_rationale": ["Two folds create four layers at that position, so the hole mirrors into four positions when unfolded."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-timed-triage",
+            "title": "Timed strategy: triage decision",
+            "summary": "Original pacing item for skip/mark/return behavior.",
+            "response_format": "multiple_choice",
+            "scenario": [
+                "During a timed mixed set, you spend 90 seconds on a spatial item and still cannot choose between two answers. What is the best next action?"
+            ],
+            "choices": ["A) Spend as long as needed", "B) Mark it, make the best provisional choice if required, and move on", "C) Stop the test and review notes", "D) Guess without reading the remaining questions"],
+            "answer": "B",
+            "correct_rationale": ["Pacing protects the total score. Mark, move, and return if time remains."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-pef-specific-evidence",
+            "title": "PEF: specific evidence beats vague claims",
+            "summary": "Original PEF item about evidence quality.",
+            "response_format": "multiple_choice",
+            "scenario": ["Which PEF note is strongest?"],
+            "choices": ["A) I am hardworking", "B) I helped sometimes", "C) I completed a 40-hour safety course and can attach the certificate", "D) I like electrical work"],
+            "answer": "C",
+            "correct_rationale": ["Specific, verifiable evidence is stronger than vague self-description."],
+            "source_ref_ids": ["laett.inside_wireman.2026-01-26", "gan.validation.2026-09-03"],
+        },
+    ]
+
+
+def flashcard_decks() -> list[dict]:
+    return [
+        {
+            "id": "cec-flashcards-entrance-format-mix",
+            "title": "Entrance Exam format mix",
+            "summary": "Cards reminding Tutor and learner to practice more than multiple choice.",
+            "cards": [
+                "Multiple choice: fast grading and elimination practice.",
+                "Numeric fill: prevents overreliance on answer choices.",
+                "Short evidence answer: proves reading support.",
+                "True/false: quick concept check, but explain false statements after misses.",
+                "Visual reasoning prompt: trace one feature, fold, gear, or force path.",
+                "Never call original Tutor items official or recalled exam questions.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-flashcards-entrance-reading-qualifiers",
+            "title": "Entrance reading qualifier traps",
+            "summary": "Recognition cards for passage-based reading questions.",
+            "cards": ["only", "except", "unless", "before", "after", "must", "may", "not permitted", "first", "most likely"],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-flashcards-entrance-mechanical-motion",
+            "title": "Entrance mechanical motion cues",
+            "summary": "Fast cues for tracing basic mechanical systems.",
+            "cards": [
+                "Pivot: farther usually means less force.",
+                "Ramp: less force usually means more distance.",
+                "Meshed gear: reverse direction.",
+                "Even gear reversals: same final direction.",
+                "Odd gear reversals: opposite final direction.",
+                "Pulley advantage: less force, more rope travel.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-flashcards-entrance-spatial-paper",
+            "title": "Entrance spatial and paper-folding cues",
+            "summary": "Fast cues for rotation, reflection, and unfolding.",
+            "cards": [
+                "Rotation preserves feature order.",
+                "Reflection reverses handedness.",
+                "Track one asymmetric feature.",
+                "Unfold in reverse order.",
+                "Mirror holes across each fold line.",
+                "Count layers before counting holes.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+    ]
+
+
+def readiness_checkpoints() -> list[dict]:
+    return [
+        {
+            "id": "cec-checkpoint-entrance-exam-section-readiness",
+            "title": "Entrance Exam section readiness checkpoint",
+            "summary": (
+                "Use after several Entrance Exam lessons to decide whether the learner "
+                "needs focused repair or mixed timed practice."
+            ),
+            "checkpoint_prompts": [
+                "Can the learner solve no-choice numeric-fill math items before seeing choices?",
+                "Can the learner name the pattern type in sequence and table questions?",
+                "Can the learner identify the exact passage phrase that controls a reading answer?",
+                "Can the learner trace lever, ramp, gear, pulley, rotation, and fold items one step at a time?",
+                "Can the learner explain the reason for a wrong answer using an error label?",
+                "Can the learner switch from focused drills to timed mixed sets without freezing?",
+            ],
+            "mastery_evidence": [
+                "80% on math computation and setup drills across two sessions",
+                "75% on numerical pattern/table drills across two sessions",
+                "75% on reading evidence drills with qualifier traps",
+                "70% on mechanical/spatial visual reasoning drills",
+                "documented error log with fewer repeated misses",
+                "one completed timed mixed set with a written skip rule",
+            ],
+            "remediation": [
+                "If numeric fill is weak, return to fraction/decimal/percent bridges and equation setup.",
+                "If reading is weak, use evidence-ladder drills before more mixed practice.",
+                "If mechanical is weak, use force-distance and one-connection tracing drills.",
+                "If spatial is weak, separate rotation/reflection before paper-folding drills.",
+                "If timing is weak, shorten sets and enforce mark/move/return behavior.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        }
+    ]
+
+
+def provenance_refs() -> list[dict]:
+    return [
+        {
+            "source_id": "cec.entrance_exam_practice_boundary.2026-09-04",
+            "managed_by": "Cognisphere",
+            "materialized_at": "2026-09-04",
+            "claim_summaries": [
+                "Tutor Entrance Exam practice uses original items derived from published section descriptions and validated-selection principles, not recalled or official exam questions.",
+                "Tutor should use multiple item formats: multiple choice for fast checks, numeric fill for computation, short evidence answers for reading, and visual reasoning prompts for mechanical/spatial skills.",
+                "When exact local item presentation is not published, Tutor must avoid claiming that all official Entrance Exam questions are multiple choice.",
+            ],
+        }
+    ]
+
+
+def main() -> None:
+    data = json.loads(PACK_PATH.read_text(encoding="utf-8"))
+    knowledge = data["knowledge"]
+    added = {
+        "lesson_cards": append_unique(knowledge, "lesson_cards", lesson_cards()),
+        "practice_blueprints": append_unique(knowledge, "practice_blueprints", practice_blueprints()),
+        "scenario_cards": append_unique(knowledge, "scenario_cards", scenario_cards()),
+        "flashcard_decks": append_unique(knowledge, "flashcard_decks", flashcard_decks()),
+        "readiness_checkpoints": append_unique(knowledge, "readiness_checkpoints", readiness_checkpoints()),
+        "cognisphere_provenance_refs": append_unique(
+            knowledge, "cognisphere_provenance_refs", provenance_refs()
+        ),
+    }
+    PACK_PATH.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(json.dumps(added, indent=2))
+
+
+if __name__ == "__main__":
+    main()
