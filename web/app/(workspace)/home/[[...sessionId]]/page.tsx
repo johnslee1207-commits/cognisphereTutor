@@ -16,6 +16,7 @@ import {
   BookOpenCheck,
   BrainCircuit,
   Calculator,
+  ChevronDown,
   Clapperboard,
   Code2,
   Compass,
@@ -371,6 +372,16 @@ interface MasteryStartingPoint {
   blurb: { zh: string; en: string };
   prompt: { zh: string; en: string };
   tone?: "primary" | "default";
+  children?: MasteryStartingPoint[];
+}
+
+function flattenMasteryStartingPoints(
+  points: MasteryStartingPoint[],
+): MasteryStartingPoint[] {
+  return points.flatMap((point) => [
+    point,
+    ...flattenMasteryStartingPoints(point.children || []),
+  ]);
 }
 
 function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
@@ -391,108 +402,123 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
         },
       },
       {
-        id: "apprenticeship_diagnostic",
+        id: "apprenticeship_entry",
         icon: ListChecks,
-        title: { zh: "入学诊断", en: "Entry diagnostic" },
+        title: { zh: "Entrance Exam", en: "Entrance Exam" },
         blurb: {
-          zh: "先做基线诊断，确认 math、reading、mechanical、spatial 的薄弱点。",
-          en: "Start with a baseline check across math, reading, mechanical, and spatial skills.",
+          zh: "面向下月初入学考试：先选具体题型，也可以从综合诊断开始。",
+          en: "Prepare for the entrance exam by choosing a test area or starting with a diagnostic.",
         },
         prompt: {
           zh: "Start from the apprenticeship entry baseline diagnostic. Teach briefly, run one diagnostic-style quick quiz, grade it, then continue from the biggest gap.",
           en: "Start from the apprenticeship entry baseline diagnostic. Teach briefly, run one diagnostic-style quick quiz, grade it, then continue from the biggest gap.",
         },
-      },
-      {
-        id: "apprenticeship_math",
-        icon: Calculator,
-        title: { zh: "Math reasoning", en: "Math reasoning" },
-        blurb: {
-          zh: "比例、百分比、代数设式、速算和文字题建模。",
-          en: "Ratios, percentages, algebra setup, quick arithmetic, and word-problem modeling.",
-        },
-        prompt: {
-          zh: "Start directly from Mathematical reasoning for aptitude testing. Teach the first math reasoning mini-lesson, then give a graded multiple-choice quick quiz.",
-          en: "Start directly from Mathematical reasoning for aptitude testing. Teach the first math reasoning mini-lesson, then give a graded multiple-choice quick quiz.",
-        },
-      },
-      {
-        id: "apprenticeship_numerical",
-        icon: BarChart3,
-        title: { zh: "Numerical reasoning", en: "Numerical reasoning" },
-        blurb: {
-          zh: "数列、表格、图表、趋势判断和数据解释。",
-          en: "Sequences, tables, charts, trend judgment, and data interpretation.",
-        },
-        prompt: {
-          zh: "Start directly from Numerical reasoning, sequences, and data interpretation. Teach one mini-lesson and follow with a graded quick quiz.",
-          en: "Start directly from Numerical reasoning, sequences, and data interpretation. Teach one mini-lesson and follow with a graded quick quiz.",
-        },
-      },
-      {
-        id: "apprenticeship_reading",
-        icon: BookOpenCheck,
-        title: { zh: "Reading comprehension", en: "Reading comprehension" },
-        blurb: {
-          zh: "技术说明、条件限制、关键词定位和题干陷阱。",
-          en: "Technical instructions, constraints, keyword location, and question traps.",
-        },
-        prompt: {
-          zh: "Start directly from Reading comprehension for technical instructions. Teach one mini-lesson and follow with a certification-style quick quiz.",
-          en: "Start directly from Reading comprehension for technical instructions. Teach one mini-lesson and follow with a certification-style quick quiz.",
-        },
-      },
-      {
-        id: "apprenticeship_mechanical",
-        icon: BrainCircuit,
-        title: { zh: "Mechanical physics", en: "Mechanical physics" },
-        blurb: {
-          zh: "力、杠杆、滑轮、齿轮、运动方向和机械直觉。",
-          en: "Force, levers, pulleys, gears, motion direction, and mechanical intuition.",
-        },
-        prompt: {
-          zh: "Start directly from Mechanical reasoning: force, levers, pulleys, gears, and motion. Teach one practical mini-lesson and then give a quick quiz.",
-          en: "Start directly from Mechanical reasoning: force, levers, pulleys, gears, and motion. Teach one practical mini-lesson and then give a quick quiz.",
-        },
-      },
-      {
-        id: "apprenticeship_spatial",
-        icon: Compass,
-        title: { zh: "Spatial reasoning", en: "Spatial reasoning" },
-        blurb: {
-          zh: "图形旋转、折纸、视角转换和空间判断。",
-          en: "Shape rotation, paper folding, perspective shifts, and spatial judgment.",
-        },
-        prompt: {
-          zh: "Start directly from Spatial reasoning and paper folding. Teach one mini-lesson with a visual-thinking method, then give a quick quiz.",
-          en: "Start directly from Spatial reasoning and paper folding. Teach one mini-lesson with a visual-thinking method, then give a quick quiz.",
-        },
-      },
-      {
-        id: "apprenticeship_timed",
-        icon: Timer,
-        title: { zh: "Timed mixed practice", en: "Timed mixed practice" },
-        blurb: {
-          zh: "按入学选拔节奏做混合题，训练取舍和时间管理。",
-          en: "Practice mixed sets with pacing, triage, and time management.",
-        },
-        prompt: {
-          zh: "Start directly from Timed mixed practice for the apprenticeship aptitude test. Give a short pacing lesson, then a timed-style quick quiz.",
-          en: "Start directly from Timed mixed practice for the apprenticeship aptitude test. Give a short pacing lesson, then a timed-style quick quiz.",
-        },
-      },
-      {
-        id: "apprenticeship_pef",
-        icon: FileSearch,
-        title: { zh: "PEF preparation", en: "PEF preparation" },
-        blurb: {
-          zh: "整理 Personal Experience Form 的经历证据和表达。",
-          en: "Organize Personal Experience Form evidence and wording.",
-        },
-        prompt: {
-          zh: "Start directly from Personal Experience Form preparation and evidence organization. Teach one mini-lesson, then give a practical checklist-style quick check.",
-          en: "Start directly from Personal Experience Form preparation and evidence organization. Teach one mini-lesson, then give a practical checklist-style quick check.",
-        },
+        children: [
+          {
+            id: "apprenticeship_diagnostic",
+            icon: ListChecks,
+            title: { zh: "入学诊断", en: "Entry diagnostic" },
+            blurb: {
+              zh: "先做基线诊断，确认 math、reading、mechanical、spatial 的薄弱点。",
+              en: "Baseline check across math, reading, mechanical, and spatial skills.",
+            },
+            prompt: {
+              zh: "Start from the apprenticeship entry baseline diagnostic. Teach briefly, run one diagnostic-style quick quiz, grade it, then continue from the biggest gap.",
+              en: "Start from the apprenticeship entry baseline diagnostic. Teach briefly, run one diagnostic-style quick quiz, grade it, then continue from the biggest gap.",
+            },
+          },
+          {
+            id: "apprenticeship_math",
+            icon: Calculator,
+            title: { zh: "Math reasoning", en: "Math reasoning" },
+            blurb: {
+              zh: "比例、百分比、代数设式、速算和文字题建模。",
+              en: "Ratios, percentages, algebra setup, quick arithmetic, and word problems.",
+            },
+            prompt: {
+              zh: "Start directly from Mathematical reasoning for aptitude testing. Teach the first math reasoning mini-lesson, then give a graded multiple-choice quick quiz.",
+              en: "Start directly from Mathematical reasoning for aptitude testing. Teach the first math reasoning mini-lesson, then give a graded multiple-choice quick quiz.",
+            },
+          },
+          {
+            id: "apprenticeship_numerical",
+            icon: BarChart3,
+            title: { zh: "Numerical reasoning", en: "Numerical reasoning" },
+            blurb: {
+              zh: "数列、表格、图表、趋势判断和数据解释。",
+              en: "Sequences, tables, charts, trend judgment, and data interpretation.",
+            },
+            prompt: {
+              zh: "Start directly from Numerical reasoning, sequences, and data interpretation. Teach one mini-lesson and follow with a graded quick quiz.",
+              en: "Start directly from Numerical reasoning, sequences, and data interpretation. Teach one mini-lesson and follow with a graded quick quiz.",
+            },
+          },
+          {
+            id: "apprenticeship_reading",
+            icon: BookOpenCheck,
+            title: { zh: "Reading comprehension", en: "Reading comprehension" },
+            blurb: {
+              zh: "技术说明、条件限制、关键词定位和题干陷阱。",
+              en: "Technical instructions, constraints, keyword location, and question traps.",
+            },
+            prompt: {
+              zh: "Start directly from Reading comprehension for technical instructions. Teach one mini-lesson and follow with a certification-style quick quiz.",
+              en: "Start directly from Reading comprehension for technical instructions. Teach one mini-lesson and follow with a certification-style quick quiz.",
+            },
+          },
+          {
+            id: "apprenticeship_mechanical",
+            icon: BrainCircuit,
+            title: { zh: "Mechanical physics", en: "Mechanical physics" },
+            blurb: {
+              zh: "力、杠杆、滑轮、齿轮、运动方向和机械直觉。",
+              en: "Force, levers, pulleys, gears, motion direction, and mechanical intuition.",
+            },
+            prompt: {
+              zh: "Start directly from Mechanical reasoning: force, levers, pulleys, gears, and motion. Teach one practical mini-lesson and then give a quick quiz.",
+              en: "Start directly from Mechanical reasoning: force, levers, pulleys, gears, and motion. Teach one practical mini-lesson and then give a quick quiz.",
+            },
+          },
+          {
+            id: "apprenticeship_spatial",
+            icon: Compass,
+            title: { zh: "Spatial reasoning", en: "Spatial reasoning" },
+            blurb: {
+              zh: "图形旋转、折纸、视角转换和空间判断。",
+              en: "Shape rotation, paper folding, perspective shifts, and spatial judgment.",
+            },
+            prompt: {
+              zh: "Start directly from Spatial reasoning and paper folding. Teach one mini-lesson with a visual-thinking method, then give a quick quiz.",
+              en: "Start directly from Spatial reasoning and paper folding. Teach one mini-lesson with a visual-thinking method, then give a quick quiz.",
+            },
+          },
+          {
+            id: "apprenticeship_timed",
+            icon: Timer,
+            title: { zh: "Timed mixed practice", en: "Timed mixed practice" },
+            blurb: {
+              zh: "按入学选拔节奏做混合题，训练取舍和时间管理。",
+              en: "Mixed sets with pacing, triage, and time management.",
+            },
+            prompt: {
+              zh: "Start directly from Timed mixed practice for the apprenticeship aptitude test. Give a short pacing lesson, then a timed-style quick quiz.",
+              en: "Start directly from Timed mixed practice for the apprenticeship aptitude test. Give a short pacing lesson, then a timed-style quick quiz.",
+            },
+          },
+          {
+            id: "apprenticeship_pef",
+            icon: FileSearch,
+            title: { zh: "PEF preparation", en: "PEF preparation" },
+            blurb: {
+              zh: "整理 Personal Experience Form 的经历证据和表达。",
+              en: "Organize Personal Experience Form evidence and wording.",
+            },
+            prompt: {
+              zh: "Start directly from Personal Experience Form preparation and evidence organization. Teach one mini-lesson, then give a practical checklist-style quick check.",
+              en: "Start directly from Personal Experience Form preparation and evidence organization. Teach one mini-lesson, then give a practical checklist-style quick check.",
+            },
+          },
+        ],
       },
       {
         id: "shared_foundations",
@@ -808,35 +834,81 @@ function MasteryStartingPointPanel({
           </p>
         </div>
       </div>
-      <div className="grid gap-2 lg:grid-cols-2">
+      <div className="grid gap-3 lg:grid-cols-2">
         {points.map((point) => {
           const Icon = point.icon;
           const primary = point.tone === "primary";
+          const hasChildren = Boolean(point.children?.length);
           return (
-            <button
+            <div
               key={point.id}
-              type="button"
-              disabled={disabled}
-              onClick={() => onSelect(point)}
-              className={`flex min-h-[96px] items-start gap-3 rounded-md border px-3 py-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+              className={`rounded-md border transition-colors ${
                 primary
-                  ? "border-[var(--primary)]/50 bg-[var(--primary)]/10 hover:bg-[var(--primary)]/15"
+                  ? "border-[var(--primary)]/50 bg-[var(--primary)]/10"
                   : "border-[var(--border)] hover:bg-[var(--accent)]"
               }`}
-              title={tr(point.title.zh, point.title.en)}
             >
-              <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--background)]">
-                <Icon className="h-4 w-4 text-[var(--primary)]" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-sm font-medium text-[var(--foreground)]">
-                  {tr(point.title.zh, point.title.en)}
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={() => onSelect(point)}
+                className={`flex min-h-[96px] w-full items-start gap-3 rounded-md px-3 py-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                  primary
+                    ? "hover:bg-[var(--primary)]/10"
+                    : "hover:bg-[var(--accent)]"
+                }`}
+                title={tr(point.title.zh, point.title.en)}
+              >
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--background)]">
+                  <Icon className="h-4 w-4 text-[var(--primary)]" />
                 </span>
-                <span className="mt-1 block text-xs leading-relaxed text-[var(--muted-foreground)]">
-                  {tr(point.blurb.zh, point.blurb.en)}
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-1.5 text-sm font-medium text-[var(--foreground)]">
+                    {tr(point.title.zh, point.title.en)}
+                    {hasChildren ? (
+                      <ChevronDown className="h-3.5 w-3.5 shrink-0 text-[var(--muted-foreground)]" />
+                    ) : null}
+                  </span>
+                  <span className="mt-1 block text-xs leading-relaxed text-[var(--muted-foreground)]">
+                    {tr(point.blurb.zh, point.blurb.en)}
+                  </span>
                 </span>
-              </span>
-            </button>
+              </button>
+              {hasChildren ? (
+                <div className="border-t border-[var(--border)] bg-[var(--background)]/45 px-3 pb-3 pt-2">
+                  <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+                    {tr("选择具体训练", "Choose a practice area")}
+                  </div>
+                  <div className="grid gap-2 md:grid-cols-2">
+                    {point.children?.map((child) => {
+                      const ChildIcon = child.icon;
+                      return (
+                        <button
+                          key={child.id}
+                          type="button"
+                          disabled={disabled}
+                          onClick={() => onSelect(child)}
+                          className="flex min-h-[72px] items-start gap-2 rounded-md border border-[var(--border)] bg-[var(--card)] px-2.5 py-2 text-left transition-colors hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
+                          title={tr(child.title.zh, child.title.en)}
+                        >
+                          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--background)]">
+                            <ChildIcon className="h-3.5 w-3.5 text-[var(--primary)]" />
+                          </span>
+                          <span className="min-w-0">
+                            <span className="block text-xs font-medium text-[var(--foreground)]">
+                              {tr(child.title.zh, child.title.en)}
+                            </span>
+                            <span className="mt-0.5 block text-[11px] leading-snug text-[var(--muted-foreground)]">
+                              {tr(child.blurb.zh, child.blurb.en)}
+                            </span>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
+            </div>
           );
         })}
       </div>
@@ -2312,9 +2384,9 @@ export default function ChatPage() {
 
   const activeMasteryStartPointLabel = useMemo(() => {
     if (!masteryPathParam || !activeMasteryStartPoint) return "";
-    const point = masteryStartingPointsForPath(masteryPathParam).find(
-      (item) => item.id === activeMasteryStartPoint,
-    );
+    const point = flattenMasteryStartingPoints(
+      masteryStartingPointsForPath(masteryPathParam),
+    ).find((item) => item.id === activeMasteryStartPoint);
     return point ? goalTr(point.title.zh, point.title.en) : "";
   }, [activeMasteryStartPoint, goalTr, masteryPathParam]);
 
