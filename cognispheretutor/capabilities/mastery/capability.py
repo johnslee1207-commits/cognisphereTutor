@@ -113,6 +113,9 @@ class MasteryPathCapability(BaseCapability):
         start_point = str(context.config_overrides.get("mastery_start_point") or "").strip()
         if start_point:
             context.metadata["mastery_start_point"] = start_point
+        start_action = str(context.config_overrides.get("mastery_start_action") or "").strip()
+        if start_action:
+            context.metadata["mastery_start_action"] = start_action
         pipeline = AgenticChatPipeline(language=context.language)
         await pipeline.run(context, stream)
 

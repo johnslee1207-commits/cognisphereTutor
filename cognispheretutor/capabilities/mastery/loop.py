@@ -55,6 +55,9 @@ class MasteryLoopCapability:
             updated["_mastery_start_point"] = str(
                 context.metadata.get("mastery_start_point") or ""
             ).strip()
+            updated["_mastery_start_action"] = str(
+                context.metadata.get("mastery_start_action") or ""
+            ).strip()
             updated["_session_id"] = str(context.session_id or "").strip()
             updated["_turn_id"] = str(context.metadata.get("turn_id") or "").strip()
             return updated
@@ -202,6 +205,9 @@ def _deterministic_mastery_status(context: UnifiedContext) -> str:
         else:
             full_map = map_summary(progress)
             start_point = str(context.metadata.get("mastery_start_point") or "").strip()
+            start_action = str(context.metadata.get("mastery_start_action") or "").strip()
+            if start_point and start_action == "start" and progress.pending_question is not None:
+                LearningService(LearningStore()).clear_pending_question(progress)
             next_step = next_objective_for_start_point(
                 progress,
                 start_point,

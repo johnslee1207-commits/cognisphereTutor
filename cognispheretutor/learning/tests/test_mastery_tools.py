@@ -153,6 +153,49 @@ async def test_status_honors_selected_start_point(path_id):
 
 
 @pytest.mark.asyncio
+async def test_status_start_action_clears_stale_pending_question(path_id):
+    await MasteryBuildTool().execute(
+        _mastery_path_id=path_id,
+        mode="replace",
+        modules=[
+            {
+                "name": "Career Orientation",
+                "knowledge_points": [{"name": "Choose a career goal", "type": "procedure"}],
+            },
+            {
+                "name": "ETI / IBEW Local 11 Apprenticeship Entrance",
+                "knowledge_points": [{"name": "Baseline diagnostic", "type": "procedure"}],
+            },
+        ],
+    )
+    first_status = json.loads(
+        (await MasteryStatusTool().execute(_mastery_path_id=path_id)).content
+    )
+    await MasteryQuizTool().execute(
+        _mastery_path_id=path_id,
+        knowledge_point_id=first_status["next"]["knowledge_point_id"],
+        question="Which career goal?",
+        expected_answer="A",
+        question_type="choice",
+        options=["A: Apprenticeship", "B: Contractor"],
+    )
+
+    payload = json.loads(
+        (
+            await MasteryStatusTool().execute(
+                _mastery_path_id=path_id,
+                _mastery_start_point="apprenticeship_entry",
+                _mastery_start_action="start",
+            )
+        ).content
+    )
+
+    assert payload["cleared_pending_question"] is True
+    assert payload["next"]["action"] == "probe"
+    assert payload["next"]["module_name"] == "ETI / IBEW Local 11 Apprenticeship Entrance"
+
+
+@pytest.mark.asyncio
 async def test_no_path_id_fails_closed():
     result = await MasteryStatusTool().execute(_mastery_path_id="")
     assert result.success is False

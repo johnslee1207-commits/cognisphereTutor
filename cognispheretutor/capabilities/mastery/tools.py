@@ -95,6 +95,10 @@ def _resolve_start_point(kwargs: dict[str, Any]) -> str:
     return str(kwargs.get("_mastery_start_point") or "").strip().lower()
 
 
+def _resolve_start_action(kwargs: dict[str, Any]) -> str:
+    return str(kwargs.get("_mastery_start_action") or "").strip().lower()
+
+
 _START_POINT_MODULE_SIGNALS: dict[str, tuple[str, ...]] = {
     "newcomer_sprint": ("career orientation", "shared electrical foundations"),
     "apprenticeship_entry": ("apprenticeship entrance", "ibew", "eti"),
@@ -290,14 +294,17 @@ class MasteryStatusTool(BaseTool):
             "status": "active",
         }
         start_point = _resolve_start_point(kwargs)
+        start_action = _resolve_start_action(kwargs)
         if start_point and progress.pending_question is not None:
             pending_module = next(
                 (m for m in progress.modules if m.id == progress.pending_question.module_id),
                 None,
             )
-            if pending_module is not None and not _module_matches_start_point(
-                pending_module, start_point
-            ):
+            should_clear_pending = start_action == "start" or (
+                pending_module is not None
+                and not _module_matches_start_point(pending_module, start_point)
+            )
+            if should_clear_pending:
                 service.clear_pending_question(progress)
                 payload["cleared_pending_question"] = True
         payload.update(
@@ -308,6 +315,8 @@ class MasteryStatusTool(BaseTool):
         )
         if start_point:
             payload["requested_start_point"] = start_point
+        if start_action:
+            payload["requested_start_action"] = start_action
         return _json_result(payload, meta_key="mastery_status")
 
 

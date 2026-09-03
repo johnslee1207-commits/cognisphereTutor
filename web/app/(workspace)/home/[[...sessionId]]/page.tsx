@@ -542,6 +542,7 @@ function MasteryPathStatusStrip({
   loading,
   error,
   isAiInfra,
+  focusLabel,
   tr,
   onOpenPath,
   onOpenLabs,
@@ -554,6 +555,7 @@ function MasteryPathStatusStrip({
   loading: boolean;
   error: string | null;
   isAiInfra: boolean;
+  focusLabel?: string;
   tr: GoalTranslator;
   onOpenPath: () => void;
   onOpenLabs: () => void;
@@ -576,12 +578,18 @@ function MasteryPathStatusStrip({
         "可信上下文：Cognisphere plugin pack",
         "Trusted context: Cognisphere plugin pack",
       );
-  const objectiveName =
-    next?.knowledge_point_name ||
+  const objectiveName = focusLabel
+    ? tr(`当前学习：${focusLabel}`, `Learning focus: ${focusLabel}`)
+    : next?.knowledge_point_name ||
     (map?.map.complete
       ? tr("学习路径已完成", "Path complete")
       : tr("等待开始", "Ready to start"));
-  const objectiveMeta = next
+  const objectiveMeta = focusLabel
+    ? tr(
+        "已按所选方向进入教学；本节先讲内容，再做 quick quiz。",
+        "Tutor is following the selected start point: lesson first, then quick quiz.",
+      )
+    : next
     ? [
         next.module_name,
         next.knowledge_point_type,
@@ -592,9 +600,17 @@ function MasteryPathStatusStrip({
         .filter(Boolean)
         .join(" · ")
     : pathId;
-  const actionLabel = masteryActionLabel(next?.action, tr);
-  const reasonLabel = masteryReasonLabel(next, tr);
-  const isComplete = next?.action === "complete" || Boolean(map?.map.complete);
+  const actionLabel = focusLabel
+    ? tr("继续当前进度", "Continue progress")
+    : masteryActionLabel(next?.action, tr);
+  const reasonLabel = focusLabel
+    ? tr(
+        "当前会话按所选入口学习；如果下方出现 quick quiz，请完成它以进入下一节。",
+        "This session is following the selected entry point; complete the quick quiz below when it appears.",
+      )
+    : masteryReasonLabel(next, tr);
+  const isComplete =
+    !focusLabel && (next?.action === "complete" || Boolean(map?.map.complete));
 
   return (
     <div className="border-b border-[var(--border)] bg-[var(--background)]/95 px-4 py-2">
@@ -821,6 +837,7 @@ export default function ChatPage() {
   const pendingTutorSessionRef = useRef<string | null | undefined>(undefined);
   const pendingMasteryPathRef = useRef<string | null | undefined>(undefined);
   const pendingMasteryStartPointRef = useRef<string>("");
+  const [activeMasteryStartPoint, setActiveMasteryStartPoint] = useState<string>("");
   const pendingMasteryAutoStartRef = useRef<string | null | undefined>(undefined);
   const masteryAutoStartSentRef = useRef(false);
   if (pendingAgentRef.current === undefined) {
@@ -2132,6 +2149,7 @@ export default function ChatPage() {
     setCapability("mastery_path");
     pendingMasteryPathRef.current = masteryPathParam;
     pendingMasteryStartPointRef.current = "";
+    setActiveMasteryStartPoint("");
     masteryAutoStartSentRef.current = true;
     sendMessage(
       "Continue the current mastery path in order.",
@@ -2165,6 +2183,7 @@ export default function ChatPage() {
       setCapability("mastery_path");
       pendingMasteryPathRef.current = masteryPathParam;
       pendingMasteryStartPointRef.current = point.id;
+      setActiveMasteryStartPoint(point.id);
       masteryAutoStartSentRef.current = true;
       const startPrompt = goalTr(point.prompt.zh, point.prompt.en);
       sendMessage(
@@ -2173,6 +2192,7 @@ export default function ChatPage() {
         {
           mastery_path_id: masteryPathParam,
           mastery_start_point: point.id,
+          mastery_start_action: "start",
           ...(pendingTutorSessionRef.current
             ? { cognisphere_tutor_session_id: pendingTutorSessionRef.current }
             : {}),
@@ -2184,7 +2204,7 @@ export default function ChatPage() {
           persistUserMessage: false,
         },
       );
-      shouldAutoScrollRef.current = true;
+      shouldAutoScrollRef.current = false;
     },
     [
       goalTr,
@@ -2196,6 +2216,14 @@ export default function ChatPage() {
       state.isStreaming,
     ],
   );
+
+  const activeMasteryStartPointLabel = useMemo(() => {
+    if (!masteryPathParam || !activeMasteryStartPoint) return "";
+    const point = masteryStartingPointsForPath(masteryPathParam).find(
+      (item) => item.id === activeMasteryStartPoint,
+    );
+    return point ? goalTr(point.title.zh, point.title.en) : "";
+  }, [activeMasteryStartPoint, goalTr, masteryPathParam]);
 
   const handleSend = useCallback(
     async (content: string) => {
@@ -2744,6 +2772,7 @@ export default function ChatPage() {
               loading={masteryMapLoading}
               error={masteryMapError}
               isAiInfra={isAiInfraMasteryPath}
+              focusLabel={activeMasteryStartPointLabel}
               tr={goalTr}
               onOpenPath={() =>
                 router.push(
