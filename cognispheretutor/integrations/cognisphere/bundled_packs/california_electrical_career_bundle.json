@@ -726,6 +726,159 @@
         ]
       },
       {
+        "id": "cec-lesson-apprentice-document-checklist",
+        "title": "Application document checklist",
+        "summary": "The learner should separate test study from admissions paperwork so eligibility does not fail on missing documents.",
+        "body": "Teach a document-first routine: government photo ID, age requirement, diploma/GED/degree evidence, algebra proof, and later social security number at indenture. For transcripts and original documents, the learner should follow the local ETI instructions exactly because upload copies and boot-camp verification can differ.",
+        "teaching_points": [
+          "A strong test score cannot fix missing required admissions documents.",
+          "Algebra proof is a gate for many electrical apprenticeship routes.",
+          "Original or official documents may be required later even when uploads start the process.",
+          "Veteran waiver documentation should be prepared only when the learner actually qualifies."
+        ],
+        "quick_check_prompts": [
+          "Which is safest before studying all weekend: verify required documents and official instructions, assume documents can wait, upload unreadable screenshots, or invent missing experience?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-pef-14-day-workflow",
+        "title": "PEF 14-day workflow",
+        "summary": "The Personal Experience Form should be handled like a documented evidence packet with a hard deadline.",
+        "body": "Teach the learner to list every relevant education, work, training, military, and community experience, then attach proof where possible. For LAETT, the PEF window and scoring impact make this a preparation task, not an afterthought. Tutor should help organize claims, not embellish them.",
+        "teaching_points": [
+          "Write each claim only as strongly as the evidence supports.",
+          "Gather files before opening a timed or deadline-bound form.",
+          "Unsupported experience may receive no credit.",
+          "Track submission deadline, confirmation, and any official email instructions."
+        ],
+        "quick_check_prompts": [
+          "If a PEF claim has no proof, what should the learner do first: document what can be verified, exaggerate details, submit unrelated photos, or ignore the deadline?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.validation.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-gan-section-map",
+        "title": "GAN-style section map",
+        "summary": "GAN-linked sources describe aptitude preparation around math, reading, spatial reasoning, problem solving, and mechanical comprehension.",
+        "body": "Teach the learner to map every practice question to a section before solving. LAETT names mathematical reasoning, numerical reasoning, reading comprehension, mechanical reasoning, and paper folding. GAN and California JATC comparator pages support a broader preparation map that also names numerical computation, problem solving, and mechanical comprehension.",
+        "teaching_points": [
+          "Classifying the section tells the learner which method to use.",
+          "Math and numerical reasoning are related but not identical.",
+          "Paper folding is a spatial skill, not an electrical-code skill.",
+          "Electrical construction knowledge is not the center of aptitude preparation."
+        ],
+        "quick_check_prompts": [
+          "A folding question belongs closest to which preparation bucket: spatial reasoning, payroll law, NEC lookup, or contractor bonding?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-no-calculator-practice",
+        "title": "No-calculator practice mode",
+        "summary": "Even when local instructions vary, no-calculator practice builds speed and reduces dependence on tools.",
+        "body": "Teach no-calculator practice as a conservative training mode, especially for arithmetic, percentages, ratios, and quick estimates. Comparator JATC pages explicitly prohibit calculators for some apprenticeship aptitude tests, so Tutor should prepare the learner to work cleanly on scratch paper unless the actual official instruction says otherwise.",
+        "teaching_points": [
+          "Estimate before calculating to catch impossible answers.",
+          "Use fraction shortcuts such as half, quarter, fifth, and tenth.",
+          "Convert common percentages to decimals quickly.",
+          "Follow the actual test-day instructions for allowed materials."
+        ],
+        "quick_check_prompts": [
+          "Why practice without a calculator: to build reliable mental setup, to avoid reading, to memorize NEC text, or to skip units?"
+        ],
+        "source_ref_ids": [
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-reading-elimination",
+        "title": "Reading elimination method",
+        "summary": "Reading-comprehension questions should be answered by evidence and elimination, one claim at a time.",
+        "body": "Teach a four-pass method: read the question, locate the evidence sentence, eliminate choices that contradict or add unsupported claims, then select the best remaining answer. Electrical Training Alliance sample guidance emphasizes that each sample question has one correct answer, which makes disciplined elimination valuable.",
+        "teaching_points": [
+          "Do not reward choices that merely sound technical.",
+          "A wrong choice may be true in real life but unsupported by the passage.",
+          "Qualifier words often decide the answer.",
+          "One-correct-answer formats reward elimination under time pressure."
+        ],
+        "quick_check_prompts": [
+          "If two reading choices sound plausible, what should decide: passage evidence, personal opinion, answer length, or the most technical word?"
+        ],
+        "source_ref_ids": [
+          "eta.sample_test.2026-09-03",
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-error-log",
+        "title": "Aptitude error log",
+        "summary": "The fastest improvement comes from naming the miss pattern, not simply counting wrong answers.",
+        "body": "Teach the learner to tag each miss as concept, setup, arithmetic, misread, spatial tracking, mechanical trace, or pacing. The next study session should begin with the top two recurring tags. This keeps a four-week sprint focused and prevents random practice from feeling productive while leaving the same gap open.",
+        "teaching_points": [
+          "Every wrong answer should produce a next action.",
+          "Method errors need a worked example; speed errors need timed repetition.",
+          "Misread errors need qualifier drills.",
+          "Spatial errors need slow reverse simulation before speed work."
+        ],
+        "quick_check_prompts": [
+          "A learner misses three questions because they ignored 'except'. Which error tag fits best: misread qualifier, arithmetic, gear direction, or document upload?"
+        ],
+        "source_ref_ids": [
+          "gan.aptitude_test.2026-09-03",
+          "eta.sample_test.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-application-window",
+        "title": "Application window and official messages",
+        "summary": "Admissions progress depends on completing online steps and responding to official scheduling instructions on time.",
+        "body": "Teach the learner to treat online registration, document uploads, portal messages, and scheduling emails as part of the study plan. Different programs use different windows, so Tutor should teach the habit: read the current local instructions, make a deadline list, and verify status before test week.",
+        "teaching_points": [
+          "Local official instructions override generic advice.",
+          "Online application completion and document upload are separate tasks.",
+          "Scheduling notices can arrive after staff review.",
+          "A calendar checklist reduces avoidable admissions mistakes."
+        ],
+        "quick_check_prompts": [
+          "Which source should control a real deadline: the current official program page/email, a memory of a friend's process, a generic blog, or an old screenshot?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-apprentice-work-expectations",
+        "title": "Apprenticeship work expectations",
+        "summary": "The entrance process is for a real earn-while-you-learn trade path, not just a classroom exam.",
+        "body": "Teach the learner what the program is selecting for: ability to learn in class, work full time, follow safety instructions, read and understand English warnings, use tools, and handle physical construction conditions. This helps connect aptitude skills to job and school performance rather than treating the test as abstract puzzles.",
+        "teaching_points": [
+          "Apprenticeship combines on-the-job training with classroom instruction.",
+          "Reading and safety-following matter because jobsite instructions can be high stakes.",
+          "Mechanical and spatial reasoning connect to tools, materials, and installation tasks.",
+          "A learner should prepare both for the test and for the reality of the trade."
+        ],
+        "quick_check_prompts": [
+          "Why does an apprenticeship entrance test include reading and mechanical reasoning: because those skills connect to school/job performance, because it is a contractor license exam, because it replaces all training, or because NEC text is memorized?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03"
+        ]
+      },
+      {
         "id": "cec-lesson-ge-eligibility",
         "title": "General Electrician eligibility baseline",
         "summary": "General Electrician certification requires qualifying work experience and California-specific application rules.",
@@ -1175,6 +1328,40 @@
         ],
         "source_ref_ids": [
           "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-practice-apprenticeship-daily-selection-set",
+        "title": "Daily apprenticeship selection set",
+        "summary": "Generate one short original set per study day: teach one method, ask one worked example, then grade three quick items.",
+        "practice_modes": [
+          "one_method_micro_lesson",
+          "worked_example",
+          "three_item_quick_quiz",
+          "error_tag_review",
+          "next_day_assignment"
+        ],
+        "target_skills": [
+          "section classification",
+          "ratio and percent setup",
+          "algebra translation",
+          "reading evidence elimination",
+          "mechanical motion tracing",
+          "paper folding reverse simulation",
+          "timed skip decisions"
+        ],
+        "generation_rules": [
+          "Use only original Tutor-authored items.",
+          "Do not reproduce paid GAN study-guide content or official/sample items verbatim.",
+          "Use local LAETT requirements for admissions facts; use comparator sources only for practice shape.",
+          "After each quiz, tell the learner correct/incorrect, give the reason, tag the error, and either advance or remediate."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "gan.study_guide.2026-09-03",
+          "eta.sample_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
         ]
       },
       {
@@ -1643,6 +1830,14 @@
           "cec-lesson-apprentice-mechanical-gears-pulleys",
           "cec-lesson-apprentice-spatial-rotation",
           "cec-lesson-apprentice-paper-folding",
+          "cec-lesson-apprentice-gan-section-map",
+          "cec-lesson-apprentice-reading-elimination",
+          "cec-lesson-apprentice-no-calculator-practice",
+          "cec-lesson-apprentice-error-log",
+          "cec-lesson-apprentice-document-checklist",
+          "cec-lesson-apprentice-pef-14-day-workflow",
+          "cec-lesson-apprentice-application-window",
+          "cec-lesson-apprentice-work-expectations",
           "cec-lesson-apprentice-timed-strategy",
           "cec-lesson-pef",
           "cec-lesson-apprentice-test-day-routine"
@@ -1665,6 +1860,44 @@
           "two mixed timed sets with improving pacing",
           "PEF documentation inventory",
           "final-week light review plan"
+        ]
+      },
+      {
+        "id": "cec-sequence-apprenticeship-final-week",
+        "title": "Apprenticeship final-week readiness route",
+        "summary": "A compressed final-week route for a learner who must prioritize test execution, weak-area repair, and admissions paperwork.",
+        "objective_ids": [
+          "cec-apprentice-timed-practice",
+          "cec-apprentice-reading",
+          "cec-apprentice-mechanical",
+          "cec-apprentice-spatial",
+          "cec-apprentice-pef"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-apprentice-gan-section-map",
+          "cec-lesson-apprentice-error-log",
+          "cec-lesson-apprentice-reading-elimination",
+          "cec-lesson-apprentice-no-calculator-practice",
+          "cec-lesson-apprentice-document-checklist",
+          "cec-lesson-apprentice-pef-14-day-workflow",
+          "cec-lesson-apprentice-test-day-routine"
+        ],
+        "activity_template_ids": [
+          "cec-activity-mini-lesson-quick-check",
+          "cec-activity-timed-mixed-set",
+          "cec-activity-document-evidence-coach"
+        ],
+        "checkpoint_prompts": [
+          "Can the learner classify every item before solving?",
+          "Can the learner complete a short mixed set with a planned skip rule?",
+          "Can the learner name the top two error tags and the repair drill for each?",
+          "Has the learner verified official document and test-day instructions?"
+        ],
+        "mastery_evidence": [
+          "one graded daily selection set",
+          "updated error log with remediation actions",
+          "official-instruction and document checklist completed",
+          "final 24-hour light review plan"
         ]
       },
       {
@@ -2066,6 +2299,262 @@
         ]
       },
       {
+        "id": "cec-scenario-apprentice-document-gate",
+        "title": "Application readiness: document gate",
+        "summary": "Original admissions-readiness item about documents versus test prep.",
+        "scenario": [
+          "A learner studies hard for the aptitude test but has not found algebra proof or a valid photo ID. What is the biggest risk?"
+        ],
+        "choices": [
+          "A) The application may not qualify for testing or later verification",
+          "B) Algebra proof is never relevant",
+          "C) A high score automatically replaces all documents",
+          "D) Photo ID matters only after becoming a contractor"
+        ],
+        "correct_rationale": [
+          "Required documents are part of admissions readiness; test prep and document proof must both be handled."
+        ],
+        "distractor_rationales": [
+          "Algebra proof is a stated requirement in local apprenticeship instructions.",
+          "A test score does not replace required documentation.",
+          "Photo ID is part of application/test-day readiness, not only later contractor licensing."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-pef-evidence",
+        "title": "PEF evidence: supported claims",
+        "summary": "Original PEF scenario about accuracy and supporting documentation.",
+        "scenario": [
+          "A learner has two months of warehouse work and one semester of construction class. What is the best PEF strategy?"
+        ],
+        "choices": [
+          "A) List only experiences that can be described accurately and support them with documents where available",
+          "B) Claim several years of electrical work to sound stronger",
+          "C) Leave all experience blank because it is not perfect",
+          "D) Submit unrelated files and hope they count"
+        ],
+        "correct_rationale": [
+          "The safest PEF strategy is accurate, documented evidence; Tutor should never encourage exaggeration."
+        ],
+        "distractor_rationales": [
+          "Overstating experience can create accuracy problems.",
+          "Relevant experience should not be omitted just because it is beginner-level.",
+          "Unrelated files do not support the claimed experience."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.validation.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-mental-percent",
+        "title": "No-calculator math: percent discount",
+        "summary": "Original mental-math item for quick percent handling.",
+        "scenario": [
+          "A $80 tool is marked 25% off. What is the sale price?"
+        ],
+        "choices": [
+          "A) $20",
+          "B) $55",
+          "C) $60",
+          "D) $100"
+        ],
+        "correct_rationale": [
+          "25% of $80 is $20, so the sale price is $80 - $20 = $60."
+        ],
+        "distractor_rationales": [
+          "$20 is the discount, not the sale price.",
+          "$55 subtracts the wrong discount.",
+          "$100 increases the price instead of discounting it."
+        ],
+        "source_ref_ids": [
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-work-rate",
+        "title": "Problem solving: shared work rate",
+        "summary": "Original quantitative-reasoning item about rate and time.",
+        "scenario": [
+          "One trainee labels 12 boxes in 6 minutes. At the same rate, how many boxes can three trainees label in 10 minutes?"
+        ],
+        "choices": [
+          "A) 20",
+          "B) 36",
+          "C) 60",
+          "D) 120"
+        ],
+        "correct_rationale": [
+          "One trainee labels 2 boxes per minute. Three trainees label 6 per minute. In 10 minutes, they label 60."
+        ],
+        "distractor_rationales": [
+          "20 is one trainee's 10-minute output.",
+          "36 mixes 12 boxes with 3 trainees.",
+          "120 doubles the correct group rate."
+        ],
+        "source_ref_ids": [
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-reading-except",
+        "title": "Reading comprehension: EXCEPT qualifier",
+        "summary": "Original passage-evidence question with a qualifier trap.",
+        "scenario": [
+          "Passage: Before using a ladder, inspect the feet, rungs, and locking spreaders. Do not use the ladder if any part is damaged. Which action is NOT supported by the passage?"
+        ],
+        "choices": [
+          "A) Inspect the ladder feet",
+          "B) Inspect the rungs",
+          "C) Use a ladder with damaged locking spreaders if the job is short",
+          "D) Reject a damaged ladder"
+        ],
+        "correct_rationale": [
+          "The passage says not to use the ladder if any part is damaged, so option C is not supported."
+        ],
+        "distractor_rationales": [
+          "Inspecting feet is directly supported.",
+          "Inspecting rungs is directly supported.",
+          "Rejecting a damaged ladder follows from the passage."
+        ],
+        "source_ref_ids": [
+          "eta.sample_test.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-two-folds",
+        "title": "Paper folding: two folds",
+        "summary": "Original spatial item for reverse unfolding.",
+        "scenario": [
+          "A square is folded in half vertically, then in half horizontally. One hole is punched through all layers near the folded corner. How many holes appear after unfolding?"
+        ],
+        "choices": [
+          "A) 1",
+          "B) 2",
+          "C) 4",
+          "D) 8"
+        ],
+        "correct_rationale": [
+          "Two folds create four layers, so one punch through all layers produces four holes when unfolded."
+        ],
+        "distractor_rationales": [
+          "One ignores the layers.",
+          "Two accounts for only one fold.",
+          "Eight doubles the number of layers without support."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-gear-chain-four",
+        "title": "Mechanical reasoning: four gear chain",
+        "summary": "Original gear-direction drill.",
+        "scenario": [
+          "Four gears mesh in a straight chain: A with B, B with C, and C with D. If A turns clockwise, how does D turn?"
+        ],
+        "choices": [
+          "A) Clockwise",
+          "B) Counterclockwise",
+          "C) It reverses twice and stops",
+          "D) Direction cannot be traced"
+        ],
+        "correct_rationale": [
+          "Each mesh reverses direction: A clockwise, B counterclockwise, C clockwise, D counterclockwise."
+        ],
+        "distractor_rationales": [
+          "Clockwise would fit C, not D.",
+          "The gears do not stop just because direction reverses.",
+          "Direction is traceable connection by connection."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-incline-tradeoff",
+        "title": "Mechanical reasoning: incline tradeoff",
+        "summary": "Original mechanical-intuition item.",
+        "scenario": [
+          "A ramp lets a worker push a heavy box with less force than lifting it straight up. What tradeoff is most likely?"
+        ],
+        "choices": [
+          "A) The box travels a longer distance",
+          "B) The box loses all weight",
+          "C) The worker uses no energy",
+          "D) Gravity changes direction"
+        ],
+        "correct_rationale": [
+          "An incline can reduce required force by spreading the lift over a longer distance."
+        ],
+        "distractor_rationales": [
+          "The box does not become weightless.",
+          "Work still requires energy.",
+          "Gravity does not change direction."
+        ],
+        "source_ref_ids": [
+          "gan.aptitude_test.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-table-trend",
+        "title": "Numerical reasoning: table trend",
+        "summary": "Original table pattern item.",
+        "scenario": [
+          "A table shows x values 1, 2, 3, 4 and y values 4, 7, 10, 13. Which rule fits?"
+        ],
+        "choices": [
+          "A) y = x + 3",
+          "B) y = 2x + 2",
+          "C) y = 3x + 1",
+          "D) y = 4x"
+        ],
+        "correct_rationale": [
+          "Each y value equals 3x + 1: 4, 7, 10, 13."
+        ],
+        "distractor_rationales": [
+          "x + 3 only fits when x = 1.",
+          "2x + 2 fits the first value but not the trend.",
+          "4x fits only the first value."
+        ],
+        "source_ref_ids": [
+          "eta.sample_test.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-apprentice-skip-rule",
+        "title": "Timed strategy: skip rule",
+        "summary": "Original pacing scenario for preserving score under time pressure.",
+        "scenario": [
+          "A learner spends four minutes on one folding question and still has no method. What is the best next move in a timed set?"
+        ],
+        "choices": [
+          "A) Mark it, choose a controlled guess if required, and move to easier points",
+          "B) Spend the rest of the test on it",
+          "C) Stop reading all remaining questions",
+          "D) Erase every previous answer"
+        ],
+        "correct_rationale": [
+          "A planned skip rule protects easier points and keeps pacing under control."
+        ],
+        "distractor_rationales": [
+          "Spending unlimited time harms the whole section.",
+          "Stopping wastes available points.",
+          "Erasing previous work does not solve the pacing issue."
+        ],
+        "source_ref_ids": [
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "eta.sample_test.2026-09-03"
+        ]
+      },
+      {
         "id": "cec-scenario-ohms-law-current",
         "title": "Ohm's Law: current change",
         "summary": "Conceptual circuit reasoning without a calculator.",
@@ -2299,6 +2788,58 @@
         "source_ref_ids": [
           "laett.inside_wireman.2026-01-26"
         ]
+      },
+      {
+        "id": "cec-flashcards-apprentice-documents",
+        "title": "Apprenticeship document readiness",
+        "summary": "Recognition cards for admissions paperwork and official-instruction habits.",
+        "cards": [
+          "Photo ID: required identity evidence for application/test-day steps.",
+          "Algebra proof: transcript or approved equivalent showing required math background.",
+          "Original documents: may be required later for verification even after online upload.",
+          "Veteran waiver: only applies when documented criteria are met.",
+          "Official email: controls scheduling details and deadlines.",
+          "Portal checklist: track uploaded, submitted, confirmed, and pending items."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-flashcards-apprentice-pef",
+        "title": "PEF evidence habits",
+        "summary": "Cards for turning experience into accurate, supported PEF claims.",
+        "cards": [
+          "Claim: one experience statement the learner can describe accurately.",
+          "Evidence: a document that supports a claim.",
+          "Unsupported claim: may receive no credit or create review problems.",
+          "Deadline window: complete and submit before the official cutoff.",
+          "Work history: hours, employer, role, and supporting proof.",
+          "Training history: courses, certificates, transcripts, and completion evidence."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.validation.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-flashcards-apprentice-test-day",
+        "title": "Aptitude test-day strategy",
+        "summary": "Cards for pacing, instructions, and final-week execution.",
+        "cards": [
+          "Classify first: name the section before solving.",
+          "Easy points first: do not let one hard item consume the section.",
+          "Controlled guess: eliminate impossibilities before choosing under time pressure.",
+          "No-calculator mode: practice arithmetic cleanly unless official instructions allow tools.",
+          "Qualifier scan: mark words like except, only, before, and after.",
+          "Error tag: convert each miss into a repair action."
+        ],
+        "source_ref_ids": [
+          "eta.sample_test.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "gan.aptitude_test.2026-09-03"
+        ]
       }
     ],
     "readiness_checkpoints": [
@@ -2351,6 +2892,38 @@
         ],
         "source_ref_ids": [
           "laett.inside_wireman.2026-01-26"
+        ]
+      },
+      {
+        "id": "cec-checkpoint-apprenticeship-final-week",
+        "title": "Apprenticeship final-week checkpoint",
+        "summary": "Use when the learner is within roughly one week of an apprenticeship entrance selection event.",
+        "checkpoint_prompts": [
+          "Can the learner complete a three-item quick quiz after each mini-lesson and explain every miss by error tag?",
+          "Can the learner solve ratio, percent, algebra, sequence, and table questions in no-calculator practice mode?",
+          "Can the learner answer reading questions using passage evidence and qualifier checks?",
+          "Can the learner trace one lever, one gear chain, one pulley or incline, and one paper-folding problem?",
+          "Can the learner state the planned skip/mark/return rule before a timed set starts?",
+          "Has the learner verified official test-day instructions, photo ID, application status, and PEF/document requirements?"
+        ],
+        "mastery_evidence": [
+          "at least 80% on the most recent math/numerical quick set",
+          "at least 70% on reading/mechanical/spatial quick sets",
+          "all misses have an error tag and next drill",
+          "official-instruction checklist completed",
+          "final-day study plan avoids heavy new content"
+        ],
+        "remediation": [
+          "If math accuracy is low, run two short ratio/percent/algebra sets before mixed practice.",
+          "If reading errors include unsupported claims, repeat qualifier and evidence-elimination drills.",
+          "If mechanical or spatial tracing is unstable, slow down and narrate one connection or unfold at a time.",
+          "If documents are incomplete, stop study expansion and resolve official checklist items first."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "eta.sample_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
         ]
       },
       {
@@ -2450,6 +3023,63 @@
           "Inside Wireman applicants take an aptitude test with mathematical reasoning, numerical reasoning, reading comprehension, mechanical reasoning, and paper folding.",
           "The aptitude test time is 2 hours 20 minutes.",
           "The Personal Experience Form can constitute up to 40% of the final score."
+        ]
+      },
+      {
+        "source_id": "gan.aptitude_test.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "GAN describes its Aptitude Battery as assessing basic math, reading, and spatial skills for apprentice selection.",
+          "GAN says the battery was developed from job analysis of skills and abilities required for school and job performance.",
+          "GAN states that its apprentice selection tests are reliable, valid, and used across multiple apprenticeship programs."
+        ]
+      },
+      {
+        "source_id": "gan.study_guide.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "GAN offers an Aptitude Test Study Guide intended to familiarize applicants with test sections and practice-question types.",
+          "Tutor may reference the study-guide availability and broad preparation purpose, but must not reproduce paid study-guide content."
+        ]
+      },
+      {
+        "source_id": "gan.validation.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "GAN explains validation as the process for making selection procedures fair, defensible, and predictive of successful apprentice and employee performance.",
+          "Tutor should teach PEF, aptitude, and interview preparation as evidence-based selection readiness, not as a way to game the process."
+        ]
+      },
+      {
+        "source_id": "eta.sample_test.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "Electrical Training Alliance describes IBEW/NECA apprenticeship aptitude tests as validated tools for selecting apprentices.",
+          "Its sample-test guidance supports algebra/function and reading-comprehension practice shapes with one correct answer per sample item.",
+          "Tutor should use this as a topic-shape source only and generate original practice items."
+        ]
+      },
+      {
+        "source_id": "cceti.gan_how_to_apply.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "CCETI describes a GAN Aptitude Test Battery with reading, numerical computation, numerical reasoning, paper folding, problem solving, and mechanical comprehension.",
+          "CCETI states that electrical construction knowledge is not part of its GAN aptitude test.",
+          "CCETI is a California JATC comparator for study design and test-day constraints, not the controlling LAETT Local 11 rule source."
+        ]
+      },
+      {
+        "source_id": "inland_electrical.eta_aptitude.2026-09-03",
+        "managed_by": "Cognisphere",
+        "materialized_at": "2026-09-03",
+        "claim_summaries": [
+          "Inland Electrical describes an ETA-style aptitude test with timed math and reading sections, no calculator, no guessing penalty, and interview progression after a qualifying score.",
+          "Tutor should treat this as a comparator for pacing and no-calculator practice, not as LAETT or GAN local policy."
         ]
       },
       {
@@ -2662,13 +3292,13 @@
       "source": "DeepTutor_California_Electrical_Career_Domain_Pack_v1.0.md",
       "stage": "M0/M2 expanded content seed",
       "objective_count": 39,
-      "lesson_card_count": 41,
-      "practice_blueprint_count": 9,
+      "lesson_card_count": 49,
+      "practice_blueprint_count": 10,
       "learning_activity_template_count": 8,
-      "study_sequence_count": 6,
-      "scenario_card_count": 16,
-      "flashcard_deck_count": 6,
-      "readiness_checkpoint_count": 4,
+      "study_sequence_count": 7,
+      "scenario_card_count": 26,
+      "flashcard_deck_count": 9,
+      "readiness_checkpoint_count": 5,
       "error_taxonomy_count": 5,
       "source_governance": "Official public sources, URLs, provenance, versions, and update watch are managed by Cognisphere. Tutor consumes materialized pack data only.",
       "note": "Tutor-ready seed with materialized lesson cards, practice blueprints, varied learning activity templates, study sequences, scenario cards, flashcard decks, readiness checkpoints, and error taxonomy. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
