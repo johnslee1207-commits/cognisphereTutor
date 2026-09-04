@@ -17,6 +17,7 @@ from cognispheretutor.tools.mastery_tool import (
     MasteryGradeTool,
     MasteryQuizTool,
     MasteryStatusTool,
+    MasteryVisualTool,
 )
 
 
@@ -233,6 +234,71 @@ async def test_status_start_action_clears_stale_pending_question(path_id):
     assert payload["cleared_pending_question"] is True
     assert payload["next"]["action"] == "probe"
     assert payload["next"]["module_name"] == "ETI / IBEW Local 11 Apprenticeship Entrance"
+
+
+@pytest.mark.asyncio
+async def test_visual_tool_renders_requested_mechanical_template(path_id):
+    await MasteryBuildTool().execute(
+        _mastery_path_id=path_id,
+        mode="replace",
+        modules=[
+            {
+                "name": "ETI / IBEW Local 11 Apprenticeship Entrance",
+                "knowledge_points": [
+                    {
+                        "name": (
+                            "Mechanical reasoning: force, levers, pulleys, gears, "
+                            "and motion"
+                        ),
+                        "type": "concept",
+                    }
+                ],
+            },
+        ],
+    )
+
+    result = await MasteryVisualTool().execute(
+        _mastery_path_id=path_id,
+        knowledge_point_id="test_path_m0_kp0",
+        template="lever",
+    )
+    payload = json.loads(result.content)
+
+    assert result.success is True
+    assert payload["status"] == "ready"
+    assert payload["template"] == "lever"
+    assert "```mermaid" in payload["markdown"]
+    assert "Effort: push down" in payload["markdown"]
+
+
+@pytest.mark.asyncio
+async def test_visual_tool_auto_selects_paper_folding_for_spatial_objective(path_id):
+    await MasteryBuildTool().execute(
+        _mastery_path_id=path_id,
+        mode="replace",
+        modules=[
+            {
+                "name": "ETI / IBEW Local 11 Apprenticeship Entrance",
+                "knowledge_points": [
+                    {
+                        "name": "Spatial reasoning and paper folding",
+                        "type": "procedure",
+                    }
+                ],
+            },
+        ],
+    )
+
+    result = await MasteryVisualTool().execute(
+        _mastery_path_id=path_id,
+        knowledge_point_id="test_path_m0_kp0",
+        template="auto",
+    )
+    payload = json.loads(result.content)
+
+    assert result.success is True
+    assert payload["template"] == "paper_one_fold_hole"
+    assert "Unfold backward" in payload["markdown"]
 
 
 @pytest.mark.asyncio

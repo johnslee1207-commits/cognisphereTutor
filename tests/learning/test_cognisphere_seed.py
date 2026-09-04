@@ -528,6 +528,7 @@ def test_california_electrical_pack_metadata_counts_match_content() -> None:
         "flashcard_deck_count": "flashcard_decks",
         "readiness_checkpoint_count": "readiness_checkpoints",
         "error_taxonomy_count": "error_taxonomy",
+        "visual_prompt_count": "visual_prompts",
     }
     for metadata_key, content_key in count_fields.items():
         assert metadata[metadata_key] == len(knowledge[content_key])
@@ -547,6 +548,12 @@ def test_california_electrical_pack_metadata_counts_match_content() -> None:
 
     assert metadata["scenario_card_count"] >= 123
     assert metadata["lesson_card_count"] >= 99
+    assert metadata["visual_prompt_count"] == 10
+    assert {item["visual_template"] for item in knowledge["visual_prompts"]} >= {
+        "lever",
+        "paper_one_fold_hole",
+        "three_gears",
+    }
     assert len(entrance_scenarios) >= 100
     assert len(entrance_lessons) >= 55
 

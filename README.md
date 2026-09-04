@@ -23,7 +23,7 @@
 | AWS Certification | `cognispheretutor/integrations/cognisphere/bundled_packs/aws_certification_bundle.json` | 6 个模块 / 46 个目标 |
 | AP Calculus | `cognispheretutor/integrations/cognisphere/bundled_packs/ap_calculus_bundle.json` | 6 个模块 / 22 个目标 |
 | LeetCode | `cognispheretutor/integrations/cognisphere/bundled_packs/leetcode_bundle.json` | 6 个模块 / 18 个目标 |
-| California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 / 99 张 lesson cards / 33 个 practice blueprints / 21 个 activity templates / 14 条 study sequences / 123 张 scenario cards / 26 组 flashcard decks / 13 个 readiness checkpoints |
+| California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 / 99 张 lesson cards / 33 个 practice blueprints / 21 个 activity templates / 14 条 study sequences / 123 张 scenario cards / 26 组 flashcard decks / 13 个 readiness checkpoints / 10 个 visual prompts |
 
 California Electrical Career 当前已从课程路径 seed 扩展为可进入 mini-lesson 的
 内容 seed，覆盖：
@@ -53,6 +53,9 @@ California Electrical Career 当前已从课程路径 seed 扩展为可进入 mi
 - Entrance Exam 学习方法继续补充 spaced review、interleaving、confidence
   calibration、error journal、educated guessing、adaptive weak-area router、
   confidence-marked quick quiz、interleaved three-pack 和 exam-day simulation
+- Entrance Exam 的 mechanical/spatial 目标带 visual prompts，并通过
+  `mastery_visual` 生成 Mermaid 图示或分步 storyboard：lever、fixed/movable
+  pulley、gears、open/crossed belt、paper folding、rotation/reflection
 - mini-lesson + quick check、worked example、open-book navigation rehearsal、
   scenario judgment、flashcard ladder、timed mixed set、field visualization、
   document evidence coach 等学习形式

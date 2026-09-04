@@ -8587,8 +8587,262 @@
       "readiness_checkpoint_count": 13,
       "error_taxonomy_count": 12,
       "source_governance": "Official public sources, URLs, provenance, versions, and update watch are managed by Cognisphere. Tutor consumes materialized pack data only.",
-      "note": "Tutor-ready seed with materialized lesson cards, practice blueprints, varied learning activity templates, study sequences, scenario cards, flashcard decks, readiness checkpoints, and error taxonomy. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
-    }
+      "note": "Tutor-ready seed with materialized lesson cards, practice blueprints, varied learning activity templates, study sequences, scenario cards, flashcard decks, readiness checkpoints, and error taxonomy. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities.",
+      "visual_prompt_count": 10
+    },
+    "visual_prompts": [
+      {
+        "id": "cec-visual-entrance-lever-force-arm",
+        "title": "Lever force-arm diagram",
+        "summary": "Tutor visual aid metadata for apprenticeship entrance reasoning.",
+        "visual_mode": "diagram_storyboard",
+        "render_type": "mermaid",
+        "visual_template": "lever",
+        "applies_to_objective_ids": [
+          "cec-apprentice-mechanical"
+        ],
+        "diagram_focus": "force, fulcrum, load, and lever-arm length",
+        "prompt": "Show why a longer handle can require less effort force for the same load.",
+        "animation_steps": [
+          "Mark the fulcrum.",
+          "Compare effort-arm distance and load-arm distance.",
+          "Explain less force over more hand movement."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-visual-entrance-fixed-pulley-direction",
+        "title": "Fixed pulley direction storyboard",
+        "summary": "Tutor visual aid metadata for apprenticeship entrance reasoning.",
+        "visual_mode": "diagram_storyboard",
+        "render_type": "mermaid",
+        "visual_template": "fixed_pulley",
+        "applies_to_objective_ids": [
+          "cec-apprentice-mechanical"
+        ],
+        "diagram_focus": "pull-down direction changes into load-up movement",
+        "prompt": "Show that a fixed pulley mainly changes force direction.",
+        "animation_steps": [
+          "Locate ceiling support.",
+          "Trace rope over pulley.",
+          "Connect hand pull direction to load motion direction."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-visual-entrance-movable-pulley-effort",
+        "title": "Movable pulley effort storyboard",
+        "summary": "Tutor visual aid metadata for apprenticeship entrance reasoning.",
+        "visual_mode": "diagram_storyboard",
+        "render_type": "mermaid",
+        "visual_template": "movable_pulley",
+        "applies_to_objective_ids": [
+          "cec-apprentice-mechanical"
+        ],
+        "diagram_focus": "force-distance tradeoff",
+        "prompt": "Show why a movable pulley can lower effort force while requiring more rope movement.",
+        "animation_steps": [
+          "Attach pulley to the load.",
+          "Trace supporting rope segments.",
+          "Explain why the hand pulls more rope distance."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-visual-entrance-three-gear-direction",
+        "title": "Three-gear direction trace",
+        "summary": "Tutor visual aid metadata for apprenticeship entrance reasoning.",
+        "visual_mode": "diagram_storyboard",
+        "render_type": "mermaid",
+        "visual_template": "three_gears",
+        "applies_to_objective_ids": [
+          "cec-apprentice-mechanical"
+        ],
+        "diagram_focus": "direction reversal across each gear contact",
+        "prompt": "Show A clockwise, B counterclockwise, and C clockwise after two reversals.",
+        "animation_steps": [
+          "Set Gear A direction.",
+          "Reverse once for Gear B.",
+          "Reverse again for Gear C."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-visual-entrance-open-belt",
+        "title": "Open-belt pulley direction",
+        "summary": "Tutor visual aid metadata for apprenticeship entrance reasoning.",
+        "visual_mode": "diagram_storyboard",
+        "render_type": "mermaid",
+        "visual_template": "open_belt",
+        "applies_to_objective_ids": [
+          "cec-apprentice-mechanical"
+        ],
+        "diagram_focus": "same-direction rotation with an uncrossed belt",
+        "prompt": "Show that an open belt usually keeps pulley rotation direction.",
+        "animation_steps": [
+          "Trace belt without crossing.",
+          "Copy direction to the second pulley.",
+          "Separate direction from speed ratio."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-visual-entrance-crossed-belt",
+        "title": "Crossed-belt pulley direction",
+        "summary": "Tutor visual aid metadata for apprenticeship entrance reasoning.",
+        "visual_mode": "diagram_storyboard",
+        "render_type": "mermaid",
+        "visual_template": "crossed_belt",
+        "applies_to_objective_ids": [
+          "cec-apprentice-mechanical"
+        ],
+        "diagram_focus": "opposite-direction rotation with a crossed belt",
+        "prompt": "Show that crossing the belt reverses pulley rotation direction.",
+        "animation_steps": [
+          "Find where belt paths cross.",
+          "Flip the direction at the driven pulley.",
+          "Avoid mixing up crossing with pulley size."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-visual-entrance-one-fold-hole",
+        "title": "One-fold hole-punch mirror",
+        "summary": "Tutor visual aid metadata for apprenticeship entrance reasoning.",
+        "visual_mode": "diagram_storyboard",
+        "render_type": "mermaid",
+        "visual_template": "paper_one_fold_hole",
+        "applies_to_objective_ids": [
+          "cec-apprentice-spatial"
+        ],
+        "diagram_focus": "one fold creates one mirrored hole when unfolded",
+        "prompt": "Show folded paper, a hole near the folded edge, then two mirrored holes after unfolding.",
+        "animation_steps": [
+          "Fold left over right.",
+          "Punch through the folded layer.",
+          "Unfold and mirror the hole across the fold line."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-visual-entrance-two-fold-unfold",
+        "title": "Two-fold unfold storyboard",
+        "summary": "Tutor visual aid metadata for apprenticeship entrance reasoning.",
+        "visual_mode": "diagram_storyboard",
+        "render_type": "mermaid",
+        "visual_template": "paper_two_fold_unfold",
+        "applies_to_objective_ids": [
+          "cec-apprentice-spatial"
+        ],
+        "diagram_focus": "reverse the last fold first",
+        "prompt": "Show why unfolding must happen backward: last fold first, then first fold.",
+        "animation_steps": [
+          "Record fold order.",
+          "Undo the last fold first.",
+          "Mirror marks once per unfold."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-visual-entrance-rotation-reflection",
+        "title": "Rotation versus reflection diagram",
+        "summary": "Tutor visual aid metadata for apprenticeship entrance reasoning.",
+        "visual_mode": "diagram_storyboard",
+        "render_type": "mermaid",
+        "visual_template": "rotation_vs_reflection",
+        "applies_to_objective_ids": [
+          "cec-apprentice-spatial"
+        ],
+        "diagram_focus": "turning versus flipping",
+        "prompt": "Show how rotation turns a shape while reflection flips it across a line.",
+        "animation_steps": [
+          "Identify the transformation.",
+          "Check whether left-right order reversed.",
+          "Use the correct transformation before selecting an answer."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-visual-entrance-mechanical-spatial-remediation",
+        "title": "Visual remediation selector",
+        "summary": "Tutor visual aid metadata for apprenticeship entrance reasoning.",
+        "visual_mode": "diagram_storyboard",
+        "render_type": "mermaid",
+        "visual_template": "auto",
+        "applies_to_objective_ids": [
+          "cec-apprentice-mechanical",
+          "cec-apprentice-spatial"
+        ],
+        "diagram_focus": "choose the right visual template from the missed item",
+        "prompt": "Use after a wrong answer to select lever, pulley, gear, belt, fold, or transformation aid.",
+        "animation_steps": [
+          "Classify the visual miss.",
+          "Call mastery_visual with the matching template or auto.",
+          "Reteach one visual reasoning move before the replacement quick check."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      }
+    ]
   },
   "safety": {
     "no_answer_keys": true,

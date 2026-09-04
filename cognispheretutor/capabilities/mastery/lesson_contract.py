@@ -60,6 +60,7 @@ def build_lesson_contract_seed(
         "current_objective": current,
         "lesson_mode": _lesson_mode(next_step, learner_profile),
         "must_teach": _must_teach(next_step, modules),
+        "visual_aid": _visual_aid(next_step, domain),
         "must_ask": _must_ask(next_step),
         "check_options": _check_options(next_step),
         "required_check": _required_check(next_step, map_summary),
@@ -163,7 +164,63 @@ def _must_teach(next_step: NextStep, modules: list[Any]) -> list[str]:
         items.append("Briefly orient the learner before checking prior knowledge.")
     if modules:
         items.append("Give a compact path overview only if the learner asked for a full/systematic path.")
+    if _visual_aid_required(next_step):
+        items.append(
+            "Before the mini-lesson, call mastery_visual(template='auto') for this "
+            "objective and include the returned markdown diagram/storyboard in the "
+            "learner-facing reply."
+        )
     return items
+
+
+def _visual_aid(next_step: NextStep, domain: str) -> dict[str, Any]:
+    if not _visual_aid_required(next_step):
+        return {
+            "required": False,
+            "reason": "Current objective is not a visual mechanical or spatial reasoning target.",
+        }
+    return {
+        "required": True,
+        "tool": "mastery_visual",
+        "template": "auto",
+        "knowledge_point_id": next_step.knowledge_point_id,
+        "reason": (
+            "Mechanical and spatial apprenticeship entrance objectives should be "
+            "taught with a diagram or step storyboard before the quick check."
+        ),
+        "rendering_policy": [
+            "Call mastery_visual before explaining the mini-lesson.",
+            "Paste the returned markdown diagram/storyboard into the answer.",
+            "Use the visual to explain one reasoning move, then register exactly one quick check.",
+        ],
+        "domain": domain,
+    }
+
+
+def _visual_aid_required(next_step: NextStep) -> bool:
+    text = _normalize_label(
+        " ".join(
+            [
+                next_step.module_id or "",
+                next_step.module_name or "",
+                next_step.knowledge_point_id or "",
+                next_step.knowledge_point_name or "",
+            ]
+        )
+    )
+    signals = (
+        "mechanical",
+        "spatial",
+        "paper folding",
+        "fold",
+        "lever",
+        "pulley",
+        "gear",
+        "belt",
+        "rotation",
+        "reflection",
+    )
+    return any(signal in text for signal in signals)
 
 
 def _must_ask(next_step: NextStep) -> str:

@@ -36,6 +36,11 @@ _TEXT_KEYS = (
     "teaching_purpose",
     "source_policy",
     "review_status",
+    "visual_template",
+    "visual_mode",
+    "render_type",
+    "prompt",
+    "diagram_focus",
 )
 _LIST_TEXT_KEYS = (
     "teaching_points",
@@ -80,6 +85,8 @@ _LIST_TEXT_KEYS = (
     "choices",
     "correct_rationale",
     "distractor_rationales",
+    "applies_to_objective_ids",
+    "animation_steps",
 )
 _STOPWORDS = {
     "a",
@@ -262,6 +269,7 @@ def _iter_candidate_objects(payload: Any) -> Iterable[dict[str, Any]]:
             "flashcard_decks",
             "readiness_checkpoints",
             "error_taxonomy",
+            "visual_prompts",
             "problems",
             "items",
             "classes",
@@ -379,11 +387,26 @@ def _render_item(item: dict[str, Any]) -> dict[str, Any]:
         "choices",
         "correct_rationale",
         "distractor_rationales",
+        "visual_template",
+        "visual_mode",
+        "render_type",
+        "applies_to_objective_ids",
+        "prompt",
+        "diagram_focus",
+        "animation_steps",
     ):
         value = item.get(key)
         if isinstance(value, list) and value:
             rendered[key] = [_list_item_text(v) for v in value[:8]]
-    for key in ("source_policy", "review_status"):
+    for key in (
+        "source_policy",
+        "review_status",
+        "visual_template",
+        "visual_mode",
+        "render_type",
+        "prompt",
+        "diagram_focus",
+    ):
         value = item.get(key)
         if isinstance(value, str) and value.strip():
             rendered[key] = value.strip()[:1200]

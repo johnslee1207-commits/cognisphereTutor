@@ -199,3 +199,29 @@ def test_lesson_contract_requires_free_response_after_foundation_ramp() -> None:
     assert payload["required_check"]["mode"] == "free_response"
     assert payload["free_response_policy"]["required_now"] is True
     assert payload["free_response_policy"]["optional_now"] is False
+
+
+def test_lesson_contract_requires_visual_aid_for_mechanical_spatial_objective() -> None:
+    seed = build_lesson_contract_seed(
+        domain="california_electrical_career",
+        learner_goal="entrance exam mechanical reasoning",
+        next_step=NextStep(
+            action="probe",
+            knowledge_point_id="cec-apprentice-mechanical",
+            knowledge_point_name=(
+                "Mechanical reasoning: force, levers, pulleys, gears, and motion"
+            ),
+            knowledge_point_type="concept",
+            status="new",
+            module_id="csphere-california_electrical_career-apprenticeship",
+            module_name="ETI / IBEW Local 11 Apprenticeship Entrance",
+        ),
+        map_summary={"counts": {"total": 39}, "modules": []},
+    )
+
+    payload = _payload(seed)
+
+    assert payload["visual_aid"]["required"] is True
+    assert payload["visual_aid"]["tool"] == "mastery_visual"
+    assert payload["visual_aid"]["knowledge_point_id"] == "cec-apprentice-mechanical"
+    assert any("mastery_visual" in item for item in payload["must_teach"])

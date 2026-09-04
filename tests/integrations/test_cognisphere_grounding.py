@@ -342,6 +342,68 @@ def test_build_plugin_grounding_seed_includes_learning_activity_templates(
     assert "lookup strategy separately" in seed
 
 
+def test_build_plugin_grounding_seed_includes_visual_prompts(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    from cognispheretutor.integrations.cognisphere import grounding
+
+    cache_dir = tmp_path / "imports" / "california_electrical_career"
+    cache_dir.mkdir(parents=True)
+    (cache_dir / "bundle.json").write_text(
+        json.dumps(
+            {
+                "domain": "california_electrical_career",
+                "knowledge": {
+                    "visual_prompts": [
+                        {
+                            "id": "cec-visual-entrance-one-fold-hole",
+                            "title": "One-fold hole punch mirror",
+                            "applies_to_objective_ids": [
+                                "cec-apprentice-spatial"
+                            ],
+                            "visual_template": "paper_one_fold_hole",
+                            "visual_mode": "mermaid_storyboard",
+                            "prompt": (
+                                "Show the folded state, punched mark, and backward "
+                                "unfolding mirror result."
+                            ),
+                            "animation_steps": [
+                                "Fold left over right.",
+                                "Punch one mark near the folded edge.",
+                                "Unfold backward and mirror the mark.",
+                            ],
+                        }
+                    ]
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    class FakeRegistry:
+        def get_plugin(self, _domain: str):
+            return {"plugin": {"path": str(tmp_path / "missing_plugin")}}
+
+    monkeypatch.setattr(grounding, "PluginRegistryClient", FakeRegistry)
+    monkeypatch.setattr(grounding, "resolve_import_cache_dir", lambda domain: cache_dir)
+
+    seed = grounding.build_plugin_grounding_seed(
+        domain="california_electrical_career",
+        objective={
+            "knowledge_point_id": "cec-apprentice-spatial",
+            "knowledge_point_name": "Spatial reasoning and paper folding",
+            "module_name": "ETI / IBEW Local 11 Apprenticeship Entrance",
+        },
+        learner_goal="entrance exam spatial paper folding",
+    )
+
+    assert "One-fold hole punch mirror" in seed
+    assert "paper_one_fold_hole" in seed
+    assert "Fold left over right." in seed
+    assert "Unfold backward and mirror the mark." in seed
+
+
 def test_build_plugin_grounding_seed_includes_sequences_and_scenario_cards(
     tmp_path: Path,
     monkeypatch,

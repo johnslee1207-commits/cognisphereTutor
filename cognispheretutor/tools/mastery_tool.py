@@ -14,12 +14,14 @@ from cognispheretutor.capabilities.mastery.tools import (
     MasteryGradeTool,
     MasteryQuizTool,
     MasteryStatusTool,
+    MasteryVisualTool,
 )
 
 __all__ = [
     "MASTERY_TOOL_NAMES",
     "MASTERY_TOOL_TYPES",
     "MasteryStatusTool",
+    "MasteryVisualTool",
     "MasteryQuizTool",
     "MasteryGradeTool",
     "MasteryAssessTool",

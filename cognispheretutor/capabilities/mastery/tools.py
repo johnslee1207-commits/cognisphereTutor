@@ -62,6 +62,7 @@ if TYPE_CHECKING:
 # here so the mount policy and the registration list can't disagree.
 MASTERY_TOOL_NAMES: tuple[str, ...] = (
     "mastery_status",
+    "mastery_visual",
     "mastery_quiz",
     "mastery_grade",
     "mastery_assess",
@@ -69,6 +70,18 @@ MASTERY_TOOL_NAMES: tuple[str, ...] = (
 )
 
 _QUESTION_TYPES = ("choice", "short", "open")
+_VISUAL_TEMPLATES = (
+    "auto",
+    "lever",
+    "fixed_pulley",
+    "movable_pulley",
+    "three_gears",
+    "open_belt",
+    "crossed_belt",
+    "paper_one_fold_hole",
+    "paper_two_fold_unfold",
+    "rotation_vs_reflection",
+)
 _ALLOWED_KP_TYPES = {t.value for t in KnowledgeType}
 logger = logging.getLogger(__name__)
 _NUMBER_PATTERN = re.compile(r"-?\d+(?:,\d{3})*(?:\.\d+)?")
@@ -473,6 +486,101 @@ class MasteryStatusTool(BaseTool):
         if start_action:
             payload["requested_start_action"] = start_action
         return _json_result(payload, meta_key="mastery_status")
+
+
+class MasteryVisualTool(BaseTool):
+    """Return deterministic visual aids for visual apprenticeship objectives."""
+
+    def get_definition(self) -> ToolDefinition:
+        return ToolDefinition(
+            name="mastery_visual",
+            description=(
+                "Create a deterministic visual aid for a mastery mini-lesson. "
+                "Use this for mechanical reasoning, levers, pulleys, gears, belts, "
+                "spatial reasoning, paper folding, rotation, or reflection before "
+                "teaching the lesson. The returned markdown is safe to include in "
+                "the assistant reply and should be shown before the quick check."
+            ),
+            parameters=[
+                ToolParameter(
+                    name="knowledge_point_id",
+                    type="string",
+                    description="Objective id from mastery_status (verbatim).",
+                    required=False,
+                ),
+                ToolParameter(
+                    name="template",
+                    type="string",
+                    description="Visual template to render. Use 'auto' when unsure.",
+                    required=False,
+                    default="auto",
+                    enum=list(_VISUAL_TEMPLATES),
+                ),
+                ToolParameter(
+                    name="focus",
+                    type="string",
+                    description=(
+                        "Optional plain-language focus, for example 'gear direction' "
+                        "or 'one-fold hole punch'."
+                    ),
+                    required=False,
+                ),
+            ],
+        )
+
+    async def execute(self, **kwargs: Any) -> ToolResult:
+        path_id = _resolve_path_id(kwargs)
+        if not path_id:
+            return _no_path_result()
+        kp_id = str(kwargs.get("knowledge_point_id") or "").strip()
+        requested = str(kwargs.get("template") or "auto").strip().lower()
+        if requested not in _VISUAL_TEMPLATES:
+            requested = "auto"
+        focus = str(kwargs.get("focus") or "").strip()
+
+        service = _new_service()
+        progress = service.get_or_create(path_id)
+        kp: KnowledgePoint | None = None
+        module_name = ""
+        if kp_id:
+            kp, _module_id, module_name = find_knowledge_point(progress, kp_id)
+            if kp is None:
+                return ToolResult(
+                    content=f"Unknown objective {kp_id!r}; call mastery_status for valid ids.",
+                    success=False,
+                )
+        if kp is None:
+            step = next_objective_for_start_point(progress, _resolve_start_point(kwargs))
+            kp, _module_id, module_name = find_knowledge_point(
+                progress, step.knowledge_point_id
+            )
+            kp_id = step.knowledge_point_id
+        objective_text = " ".join(
+            part
+            for part in (
+                focus,
+                kp_id,
+                module_name,
+                kp.name if kp else "",
+            )
+            if part
+        )
+        template = _resolve_visual_template(requested, objective_text)
+        visual = _render_visual_template(template)
+        payload = {
+            "status": "ready",
+            "knowledge_point_id": kp_id,
+            "template": template,
+            "title": visual["title"],
+            "teaching_cue": visual["teaching_cue"],
+            "markdown": visual["markdown"],
+            "usage_instruction": (
+                "Include markdown in the learner-facing reply before the quick quiz. "
+                "Treat it as a visual aid, then teach the mini-lesson and ask one "
+                "registered mastery_quiz + ask_user check."
+            ),
+        }
+        return _json_result(payload, meta_key="mastery_visual")
 
 
 class MasteryQuizTool(BaseTool):
@@ -927,8 +1035,137 @@ def _parse_modules(
     return modules, None
 
 
+def _resolve_visual_template(requested: str, text: str) -> str:
+    if requested and requested != "auto":
+        return requested
+    normalized = str(text or "").lower()
+    if "reflection" in normalized or "rotation" in normalized:
+        return "rotation_vs_reflection"
+    if "paper" in normalized or "fold" in normalized or "spatial" in normalized:
+        if "two" in normalized or "twice" in normalized:
+            return "paper_two_fold_unfold"
+        return "paper_one_fold_hole"
+    if "lever" in normalized or "force" in normalized or "mechanical" in normalized:
+        return "lever"
+    if "movable" in normalized and "pulley" in normalized:
+        return "movable_pulley"
+    if "pulley" in normalized:
+        return "fixed_pulley"
+    if "cross" in normalized and "belt" in normalized:
+        return "crossed_belt"
+    if "belt" in normalized:
+        return "open_belt"
+    if "gear" in normalized:
+        return "three_gears"
+    return "lever"
+
+
+def _render_visual_template(template: str) -> dict[str, str]:
+    title_map = {
+        "lever": "Lever: force, pivot, and load",
+        "fixed_pulley": "Fixed pulley: direction change",
+        "movable_pulley": "Movable pulley: less force, more rope movement",
+        "three_gears": "Three gears: direction trace",
+        "open_belt": "Open belt: same rotation direction",
+        "crossed_belt": "Crossed belt: reversed rotation direction",
+        "paper_one_fold_hole": "One-fold paper hole punch",
+        "paper_two_fold_unfold": "Two-fold paper unfolding storyboard",
+        "rotation_vs_reflection": "Rotation versus reflection",
+    }
+    cue_map = {
+        "lever": "Trace support first, then compare the distance from effort and load to the pivot.",
+        "fixed_pulley": "A fixed pulley changes pull direction but does not make the load weight disappear.",
+        "movable_pulley": "A movable pulley can reduce effort force by making the rope move farther.",
+        "three_gears": "Each touching gear pair reverses direction; count the reversals.",
+        "open_belt": "An uncrossed belt usually carries the same rotation direction across pulleys.",
+        "crossed_belt": "A crossed belt flips the rotation direction.",
+        "paper_one_fold_hole": "Unfold backward; one fold creates a mirrored hole.",
+        "paper_two_fold_unfold": "Undo the last fold first; each unfold mirrors marks across that fold line.",
+        "rotation_vs_reflection": "Rotation turns a shape; reflection flips it across a line.",
+    }
+    diagrams = {
+        "lever": """```mermaid
+flowchart LR
+    E["Effort: push down"] --> A["Long handle / effort arm"]
+    A --> P(("Pivot / fulcrum"))
+    P --> B["Short load arm"]
+    B --> L["Load"]
+    N["Longer effort arm means less effort force"] -.-> E
+```""",
+        "fixed_pulley": """```mermaid
+flowchart TB
+    S["Ceiling support"] --> P(("Fixed pulley"))
+    H["Hand pulls down"] --> R["Rope over pulley"]
+    R --> P
+    P --> L["Load moves up"]
+    N["Key idea: changes direction"] -.-> H
+```""",
+        "movable_pulley": """```mermaid
+flowchart TB
+    S["Ceiling anchor"] --> R["Rope"]
+    R --> M(("Movable pulley attached to load"))
+    M --> L["Load"]
+    H["Hand pulls rope farther"] --> R
+    N["Less effort force, more rope distance"] -.-> H
+```""",
+        "three_gears": """```mermaid
+flowchart LR
+    A(("Gear A ↻")) -- touches --> B(("Gear B ↺"))
+    B -- touches --> C(("Gear C ↻"))
+    N1["1st contact reverses"] -.-> B
+    N2["2nd contact reverses again"] -.-> C
+```""",
+        "open_belt": """```mermaid
+flowchart LR
+    A(("Pulley A ↻")) == open belt ==> B(("Pulley B ↻"))
+    N["Uncrossed belt keeps direction"] -.-> B
+```""",
+        "crossed_belt": """```mermaid
+flowchart LR
+    A(("Pulley A ↻")) == crossed belt ==> B(("Pulley B ↺"))
+    N["Crossed belt reverses direction"] -.-> B
+```""",
+        "paper_one_fold_hole": """```mermaid
+flowchart LR
+    A["Flat paper"] --> B["Fold left over right"]
+    B --> C["Punch one hole near folded edge"]
+    C --> D["Unfold backward"]
+    D --> E["Two mirrored holes"]
+```""",
+        "paper_two_fold_unfold": """```mermaid
+sequenceDiagram
+    participant P as Paper
+    participant F1 as First fold
+    participant F2 as Second fold
+    participant H as Hole punch
+    participant U as Unfold
+    P->>F1: Fold horizontally
+    F1->>F2: Fold vertically
+    F2->>H: Punch mark through layers
+    H->>U: Undo vertical fold first
+    U->>U: Mirror holes across vertical fold
+    U->>U: Undo horizontal fold second
+    U->>P: Final pattern shows both mirror steps
+```""",
+        "rotation_vs_reflection": """```mermaid
+flowchart TB
+    A["Original shape"] --> R["Rotation: turn around a point"]
+    A --> F["Reflection: flip across a line"]
+    R --> R2["Orientation turns"]
+    F --> F2["Left/right order reverses"]
+```""",
+    }
+    resolved = template if template in diagrams else "lever"
+    return {
+        "title": title_map[resolved],
+        "teaching_cue": cue_map[resolved],
+        "markdown": diagrams[resolved],
+    }
+
+
 MASTERY_TOOL_TYPES: tuple[type[BaseTool], ...] = (
     MasteryStatusTool,
+    MasteryVisualTool,
     MasteryQuizTool,
     MasteryGradeTool,
     MasteryAssessTool,
@@ -940,6 +1177,7 @@ __all__ = [
     "MASTERY_TOOL_NAMES",
     "MASTERY_TOOL_TYPES",
     "MasteryStatusTool",
+    "MasteryVisualTool",
     "MasteryQuizTool",
     "MasteryGradeTool",
     "MasteryAssessTool",
