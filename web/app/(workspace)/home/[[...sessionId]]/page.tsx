@@ -801,6 +801,7 @@ function MasteryStartingPointPanel({
   pathId,
   tr,
   disabled,
+  controlsDisabled,
   onContinue,
   onRestart,
   onRestore,
@@ -809,11 +810,13 @@ function MasteryStartingPointPanel({
   pathId: string;
   tr: GoalTranslator;
   disabled: boolean;
+  controlsDisabled?: boolean;
   onContinue: () => void;
   onRestart: () => void;
   onRestore: () => void;
 }) {
   const points = masteryStartingPointsForPath(pathId);
+  const actionsDisabled = controlsDisabled ?? disabled;
   return (
     <div className="mx-auto flex w-full max-w-[720px] flex-col gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)]/70 p-4 shadow-sm">
       <div className="flex items-start gap-3">
@@ -939,7 +942,7 @@ function MasteryStartingPointPanel({
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            disabled={disabled}
+            disabled={actionsDisabled}
             onClick={onContinue}
             className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--border)] px-2.5 text-xs text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -948,7 +951,7 @@ function MasteryStartingPointPanel({
           </button>
           <button
             type="button"
-            disabled={disabled}
+            disabled={actionsDisabled}
             onClick={onRestart}
             className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--border)] px-2.5 text-xs text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -957,7 +960,7 @@ function MasteryStartingPointPanel({
           </button>
           <button
             type="button"
-            disabled={disabled}
+            disabled={actionsDisabled}
             onClick={onRestore}
             className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[var(--border)] px-2.5 text-xs text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -3046,7 +3049,8 @@ export default function ChatPage() {
                       title={masteryPathTitle}
                       pathId={masteryPathParam}
                       tr={goalTr}
-                      disabled={masteryProgressBusy || state.isStreaming}
+                      disabled={masteryProgressBusy}
+                      controlsDisabled={masteryProgressBusy || state.isStreaming}
                       onContinue={handleContinueMasteryPath}
                       onRestart={() => void handleNewMasterySession("restart")}
                       onRestore={handleRestoreMasteryProgress}

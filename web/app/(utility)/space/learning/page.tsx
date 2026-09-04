@@ -1129,37 +1129,51 @@ function MasteryPathPageInner() {
                       </span>
                     </div>
                     <div className="mt-2 flex gap-1">
-                      <button
-                        type="button"
-                        disabled={csphereBusy || !plugin.valid}
-                        onClick={() =>
-                          path?.book_id
-                            ? setSelected(path.book_id)
-                            : handleImportDomain(plugin.domain)
-                        }
-                        className="flex-1 flex items-center justify-center gap-1 px-2 py-1 text-[11px] rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50 cursor-pointer"
-                      >
-                        {csphereBusy ? (
-                          <Loader2 className="w-3 h-3 animate-spin" />
-                        ) : (
+                      {path?.book_id ? (
+                        <a
+                          href={masteryChatHref(path.book_id, {
+                            autoStart: "next",
+                          })}
+                          className="flex-1 flex items-center justify-center gap-1 px-2 py-1 text-[11px] rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 cursor-pointer"
+                        >
                           <GraduationCap className="w-3 h-3" />
-                        )}
-                        {path ? tr("继续学习", "Continue") : tr("添加课程", "Add course")}
-                      </button>
-                      <button
-                        type="button"
-                        disabled={!path?.book_id}
-                        onClick={() =>
-                          path?.book_id &&
-                          router.push(
-                            masteryChatHref(path.book_id, { autoStart: "next" }),
-                          )
-                        }
-                        className="px-2 py-1 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] disabled:opacity-50 cursor-pointer"
-                        title={tr("进入 Mastery 对话", "Open Mastery Chat")}
-                      >
-                        <MessageSquare className="w-3 h-3" />
-                      </button>
+                          {tr("继续学习", "Continue")}
+                        </a>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={csphereBusy || !plugin.valid}
+                          onClick={() => handleImportDomain(plugin.domain)}
+                          className="flex-1 flex items-center justify-center gap-1 px-2 py-1 text-[11px] rounded-md border border-[var(--primary)]/40 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50 cursor-pointer"
+                        >
+                          {csphereBusy ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <GraduationCap className="w-3 h-3" />
+                          )}
+                          {tr("添加课程", "Add course")}
+                        </button>
+                      )}
+                      {path?.book_id ? (
+                        <a
+                          href={masteryChatHref(path.book_id, {
+                            autoStart: "next",
+                          })}
+                          className="px-2 py-1 text-[11px] rounded-md border border-[var(--border)] hover:bg-[var(--accent)] cursor-pointer"
+                          title={tr("进入 Mastery 对话", "Open Mastery Chat")}
+                        >
+                          <MessageSquare className="w-3 h-3" />
+                        </a>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled
+                          className="px-2 py-1 text-[11px] rounded-md border border-[var(--border)] disabled:opacity-50 cursor-pointer"
+                          title={tr("先添加课程", "Add the course first")}
+                        >
+                          <MessageSquare className="w-3 h-3" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 );
@@ -1190,19 +1204,17 @@ function MasteryPathPageInner() {
         </div>
 
         <footer className="p-2 border-t border-[var(--border)]">
-          <button
-            onClick={() =>
-              router.push(
-                selected
-                  ? masteryChatHref(selected, { autoStart: "next" })
-                  : "/home?capability=mastery_path",
-              )
+          <a
+            href={
+              selected
+                ? masteryChatHref(selected, { autoStart: "next" })
+                : "/home?capability=mastery_path"
             }
             className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-sm rounded-md bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition-opacity cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5" />
             {tr("继续下一步", "Continue next step")}
-          </button>
+          </a>
         </footer>
       </aside>
 
