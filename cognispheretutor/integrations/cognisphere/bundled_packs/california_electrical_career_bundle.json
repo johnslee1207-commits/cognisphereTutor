@@ -121,7 +121,7 @@
     "mastery_modules": [
       {
         "id": "csphere-california_electrical_career-orientation",
-        "name": "Career Orientation",
+        "name": "California Electrical Career Orientation",
         "order": 0,
         "pass_threshold": 0.7,
         "knowledge_points": [
@@ -4408,7 +4408,7 @@
       },
       {
         "id": "cec-scenario-career-route",
-        "title": "Career orientation: route choice",
+        "title": "California electrical career orientation: route choice",
         "summary": "Original beginner scenario for choosing the right career track.",
         "scenario": [
           "A learner has no electrical experience and wants paid training while learning the trade. Which route best matches that immediate goal?"
@@ -6116,7 +6116,7 @@
     "flashcard_decks": [
       {
         "id": "cec-flashcards-career-orientation",
-        "title": "Career orientation cues",
+        "title": "California electrical career orientation cues",
         "summary": "Cards for choosing the right learning route before studying details.",
         "cards": [
           "Apprenticeship entrance: selection readiness, aptitude reasoning, and admissions documents.",
@@ -6491,7 +6491,7 @@
       {
         "id": "cec-checkpoint-full-course-map",
         "title": "Full course map checkpoint",
-        "summary": "Use after orientation to confirm the learner understands the five modules and the next best study route.",
+        "summary": "Use after California electrical career orientation to confirm the learner understands the five modules and the next best study route.",
         "checkpoint_prompts": [
           "Can the learner distinguish apprenticeship entrance, General Electrician certification, C-10 trade, and Law & Business?",
           "Can the learner name why shared foundations come before advanced exam practice?",
@@ -6537,7 +6537,7 @@
           "If setup errors remain, repeat worked-example ladder for units and algebra.",
           "If concept language is weak, repeat explain-back with multiple-choice fallback.",
           "If aptitude timing is weak, move to daily selection set before full timed practice.",
-          "If route choice is unclear, repeat career orientation cues and source discipline."
+          "If route choice is unclear, repeat California electrical career orientation cues and source discipline."
         ],
         "source_ref_ids": [
           "laett.inside_wireman.2026-01-26",

@@ -21,7 +21,7 @@ mini-lesson 的 lesson cards、27 个 practice blueprint、17 个 learning
 activity templates、11 条 study sequences、98 张 scenario cards、21 组
 flashcard decks、10 个 readiness checkpoints 和 8 类 error taxonomy：
 
-1. Career Orientation
+1. California Electrical Career Orientation
 2. Shared Electrical Foundations
 3. ETI / IBEW Local 11 Apprenticeship Entrance
 4. California General Electrician

@@ -102,7 +102,11 @@ def _resolve_start_action(kwargs: dict[str, Any]) -> str:
 
 
 _START_POINT_MODULE_SIGNALS: dict[str, tuple[str, ...]] = {
-    "newcomer_sprint": ("career orientation", "shared electrical foundations"),
+    "newcomer_sprint": (
+        "california electrical career orientation",
+        "career orientation",
+        "shared electrical foundations",
+    ),
     "apprenticeship_entry": ("apprenticeship entrance", "ibew", "eti"),
     "shared_foundations": ("shared electrical foundations",),
     "ge": ("general electrician",),

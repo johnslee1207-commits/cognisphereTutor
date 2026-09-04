@@ -542,8 +542,8 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
           en: "Enter the General Electrician blueprint, open-book NEC navigation, calculations, and sectional practice.",
         },
         prompt: {
-          zh: "Start from California General Electrician. Use the GE blueprint and begin with the first necessary mini-lesson, then quick quiz. Do not start with career orientation unless needed.",
-          en: "Start from California General Electrician. Use the GE blueprint and begin with the first necessary mini-lesson, then quick quiz. Do not start with career orientation unless needed.",
+          zh: "Start from California General Electrician. Use the GE blueprint and begin with the first necessary mini-lesson, then quick quiz. Do not start with California electrical career orientation unless needed.",
+          en: "Start from California General Electrician. Use the GE blueprint and begin with the first necessary mini-lesson, then quick quiz. Do not start with California electrical career orientation unless needed.",
         },
       },
       {

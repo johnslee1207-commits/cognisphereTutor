@@ -128,7 +128,7 @@ async def test_status_honors_selected_start_point(path_id):
         mode="replace",
         modules=[
             {
-                "name": "Career Orientation",
+                "name": "California Electrical Career Orientation",
                 "knowledge_points": [{"name": "Choose a career goal", "type": "concept"}],
             },
             {
@@ -199,7 +199,7 @@ async def test_status_start_action_clears_stale_pending_question(path_id):
         mode="replace",
         modules=[
             {
-                "name": "Career Orientation",
+                "name": "California Electrical Career Orientation",
                 "knowledge_points": [{"name": "Choose a career goal", "type": "procedure"}],
             },
             {
