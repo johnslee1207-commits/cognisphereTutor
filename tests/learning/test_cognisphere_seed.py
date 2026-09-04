@@ -445,6 +445,72 @@ def test_bundled_pack_status_and_import_without_external_plugins(
     )
 
 
+def test_bundled_pack_radar_axes_are_domain_specific(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    missing_root = tmp_path / "missing_plugins"
+    monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(missing_root))
+    monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
+
+    store_root = tmp_path / "learning"
+    monkeypatch.setattr(
+        cognisphere_learning,
+        "_service",
+        lambda: __import__(
+            "cognispheretutor.learning.service", fromlist=["LearningService"]
+        ).LearningService(LearningStore(store_root)),
+    )
+
+    app = FastAPI()
+    app.include_router(cognisphere_learning.router, prefix="/api/v1/learning/cognisphere")
+    client = TestClient(app)
+
+    expected = {
+        "aws_certification": {
+            "path_id": "csphere-aws_certification",
+            "kp_count": 46,
+            "axis": "CLF-C02 Technology Services",
+        },
+        "ap_calculus": {
+            "path_id": "csphere-ap_calculus",
+            "kp_count": 22,
+            "axis": "AP Calculus Derivatives",
+        },
+        "leetcode": {
+            "path_id": "csphere-leetcode",
+            "kp_count": 18,
+            "axis": "Two Pointers and Sliding Window",
+        },
+        "california_electrical_career": {
+            "path_id": "csphere-california_electrical_career",
+            "kp_count": 39,
+            "axis": "ETI / IBEW Local 11 Apprenticeship Entrance",
+        },
+    }
+
+    for domain, meta in expected.items():
+        seeded = client.post(
+            "/api/v1/learning/cognisphere/import-and-seed",
+            json={"domain": domain, "seed_mastery_path": True},
+        )
+        assert seeded.status_code == 200, seeded.text
+        assert seeded.json()["mastery_path"]["kp_count"] == meta["kp_count"]
+
+        radar = client.get(
+            "/api/v1/learning/cognisphere/ability-radar",
+            params={"path_id": meta["path_id"], "include_skill_graph": False},
+        )
+        assert radar.status_code == 200, radar.text
+        body = radar.json()
+        selected = body["selected"]
+        labels = [axis["label"] for axis in selected["axes"]]
+        assert selected["counts"]["total"] == meta["kp_count"]
+        assert meta["axis"] in labels
+        assert all(not label.startswith("Cognisphere ·") for label in labels)
+        assert [d["path_id"] for d in body["weak_domains"]] == [meta["path_id"]]
+
+
 def test_runtime_plan_fallback_seeds_sparse_domain(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

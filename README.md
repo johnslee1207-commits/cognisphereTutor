@@ -21,8 +21,8 @@
 | 课程 | 内置文件 | 当前学习目标 |
 | --- | --- | --- |
 | AWS Certification | `cognispheretutor/integrations/cognisphere/bundled_packs/aws_certification_bundle.json` | 6 个模块 / 46 个目标 |
-| AP Calculus | `cognispheretutor/integrations/cognisphere/bundled_packs/ap_calculus_bundle.json` | 22 个目标 |
-| LeetCode | `cognispheretutor/integrations/cognisphere/bundled_packs/leetcode_bundle.json` | 7 个目标 |
+| AP Calculus | `cognispheretutor/integrations/cognisphere/bundled_packs/ap_calculus_bundle.json` | 6 个模块 / 22 个目标 |
+| LeetCode | `cognispheretutor/integrations/cognisphere/bundled_packs/leetcode_bundle.json` | 6 个模块 / 18 个目标 |
 | California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 / 91 张 lesson cards / 27 个 practice blueprints / 17 个 activity templates / 11 条 study sequences / 98 张 scenario cards / 21 组 flashcard decks / 10 个 readiness checkpoints |
 
 California Electrical Career 当前已从课程路径 seed 扩展为可进入 mini-lesson 的

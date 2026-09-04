@@ -259,7 +259,189 @@
           "scoring_guideline_full_text_included": false
         }
       }
-    }
+    },
+    "mastery_modules": [
+      {
+        "id": "csphere-ap_calculus-limits-continuity",
+        "name": "AP Calculus Limits and Continuity",
+        "order": 0,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "ap-limits-intuition",
+            "name": "Limits from graphs, tables, and algebraic behavior",
+            "type": "concept",
+            "module_id": "csphere-ap_calculus-limits-continuity"
+          },
+          {
+            "id": "ap-continuity",
+            "name": "Continuity, removable discontinuities, and one-sided limits",
+            "type": "concept",
+            "module_id": "csphere-ap_calculus-limits-continuity"
+          },
+          {
+            "id": "ap-limit-techniques",
+            "name": "Algebraic limit techniques and squeeze-style reasoning",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-limits-continuity"
+          }
+        ]
+      },
+      {
+        "id": "csphere-ap_calculus-derivatives",
+        "name": "AP Calculus Derivatives",
+        "order": 1,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "ap-derivative-definition",
+            "name": "Derivative meaning: rate of change and tangent slope",
+            "type": "concept",
+            "module_id": "csphere-ap_calculus-derivatives"
+          },
+          {
+            "id": "ap-derivative-rules",
+            "name": "Power, product, quotient, chain, implicit, and inverse derivative rules",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-derivatives"
+          },
+          {
+            "id": "ap-derivative-applications",
+            "name": "Motion, related rates, optimization, and graph behavior",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-derivatives"
+          },
+          {
+            "id": "ap-derivative-graph-interpretation",
+            "name": "Connect f, f prime, and f double-prime graphs",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-derivatives"
+          }
+        ]
+      },
+      {
+        "id": "csphere-ap_calculus-integrals",
+        "name": "AP Calculus Integrals and FTC",
+        "order": 2,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "ap-integral-meaning",
+            "name": "Definite integrals as accumulation and net change",
+            "type": "concept",
+            "module_id": "csphere-ap_calculus-integrals"
+          },
+          {
+            "id": "ap-antiderivatives",
+            "name": "Antiderivatives, substitution, and basic integration techniques",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-integrals"
+          },
+          {
+            "id": "ap-ftc",
+            "name": "Fundamental Theorem of Calculus in graph, table, and symbolic contexts",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-integrals"
+          },
+          {
+            "id": "ap-area-volume",
+            "name": "Area, volume, and accumulation applications",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-integrals"
+          }
+        ]
+      },
+      {
+        "id": "csphere-ap_calculus-differential-equations",
+        "name": "AP Calculus Differential Equations",
+        "order": 3,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "ap-slope-fields",
+            "name": "Slope fields and solution curve reasoning",
+            "type": "concept",
+            "module_id": "csphere-ap_calculus-differential-equations"
+          },
+          {
+            "id": "ap-separable-differential-equations",
+            "name": "Separable differential equations and initial conditions",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-differential-equations"
+          },
+          {
+            "id": "ap-exponential-logistic-models",
+            "name": "Exponential and logistic models",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-differential-equations"
+          }
+        ]
+      },
+      {
+        "id": "csphere-ap_calculus-series-bc",
+        "name": "AP Calculus BC Series",
+        "order": 4,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "ap-sequence-series-basics",
+            "name": "Sequences, series, convergence, and divergence",
+            "type": "concept",
+            "module_id": "csphere-ap_calculus-series-bc"
+          },
+          {
+            "id": "ap-series-tests",
+            "name": "Geometric, p-series, comparison, ratio, alternating, and integral tests",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-series-bc"
+          },
+          {
+            "id": "ap-power-series",
+            "name": "Power series, radius/interval of convergence, and representation",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-series-bc"
+          },
+          {
+            "id": "ap-taylor-series",
+            "name": "Taylor and Maclaurin polynomials and error reasoning",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-series-bc"
+          }
+        ]
+      },
+      {
+        "id": "csphere-ap_calculus-exam-frq-practice",
+        "name": "AP Calculus Exam Practice",
+        "order": 5,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "ap-mcq-strategy",
+            "name": "Multiple-choice strategy: classify, compute, estimate, eliminate",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-exam-frq-practice"
+          },
+          {
+            "id": "ap-frq-communication",
+            "name": "Free-response communication: setup, notation, units, and justification",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-exam-frq-practice"
+          },
+          {
+            "id": "ap-error-review",
+            "name": "Error review by concept, algebra, notation, and interpretation",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-exam-frq-practice"
+          },
+          {
+            "id": "ap-readiness-checkpoint",
+            "name": "AB/BC readiness checkpoint using mixed AP-style tasks",
+            "type": "procedure",
+            "module_id": "csphere-ap_calculus-exam-frq-practice"
+          }
+        ]
+      }
+    ]
   },
   "course_framework": {
     "generated_at": "2026-07-26T05:10:31.666558+00:00",

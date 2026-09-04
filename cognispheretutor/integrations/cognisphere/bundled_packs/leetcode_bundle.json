@@ -13,60 +13,158 @@
     },
     "mastery_modules": [
       {
-        "id": "csphere-leetcode-overview",
-        "name": "Cognisphere · leetcode",
+        "id": "csphere-leetcode-problem-solving-foundations",
+        "name": "LeetCode Problem-Solving Foundations",
         "order": 0,
         "pass_threshold": 0.7,
         "knowledge_points": [
           {
-            "id": "ov-overview",
-            "name": "Cognisphere · leetcode",
+            "id": "lc-problem-reading",
+            "name": "Read constraints, examples, input/output, and edge cases",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-problem-solving-foundations"
+          },
+          {
+            "id": "lc-complexity-basics",
+            "name": "Time and space complexity basics",
             "type": "concept",
-            "module_id": "csphere-leetcode-overview"
+            "module_id": "csphere-leetcode-problem-solving-foundations"
+          },
+          {
+            "id": "lc-test-first-thinking",
+            "name": "Create examples and counterexamples before coding",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-problem-solving-foundations"
           }
         ]
       },
       {
-        "id": "csphere-leetcode-runtime-plan",
-        "name": "Plugin runtime plan",
+        "id": "csphere-leetcode-arrays-hashmaps-strings",
+        "name": "Arrays, Hash Maps, and Strings",
         "order": 1,
         "pass_threshold": 0.7,
         "knowledge_points": [
           {
-            "id": "rt-skill-basic-data-structures",
-            "name": "Basic Data Structures",
+            "id": "lc-array-iteration",
+            "name": "Array iteration, prefix state, and boundary handling",
             "type": "procedure",
-            "module_id": "csphere-leetcode-runtime-plan"
+            "module_id": "csphere-leetcode-arrays-hashmaps-strings"
           },
           {
-            "id": "rt-skill-queue",
-            "name": "Queue",
+            "id": "lc-hashmap-lookup",
+            "name": "Hash map counting, indexing, and complement lookup",
             "type": "procedure",
-            "module_id": "csphere-leetcode-runtime-plan"
+            "module_id": "csphere-leetcode-arrays-hashmaps-strings"
           },
           {
-            "id": "rt-skill-graph",
-            "name": "Graph",
+            "id": "lc-string-patterns",
+            "name": "String scanning, frequency maps, and normalization",
             "type": "procedure",
-            "module_id": "csphere-leetcode-runtime-plan"
+            "module_id": "csphere-leetcode-arrays-hashmaps-strings"
+          }
+        ]
+      },
+      {
+        "id": "csphere-leetcode-two-pointers-sliding-window",
+        "name": "Two Pointers and Sliding Window",
+        "order": 2,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "lc-two-pointers",
+            "name": "Two-pointer invariants and sorted/paired movement",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-two-pointers-sliding-window"
           },
           {
-            "id": "rt-skill-bfs",
-            "name": "BFS",
+            "id": "lc-sliding-window",
+            "name": "Sliding-window expand/shrink conditions",
             "type": "procedure",
-            "module_id": "csphere-leetcode-runtime-plan"
+            "module_id": "csphere-leetcode-two-pointers-sliding-window"
           },
           {
-            "id": "rt-skill-array-basics",
-            "name": "Array Basics",
+            "id": "lc-window-invariants",
+            "name": "Maintain window state without off-by-one errors",
             "type": "procedure",
-            "module_id": "csphere-leetcode-runtime-plan"
+            "module_id": "csphere-leetcode-two-pointers-sliding-window"
+          }
+        ]
+      },
+      {
+        "id": "csphere-leetcode-recursion-trees-graphs",
+        "name": "Recursion, Trees, and Graphs",
+        "order": 3,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "lc-recursion-backtracking",
+            "name": "Recursion, backtracking state, and base cases",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-recursion-trees-graphs"
           },
           {
-            "id": "rt-skill-big-o-analysis",
-            "name": "Big O Analysis",
+            "id": "lc-tree-traversal",
+            "name": "Tree traversal and divide-and-conquer reasoning",
             "type": "procedure",
-            "module_id": "csphere-leetcode-runtime-plan"
+            "module_id": "csphere-leetcode-recursion-trees-graphs"
+          },
+          {
+            "id": "lc-graph-bfs-dfs",
+            "name": "Graph BFS/DFS, visited state, and shortest path basics",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-recursion-trees-graphs"
+          }
+        ]
+      },
+      {
+        "id": "csphere-leetcode-dynamic-programming",
+        "name": "Dynamic Programming",
+        "order": 4,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "lc-dp-state",
+            "name": "DP state definition and recurrence",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-dynamic-programming"
+          },
+          {
+            "id": "lc-dp-order",
+            "name": "DP traversal order, base cases, and transitions",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-dynamic-programming"
+          },
+          {
+            "id": "lc-dp-optimization",
+            "name": "Space optimization and memoization tradeoffs",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-dynamic-programming"
+          }
+        ]
+      },
+      {
+        "id": "csphere-leetcode-interview-readiness",
+        "name": "Interview Readiness",
+        "order": 5,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "lc-explain-approach",
+            "name": "Explain approach, correctness, and complexity",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-interview-readiness"
+          },
+          {
+            "id": "lc-debugging",
+            "name": "Debug with traces, edge cases, and invariant checks",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-interview-readiness"
+          },
+          {
+            "id": "lc-timed-practice",
+            "name": "Timed mock practice and post-solve error review",
+            "type": "procedure",
+            "module_id": "csphere-leetcode-interview-readiness"
           }
         ]
       }

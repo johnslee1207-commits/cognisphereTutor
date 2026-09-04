@@ -614,7 +614,333 @@
       },
       "not_exam_dump": true,
       "supplements_original_knowledge": true
-    }
+    },
+    "mastery_modules": [
+      {
+        "id": "csphere-aws_certification-cloud-foundations",
+        "name": "AWS Cloud Foundations",
+        "order": 0,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "aws-cloud-value-proposition",
+            "name": "Cloud value proposition and pay-as-you-go economics",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-cloud-foundations"
+          },
+          {
+            "id": "aws-global-infrastructure",
+            "name": "AWS Regions, Availability Zones, edge locations, and global reach",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-cloud-foundations"
+          },
+          {
+            "id": "aws-shared-responsibility",
+            "name": "Shared Responsibility Model and customer responsibilities",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-cloud-foundations"
+          },
+          {
+            "id": "aws-cloud-deployment-models",
+            "name": "Public, private, hybrid, and multi-cloud deployment models",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-cloud-foundations"
+          },
+          {
+            "id": "aws-migration-modernization",
+            "name": "Migration, modernization, and common cloud adoption drivers",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-cloud-foundations"
+          },
+          {
+            "id": "aws-well-architected-overview",
+            "name": "Well-Architected pillars as certification reasoning lenses",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-cloud-foundations"
+          }
+        ]
+      },
+      {
+        "id": "csphere-aws_certification-clf-cloud-concepts",
+        "name": "CLF-C02 Cloud Concepts",
+        "order": 1,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "aws-clf-cloud-concepts",
+            "name": "CLF-C02 cloud concepts and business value",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-cloud-concepts"
+          },
+          {
+            "id": "aws-clf-design-principles",
+            "name": "Cloud design principles: scalability, elasticity, agility, and high availability",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-cloud-concepts"
+          },
+          {
+            "id": "aws-clf-economies-scale",
+            "name": "Economies of scale and shift from capital expense to variable expense",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-cloud-concepts"
+          },
+          {
+            "id": "aws-clf-global-benefits",
+            "name": "Benefits of global reach, low latency, fault tolerance, and disaster recovery",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-cloud-concepts"
+          },
+          {
+            "id": "aws-clf-managed-services",
+            "name": "Managed services and the operational value of undifferentiated lifting",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-cloud-concepts"
+          },
+          {
+            "id": "aws-clf-well-architected-pillars",
+            "name": "Well-Architected pillars in Cloud Practitioner scenarios",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-cloud-concepts"
+          },
+          {
+            "id": "aws-clf-migration-value",
+            "name": "Business value of migration, modernization, and cloud adoption frameworks",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-cloud-concepts"
+          },
+          {
+            "id": "aws-clf-cloud-concepts-quiz",
+            "name": "Quick-check cloud concepts with certification-style answer elimination",
+            "type": "procedure",
+            "module_id": "csphere-aws_certification-clf-cloud-concepts"
+          }
+        ]
+      },
+      {
+        "id": "csphere-aws_certification-clf-security-compliance",
+        "name": "CLF-C02 Security and Compliance",
+        "order": 2,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "aws-clf-security-compliance",
+            "name": "CLF-C02 security, compliance, IAM, and shared responsibility",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-security-compliance"
+          },
+          {
+            "id": "aws-iam-users-groups-roles",
+            "name": "IAM users, groups, roles, policies, and least privilege",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-security-compliance"
+          },
+          {
+            "id": "aws-root-mfa-best-practices",
+            "name": "Root account protection, MFA, and access key hygiene",
+            "type": "procedure",
+            "module_id": "csphere-aws_certification-clf-security-compliance"
+          },
+          {
+            "id": "aws-security-services",
+            "name": "Security Hub, GuardDuty, Inspector, WAF, Shield, and Macie use cases",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-security-compliance"
+          },
+          {
+            "id": "aws-encryption-kms",
+            "name": "Encryption at rest and in transit with KMS and managed keys",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-security-compliance"
+          },
+          {
+            "id": "aws-compliance-artifacts",
+            "name": "AWS Artifact, compliance programs, and customer audit responsibilities",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-security-compliance"
+          },
+          {
+            "id": "aws-monitoring-audit",
+            "name": "CloudTrail, CloudWatch, Config, and audit evidence basics",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-security-compliance"
+          },
+          {
+            "id": "aws-security-quiz",
+            "name": "Security scenario quick quiz and misconception review",
+            "type": "procedure",
+            "module_id": "csphere-aws_certification-clf-security-compliance"
+          }
+        ]
+      },
+      {
+        "id": "csphere-aws_certification-clf-technology-services",
+        "name": "CLF-C02 Technology Services",
+        "order": 3,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "aws-clf-technology-services",
+            "name": "CLF-C02 core technology services: compute, storage, database, network",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          },
+          {
+            "id": "aws-compute-ec2",
+            "name": "EC2 instances, AMIs, instance families, and basic compute choices",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          },
+          {
+            "id": "aws-compute-lambda-containers",
+            "name": "Lambda, ECS, EKS, and container/serverless tradeoffs",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          },
+          {
+            "id": "aws-storage-s3",
+            "name": "S3 buckets, storage classes, lifecycle, versioning, and durability",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          },
+          {
+            "id": "aws-storage-ebs-efs",
+            "name": "EBS, EFS, FSx, and block/file storage selection",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          },
+          {
+            "id": "aws-databases-rds-dynamodb",
+            "name": "RDS, Aurora, DynamoDB, ElastiCache, and database fit",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          },
+          {
+            "id": "aws-clf-vpc-networking",
+            "name": "VPC, subnets, security groups, route tables, and connectivity basics",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          },
+          {
+            "id": "aws-network-edge",
+            "name": "Route 53, CloudFront, Global Accelerator, and edge networking",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          },
+          {
+            "id": "aws-integration-messaging",
+            "name": "SQS, SNS, EventBridge, Step Functions, and decoupled systems",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          },
+          {
+            "id": "aws-clf-monitoring",
+            "name": "CloudWatch, CloudTrail, Trusted Advisor, and basic operations",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          },
+          {
+            "id": "aws-ai-analytics-overview",
+            "name": "Analytics, machine learning, and AI services at Cloud Practitioner depth",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          },
+          {
+            "id": "aws-technology-services-quiz",
+            "name": "Service-selection quick quiz using scenario clues",
+            "type": "procedure",
+            "module_id": "csphere-aws_certification-clf-technology-services"
+          }
+        ]
+      },
+      {
+        "id": "csphere-aws_certification-clf-billing-cost",
+        "name": "CLF-C02 Billing, Pricing, and Support",
+        "order": 4,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "aws-clf-billing-pricing",
+            "name": "CLF-C02 billing, pricing, support, and cost tools",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-billing-cost"
+          },
+          {
+            "id": "aws-pricing-models",
+            "name": "On-Demand, Reserved Instances, Savings Plans, Spot, and free tier",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-billing-cost"
+          },
+          {
+            "id": "aws-cost-tools",
+            "name": "Cost Explorer, Budgets, Pricing Calculator, CUR, and cost allocation tags",
+            "type": "procedure",
+            "module_id": "csphere-aws_certification-clf-billing-cost"
+          },
+          {
+            "id": "aws-support-plans",
+            "name": "AWS Support plans, Trusted Advisor checks, and account help paths",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-billing-cost"
+          },
+          {
+            "id": "aws-organizations-billing",
+            "name": "Organizations, consolidated billing, SCPs, and multi-account basics",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-clf-billing-cost"
+          },
+          {
+            "id": "aws-cost-quiz",
+            "name": "Billing and cost scenario quick quiz",
+            "type": "procedure",
+            "module_id": "csphere-aws_certification-clf-billing-cost"
+          }
+        ]
+      },
+      {
+        "id": "csphere-aws_certification-associate-preview-exam-practice",
+        "name": "Associate Preview and Exam Practice",
+        "order": 5,
+        "pass_threshold": 0.7,
+        "knowledge_points": [
+          {
+            "id": "aws-associate-paths-overview",
+            "name": "Choose next Associate path: Solutions Architect, Developer, or SysOps",
+            "type": "concept",
+            "module_id": "csphere-aws_certification-associate-preview-exam-practice"
+          },
+          {
+            "id": "aws-saa-resilient-architectures",
+            "name": "Preview resilient architectures with Multi-AZ, load balancing, and decoupling",
+            "type": "procedure",
+            "module_id": "csphere-aws_certification-associate-preview-exam-practice"
+          },
+          {
+            "id": "aws-saa-secure-networked-access",
+            "name": "Preview secure networked access with IAM, encryption, and VPC boundaries",
+            "type": "procedure",
+            "module_id": "csphere-aws_certification-associate-preview-exam-practice"
+          },
+          {
+            "id": "aws-exam-domain-map",
+            "name": "Map questions to official exam domains before answering",
+            "type": "procedure",
+            "module_id": "csphere-aws_certification-associate-preview-exam-practice"
+          },
+          {
+            "id": "aws-exam-scenario-elimination",
+            "name": "Use scenario clues and eliminate unsafe or overbuilt answers",
+            "type": "procedure",
+            "module_id": "csphere-aws_certification-associate-preview-exam-practice"
+          },
+          {
+            "id": "aws-exam-review-loop",
+            "name": "Use quick quizzes, error memory, mock review, and source-grounded remediation",
+            "type": "procedure",
+            "module_id": "csphere-aws_certification-associate-preview-exam-practice"
+          }
+        ]
+      }
+    ]
   },
   "safety": {
     "no_answer_keys": true,
