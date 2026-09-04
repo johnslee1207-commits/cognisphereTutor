@@ -1405,6 +1405,430 @@ def exam_deepening_readiness_checkpoints() -> list[dict]:
     ]
 
 
+def exam_expansion_lesson_cards() -> list[dict]:
+    return [
+        {
+            "id": "cec-lesson-entrance-calculator-free-arithmetic",
+            "title": "Calculator-free arithmetic habits",
+            "summary": "Entrance practice should build reliable mental arithmetic and written setup habits.",
+            "body": (
+                "Teach arithmetic as controlled shortcuts, not guessing. Break numbers "
+                "into friendly parts, estimate first, and keep one written line for the "
+                "relationship. For percentages, convert to a multiplier or a known fraction. "
+                "For rates, write units so minutes, hours, items, and distance do not blur."
+            ),
+            "teaching_points": [
+                "Break 48 x 25% into one fourth of 48.",
+                "Use 10% and 1% anchors for awkward percentages.",
+                "For rate, write amount per unit before scaling.",
+                "A fast wrong answer is worse than a slower stable method.",
+            ],
+            "quick_check_prompts": ["Find 15% of 80 without a calculator. Name your shortcut."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-reading-timed-scan",
+            "title": "Timed reading scan",
+            "summary": "Timed reading improves when the learner scans for task words before reading every choice.",
+            "body": (
+                "Teach a timed scan: read the question stem first, circle the task word "
+                "mentally, then read the passage for the controlling phrase. For detail "
+                "questions, do not summarize the whole passage. For main-purpose questions, "
+                "avoid choices that focus on only one detail."
+            ),
+            "teaching_points": [
+                "Read the task before the answer choices.",
+                "Task words include main purpose, according to the passage, except, best supported, and first.",
+                "Detail questions need a phrase; main idea questions need the whole passage purpose.",
+                "Eliminate answers that add outside assumptions.",
+            ],
+            "quick_check_prompts": ["What should you identify before reading answer choices in a timed reading item?"],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-diagram-simplification",
+            "title": "Simplify visual diagrams before solving",
+            "summary": "Mechanical and spatial items become easier when the learner redraws the essential relationship mentally.",
+            "body": (
+                "Teach diagram simplification. Ignore decorative details and identify only "
+                "the relation that matters: pivot and distance, gear contact count, belt "
+                "crossing, fold line, or marked feature. The learner should state that "
+                "relation before selecting an answer."
+            ),
+            "teaching_points": [
+                "Lever: pivot, load, effort, and distances.",
+                "Gear train: count contacts and reversals.",
+                "Belt: open or crossed.",
+                "Fold: fold line and layer count.",
+                "Rotation/reflection: one asymmetric feature.",
+            ],
+            "quick_check_prompts": ["In a gear diagram, what is the first thing to count?"],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-mock-review-method",
+            "title": "Mock review method",
+            "summary": "A mock test is useful only if review turns misses into specific repair rules.",
+            "body": (
+                "Teach mock review in four buckets: confident wrong, uncertain wrong, slow "
+                "correct, and fast correct. Confident wrong answers get reviewed first "
+                "because they reveal false rules. Slow correct answers become pacing drills. "
+                "Fast correct answers are maintained with light review."
+            ),
+            "teaching_points": [
+                "Confident wrong means misconception.",
+                "Uncertain wrong means missing method or weak evidence.",
+                "Slow correct means method works but needs speed.",
+                "Fast correct means maintenance, not heavy review.",
+            ],
+            "quick_check_prompts": ["Why should confident wrong answers be reviewed before uncertain wrong answers?"],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-stamina-and-break-plan",
+            "title": "Exam stamina and break plan",
+            "summary": "Readiness includes attention management across a long aptitude session.",
+            "body": (
+                "Teach stamina as a pacing skill. The learner needs a repeatable rhythm: "
+                "solve easy items cleanly, mark uncertain items, return if time allows, and "
+                "reset attention between sections. Practice should include short focus blocks "
+                "and one longer mixed block as the date approaches."
+            ),
+            "teaching_points": [
+                "Attention fades before knowledge disappears.",
+                "A mark-and-return rule protects later easy points.",
+                "Short reset breaths can prevent a cascade of careless errors.",
+                "Final practice should include at least one longer mixed block.",
+            ],
+            "quick_check_prompts": ["What is one sign that a miss was caused by stamina rather than missing knowledge?"],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-section-switching",
+            "title": "Switching between exam sections",
+            "summary": "Mixed tests require the learner to change methods quickly when the section changes.",
+            "body": (
+                "Teach section switching as a cue-response habit. A passage cues evidence "
+                "search. A sequence cues pattern tests. A gear cues reversal count. A rate "
+                "cues units. A fold cues reverse unfolding. Mixed practice should train the "
+                "learner to name the cue in the first few seconds."
+            ),
+            "teaching_points": [
+                "Cue first, method second, answer third.",
+                "Do not carry a math-solving habit into a reading evidence question.",
+                "Do not carry a passage-summary habit into a visual tracing item.",
+                "Use the first five seconds to classify the item.",
+            ],
+            "quick_check_prompts": ["What cue tells you to use reverse unfolding?"],
+            "source_ref_ids": SOURCE_REFS,
+        },
+    ]
+
+
+def exam_expansion_practice_blueprints() -> list[dict]:
+    return [
+        {
+            "id": "cec-practice-entrance-full-section-mock",
+            "title": "Entrance Exam full-section mock rehearsal",
+            "summary": "Generate a longer mixed section rehearsal with pacing, confidence marks, and section-level feedback.",
+            "practice_modes": ["timed section mock", "confidence mark", "section breakdown", "repair prescription"],
+            "item_format_mix": ["multiple_choice", "numeric_fill", "short_evidence_answer", "visual_reasoning_prompt"],
+            "generation_rules": [
+                "Use only original items and do not imply official exam replication.",
+                "Balance math/numerical, reading, mechanical, and spatial items.",
+                "Require a confidence mark for each response.",
+                "Review confident-wrong and repeated-error items first.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-practice-entrance-section-switching-drill",
+            "title": "Entrance Exam section-switching drill",
+            "summary": "Generate a rapid mixed drill where each item starts with section classification.",
+            "practice_modes": ["classify", "choose method", "answer", "error label"],
+            "generation_rules": [
+                "Ask the learner to classify the item before answering.",
+                "Rotate item types every question.",
+                "If classification is wrong, remediate before grading the final answer.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-practice-entrance-reading-mechanical-pairing",
+            "title": "Reading and mechanical paired drill",
+            "summary": "Pair one reading item with one visual reasoning item to train attention shifting.",
+            "practice_modes": ["reading evidence", "visual trace", "compare error labels"],
+            "generation_rules": [
+                "Use one qualifier-heavy passage and one mechanical/spatial trace.",
+                "After grading, ask which item required evidence and which required tracing.",
+                "Keep the paired drill short enough to fit after a mini-lesson.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+    ]
+
+
+def exam_expansion_scenario_cards() -> list[dict]:
+    return [
+        {
+            "id": "cec-scenario-entrance-percent-anchor",
+            "title": "Mental math: percent anchor",
+            "summary": "Original calculator-free percent item.",
+            "response_format": "numeric_fill",
+            "scenario": ["What is 15% of 80?"],
+            "expected_answer": "12",
+            "correct_rationale": ["10% of 80 is 8 and 5% is 4, so 15% is 12."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-fraction-of-total",
+            "title": "Fraction of total",
+            "summary": "Original fraction computation item.",
+            "response_format": "multiple_choice",
+            "scenario": ["A box has 48 parts. One fourth are marked for review. How many are marked?"],
+            "choices": ["A) 8", "B) 10", "C) 12", "D) 16"],
+            "answer": "C",
+            "correct_rationale": ["One fourth of 48 is 12."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-average-score",
+            "title": "Average: practice scores",
+            "summary": "Original mean calculation item.",
+            "response_format": "numeric_fill",
+            "scenario": ["Practice scores are 70, 80, and 90. What is the average?"],
+            "expected_answer": "80",
+            "correct_rationale": ["70 + 80 + 90 = 240, and 240/3 = 80."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-backsolve-choice",
+            "title": "Algebra: backsolve when stuck",
+            "summary": "Original item where testing choices is efficient.",
+            "response_format": "multiple_choice",
+            "scenario": ["A number doubled and then increased by 6 equals 34. What is the number?"],
+            "choices": ["A) 10", "B) 12", "C) 14", "D) 20"],
+            "answer": "C",
+            "correct_rationale": ["2 x 14 + 6 = 34."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-pattern-alternating-letters",
+            "title": "Pattern: alternating numbers",
+            "summary": "Original alternating sequence item.",
+            "response_format": "multiple_choice",
+            "scenario": ["Find the next number: 8, 3, 10, 6, 12, 9, ?"],
+            "choices": ["A) 11", "B) 13", "C) 14", "D) 18"],
+            "answer": "C",
+            "correct_rationale": ["Odd positions are 8, 10, 12, so next odd-position number is 14."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-table-change",
+            "title": "Table reasoning: greatest change",
+            "summary": "Original table-comparison item.",
+            "response_format": "multiple_choice",
+            "scenario": ["Day 1: 12 items, Day 2: 18, Day 3: 21, Day 4: 29. Which day-to-day increase is greatest?"],
+            "choices": ["A) Day 1 to Day 2", "B) Day 2 to Day 3", "C) Day 3 to Day 4", "D) All equal"],
+            "answer": "C",
+            "correct_rationale": ["Increases are +6, +3, and +8; the greatest is Day 3 to Day 4."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-reading-detail-id",
+            "title": "Reading detail: ID requirement",
+            "summary": "Original reading detail item.",
+            "response_format": "multiple_choice",
+            "scenario": ["Passage: Applicants must bring a current photo ID. Expired IDs will not be accepted. Which ID is acceptable?"],
+            "choices": ["A) Expired photo ID", "B) Current photo ID", "C) Library card without photo", "D) No ID if the applicant knows their number"],
+            "answer": "B",
+            "correct_rationale": ["The passage says current photo ID is required."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-reading-main-vs-detail",
+            "title": "Reading: main idea versus detail",
+            "summary": "Original reading classification item.",
+            "response_format": "multiple_choice",
+            "scenario": ["A question asks, 'What is the passage mainly about?' What should you look for?"],
+            "choices": ["A) One isolated number", "B) The overall purpose", "C) The longest word", "D) A choice with trade vocabulary"],
+            "answer": "B",
+            "correct_rationale": ["Mainly about asks for the overall purpose, not one detail."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-reading-unless",
+            "title": "Reading qualifier: unless",
+            "summary": "Original qualifier item.",
+            "response_format": "multiple_choice",
+            "scenario": ["Passage: Applicants will receive a confirmation email unless their application is incomplete. Who may not receive confirmation?"],
+            "choices": ["A) Applicants with complete applications", "B) Applicants with incomplete applications", "C) Everyone who applies", "D) Only applicants who arrive early"],
+            "answer": "B",
+            "correct_rationale": ["Unless marks the exception: incomplete applications may not receive confirmation."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-lever-load-distance",
+            "title": "Lever: load farther from pivot",
+            "summary": "Original lever reasoning item.",
+            "response_format": "multiple_choice",
+            "scenario": ["On a lever, the load is moved farther from the pivot while effort is applied at the same point. What usually happens to required effort?"],
+            "choices": ["A) It decreases", "B) It increases", "C) It becomes zero", "D) Distance from pivot never matters"],
+            "answer": "B",
+            "correct_rationale": ["Moving the load farther from the pivot increases its turning effect, so more effort is usually required."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-gear-size-speed",
+            "title": "Gear size and speed",
+            "summary": "Original gear-speed intuition item.",
+            "response_format": "true_false",
+            "scenario": ["True or false: When a small gear drives a larger gear, the larger gear usually turns more slowly."],
+            "answer": "True",
+            "correct_rationale": ["The larger gear has more teeth/circumference, so it generally rotates more slowly for each turn of the smaller gear."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-pulley-fixed",
+            "title": "Fixed pulley: direction change",
+            "summary": "Original pulley concept item.",
+            "response_format": "multiple_choice",
+            "scenario": ["A single fixed pulley mainly helps by changing what?"],
+            "choices": ["A) Direction of pull", "B) Weight into zero", "C) Rope into metal", "D) Time into distance"],
+            "answer": "A",
+            "correct_rationale": ["A fixed pulley mainly changes the direction of the pulling force."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-spatial-rotate-arrow",
+            "title": "Spatial: rotate arrow",
+            "summary": "Original rotation item.",
+            "response_format": "numeric_fill",
+            "scenario": ["An arrow points up. After two 90-degree clockwise turns, which direction does it point?"],
+            "expected_answer": "down",
+            "correct_rationale": ["Up rotated 90 degrees clockwise points right; another 90 degrees points down."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-fold-one-horizontal",
+            "title": "Paper folding: one horizontal fold",
+            "summary": "Original fold-count item.",
+            "response_format": "multiple_choice",
+            "scenario": ["A paper is folded once horizontally. A hole is punched away from the fold line. How many holes after unfolding?"],
+            "choices": ["A) 1", "B) 2", "C) 3", "D) 4"],
+            "answer": "B",
+            "correct_rationale": ["One fold creates two layers, so the off-fold-line hole appears in two mirrored positions."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-section-classify-passage",
+            "title": "Section triage: passage item",
+            "summary": "Original classification item.",
+            "response_format": "multiple_choice",
+            "scenario": ["The item begins with a short workplace notice and asks what must happen first. Which method should you use first?"],
+            "choices": ["A) Gear reversal count", "B) Passage evidence scan", "C) Percent multiplier", "D) Paper unfolding"],
+            "answer": "B",
+            "correct_rationale": ["A workplace notice with must/first language is a reading evidence item."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-section-classify-fold",
+            "title": "Section triage: fold item",
+            "summary": "Original classification item for spatial reasoning.",
+            "response_format": "multiple_choice",
+            "scenario": ["The item describes folding paper twice and punching one hole. Which method should you use?"],
+            "choices": ["A) Reverse unfolding", "B) Percent increase", "C) Main idea summary", "D) Combined work rate"],
+            "answer": "A",
+            "correct_rationale": ["Paper folding should be solved by unfolding in reverse order."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-confidence-slow-correct",
+            "title": "Mock review: slow correct",
+            "summary": "Original mock-review item.",
+            "response_format": "multiple_choice",
+            "scenario": ["You answered a ratio item correctly but needed four minutes. What should the review label be?"],
+            "choices": ["A) Stable maintenance", "B) Speed/pacing repair", "C) Reading qualifier trap", "D) Visual jump"],
+            "answer": "B",
+            "correct_rationale": ["Correct but too slow means the method works but needs speed or shortcut practice."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-stamina-cascade",
+            "title": "Stamina: careless cascade",
+            "summary": "Original stamina-awareness item.",
+            "response_format": "multiple_choice",
+            "scenario": ["After 40 minutes, you miss three easy arithmetic items by copying numbers incorrectly. What is the likely training issue?"],
+            "choices": ["A) Stamina or attention reset", "B) Gear reversal", "C) Contractor law", "D) Paper-folding layer count"],
+            "answer": "A",
+            "correct_rationale": ["Easy copying misses after sustained work suggest attention/stamina, not missing arithmetic concept alone."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+    ]
+
+
+def exam_expansion_flashcard_decks() -> list[dict]:
+    return [
+        {
+            "id": "cec-flashcards-entrance-calculator-free",
+            "title": "Calculator-free arithmetic cues",
+            "summary": "Fast cues for no-calculator Entrance Exam practice.",
+            "cards": [
+                "25% means one fourth.",
+                "10% then 5% builds 15%.",
+                "Estimate before exact arithmetic.",
+                "Rate means amount per unit.",
+                "Average means total divided by count.",
+                "Backsolve choices when algebra is slow.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-flashcards-entrance-mock-review",
+            "title": "Mock review buckets",
+            "summary": "Cards for converting mock results into study actions.",
+            "cards": [
+                "Confident wrong: misconception, review first.",
+                "Uncertain wrong: missing method or evidence.",
+                "Slow correct: speed drill.",
+                "Fast correct: light maintenance.",
+                "Repeated miss: next session warmup.",
+                "Skipped too late: pacing rule repair.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+    ]
+
+
+def exam_expansion_readiness_checkpoints() -> list[dict]:
+    return [
+        {
+            "id": "cec-checkpoint-entrance-full-mock-readiness",
+            "title": "Entrance Exam full-mock readiness checkpoint",
+            "summary": "Use after the learner has completed focused drills and at least one half mock.",
+            "checkpoint_prompts": [
+                "Can the learner maintain accuracy across section switches?",
+                "Can the learner explain the top two repeated misses and repair rules?",
+                "Can the learner finish a longer mixed block without attention collapse?",
+                "Can the learner distinguish speed issues from concept issues?",
+                "Are PEF/document tasks tracked separately from test-content practice?",
+            ],
+            "mastery_evidence": [
+                "at least one completed half mock with section breakdown",
+                "no severe repeated miss across two consecutive sessions",
+                "written pacing rule used during mixed practice",
+                "PEF/document checklist is current if applicable",
+            ],
+            "remediation": [
+                "If section switching fails, use rapid triage drills.",
+                "If stamina fails, use shorter mixed blocks with planned resets.",
+                "If confident-wrong persists, require method explanation before choices.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        }
+    ]
+
+
 def provenance_refs() -> list[dict]:
     return [
         {
@@ -1428,21 +1852,36 @@ def main() -> None:
         "exam_deepening_lesson_cards": append_unique(
             knowledge, "lesson_cards", exam_deepening_lesson_cards()
         ),
+        "exam_expansion_lesson_cards": append_unique(
+            knowledge, "lesson_cards", exam_expansion_lesson_cards()
+        ),
         "practice_blueprints": append_unique(knowledge, "practice_blueprints", practice_blueprints()),
         "exam_deepening_practice_blueprints": append_unique(
             knowledge, "practice_blueprints", exam_deepening_practice_blueprints()
+        ),
+        "exam_expansion_practice_blueprints": append_unique(
+            knowledge, "practice_blueprints", exam_expansion_practice_blueprints()
         ),
         "scenario_cards": append_unique(knowledge, "scenario_cards", scenario_cards()),
         "exam_deepening_scenario_cards": append_unique(
             knowledge, "scenario_cards", exam_deepening_scenario_cards()
         ),
+        "exam_expansion_scenario_cards": append_unique(
+            knowledge, "scenario_cards", exam_expansion_scenario_cards()
+        ),
         "flashcard_decks": append_unique(knowledge, "flashcard_decks", flashcard_decks()),
         "exam_deepening_flashcard_decks": append_unique(
             knowledge, "flashcard_decks", exam_deepening_flashcard_decks()
         ),
+        "exam_expansion_flashcard_decks": append_unique(
+            knowledge, "flashcard_decks", exam_expansion_flashcard_decks()
+        ),
         "readiness_checkpoints": append_unique(knowledge, "readiness_checkpoints", readiness_checkpoints()),
         "exam_deepening_readiness_checkpoints": append_unique(
             knowledge, "readiness_checkpoints", exam_deepening_readiness_checkpoints()
+        ),
+        "exam_expansion_readiness_checkpoints": append_unique(
+            knowledge, "readiness_checkpoints", exam_expansion_readiness_checkpoints()
         ),
         "learning_activity_templates": append_unique(
             knowledge, "learning_activity_templates", learning_activity_templates()

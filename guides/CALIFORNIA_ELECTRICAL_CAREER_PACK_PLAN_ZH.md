@@ -16,10 +16,10 @@ cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_ca
 csphere-california_electrical_career
 ```
 
-当前版包含 6 个模块、39 个学习目标，并补充了 80 张可用于 Tutor
-mini-lesson 的 lesson cards、22 个 practice blueprint、13 个 learning
-activity templates、10 条 study sequences、72 张 scenario cards、19 组
-flashcard decks、9 个 readiness checkpoints 和 8 类 error taxonomy：
+当前版包含 6 个模块、39 个学习目标，并补充了 86 张可用于 Tutor
+mini-lesson 的 lesson cards、25 个 practice blueprint、13 个 learning
+activity templates、10 条 study sequences、90 张 scenario cards、21 组
+flashcard decks、10 个 readiness checkpoints 和 8 类 error taxonomy：
 
 1. Career Orientation
 2. Shared Electrical Foundations
@@ -42,6 +42,9 @@ flashcard decks、9 个 readiness checkpoints 和 8 类 error taxonomy：
   rotation-vs-reflection、reverse paper unfolding
 - Entrance Exam exam-deepening：section triage、numerical computation speed、
   constraint solving、main idea/detail/inference reading、final-review priority
+- Entrance Exam 第三批 exam expansion：calculator-free arithmetic、timed
+  reading scan、diagram simplification、mock review method、stamina/break plan、
+  section switching
 - GE eligibility、GE blueprint、NEC navigation、GE installation
 - C-10 blueprint、estimating、safety
 - Law & Business blueprint 和 contractor qualifying experience
@@ -69,6 +72,9 @@ flashcard decks、9 个 readiness checkpoints 和 8 类 error taxonomy：
 - Entrance Exam section diagnostic matrix
 - Entrance Exam half mock
 - Entrance visual reasoning bank
+- Entrance Exam full-section mock rehearsal
+- Entrance Exam section-switching drill
+- Reading and mechanical paired drill
 
 新增 learning activity templates 覆盖：
 
@@ -102,6 +108,9 @@ flashcard decks、9 个 readiness checkpoints 和 8 类 error taxonomy：
   mechanical/spatial visual reasoning 原创场景卡
 - Entrance Exam half-mock、confidence calibration、section triage、open/crossed
   belt、wheel radius、unit rate、combined work rate、constraint solving 原创题卡
+- Entrance Exam calculator-free percent/average/backsolve、reading unless/main
+  detail、lever load distance、fixed pulley、gear speed、fold line、stamina
+  cascade、mock review buckets 原创题卡
 - electrical foundations、GE navigation、Law & Business scenario cues、apprenticeship math、apprenticeship mechanical、apprenticeship spatial/reading 闪卡组
 - foundations、apprenticeship entry sprint、GE navigation、C-10/Law readiness checkpoints
 - topic classification、unit/setup、safety sequencing、documentation boundary、memorization-over-navigation 错因分类
