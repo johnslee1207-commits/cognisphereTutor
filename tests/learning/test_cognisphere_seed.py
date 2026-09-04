@@ -80,6 +80,46 @@ def test_ability_radar_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> N
     assert len(selected["weak_areas"]) >= 1
 
 
+def test_ability_radar_path_detail_keeps_weak_domains_scoped(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
+
+    store_root = tmp_path / "learning"
+    monkeypatch.setattr(
+        cognisphere_learning,
+        "_service",
+        lambda: __import__(
+            "cognispheretutor.learning.service", fromlist=["LearningService"]
+        ).LearningService(LearningStore(store_root)),
+    )
+    app = FastAPI()
+    app.include_router(cognisphere_learning.router, prefix="/api/v1/learning/cognisphere")
+    client = TestClient(app)
+
+    for domain in ("aws_certification", "california_electrical_career"):
+        seeded = client.post(
+            "/api/v1/learning/cognisphere/import-and-seed",
+            json={"domain": domain, "seed_mastery_path": True},
+        )
+        assert seeded.status_code == 200, seeded.text
+
+    radar = client.get(
+        "/api/v1/learning/cognisphere/ability-radar",
+        params={
+            "path_id": "csphere-california_electrical_career",
+            "include_skill_graph": False,
+        },
+    )
+    assert radar.status_code == 200, radar.text
+    body = radar.json()
+    assert body["selected"]["path_id"] == "csphere-california_electrical_career"
+    assert body["weak_domains"]
+    assert {
+        item["path_id"] for item in body["weak_domains"]
+    } == {"csphere-california_electrical_career"}
+
+
 def test_seed_payload_requires_domain() -> None:
     from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
 

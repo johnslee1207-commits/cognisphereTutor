@@ -177,13 +177,17 @@ def build_ability_radar(
             include_skill_graph=include_skill_graph,
         )
 
-    weak_domains = sorted(
-        [d for d in domains if int(d.get("mastered_pct") or 0) < 100],
-        key=lambda d: (
-            int(d.get("mastered_pct") or 0),
-            -(int(d.get("weak_count") or 0)),
-        ),
-    )[:weak_limit]
+    weak_domain_candidates = [d for d in domains if int(d.get("mastered_pct") or 0) < 100]
+    if path_id:
+        weak_domains = [d for d in weak_domain_candidates if d.get("path_id") == path_id]
+    else:
+        weak_domains = sorted(
+            weak_domain_candidates,
+            key=lambda d: (
+                int(d.get("mastered_pct") or 0),
+                -(int(d.get("weak_count") or 0)),
+            ),
+        )[:weak_limit]
 
     return {
         "ok": True,
