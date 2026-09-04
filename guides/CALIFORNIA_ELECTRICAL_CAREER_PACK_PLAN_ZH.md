@@ -16,9 +16,9 @@ cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_ca
 csphere-california_electrical_career
 ```
 
-当前版包含 6 个模块、39 个学习目标，并补充了 86 张可用于 Tutor
-mini-lesson 的 lesson cards、25 个 practice blueprint、13 个 learning
-activity templates、10 条 study sequences、90 张 scenario cards、21 组
+当前版包含 6 个模块、39 个学习目标，并补充了 91 张可用于 Tutor
+mini-lesson 的 lesson cards、27 个 practice blueprint、17 个 learning
+activity templates、11 条 study sequences、98 张 scenario cards、21 组
 flashcard decks、10 个 readiness checkpoints 和 8 类 error taxonomy：
 
 1. Career Orientation
@@ -45,6 +45,8 @@ flashcard decks、10 个 readiness checkpoints 和 8 类 error taxonomy：
 - Entrance Exam 第三批 exam expansion：calculator-free arithmetic、timed
   reading scan、diagram simplification、mock review method、stamina/break plan、
   section switching
+- Entrance Exam 学习方法：spaced review、interleaving、confidence calibration、
+  error journal、educated guessing and elimination
 - GE eligibility、GE blueprint、NEC navigation、GE installation
 - C-10 blueprint、estimating、safety
 - Law & Business blueprint 和 contractor qualifying experience
@@ -75,6 +77,8 @@ flashcard decks、10 个 readiness checkpoints 和 8 类 error taxonomy：
 - Entrance Exam full-section mock rehearsal
 - Entrance Exam section-switching drill
 - Reading and mechanical paired drill
+- Entrance Exam adaptive weak-area router
+- Entrance Exam confidence calibration set
 
 新增 learning activity templates 覆盖：
 
@@ -91,6 +95,10 @@ flashcard decks、10 个 readiness checkpoints 和 8 类 error taxonomy：
 - Mechanical visual trace board
 - Adaptive retest loop
 - Final-week mock block
+- Spaced error retest
+- Confidence-marked quick quiz
+- Interleaved three-pack
+- Exam-day simulation
 
 新增连续学习与个性化复习数据：
 
@@ -99,6 +107,7 @@ flashcard decks、10 个 readiness checkpoints 和 8 类 error taxonomy：
 - Apprenticeship four-week sprint
 - Entrance Exam 10-day bootcamp
 - Entrance Exam daily maintenance
+- Entrance Exam adaptive review week
 - California General Electrician core path
 - C-10 contractor trade path
 - Contractor Law and Business scenario path

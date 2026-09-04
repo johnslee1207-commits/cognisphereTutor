@@ -2020,6 +2020,106 @@
           "gan.aptitude_test.2026-09-03",
           "cceti.gan_how_to_apply.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-lesson-entrance-spaced-review",
+        "title": "Spaced review for Entrance Exam retention",
+        "summary": "Retesting a weak skill after a delay is more useful than rereading the same explanation immediately.",
+        "body": "Teach spaced review as a schedule: repair the miss today, retest it tomorrow, then mix it again several days later. The learner should not treat one correct replacement item as permanent mastery. A skill becomes stable when it survives a delay and appears correctly inside a mixed set.",
+        "teaching_points": [
+          "Immediate repair checks whether the explanation made sense.",
+          "Next-day retest checks whether the method stuck.",
+          "Mixed-set retest checks whether the learner can recognize the skill without a label.",
+          "Repeated misses should become the next warmup."
+        ],
+        "quick_check_prompts": [
+          "Why is a next-day retest stronger evidence than getting one replacement question right immediately?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-entrance-interleaving",
+        "title": "Interleaving: mix sections after method accuracy",
+        "summary": "Mixed practice should begin after the learner can solve each method in isolation.",
+        "body": "Teach interleaving as a second-stage practice method. First learn a method in a focused drill. Then mix it with nearby methods so the learner must recognize which tool to use. Do not start with a long mixed set if basic math, reading evidence, or visual tracing is still unstable.",
+        "teaching_points": [
+          "Focused drills build the method.",
+          "Interleaving builds recognition.",
+          "Mixed practice exposes section-switching errors.",
+          "If mixed practice collapses, return to the weakest focused method."
+        ],
+        "quick_check_prompts": [
+          "What is the difference between focused practice and interleaved practice?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-entrance-confidence-calibration",
+        "title": "Confidence calibration",
+        "summary": "Learners should track confidence because confident wrong answers reveal hidden misconceptions.",
+        "body": "Teach each response as answer plus confidence: high, medium, or low. High-confidence wrong answers are reviewed first because the learner's internal rule is wrong. Low-confidence correct answers need reinforcement. High-confidence correct answers can move to spaced maintenance.",
+        "teaching_points": [
+          "Correct with low confidence is still fragile.",
+          "Wrong with high confidence is the highest-priority review bucket.",
+          "Skipped items may be good pacing, not failure.",
+          "Confidence data helps Tutor choose the next lesson or drill."
+        ],
+        "quick_check_prompts": [
+          "Which should be reviewed first: wrong with high confidence or wrong with low confidence?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-entrance-error-journal",
+        "title": "Entrance Exam error journal",
+        "summary": "An error journal turns wrong answers into specific future practice instead of vague discouragement.",
+        "body": "Teach a lightweight journal entry: section, item cue, selected method, error label, repair rule, and retest date. The journal should be short enough to use after every quick quiz. The goal is not paperwork; the goal is to make repeated patterns impossible to ignore.",
+        "teaching_points": [
+          "Write the section first.",
+          "Name the item cue that should have triggered the method.",
+          "Name one repair rule.",
+          "Schedule one retest rather than rereading everything."
+        ],
+        "quick_check_prompts": [
+          "What are the two most important fields in an Entrance Exam error journal?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-lesson-entrance-guessing-and-elimination",
+        "title": "Elimination and educated guessing",
+        "summary": "When choices are present, elimination should be disciplined and tied to evidence or constraints.",
+        "body": "Teach educated guessing as a fallback after method work. Eliminate choices that violate units, passage evidence, direction tracing, or rough estimates. If two choices remain, choose the better-supported one, mark the uncertainty, and move on if pacing matters.",
+        "teaching_points": [
+          "Eliminate impossible units or magnitudes first.",
+          "Reading choices must match passage evidence.",
+          "Visual choices must match the traced feature or direction.",
+          "A marked guess is better than losing time on several later easy items."
+        ],
+        "quick_check_prompts": [
+          "Name one reason a choice can be eliminated before full calculation."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
       }
     ],
     "practice_blueprints": [
@@ -2581,6 +2681,50 @@
           "gan.aptitude_test.2026-09-03",
           "cceti.gan_how_to_apply.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-practice-entrance-adaptive-weak-area-router",
+        "title": "Entrance Exam adaptive weak-area router",
+        "summary": "Route the next drill from recent correctness, confidence, speed, and error labels.",
+        "practice_modes": [
+          "diagnose",
+          "rank weak areas",
+          "assign drill",
+          "retest"
+        ],
+        "routing_rules": [
+          "High-confidence wrong becomes misconception repair.",
+          "Low-confidence correct becomes reinforcement.",
+          "Slow correct becomes speed drill.",
+          "Repeated section misses become the next session warmup.",
+          "Two consecutive visual jumps route to visual trace board."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-practice-entrance-confidence-calibration-set",
+        "title": "Entrance Exam confidence calibration set",
+        "summary": "Generate mixed questions that require answer and confidence marking.",
+        "practice_modes": [
+          "answer",
+          "confidence",
+          "grade",
+          "bucket review"
+        ],
+        "generation_rules": [
+          "Include at least one easy item, one medium item, and one trap item.",
+          "Ask for confidence before revealing feedback.",
+          "Return review buckets: misconception, fragile, pacing, maintenance."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
       }
     ],
     "learning_activity_templates": [
@@ -3003,6 +3147,138 @@
         ],
         "exam_alignment": [
           "Builds near-term readiness for timed aptitude selection."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-activity-spaced-error-retest",
+        "title": "Spaced error retest",
+        "summary": "Retest missed Entrance Exam skills after a delay and inside a mixed context.",
+        "activity_modes": [
+          "miss repair",
+          "next-day retest",
+          "mixed retest",
+          "mastery update"
+        ],
+        "steps": [
+          "Select one recent repeated miss from the error journal.",
+          "Teach the repair rule in one paragraph.",
+          "Ask a new original item with the same underlying skill.",
+          "Schedule or run a mixed retest where the section is not announced."
+        ],
+        "learner_action": [
+          "State the repair rule before answering.",
+          "Answer without relying on the previous surface story.",
+          "Mark confidence after the answer."
+        ],
+        "feedback_rule": [
+          "Advance only when the learner succeeds on delayed or mixed retest, not just immediate retry."
+        ],
+        "exam_alignment": [
+          "Supports durable readiness under mixed aptitude conditions."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-activity-confidence-marked-quiz",
+        "title": "Confidence-marked quick quiz",
+        "summary": "A quick quiz where each answer includes confidence so Tutor can route review intelligently.",
+        "activity_modes": [
+          "quick quiz",
+          "confidence mark",
+          "review bucket",
+          "next action"
+        ],
+        "steps": [
+          "Ask one to three original items.",
+          "Ask the learner to mark high, medium, or low confidence.",
+          "Grade correctness and confidence together.",
+          "Route to maintenance, reinforcement, misconception repair, or pacing practice."
+        ],
+        "learner_action": [
+          "Answer normally.",
+          "Add a confidence mark.",
+          "Accept a short review bucket label after grading."
+        ],
+        "feedback_rule": [
+          "Review high-confidence wrong answers before low-confidence wrong answers."
+        ],
+        "exam_alignment": [
+          "Improves mock review quality and reduces hidden misconceptions."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-activity-interleaved-three-pack",
+        "title": "Interleaved three-pack",
+        "summary": "Three short items from different Entrance Exam sections to train rapid method switching.",
+        "activity_modes": [
+          "classify",
+          "solve",
+          "switch",
+          "review"
+        ],
+        "steps": [
+          "Ask one math or numerical item.",
+          "Ask one reading evidence item.",
+          "Ask one mechanical or spatial item.",
+          "Compare the method cue for each item after grading."
+        ],
+        "learner_action": [
+          "Classify each item before solving.",
+          "Use the matching method, not the method from the previous item.",
+          "Name which switch was hardest."
+        ],
+        "feedback_rule": [
+          "If the learner misclassifies two items, return to section triage before more mixed practice."
+        ],
+        "exam_alignment": [
+          "Builds flexible performance across aptitude sections."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-activity-exam-day-simulation",
+        "title": "Exam-day simulation",
+        "summary": "A rehearsal that includes pacing, instructions, uncertainty handling, and document readiness.",
+        "activity_modes": [
+          "instructions check",
+          "timed block",
+          "skip rule",
+          "document checklist"
+        ],
+        "steps": [
+          "Start with one instruction-reading check.",
+          "Run a timed mixed block.",
+          "Require skip/mark/return decisions when an item stalls.",
+          "Close with a short PEF or document readiness check."
+        ],
+        "learner_action": [
+          "Follow the stated instructions exactly.",
+          "Protect easy points by moving on when stuck.",
+          "Record top errors and document gaps."
+        ],
+        "feedback_rule": [
+          "Do not add new broad content during exam-day simulation; only repair repeated high-risk errors."
+        ],
+        "exam_alignment": [
+          "Practices the behavior needed on selection day, not just isolated knowledge."
         ],
         "source_ref_ids": [
           "laett.inside_wireman.2026-01-26",
@@ -3469,6 +3745,51 @@
           "stable accuracy over three separate days",
           "no repeated qualifier-trap or setup-error miss",
           "learner can explain the chosen pacing rule"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-sequence-entrance-adaptive-review-week",
+        "title": "Entrance Exam adaptive review week",
+        "summary": "A one-week sequence driven by recent misses, confidence marks, and section switching.",
+        "objective_ids": [
+          "cec-apprentice-math-reasoning",
+          "cec-apprentice-numerical-reasoning",
+          "cec-apprentice-reading",
+          "cec-apprentice-mechanical",
+          "cec-apprentice-spatial",
+          "cec-apprentice-timed-practice"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-entrance-spaced-review",
+          "cec-lesson-entrance-interleaving",
+          "cec-lesson-entrance-confidence-calibration",
+          "cec-lesson-entrance-error-journal",
+          "cec-lesson-entrance-guessing-and-elimination"
+        ],
+        "activity_template_ids": [
+          "cec-activity-confidence-marked-quiz",
+          "cec-activity-spaced-error-retest",
+          "cec-activity-interleaved-three-pack",
+          "cec-activity-exam-day-simulation"
+        ],
+        "day_plan": [
+          "Day 1: confidence-marked diagnostic and error journal setup",
+          "Day 2: weakest math/numerical repair plus spaced retest",
+          "Day 3: reading annotation plus qualifier retest",
+          "Day 4: mechanical/spatial visual trace board",
+          "Day 5: interleaved three-pack and section-switching review",
+          "Day 6: exam-day simulation block",
+          "Day 7: top-two repeated error repair and readiness decision"
+        ],
+        "mastery_evidence": [
+          "confidence marks recorded for mixed practice",
+          "at least two delayed retests completed",
+          "top repeated error label decreases by the end of the week"
         ],
         "source_ref_ids": [
           "laett.inside_wireman.2026-01-26",
@@ -5592,6 +5913,198 @@
         "answer": "A",
         "correct_rationale": [
           "Easy copying misses after sustained work suggest attention/stamina, not missing arithmetic concept alone."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-confidence-high-wrong",
+        "title": "Confidence calibration: high-confidence wrong",
+        "summary": "Original review-routing item.",
+        "response_format": "multiple_choice",
+        "scenario": [
+          "A learner answers a gear-direction item wrong and marks high confidence. What should Tutor do first?"
+        ],
+        "choices": [
+          "A) Skip review because confidence was high",
+          "B) Treat it as a misconception and repair the rule",
+          "C) Move to an unrelated reading passage",
+          "D) Only praise the effort"
+        ],
+        "answer": "B",
+        "correct_rationale": [
+          "High-confidence wrong indicates the internal rule is likely wrong."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-spaced-retest",
+        "title": "Spaced review: delayed retest",
+        "summary": "Original learning-method item about retest timing.",
+        "response_format": "multiple_choice",
+        "scenario": [
+          "You fixed a percent-base error today. What is the best evidence that the fix stuck?"
+        ],
+        "choices": [
+          "A) Rereading the explanation immediately",
+          "B) Getting one identical item right immediately",
+          "C) Getting a new percent-base item right tomorrow or inside a mixed set",
+          "D) Avoiding percent questions"
+        ],
+        "answer": "C",
+        "correct_rationale": [
+          "Delayed or mixed retest shows the method transfers beyond the immediate repair."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-eliminate-units",
+        "title": "Elimination: impossible units",
+        "summary": "Original elimination item.",
+        "response_format": "multiple_choice",
+        "scenario": [
+          "A question asks for a rate in tasks per hour. Which answer can be eliminated immediately?"
+        ],
+        "choices": [
+          "A) 8 tasks/hour",
+          "B) 12 tasks/hour",
+          "C) 3 hours/task",
+          "D) 15 tasks/hour"
+        ],
+        "answer": "C",
+        "correct_rationale": [
+          "3 hours/task has the reciprocal unit, not tasks per hour."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-interleaving-collapse",
+        "title": "Interleaving: when mixed practice collapses",
+        "summary": "Original study-routing item.",
+        "response_format": "multiple_choice",
+        "scenario": [
+          "A learner gets 80% in focused math drills but misses most math items in mixed sets. What is the likely issue?"
+        ],
+        "choices": [
+          "A) Method recognition or section switching",
+          "B) No math knowledge at all",
+          "C) PEF evidence quality",
+          "D) Contractor licensing law"
+        ],
+        "answer": "A",
+        "correct_rationale": [
+          "Focused success but mixed failure points to recognizing when to use the method."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-error-journal-entry",
+        "title": "Error journal: useful entry",
+        "summary": "Original metacognitive item.",
+        "response_format": "multiple_choice",
+        "scenario": [
+          "Which error-journal entry is most useful?"
+        ],
+        "choices": [
+          "A) Bad at math",
+          "B) Missed Q4",
+          "C) Percent increase: divided by new value instead of original; retest tomorrow",
+          "D) Need to study everything"
+        ],
+        "answer": "C",
+        "correct_rationale": [
+          "It names the section, exact error, repair idea, and retest plan."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-guessing-mark-return",
+        "title": "Educated guessing: mark and return",
+        "summary": "Original pacing and uncertainty item.",
+        "response_format": "multiple_choice",
+        "scenario": [
+          "Two choices remain after elimination, but you are over your time target. What is the best action?"
+        ],
+        "choices": [
+          "A) Spend unlimited time",
+          "B) Pick the better-supported choice, mark it, and move on",
+          "C) Erase the answer and quit",
+          "D) Ignore the remaining easy questions"
+        ],
+        "answer": "B",
+        "correct_rationale": [
+          "This protects pacing while preserving a reasonable chance on the current item."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-reading-supported-choice",
+        "title": "Reading: supported versus plausible",
+        "summary": "Original reading evidence item.",
+        "response_format": "multiple_choice",
+        "scenario": [
+          "Passage: The notice says applicants should check email daily for scheduling updates. Which answer is supported?"
+        ],
+        "choices": [
+          "A) Applicants should check email daily",
+          "B) Applicants must buy tools before testing",
+          "C) All tests are cancelled",
+          "D) Phone calls are the only update method"
+        ],
+        "answer": "A",
+        "correct_rationale": [
+          "Only A is directly supported by the passage."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-visual-track-feature",
+        "title": "Visual method: track one feature",
+        "summary": "Original visual-strategy item.",
+        "response_format": "multiple_choice",
+        "scenario": [
+          "A shape has one notch. What should you track first when deciding whether an answer is rotated or reflected?"
+        ],
+        "choices": [
+          "A) The color of the page",
+          "B) The notch's relative position and feature order",
+          "C) The longest answer choice",
+          "D) Whether the shape looks familiar"
+        ],
+        "answer": "B",
+        "correct_rationale": [
+          "Tracking a distinct feature helps distinguish rotation from reflection."
         ],
         "source_ref_ids": [
           "laett.inside_wireman.2026-01-26",
