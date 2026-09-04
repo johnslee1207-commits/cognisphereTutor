@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -509,6 +510,45 @@ def test_bundled_pack_radar_axes_are_domain_specific(
         assert meta["axis"] in labels
         assert all(not label.startswith("Cognisphere ·") for label in labels)
         assert [d["path_id"] for d in body["weak_domains"]] == [meta["path_id"]]
+
+
+def test_california_electrical_pack_metadata_counts_match_content() -> None:
+    pack_path = (
+        Path("cognispheretutor/integrations/cognisphere/bundled_packs")
+        / "california_electrical_career_bundle.json"
+    )
+    knowledge = json.loads(pack_path.read_text(encoding="utf-8"))["knowledge"]
+    metadata = knowledge["pack_metadata"]
+    count_fields = {
+        "lesson_card_count": "lesson_cards",
+        "practice_blueprint_count": "practice_blueprints",
+        "learning_activity_template_count": "learning_activity_templates",
+        "study_sequence_count": "study_sequences",
+        "scenario_card_count": "scenario_cards",
+        "flashcard_deck_count": "flashcard_decks",
+        "readiness_checkpoint_count": "readiness_checkpoints",
+        "error_taxonomy_count": "error_taxonomy",
+    }
+    for metadata_key, content_key in count_fields.items():
+        assert metadata[metadata_key] == len(knowledge[content_key])
+
+    entrance_scenarios = [
+        item
+        for item in knowledge["scenario_cards"]
+        if "entrance" in json.dumps(item).lower()
+        or "apprentice" in json.dumps(item).lower()
+    ]
+    entrance_lessons = [
+        item
+        for item in knowledge["lesson_cards"]
+        if "entrance" in json.dumps(item).lower()
+        or "apprentice" in json.dumps(item).lower()
+    ]
+
+    assert metadata["scenario_card_count"] >= 123
+    assert metadata["lesson_card_count"] >= 99
+    assert len(entrance_scenarios) >= 100
+    assert len(entrance_lessons) >= 55
 
 
 def test_runtime_plan_fallback_seeds_sparse_domain(

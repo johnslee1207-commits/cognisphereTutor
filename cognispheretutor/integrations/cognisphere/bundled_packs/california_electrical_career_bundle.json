@@ -2120,6 +2120,182 @@
           "gan.aptitude_test.2026-09-03",
           "cceti.gan_how_to_apply.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-lesson-entrance-2-week-diagnostic-map",
+        "title": "Two-week entrance diagnostic map",
+        "summary": "A near-term learner needs a fast baseline, not a broad trade survey.",
+        "body": "Teach the learner to split preparation into five lanes: math setup, numerical pattern, reading evidence, mechanical trace, and spatial tracking. The first session should sample all five, then spend most daily time on the weakest two lanes while keeping a short mixed set every day.",
+        "teaching_points": [
+          "Start with a timed mixed baseline before choosing drills.",
+          "Mark each miss with one primary tag: setup, arithmetic, misread, evidence, mechanical trace, spatial track, or pacing.",
+          "Do not postpone weak sections; rotate them daily in short blocks."
+        ],
+        "quick_check_prompts": [
+          "For a test soon, what should the first study session produce: a weakness map, a contractor-law outline, a NEC article list, or a memorized answer sheet?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-lesson-entrance-no-calculator-decimals",
+        "title": "No-calculator decimal arithmetic",
+        "summary": "Decimal placement and estimation protect many easy points.",
+        "body": "Teach decimal arithmetic with a three-step check: ignore decimals briefly, compute the whole-number shape, then place the decimal by magnitude. Before selecting an answer, estimate whether the result should be less than 1, between 1 and 10, or larger than 10.",
+        "teaching_points": [
+          "Use estimation before exact arithmetic.",
+          "Align decimal places for addition and subtraction.",
+          "For multiplication, count decimal places after multiplying whole numbers."
+        ],
+        "quick_check_prompts": [
+          "When multiplying 0.6 by 0.08, why should the answer be less than 0.1?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-lesson-entrance-fractions-ratios",
+        "title": "Fractions, ratios, and proportions under time pressure",
+        "summary": "Most ratio errors come from comparing the wrong part to the wrong whole.",
+        "body": "Teach every ratio problem as parts first. Add the ratio parts to get the total parts, divide the real total by total parts, then multiply by the requested part. For percent problems, name the base before calculating.",
+        "teaching_points": [
+          "In a ratio A:B, the whole is A+B parts unless the question says otherwise.",
+          "Percent change uses the original value as the base.",
+          "Cross-multiply only after writing matching units on both sides."
+        ],
+        "quick_check_prompts": [
+          "In a 2:3 mix with 40 total items, why is one part worth 8?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-lesson-entrance-algebra-functions",
+        "title": "Algebra and function-table recognition",
+        "summary": "ETA-style samples make algebra/function practice a high-value preparation lane.",
+        "body": "Teach the learner to identify whether a question asks for substitution, solving for x, slope, pattern continuation, or function output. The safe routine is: copy the rule, substitute carefully, simplify one operation at a time, and check with estimation.",
+        "teaching_points": [
+          "Function notation means input-output, not multiplication by a letter.",
+          "When solving equations, keep both sides balanced.",
+          "For tables, test differences, multiplication, and simple linear rules before guessing."
+        ],
+        "quick_check_prompts": [
+          "If f(x)=3x+2, what does f(4) ask you to do?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-lesson-entrance-gear-pulley-direction",
+        "title": "Gear and pulley direction tracing",
+        "summary": "Direction errors are preventable if the learner traces one contact at a time.",
+        "body": "Teach a one-connection rule: each pair of touching gears reverses direction; gears on the same shaft rotate together; crossed belts reverse direction while open belts usually keep direction. Draw arrows before thinking about speed.",
+        "teaching_points": [
+          "Touching gears alternate direction.",
+          "Same-shaft parts share rotation direction.",
+          "Speed changes depend on relative size."
+        ],
+        "quick_check_prompts": [
+          "If gear A touches gear B and B touches gear C, does C turn the same direction as A or opposite?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-lesson-entrance-spatial-fold-hole-punch",
+        "title": "Paper folding and hole-punch tracking",
+        "summary": "Spatial items reward slow, ordered unfolding.",
+        "body": "Teach the learner to reverse the folds one at a time. Each unfold mirrors the mark across the fold line. Do not rotate the mental picture unless the problem explicitly rotates the paper.",
+        "teaching_points": [
+          "Reverse the last fold first.",
+          "Mirror across the fold line at each unfold.",
+          "Separate reflection from rotation."
+        ],
+        "quick_check_prompts": [
+          "When unfolding a folded paper, should you reverse the first fold first or the last fold first?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-lesson-entrance-pef-evidence-stories",
+        "title": "Personal Experience Form evidence stories",
+        "summary": "PEF preparation should collect honest evidence, not polished fiction.",
+        "body": "Teach the learner to organize experiences into situation, task, action, result, and evidence. Good entries show reliability, follow-through, math/technical exposure, teamwork, safety mindset, and learning attitude. The learner should not invent experience or copy generic wording.",
+        "teaching_points": [
+          "Use real examples from work, school, volunteering, projects, or family responsibilities.",
+          "Attach evidence to claims: dates, role, supervisor, project, outcome.",
+          "Avoid exaggeration; consistency matters across application, PEF, and interview."
+        ],
+        "quick_check_prompts": [
+          "What is stronger for PEF: a specific honest example or a vague claim that sounds impressive?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-lesson-entrance-final-72-hours",
+        "title": "Final 72-hour readiness routine",
+        "summary": "The final days should protect accuracy, sleep, documents, and confidence.",
+        "body": "Teach the learner to stop cramming broad new material. Use short mixed sets, review recurring error tags, prepare documents and route logistics, and sleep. The aim is stable performance, not exhausting practice volume.",
+        "teaching_points": [
+          "Run short mixed practice, not marathon study.",
+          "Review the top three error tags and one fix for each.",
+          "Confirm ID, arrival time, address, parking, and permitted materials."
+        ],
+        "quick_check_prompts": [
+          "In the final 72 hours, what matters more: stable accuracy and logistics, or learning every possible trade topic?"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
       }
     ],
     "practice_blueprints": [
@@ -2725,6 +2901,114 @@
           "gan.aptitude_test.2026-09-03",
           "cceti.gan_how_to_apply.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-practice-entrance-10-minute-arithmetic-sprint",
+        "title": "10-minute arithmetic sprint",
+        "summary": "Generate 12 original no-calculator items covering decimals, fractions, percentages, ratios, and unit conversion.",
+        "practice_modes": [
+          "timed sprint",
+          "answer-only first pass",
+          "worked review by arithmetic tag"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-practice-entrance-algebra-function-table",
+        "title": "Algebra and function-table set",
+        "summary": "Generate original substitution, solve-for-x, slope, and table-rule questions.",
+        "practice_modes": [
+          "untimed method drill",
+          "timed 8-item set",
+          "wrong-rule remediation"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-practice-entrance-mechanical-trace-set",
+        "title": "Mechanical trace set",
+        "summary": "Generate lever, pulley, gear, wheel, inclined-plane, and motion-direction items.",
+        "practice_modes": [
+          "visual trace",
+          "direction-only drill",
+          "force-distance explanation"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-practice-entrance-spatial-folding-set",
+        "title": "Spatial folding set",
+        "summary": "Generate original folding, rotation, reflection, and unfolded-pattern prompts.",
+        "practice_modes": [
+          "slow unfold",
+          "timed spatial set",
+          "reflection-vs-rotation remediation"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-practice-entrance-full-mock-rehearsal",
+        "title": "Entrance full-mock rehearsal",
+        "summary": "Generate a longer original rehearsal with section pacing, confidence marking, and post-test triage.",
+        "practice_modes": [
+          "timed rehearsal",
+          "confidence marking",
+          "readiness gate"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-practice-entrance-pef-interview-bridge",
+        "title": "PEF-to-interview bridge",
+        "summary": "Generate prompts that convert honest experience evidence into concise interview-ready stories.",
+        "practice_modes": [
+          "STAR evidence drafting",
+          "claim-evidence check",
+          "two-minute spoken rehearsal"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
       }
     ],
     "learning_activity_templates": [
@@ -3285,6 +3569,110 @@
           "gan.aptitude_test.2026-09-03",
           "cceti.gan_how_to_apply.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-activity-entrance-daily-rotation",
+        "title": "Entrance daily rotation",
+        "summary": "A short daily block for learners with an exam soon.",
+        "activity_modes": [
+          "warmup",
+          "weak-lane drill",
+          "mixed quick check",
+          "error tag"
+        ],
+        "steps": [
+          "Run three easy arithmetic warmups.",
+          "Drill the weakest lane for 12-15 minutes.",
+          "Run a five-question mixed set.",
+          "Record one error tag and one fix."
+        ],
+        "learner_action": [
+          "Answer quickly.",
+          "Review only missed or guessed items.",
+          "Name the next drill lane."
+        ],
+        "feedback_rule": [
+          "Prefer immediate feedback.",
+          "Move on after one correct quick check unless confidence is low."
+        ],
+        "exam_alignment": [
+          "Builds section switching and pacing for aptitude testing."
+        ]
+      },
+      {
+        "id": "cec-activity-entrance-evidence-reading",
+        "title": "Evidence-first reading drill",
+        "summary": "A technical reading routine that prevents unsupported-answer mistakes.",
+        "activity_modes": [
+          "question-first scan",
+          "evidence underline",
+          "choice elimination"
+        ],
+        "steps": [
+          "Read the question before the passage.",
+          "Find the controlling sentence.",
+          "Predict the answer in plain language.",
+          "Select the matching option and cite the phrase."
+        ],
+        "learner_action": [
+          "Provide an answer and the evidence phrase."
+        ],
+        "feedback_rule": [
+          "Grade unsupported claims as reading-evidence errors even if they sound plausible."
+        ],
+        "exam_alignment": [
+          "Matches reading-comprehension selection logic."
+        ]
+      },
+      {
+        "id": "cec-activity-entrance-mechanical-sketch",
+        "title": "Mechanical one-sketch trace",
+        "summary": "A visual trace routine for levers, gears, pulleys, and motion.",
+        "activity_modes": [
+          "sketch",
+          "arrow trace",
+          "answer"
+        ],
+        "steps": [
+          "Identify input, output, support, and contact points.",
+          "Draw one arrow at the input.",
+          "Propagate one connection at a time.",
+          "Answer only after the trace is complete."
+        ],
+        "learner_action": [
+          "Explain the trace in one or two sentences."
+        ],
+        "feedback_rule": [
+          "Correct direction errors by replaying the first wrong connection."
+        ],
+        "exam_alignment": [
+          "Supports mechanical reasoning without requiring trade knowledge."
+        ]
+      },
+      {
+        "id": "cec-activity-entrance-pacing-lab",
+        "title": "Pacing and confidence lab",
+        "summary": "A timed block that trains skip, return, and confidence marking.",
+        "activity_modes": [
+          "timed set",
+          "confidence mark",
+          "review"
+        ],
+        "steps": [
+          "Mark each answer as sure, maybe, or guessed.",
+          "Skip any item that exceeds the time budget.",
+          "Return after easier items are complete.",
+          "Review misses by accuracy and confidence."
+        ],
+        "learner_action": [
+          "Submit answers plus confidence marks."
+        ],
+        "feedback_rule": [
+          "Prioritize high-confidence misses and slow correct answers in remediation."
+        ],
+        "exam_alignment": [
+          "Builds reliable scoring behavior under time pressure."
+        ]
       }
     ],
     "study_sequences": [
@@ -3795,6 +4183,104 @@
           "laett.inside_wireman.2026-01-26",
           "gan.aptitude_test.2026-09-03",
           "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-sequence-entrance-two-week-urgent-sprint",
+        "title": "Entrance Exam two-week urgent sprint",
+        "summary": "A compressed route for a learner taking an apprenticeship entrance selection soon.",
+        "objective_ids": [
+          "cec-apprentice-diagnostic",
+          "cec-apprentice-math-reasoning",
+          "cec-apprentice-numerical-reasoning",
+          "cec-apprentice-reading",
+          "cec-apprentice-mechanical",
+          "cec-apprentice-spatial",
+          "cec-apprentice-timed-practice",
+          "cec-apprentice-pef"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-entrance-2-week-diagnostic-map",
+          "cec-lesson-entrance-no-calculator-decimals",
+          "cec-lesson-entrance-fractions-ratios",
+          "cec-lesson-entrance-algebra-functions",
+          "cec-lesson-entrance-reading-evidence-ladder",
+          "cec-lesson-entrance-mechanical-force-distance",
+          "cec-lesson-entrance-spatial-fold-hole-punch",
+          "cec-lesson-entrance-final-72-hours"
+        ],
+        "activity_template_ids": [
+          "cec-activity-entrance-daily-rotation",
+          "cec-activity-entrance-evidence-reading",
+          "cec-activity-entrance-mechanical-sketch",
+          "cec-activity-entrance-pacing-lab"
+        ],
+        "checkpoint_prompts": [
+          "Can the learner keep arithmetic accuracy while moving fast?",
+          "Can the learner cite reading evidence rather than guess?",
+          "Can the learner trace mechanical and spatial items one step at a time?"
+        ],
+        "mastery_evidence": [
+          "two mixed sets with error tags",
+          "one half-mock review",
+          "ready/not-ready decision before final-week practice"
+        ]
+      },
+      {
+        "id": "cec-sequence-entrance-math-repair",
+        "title": "Entrance math repair lane",
+        "summary": "A focused lane for learners missing arithmetic, ratio, algebra, or table-rule items.",
+        "objective_ids": [
+          "cec-foundation-arithmetic",
+          "cec-foundation-algebra",
+          "cec-apprentice-math-reasoning",
+          "cec-apprentice-numerical-reasoning"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-entrance-no-calculator-decimals",
+          "cec-lesson-entrance-fractions-ratios",
+          "cec-lesson-entrance-algebra-functions",
+          "cec-lesson-apprentice-table-graph-reading"
+        ],
+        "activity_template_ids": [
+          "cec-activity-entrance-daily-rotation",
+          "cec-activity-error-memory-loop"
+        ],
+        "checkpoint_prompts": [
+          "Can the learner solve before looking at answer choices?",
+          "Can the learner explain the setup in one sentence?"
+        ],
+        "mastery_evidence": [
+          "80% or better across two short math sets",
+          "no recurring decimal-placement or wrong-base percent errors"
+        ]
+      },
+      {
+        "id": "cec-sequence-entrance-visual-reasoning-repair",
+        "title": "Entrance visual reasoning repair lane",
+        "summary": "A focused lane for mechanical and spatial misses.",
+        "objective_ids": [
+          "cec-apprentice-mechanical",
+          "cec-apprentice-spatial",
+          "cec-apprentice-timed-practice"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-entrance-mechanical-force-distance",
+          "cec-lesson-entrance-gear-pulley-direction",
+          "cec-lesson-entrance-spatial-fold-hole-punch",
+          "cec-lesson-apprentice-spatial-rotation"
+        ],
+        "activity_template_ids": [
+          "cec-activity-entrance-mechanical-sketch",
+          "cec-activity-entrance-pacing-lab"
+        ],
+        "checkpoint_prompts": [
+          "Can the learner trace one connection at a time?",
+          "Can the learner distinguish rotation from reflection?"
+        ],
+        "mastery_evidence": [
+          "70% or better on mechanical/spatial mixed cards",
+          "learner can verbalize the first trace step before answering"
         ]
       }
     ],
@@ -6111,6 +6597,756 @@
           "gan.aptitude_test.2026-09-03",
           "cceti.gan_how_to_apply.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-scenario-entrance-decimal-wire-cost",
+        "title": "Decimal multiplication: wire cost",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Wire costs $0.18 per foot. What is the cost of 25 feet?"
+        ],
+        "choices": [
+          "A) $0.45",
+          "B) $4.50",
+          "C) $45.00",
+          "D) $450.00"
+        ],
+        "correct_rationale": [
+          "18 cents times 25 is 450 cents, or $4.50."
+        ],
+        "distractor_rationales": [
+          "A misses a decimal place.",
+          "C is ten times too large.",
+          "D is one hundred times too large."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-percent-increase-hours",
+        "title": "Percent increase: practice hours",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "A learner increases daily practice from 40 minutes to 50 minutes. What is the percent increase?"
+        ],
+        "choices": [
+          "A) 10%",
+          "B) 20%",
+          "C) 25%",
+          "D) 50%"
+        ],
+        "correct_rationale": [
+          "The increase is 10 minutes. 10 divided by the original 40 is 25%."
+        ],
+        "distractor_rationales": [
+          "A uses the increase as raw points.",
+          "B divides by 50.",
+          "D confuses 10 with half of 20."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-ratio-crews",
+        "title": "Ratio: crew assignment",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "For every 4 apprentices there are 3 journey workers. If 28 workers are present, how many are apprentices?"
+        ],
+        "choices": [
+          "A) 12",
+          "B) 14",
+          "C) 16",
+          "D) 21"
+        ],
+        "correct_rationale": [
+          "The ratio has 7 parts. 28/7=4 per part. Apprentices are 4 parts, so 16."
+        ],
+        "distractor_rationales": [
+          "12 gives journey workers.",
+          "14 assumes half.",
+          "21 uses 3/4 of the total."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-unit-conversion-conduit",
+        "title": "Unit conversion: conduit length",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "A piece is 7 feet 6 inches long. How many inches is that?"
+        ],
+        "choices": [
+          "A) 42",
+          "B) 78",
+          "C) 84",
+          "D) 90"
+        ],
+        "correct_rationale": [
+          "7 feet is 84 inches; plus 6 inches is 90."
+        ],
+        "distractor_rationales": [
+          "42 halves the feet.",
+          "78 subtracts 6.",
+          "84 forgets the extra 6 inches."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-average-scores",
+        "title": "Average: practice scores",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Three scores are 72, 84, and 90. What fourth score makes the average 82?"
+        ],
+        "choices": [
+          "A) 76",
+          "B) 78",
+          "C) 80",
+          "D) 82"
+        ],
+        "correct_rationale": [
+          "Four scores averaging 82 total 328. Current total is 246. The fourth score is 82."
+        ],
+        "distractor_rationales": [
+          "76 uses a wrong target total.",
+          "78 is close but low.",
+          "80 estimates without exact total."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-sequence-add",
+        "title": "Sequence: increasing differences",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "What comes next: 3, 6, 10, 15, 21, ?"
+        ],
+        "choices": [
+          "A) 25",
+          "B) 27",
+          "C) 28",
+          "D) 30"
+        ],
+        "correct_rationale": [
+          "The differences are +3,+4,+5,+6, so next is +7 and the answer is 28."
+        ],
+        "distractor_rationales": [
+          "25 repeats +4.",
+          "27 adds +6 again.",
+          "30 jumps by +9."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-function-output",
+        "title": "Function output",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "If f(x)=2x^2-1, what is f(3)?"
+        ],
+        "choices": [
+          "A) 11",
+          "B) 17",
+          "C) 18",
+          "D) 35"
+        ],
+        "correct_rationale": [
+          "2 times 3 squared is 18; 18 minus 1 is 17."
+        ],
+        "distractor_rationales": [
+          "11 squares after multiplying.",
+          "18 forgets minus 1.",
+          "35 uses 2 times 9 plus 17."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-solve-x",
+        "title": "Solve for x",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Solve: 3x + 5 = 20."
+        ],
+        "choices": [
+          "A) 3",
+          "B) 5",
+          "C) 8",
+          "D) 15"
+        ],
+        "correct_rationale": [
+          "Subtract 5 to get 15, then divide by 3 to get 5."
+        ],
+        "distractor_rationales": [
+          "3 divides too early.",
+          "8 adds values.",
+          "15 stops before dividing."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-table-rate",
+        "title": "Table rate comparison",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Crew A installs 18 devices in 3 hours. Crew B installs 20 devices in 5 hours. Which crew has the higher hourly rate?"
+        ],
+        "choices": [
+          "A) Crew A",
+          "B) Crew B",
+          "C) Same rate",
+          "D) Cannot tell"
+        ],
+        "correct_rationale": [
+          "Crew A is 6 per hour; Crew B is 4 per hour."
+        ],
+        "distractor_rationales": [
+          "B compares raw devices only.",
+          "C assumes similar totals.",
+          "D ignores hours given."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-reading-qualifier",
+        "title": "Reading qualifier: before",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Passage: Before using a tool, the trainee must inspect the cord and report visible damage. Question: What must happen before use?"
+        ],
+        "choices": [
+          "A) Replace every cord",
+          "B) Inspect the cord and report visible damage",
+          "C) Use the tool first",
+          "D) Ask for a new task"
+        ],
+        "correct_rationale": [
+          "The passage says inspect the cord and report visible damage before use."
+        ],
+        "distractor_rationales": [
+          "A adds every cord replacement.",
+          "C reverses before/after.",
+          "D is not supported."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-reading-except",
+        "title": "Reading qualifier: except",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Passage: The class meets Monday through Thursday. Attendance is recorded at the start of each class. Which statement is NOT supported?"
+        ],
+        "choices": [
+          "A) Class meets on Monday",
+          "B) Attendance is recorded",
+          "C) Class meets on Friday",
+          "D) Class meets on Thursday"
+        ],
+        "correct_rationale": [
+          "Friday is not included in Monday through Thursday."
+        ],
+        "distractor_rationales": [
+          "A is supported.",
+          "B is supported.",
+          "D is supported."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-main-idea",
+        "title": "Reading main idea",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Passage: The applicant should arrive early, bring required identification, and follow staff instructions. These steps reduce delays during check-in. What is the main idea?"
+        ],
+        "choices": [
+          "A) Check-in readiness prevents delays",
+          "B) Identification is optional",
+          "C) Staff instructions are unnecessary",
+          "D) Arriving late saves time"
+        ],
+        "correct_rationale": [
+          "The passage groups actions that reduce check-in delays."
+        ],
+        "distractor_rationales": [
+          "B contradicts required ID.",
+          "C contradicts instructions.",
+          "D contradicts arriving early."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-inference",
+        "title": "Reading inference",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Passage: If a form is incomplete, staff may ask the applicant to correct it before the next step. What can be inferred?"
+        ],
+        "choices": [
+          "A) Complete forms help the process move forward",
+          "B) Staff never review forms",
+          "C) Incomplete forms are ignored",
+          "D) The applicant skips all steps"
+        ],
+        "correct_rationale": [
+          "If incomplete forms must be corrected before the next step, complete forms support progress."
+        ],
+        "distractor_rationales": [
+          "B contradicts review.",
+          "C contradicts correction.",
+          "D invents a skip."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-lever-handle",
+        "title": "Lever handle",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Two identical wrenches are used on the same bolt. Wrench A has a longer handle. Which usually requires less force at the hand?"
+        ],
+        "choices": [
+          "A) Wrench A",
+          "B) Wrench B",
+          "C) Both require no force",
+          "D) Handle length never matters"
+        ],
+        "correct_rationale": [
+          "A longer handle gives more turning effect for the same force."
+        ],
+        "distractor_rationales": [
+          "B reverses lever advantage.",
+          "C ignores force.",
+          "D ignores lever arm."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-fixed-pulley",
+        "title": "Fixed pulley direction",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "A rope passes over a fixed pulley. Pulling down on one side lifts the load on the other. What does the fixed pulley mainly change?"
+        ],
+        "choices": [
+          "A) Direction of force",
+          "B) Weight of the load to zero",
+          "C) Material of the rope",
+          "D) The need for support"
+        ],
+        "correct_rationale": [
+          "A fixed pulley mainly changes pulling direction."
+        ],
+        "distractor_rationales": [
+          "B invents zero weight.",
+          "C is unrelated.",
+          "D ignores the pulley support."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-gear-three",
+        "title": "Three touching gears",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Gear A touches B, and B touches C. If A turns clockwise, which way does C turn?"
+        ],
+        "choices": [
+          "A) Clockwise",
+          "B) Counterclockwise",
+          "C) It stops",
+          "D) Direction cannot be traced"
+        ],
+        "correct_rationale": [
+          "A reverses B; B reverses C, so C matches A."
+        ],
+        "distractor_rationales": [
+          "B misses the second reversal.",
+          "C invents stopping.",
+          "D ignores traceable contacts."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-belt-open",
+        "title": "Open belt direction",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Two pulleys are connected by an open belt that is not crossed. If the first turns clockwise, the second usually turns which way?"
+        ],
+        "choices": [
+          "A) Clockwise",
+          "B) Counterclockwise",
+          "C) It always doubles speed",
+          "D) It cannot move"
+        ],
+        "correct_rationale": [
+          "An open belt usually keeps rotation direction."
+        ],
+        "distractor_rationales": [
+          "B describes a crossed-belt style.",
+          "C confuses direction and speed.",
+          "D ignores belt transfer."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-inclined-plane",
+        "title": "Inclined plane",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "A heavy box is moved up a long ramp instead of lifted straight up. What is the main tradeoff?"
+        ],
+        "choices": [
+          "A) Less force over more distance",
+          "B) More force over less distance",
+          "C) No work is needed",
+          "D) Gravity disappears"
+        ],
+        "correct_rationale": [
+          "A ramp can reduce required force by spreading work over longer distance."
+        ],
+        "distractor_rationales": [
+          "B reverses the tradeoff.",
+          "C violates work idea.",
+          "D is impossible."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-paper-one-fold",
+        "title": "Paper fold one time",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "A square paper is folded left over right, then one hole is punched near the folded edge. After unfolding, what happens?"
+        ],
+        "choices": [
+          "A) One hole only",
+          "B) Two mirrored holes",
+          "C) Four holes in a circle",
+          "D) No holes"
+        ],
+        "correct_rationale": [
+          "One fold creates a mirrored pair when unfolded."
+        ],
+        "distractor_rationales": [
+          "A forgets the folded layers.",
+          "C assumes two folds.",
+          "D ignores the punch."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-rotation-reflection",
+        "title": "Rotation versus reflection",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "A shape is flipped over a vertical line. Which description is best?"
+        ],
+        "choices": [
+          "A) Reflection",
+          "B) Rotation",
+          "C) Translation only",
+          "D) Enlargement"
+        ],
+        "correct_rationale": [
+          "Flipping across a line is reflection."
+        ],
+        "distractor_rationales": [
+          "B turns around a point.",
+          "C slides without flipping.",
+          "D changes size."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-fold-order",
+        "title": "Fold order",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "A paper is folded twice, first horizontally then vertically. When reasoning backward, which fold should be undone first?"
+        ],
+        "choices": [
+          "A) Vertical fold",
+          "B) Horizontal fold",
+          "C) Both at once",
+          "D) Neither fold"
+        ],
+        "correct_rationale": [
+          "Reverse operations undo the last fold first, so vertical is first to undo."
+        ],
+        "distractor_rationales": [
+          "B undoes the first fold first.",
+          "C loses tracking.",
+          "D gives up."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-cube-net",
+        "title": "Cube net adjacency",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "On a cube net, two squares share an edge before folding. What is usually true after folding?"
+        ],
+        "choices": [
+          "A) They become adjacent faces",
+          "B) They vanish",
+          "C) They must be opposite faces",
+          "D) They become the same face"
+        ],
+        "correct_rationale": [
+          "Shared-edge squares in a valid cube net usually fold into adjacent faces."
+        ],
+        "distractor_rationales": [
+          "B is impossible.",
+          "C confuses opposite with adjacent.",
+          "D merges faces."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-pacing-skip",
+        "title": "Pacing decision",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "A spatial item has taken too long and easier questions remain. What is the best scoring move?"
+        ],
+        "choices": [
+          "A) Mark it and return",
+          "B) Spend all remaining time",
+          "C) Quit the section",
+          "D) Randomly change previous answers"
+        ],
+        "correct_rationale": [
+          "Mark-and-return protects easier points and keeps momentum."
+        ],
+        "distractor_rationales": [
+          "B risks many easy points.",
+          "C forfeits work.",
+          "D introduces new errors."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-confidence-review",
+        "title": "Confidence review",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "After a timed set, which miss should be reviewed first?"
+        ],
+        "choices": [
+          "A) A high-confidence wrong answer",
+          "B) A skipped hard item",
+          "C) A correct sure answer",
+          "D) The neatest solution"
+        ],
+        "correct_rationale": [
+          "High-confidence misses reveal dangerous misconceptions."
+        ],
+        "distractor_rationales": [
+          "B matters later but may be expected difficulty.",
+          "C is low priority.",
+          "D is not an error criterion."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-scenario-entrance-pef-specificity",
+        "title": "PEF specificity",
+        "summary": "Original apprenticeship entrance practice item.",
+        "scenario": [
+          "Which PEF statement is strongest?"
+        ],
+        "choices": [
+          "A) I am good with tools",
+          "B) I helped repair a fence every Saturday for six weeks and tracked materials",
+          "C) I always work harder than everyone",
+          "D) I deserve a chance"
+        ],
+        "correct_rationale": [
+          "Specific, honest evidence beats vague claims."
+        ],
+        "distractor_rationales": [
+          "A is vague.",
+          "C is broad and hard to verify.",
+          "D is motivation without evidence."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
       }
     ],
     "flashcard_decks": [
@@ -6485,6 +7721,106 @@
           "gan.aptitude_test.2026-09-03",
           "cceti.gan_how_to_apply.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-flashcards-entrance-no-calculator",
+        "title": "Entrance no-calculator arithmetic",
+        "summary": "Fast cues for arithmetic under time pressure.",
+        "cards": [
+          "Estimate magnitude before calculating.",
+          "Percent change uses original value as the base.",
+          "Ratio total parts usually means add the parts.",
+          "For decimal multiplication, multiply first and place decimals last.",
+          "Convert feet to inches by multiplying by 12."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-flashcards-entrance-algebra-functions",
+        "title": "Entrance algebra and functions",
+        "summary": "Recognition cards for algebra/function items.",
+        "cards": [
+          "f(4) means substitute 4 for x.",
+          "Solve equations by keeping both sides balanced.",
+          "Table rules often start with differences or multiplication.",
+          "Slope is change in y divided by change in x.",
+          "Check final answers by substitution when possible."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-flashcards-entrance-reading-evidence",
+        "title": "Entrance reading evidence",
+        "summary": "Passage-first reading cards.",
+        "cards": [
+          "Question first, passage second.",
+          "Locate the controlling sentence.",
+          "Qualifiers decide many answers: only, always, except, before, after.",
+          "Outside knowledge cannot replace passage evidence.",
+          "Unsupported but plausible choices are traps."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-flashcards-entrance-mechanical-advantage",
+        "title": "Entrance mechanical advantage",
+        "summary": "Levers, pulleys, and direction trace cards.",
+        "cards": [
+          "Longer lever arm usually reduces effort force.",
+          "Fixed pulley changes force direction.",
+          "Movable pulley can reduce effort by increasing rope movement.",
+          "Touching gears reverse direction.",
+          "Open belts usually keep direction; crossed belts reverse direction."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-flashcards-entrance-visual-spatial",
+        "title": "Entrance visual-spatial tracking",
+        "summary": "Spatial reasoning cards.",
+        "cards": [
+          "Undo the last fold first.",
+          "Each unfold mirrors across the fold line.",
+          "Reflection flips; rotation turns.",
+          "Do not rotate the page mentally unless the item rotates it.",
+          "Shared edges on cube nets usually become adjacent faces."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
       }
     ],
     "readiness_checkpoints": [
@@ -6756,6 +8092,88 @@
           "gan.aptitude_test.2026-09-03",
           "cceti.gan_how_to_apply.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-checkpoint-entrance-two-week-routing",
+        "title": "Entrance two-week routing checkpoint",
+        "summary": "Use after the first diagnostic to route the learner into math, reading, mechanical, spatial, or mixed practice.",
+        "checkpoint_prompts": [
+          "Which two lanes produced the most misses?",
+          "Were misses mostly method errors, careless arithmetic, reading evidence errors, visual trace errors, or pacing errors?",
+          "Can the learner complete a five-question mixed set without asking what to study next?"
+        ],
+        "mastery_evidence": [
+          "a ranked weakness list",
+          "at least one corrective drill selected",
+          "a daily rotation plan for the next three sessions"
+        ],
+        "remediation": [
+          "If no weakness pattern is known, run a mixed diagnostic.",
+          "If math is weak, use the math repair lane.",
+          "If visual reasoning is weak, use the visual reasoning repair lane."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-checkpoint-entrance-section-switching",
+        "title": "Entrance section-switching checkpoint",
+        "summary": "Use before longer timed practice to confirm the learner can switch question types without losing method.",
+        "checkpoint_prompts": [
+          "Can the learner name the lane before solving?",
+          "Can the learner skip a time trap without emotional derailment?",
+          "Can the learner preserve accuracy after switching from reading to math or spatial to mechanical?"
+        ],
+        "mastery_evidence": [
+          "70% or better on a mixed switching drill",
+          "all skipped questions marked for return",
+          "one post-set error tag per miss"
+        ],
+        "remediation": [
+          "If switching causes accuracy collapse, shorten blocks and alternate only two lanes.",
+          "If pacing fails, use the pacing lab template."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
+      },
+      {
+        "id": "cec-checkpoint-entrance-pef-readiness",
+        "title": "PEF evidence readiness checkpoint",
+        "summary": "Use after PEF preparation to confirm the learner has honest, specific examples ready.",
+        "checkpoint_prompts": [
+          "Can each claim be tied to a concrete example?",
+          "Does the learner avoid exaggerating trade experience?",
+          "Can the learner explain reliability, learning attitude, teamwork, and safety mindset with evidence?"
+        ],
+        "mastery_evidence": [
+          "three specific experience stories",
+          "each story has situation, action, result, and evidence",
+          "no unsupported or inflated claim remains"
+        ],
+        "remediation": [
+          "If examples are vague, ask for dates, setting, task, action, and outcome.",
+          "If experience is limited, use school, volunteer, family, project, or work responsibility evidence."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "eta.sample_test.2026-09-03",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03",
+          "inland_electrical.eta_aptitude.2026-09-03",
+          "cec.entrance_exam_practice_boundary.2026-09-04"
+        ]
       }
     ],
     "error_taxonomy": [
@@ -6829,6 +8247,46 @@
         "remediation": [
           "Ask the learner to name the tracked feature, pivot, gear contact, or fold line.",
           "Grade the trace step before grading the final answer."
+        ]
+      },
+      {
+        "id": "cec-error-entrance-decimal-placement",
+        "title": "Decimal placement error",
+        "summary": "The learner performs the operation but places the decimal by pattern matching instead of magnitude.",
+        "remediation": [
+          "Estimate the answer range first.",
+          "Redo the item with whole-number multiplication and decimal-place count.",
+          "Ask one similar item with different numbers."
+        ]
+      },
+      {
+        "id": "cec-error-entrance-reading-unsupported-choice",
+        "title": "Unsupported reading choice",
+        "summary": "The learner chooses a plausible answer that is not actually supported by the passage.",
+        "remediation": [
+          "Ask for the controlling sentence.",
+          "Have the learner eliminate any choice that adds an unsupported claim.",
+          "Repeat with an except/before/after qualifier item."
+        ]
+      },
+      {
+        "id": "cec-error-entrance-visual-trace-skip",
+        "title": "Visual trace skip",
+        "summary": "The learner jumps to the answer without tracing fold, gear, pulley, or lever relationships one connection at a time.",
+        "remediation": [
+          "Force an arrow or unfold step before answering.",
+          "Replay only the first wrong connection.",
+          "Use a slower no-timer item before returning to timed practice."
+        ]
+      },
+      {
+        "id": "cec-error-entrance-confidence-miscalibration",
+        "title": "Confidence miscalibration",
+        "summary": "The learner is highly confident on wrong answers or repeatedly guesses without marking uncertainty.",
+        "remediation": [
+          "Record sure/maybe/guess on each timed answer.",
+          "Review high-confidence misses first.",
+          "Ask the learner to state the method before seeing choices."
         ]
       }
     ],
@@ -7118,16 +8576,16 @@
     ],
     "pack_metadata": {
       "source": "DeepTutor_California_Electrical_Career_Domain_Pack_v1.0.md",
-      "stage": "M0/M2 expanded content seed",
+      "stage": "M0/M2 expanded entrance exam content seed",
       "objective_count": 39,
-      "lesson_card_count": 65,
-      "practice_blueprint_count": 15,
-      "learning_activity_template_count": 8,
-      "study_sequence_count": 8,
-      "scenario_card_count": 38,
-      "flashcard_deck_count": 13,
-      "readiness_checkpoint_count": 7,
-      "error_taxonomy_count": 5,
+      "lesson_card_count": 99,
+      "practice_blueprint_count": 33,
+      "learning_activity_template_count": 21,
+      "study_sequence_count": 14,
+      "scenario_card_count": 123,
+      "flashcard_deck_count": 26,
+      "readiness_checkpoint_count": 13,
+      "error_taxonomy_count": 12,
       "source_governance": "Official public sources, URLs, provenance, versions, and update watch are managed by Cognisphere. Tutor consumes materialized pack data only.",
       "note": "Tutor-ready seed with materialized lesson cards, practice blueprints, varied learning activity templates, study sequences, scenario cards, flashcard decks, readiness checkpoints, and error taxonomy. Full deterministic question generators, mock exam engine, and learner evidence reporting remain planned follow-up Tutor capabilities."
     }
