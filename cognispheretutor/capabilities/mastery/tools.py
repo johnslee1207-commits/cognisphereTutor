@@ -575,7 +575,9 @@ class MasteryVisualTool(BaseTool):
             "teaching_cue": visual["teaching_cue"],
             "markdown": visual["markdown"],
             "usage_instruction": (
-                "Include markdown in the learner-facing reply before the quick quiz. "
+                "Copy the markdown field exactly in the learner-facing reply before "
+                "the quick quiz, including the opening and closing ```mermaid fences. "
+                "Do not paraphrase, inline, or partially rewrite the diagram syntax. "
                 "Treat it as a visual aid, then teach the mini-lesson and ask one "
                 "registered mastery_quiz + ask_user check."
             ),

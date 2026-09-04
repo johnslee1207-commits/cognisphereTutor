@@ -269,6 +269,8 @@ async def test_visual_tool_renders_requested_mechanical_template(path_id):
     assert payload["template"] == "lever"
     assert "```mermaid" in payload["markdown"]
     assert "Effort: push down" in payload["markdown"]
+    assert "Copy the markdown field exactly" in payload["usage_instruction"]
+    assert "opening and closing ```mermaid fences" in payload["usage_instruction"]
 
 
 @pytest.mark.asyncio
@@ -299,6 +301,7 @@ async def test_visual_tool_auto_selects_paper_folding_for_spatial_objective(path
     assert result.success is True
     assert payload["template"] == "paper_one_fold_hole"
     assert "Unfold backward" in payload["markdown"]
+    assert "Do not paraphrase" in payload["usage_instruction"]
 
 
 @pytest.mark.asyncio

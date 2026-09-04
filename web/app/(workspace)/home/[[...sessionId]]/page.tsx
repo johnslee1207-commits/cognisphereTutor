@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import {
   BarChart3,
@@ -801,7 +801,6 @@ function MasteryStartingPointPanel({
   pathId,
   tr,
   disabled,
-  onSelect,
   onContinue,
   onRestart,
   onRestore,
@@ -810,7 +809,6 @@ function MasteryStartingPointPanel({
   pathId: string;
   tr: GoalTranslator;
   disabled: boolean;
-  onSelect: (point: MasteryStartingPoint) => void;
   onContinue: () => void;
   onRestart: () => void;
   onRestore: () => void;
@@ -848,10 +846,21 @@ function MasteryStartingPointPanel({
                   : "border-[var(--border)] hover:bg-[var(--accent)]"
               }`}
             >
-              <button
-                type="button"
-                disabled={disabled}
-                onClick={() => onSelect(point)}
+              <a
+                href={masteryChatHref(pathId, {
+                  autoStart: "start",
+                  startPoint: point.id,
+                })}
+                aria-disabled={disabled}
+                tabIndex={disabled ? -1 : 0}
+                onClick={(event) => {
+                  if (disabled) {
+                    event.preventDefault();
+                    return;
+                  }
+                  event.preventDefault();
+                  window.location.assign(event.currentTarget.href);
+                }}
                 className={`flex min-h-[96px] w-full items-start gap-3 rounded-md px-3 py-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                   primary
                     ? "hover:bg-[var(--primary)]/10"
@@ -873,7 +882,7 @@ function MasteryStartingPointPanel({
                     {tr(point.blurb.zh, point.blurb.en)}
                   </span>
                 </span>
-              </button>
+              </a>
               {hasChildren ? (
                 <div className="border-t border-[var(--border)] bg-[var(--background)]/45 px-3 pb-3 pt-2">
                   <div className="mb-2 text-[11px] font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
@@ -883,11 +892,22 @@ function MasteryStartingPointPanel({
                     {point.children?.map((child) => {
                       const ChildIcon = child.icon;
                       return (
-                        <button
+                        <a
                           key={child.id}
-                          type="button"
-                          disabled={disabled}
-                          onClick={() => onSelect(child)}
+                          href={masteryChatHref(pathId, {
+                            autoStart: "start",
+                            startPoint: child.id,
+                          })}
+                          aria-disabled={disabled}
+                          tabIndex={disabled ? -1 : 0}
+                          onClick={(event) => {
+                            if (disabled) {
+                              event.preventDefault();
+                              return;
+                            }
+                            event.preventDefault();
+                            window.location.assign(event.currentTarget.href);
+                          }}
                           className="flex min-h-[72px] items-start gap-2 rounded-md border border-[var(--border)] bg-[var(--card)] px-2.5 py-2 text-left transition-colors hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
                           title={tr(child.title.zh, child.title.en)}
                         >
@@ -902,7 +922,7 @@ function MasteryStartingPointPanel({
                               {tr(child.blurb.zh, child.blurb.en)}
                             </span>
                           </span>
-                        </button>
+                        </a>
                       );
                     })}
                   </div>
@@ -957,6 +977,7 @@ function MasteryStartingPointPanel({
 export default function ChatPage() {
   const params = useParams<{ sessionId?: string[] }>();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { t, i18n } = useTranslation();
   const goalTr = useCallback(
     (cn: string, en: string) =>
@@ -1003,6 +1024,19 @@ export default function ChatPage() {
   const pendingMasteryPathRef = useRef<string | null | undefined>(undefined);
   const pendingMasteryStartPointRef = useRef<string>("");
   const [activeMasteryStartPoint, setActiveMasteryStartPoint] = useState<string>("");
+  const [masteryLaunchRequest, setMasteryLaunchRequest] = useState<{
+    pathId: string;
+    autoStart: string;
+    startPoint: string;
+  } | null>(() => {
+    if (typeof window === "undefined" || !masteryPathParam) return null;
+    const params = new URLSearchParams(window.location.search);
+    const autoStart = params.get("autostart") ?? "";
+    const startPoint =
+      params.get("start_point") ?? params.get("mastery_start_point") ?? "";
+    if (!autoStart && !startPoint) return null;
+    return { pathId: masteryPathParam, autoStart, startPoint };
+  });
   const pendingMasteryAutoStartRef = useRef<string | null | undefined>(undefined);
   const masteryAutoStartSentRef = useRef(false);
   if (pendingAgentRef.current === undefined) {
@@ -1014,8 +1048,37 @@ export default function ChatPage() {
     pendingCapabilityRef.current = params?.get("capability") ?? null;
     pendingTutorSessionRef.current = params?.get("tutor_session") ?? null;
     pendingMasteryAutoStartRef.current = params?.get("autostart") ?? null;
+    pendingMasteryStartPointRef.current =
+      params?.get("start_point") ?? params?.get("mastery_start_point") ?? "";
     pendingMasteryPathRef.current = masteryPathParam;
   }
+  useEffect(() => {
+    if (!masteryPathParam) return;
+    const autoStart = searchParams?.get("autostart") ?? null;
+    const startPoint =
+      searchParams?.get("start_point") ??
+      searchParams?.get("mastery_start_point") ??
+      "";
+    if (!autoStart && !startPoint) return;
+    pendingMasteryPathRef.current = masteryPathParam;
+    pendingMasteryAutoStartRef.current = autoStart;
+    pendingMasteryStartPointRef.current = startPoint;
+    masteryAutoStartSentRef.current = false;
+    setMasteryLaunchRequest((previous) => {
+      if (
+        previous?.pathId === masteryPathParam &&
+        previous.autoStart === (autoStart || "") &&
+        previous.startPoint === startPoint
+      ) {
+        return previous;
+      }
+      return {
+        pathId: masteryPathParam,
+        autoStart: autoStart || "",
+        startPoint,
+      };
+    });
+  }, [masteryPathParam, searchParams]);
   useEffect(() => {
     if (!sessionIdParam?.startsWith("unified_")) return;
     if ((pendingCapabilityRef.current || "") !== "mastery_path") return;
@@ -2342,46 +2405,6 @@ export default function ChatPage() {
     state.isStreaming,
   ]);
 
-  const handleStartMasteryAtPoint = useCallback(
-    (point: MasteryStartingPoint) => {
-      if (!masteryPathParam || masteryProgressBusy || state.isStreaming) return;
-      setCapability("mastery_path");
-      pendingMasteryPathRef.current = masteryPathParam;
-      pendingMasteryStartPointRef.current = point.id;
-      setActiveMasteryStartPoint(point.id);
-      masteryAutoStartSentRef.current = true;
-      const startPrompt = goalTr(point.prompt.zh, point.prompt.en);
-      sendMessage(
-        startPrompt,
-        [],
-        {
-          mastery_path_id: masteryPathParam,
-          mastery_start_point: point.id,
-          mastery_start_action: "start",
-          ...(pendingTutorSessionRef.current
-            ? { cognisphere_tutor_session_id: pendingTutorSessionRef.current }
-            : {}),
-        },
-        [],
-        [],
-        {
-          displayUserMessage: false,
-          persistUserMessage: false,
-        },
-      );
-      shouldAutoScrollRef.current = false;
-    },
-    [
-      goalTr,
-      masteryPathParam,
-      masteryProgressBusy,
-      sendMessage,
-      setCapability,
-      shouldAutoScrollRef,
-      state.isStreaming,
-    ],
-  );
-
   const activeMasteryStartPointLabel = useMemo(() => {
     if (!masteryPathParam || !activeMasteryStartPoint) return "";
     const point = flattenMasteryStartingPoints(
@@ -2524,34 +2547,78 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (masteryAutoStartSentRef.current) return;
-    if ((pendingMasteryAutoStartRef.current || "") !== "next") return;
-    const masteryPathId = pendingMasteryPathRef.current;
+    if (!masteryLaunchRequest) return;
+    const autoStart = masteryLaunchRequest.autoStart;
+    if (autoStart !== "next" && autoStart !== "start") return;
+    const masteryPathId = masteryLaunchRequest.pathId;
     if (!masteryPathId) return;
-    if (state.activeCapability !== "mastery_path") return;
-    if (state.isStreaming || state.messages.length > 0) return;
+    if (state.isStreaming) return;
+    const startPointId = masteryLaunchRequest.startPoint;
+    const startPoint = startPointId
+      ? flattenMasteryStartingPoints(
+          masteryStartingPointsForPath(masteryPathId),
+        ).find((item) => item.id === startPointId)
+      : null;
     masteryAutoStartSentRef.current = true;
+    if (startPoint) {
+      setActiveMasteryStartPoint(startPoint.id);
+      setMasteryProgressNotice(
+        goalTr(
+          `正在进入 ${startPoint.title.zh}...`,
+          `Opening ${startPoint.title.en}...`,
+        ),
+      );
+    }
+    setCapability("mastery_path");
+    const content = startPoint
+      ? goalTr(startPoint.prompt.zh, startPoint.prompt.en)
+      : "Continue the current mastery path in order.";
+    const config = {
+      mastery_path_id: masteryPathId,
+      ...(startPoint
+        ? {
+            mastery_start_point: startPoint.id,
+            mastery_start_action: "start",
+          }
+        : {}),
+      ...(pendingTutorSessionRef.current
+        ? { cognisphere_tutor_session_id: pendingTutorSessionRef.current }
+        : {}),
+    };
+    const requestSnapshotOverride: MessageRequestSnapshot = {
+      content,
+      capability: "mastery_path",
+      enabledTools: [...state.enabledTools],
+      knowledgeBases: [...state.knowledgeBases],
+      language: state.language,
+      config,
+      llmSelection: state.llmSelection,
+      persona: state.personaSelection,
+    };
     sendMessage(
-      "Continue the current mastery path in order.",
+      content,
       [],
-      {
-        mastery_path_id: masteryPathId,
-        ...(pendingTutorSessionRef.current
-          ? { cognisphere_tutor_session_id: pendingTutorSessionRef.current }
-          : {}),
-      },
+      config,
       [],
       [],
       {
         displayUserMessage: false,
         persistUserMessage: false,
+        requestSnapshotOverride,
       },
     );
     shouldAutoScrollRef.current = true;
   }, [
+    goalTr,
+    masteryLaunchRequest,
     sendMessage,
-    state.activeCapability,
+    setCapability,
+    state.enabledTools,
     state.isStreaming,
-    state.messages.length,
+    state.knowledgeBases,
+    state.language,
+    state.llmSelection,
+    state.personaSelection,
     shouldAutoScrollRef,
   ]);
 
@@ -2980,7 +3047,6 @@ export default function ChatPage() {
                       pathId={masteryPathParam}
                       tr={goalTr}
                       disabled={masteryProgressBusy || state.isStreaming}
-                      onSelect={handleStartMasteryAtPoint}
                       onContinue={handleContinueMasteryPath}
                       onRestart={() => void handleNewMasterySession("restart")}
                       onRestore={handleRestoreMasteryProgress}

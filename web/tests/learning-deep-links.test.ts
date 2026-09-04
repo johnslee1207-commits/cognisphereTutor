@@ -20,6 +20,13 @@ test("masteryChatHref preselects mastery_path", () => {
     masteryChatHref("csphere-demo", { autoStart: "next" }),
     "/home/csphere-demo?capability=mastery_path&autostart=next",
   );
+  assert.equal(
+    masteryChatHref("csphere-demo", {
+      autoStart: "start",
+      startPoint: "apprenticeship_mechanical",
+    }),
+    "/home/csphere-demo?capability=mastery_path&autostart=start&start_point=apprenticeship_mechanical",
+  );
 });
 
 test("learningSpaceGoalHref carries goal and domains", () => {

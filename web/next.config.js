@@ -76,6 +76,8 @@ const APP_VERSION = (() => {
 })();
 
 const nextConfig = {
+  allowedDevOrigins: ["127.0.0.1"],
+
   // Expose the build-time version to the browser so the sidebar badge
   // can compare it against GitHub's latest release.
   env: {

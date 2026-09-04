@@ -190,7 +190,8 @@ def _visual_aid(next_step: NextStep, domain: str) -> dict[str, Any]:
         ),
         "rendering_policy": [
             "Call mastery_visual before explaining the mini-lesson.",
-            "Paste the returned markdown diagram/storyboard into the answer.",
+            "Paste the returned markdown field exactly, including the opening and closing ```mermaid fences.",
+            "Do not paraphrase, inline, or partially rewrite Mermaid diagram syntax.",
             "Use the visual to explain one reasoning move, then register exactly one quick check.",
         ],
         "domain": domain,

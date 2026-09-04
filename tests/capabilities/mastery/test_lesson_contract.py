@@ -224,4 +224,12 @@ def test_lesson_contract_requires_visual_aid_for_mechanical_spatial_objective() 
     assert payload["visual_aid"]["required"] is True
     assert payload["visual_aid"]["tool"] == "mastery_visual"
     assert payload["visual_aid"]["knowledge_point_id"] == "cec-apprentice-mechanical"
+    assert any(
+        "Paste the returned markdown field exactly" in item
+        for item in payload["visual_aid"]["rendering_policy"]
+    )
+    assert any(
+        "Do not paraphrase" in item
+        for item in payload["visual_aid"]["rendering_policy"]
+    )
     assert any("mastery_visual" in item for item in payload["must_teach"])
