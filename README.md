@@ -23,7 +23,7 @@
 | AWS Certification | `cognispheretutor/integrations/cognisphere/bundled_packs/aws_certification_bundle.json` | 6 个模块 / 46 个目标 |
 | AP Calculus | `cognispheretutor/integrations/cognisphere/bundled_packs/ap_calculus_bundle.json` | 22 个目标 |
 | LeetCode | `cognispheretutor/integrations/cognisphere/bundled_packs/leetcode_bundle.json` | 7 个目标 |
-| California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 / 75 张 lesson cards / 19 个 practice blueprints / 13 个 activity templates / 10 条 study sequences / 52 张 scenario cards / 17 组 flashcard decks / 8 个 readiness checkpoints |
+| California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 / 80 张 lesson cards / 22 个 practice blueprints / 13 个 activity templates / 10 条 study sequences / 72 张 scenario cards / 19 组 flashcard decks / 9 个 readiness checkpoints |
 
 California Electrical Career 当前已从课程路径 seed 扩展为可进入 mini-lesson 的
 内容 seed，覆盖：
@@ -44,6 +44,9 @@ California Electrical Career 当前已从课程路径 seed 扩展为可进入 mi
 - Entrance Exam 学习方式包括 warmup ladder、reading annotation drill、
   mechanical visual trace board、adaptive retest loop、final-week mock block、
   10-day bootcamp 和 daily maintenance
+- Entrance Exam exam-deepening 内容包括 section triage、numerical computation
+  speed、constraint solving、main idea/detail/inference reading、half mock、
+  visual reasoning bank 和 final-review priority
 - mini-lesson + quick check、worked example、open-book navigation rehearsal、
   scenario judgment、flashcard ladder、timed mixed set、field visualization、
   document evidence coach 等学习形式

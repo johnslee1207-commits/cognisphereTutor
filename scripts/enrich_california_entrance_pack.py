@@ -909,6 +909,502 @@ def error_taxonomy() -> list[dict]:
     ]
 
 
+def exam_deepening_lesson_cards() -> list[dict]:
+    return [
+        {
+            "id": "cec-lesson-entrance-test-section-triage",
+            "title": "Entrance Exam section triage",
+            "summary": (
+                "A learner should know which section a question belongs to before "
+                "choosing a solving method."
+            ),
+            "body": (
+                "Teach a section-first habit. Before solving, classify the item as "
+                "computation, math reasoning, numerical pattern/data, reading, "
+                "mechanical, spatial, or document/PEF readiness. The method comes "
+                "after classification: calculate, set up, scan evidence, trace motion, "
+                "or reverse unfold."
+            ),
+            "teaching_points": [
+                "Wrong method selection wastes time even when the learner knows the topic.",
+                "A numbers-only item may be computation; a relationship item may be reasoning.",
+                "A passage item should start with evidence, not memory.",
+                "A visual item should start with tracking, not guessing.",
+            ],
+            "quick_check_prompts": [
+                "Classify this item before solving: A passage says forms are accepted only after review. Which word controls the answer?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-numerical-computation-speed",
+            "title": "Numerical computation speed without rushing",
+            "summary": (
+                "Computation speed comes from stable shortcuts, estimates, and unit "
+                "sense, not from skipping setup."
+            ),
+            "body": (
+                "Teach a three-pass computation habit: estimate the size, calculate "
+                "with a clean shortcut, then check whether the answer is plausible. "
+                "Use friendly numbers, cancellation, doubling/halving, and percent "
+                "multipliers. Speed should reduce careless errors, not create them."
+            ),
+            "teaching_points": [
+                "Estimate first so decimal-place errors are easier to catch.",
+                "Use doubling and halving for multiplication with 5, 25, and 50 percent.",
+                "Cancel common factors in ratios before multiplying.",
+                "Write units when the question mixes time, length, or rate.",
+            ],
+            "quick_check_prompts": [
+                "Estimate first: 19.8 multiplied by 5 is closest to 10, 50, 100, or 200?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-problem-solving-constraints",
+            "title": "Problem solving: satisfy every constraint",
+            "summary": (
+                "Constraint questions require checking every condition, not finding "
+                "the first answer that looks reasonable."
+            ),
+            "body": (
+                "Teach the checklist method: list constraints, test each answer or "
+                "candidate against them, reject a candidate as soon as it violates one "
+                "constraint, and keep the first candidate that satisfies all conditions. "
+                "This method works for schedules, ordering, tool requirements, and "
+                "logic-style aptitude items."
+            ),
+            "teaching_points": [
+                "A candidate must satisfy all constraints, not most of them.",
+                "Testing answer choices can be faster than building a full solution.",
+                "Order words such as before, after, between, and not with matter.",
+                "Write short symbols for constraints to reduce working-memory load.",
+            ],
+            "quick_check_prompts": [
+                "If A must happen before B, and C cannot be first, which constraint should you test first?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-reading-main-idea-detail",
+            "title": "Reading: main idea versus detail",
+            "summary": (
+                "Reading questions can ask for the whole passage point or for one "
+                "specific controlling detail."
+            ),
+            "body": (
+                "Teach learners to identify the question type before choosing. Main-idea "
+                "questions need the passage's overall purpose. Detail questions need the "
+                "specific sentence or phrase. Inference questions need a conclusion that "
+                "must follow from the text, not a likely real-world assumption."
+            ),
+            "teaching_points": [
+                "Main idea summarizes the whole passage.",
+                "Detail answers live in one controlling phrase or sentence.",
+                "Inference must be supported by the passage.",
+                "Extreme choices often overstate a detail.",
+            ],
+            "quick_check_prompts": [
+                "What is the difference between a detail answer and an inference answer?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-lesson-entrance-final-review-priority",
+            "title": "Final review: prioritize repeated errors",
+            "summary": (
+                "The last stretch before an Entrance Exam should prioritize repeated "
+                "error types and test execution."
+            ),
+            "body": (
+                "Teach a final-review priority order: repeated misses first, slow but "
+                "correct sections second, already-stable sections third, and new broad "
+                "content last. The learner should leave each session with one repair "
+                "rule and one short retest, not a long list of vague study tasks."
+            ),
+            "teaching_points": [
+                "Repeated error labels matter more than one-off misses.",
+                "Speed work should begin after the method is accurate.",
+                "The final week is for execution, confidence, and documents.",
+                "Stop broad review when it hides the real weak section.",
+            ],
+            "quick_check_prompts": [
+                "If your last three misses are all EXCEPT-question mistakes, what should tomorrow's first drill be?"
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+    ]
+
+
+def exam_deepening_practice_blueprints() -> list[dict]:
+    return [
+        {
+            "id": "cec-practice-entrance-section-diagnostic-matrix",
+            "title": "Entrance Exam section diagnostic matrix",
+            "summary": (
+                "Generate a diagnostic that separately scores computation, math setup, "
+                "numerical reasoning, reading evidence, mechanical tracing, spatial "
+                "reasoning, pacing, and PEF/document readiness."
+            ),
+            "practice_modes": [
+                "section classification",
+                "mixed short diagnostic",
+                "error taxonomy assignment",
+                "next-section routing",
+            ],
+            "score_dimensions": [
+                "accuracy",
+                "method choice",
+                "time pressure",
+                "confidence",
+                "error repeat rate",
+            ],
+            "generation_rules": [
+                "Use at least one non-multiple-choice item in math or spatial sections.",
+                "Do not collapse reading and numerical misses into a single score.",
+                "Recommend the next start point from the weakest repeated dimension.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-practice-entrance-half-mock",
+            "title": "Entrance Exam half mock",
+            "summary": (
+                "Generate a medium-length mixed practice block for learners who are "
+                "past basic method lessons but not ready for full mock pacing."
+            ),
+            "practice_modes": [
+                "timed half mock",
+                "section score breakdown",
+                "top-two error repair",
+                "targeted retest",
+            ],
+            "item_format_mix": [
+                "multiple_choice",
+                "numeric_fill",
+                "reading_evidence",
+                "mechanical_trace",
+                "spatial_unfold",
+            ],
+            "generation_rules": [
+                "Keep the block short enough for immediate feedback in one Tutor session.",
+                "After grading, repair only the top two repeated error types.",
+                "End with one concrete next study action.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-practice-entrance-visual-reasoning-bank",
+            "title": "Entrance visual reasoning bank",
+            "summary": (
+                "Generate original mechanical and spatial visual reasoning items with "
+                "text or simple diagram descriptions."
+            ),
+            "practice_modes": [
+                "lever and pivot",
+                "gear direction",
+                "pulley tradeoff",
+                "rotation versus reflection",
+                "paper fold reverse unfolding",
+            ],
+            "generation_rules": [
+                "Ask for the tracked feature or connection before the final answer.",
+                "Vary surface stories so the learner does not memorize one pattern.",
+                "Prefer simple diagrams or textual layouts that render well in chat.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+    ]
+
+
+def exam_deepening_scenario_cards() -> list[dict]:
+    return [
+        {
+            "id": "cec-scenario-entrance-computation-decimal-place",
+            "title": "Computation: decimal place check",
+            "summary": "Original numerical-computation item focused on estimation.",
+            "response_format": "multiple_choice",
+            "scenario": ["Which is closest to 19.8 x 5?"],
+            "choices": ["A) 10", "B) 50", "C) 100", "D) 500"],
+            "answer": "C",
+            "correct_rationale": ["19.8 is close to 20, and 20 x 5 is 100."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-computation-unit-rate",
+            "title": "Computation: unit rate",
+            "summary": "Original numeric-fill item for rate and units.",
+            "response_format": "numeric_fill",
+            "scenario": ["A learner completes 18 questions in 12 minutes. At that rate, how many questions per minute?"],
+            "expected_answer": "1.5",
+            "correct_rationale": ["18 divided by 12 is 1.5 questions per minute."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-ratio-simplify",
+            "title": "Ratio: simplify before scaling",
+            "summary": "Original ratio item that rewards cancellation.",
+            "response_format": "multiple_choice",
+            "scenario": ["The ratio of correct to incorrect answers is 5:2. If there are 21 answers total, how many are correct?"],
+            "choices": ["A) 10", "B) 12", "C) 15", "D) 18"],
+            "answer": "C",
+            "correct_rationale": ["The ratio has 7 total parts. 21/7 = 3 per part. Correct answers are 5 x 3 = 15."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-algebra-two-workers",
+            "title": "Algebra: two worker totals",
+            "summary": "Original algebra word problem with a defined unknown.",
+            "response_format": "numeric_fill",
+            "scenario": ["Worker A prepared twice as many labels as Worker B. Together they prepared 72 labels. How many did Worker B prepare?"],
+            "expected_answer": "24",
+            "correct_rationale": ["Let B = x, so A = 2x. Then 3x = 72, so x = 24."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-work-rate-combined",
+            "title": "Problem solving: combined work rate",
+            "summary": "Original rate item for combined production.",
+            "response_format": "multiple_choice",
+            "scenario": ["One trainee can sort a bin in 30 minutes. Another can sort the same kind of bin in 60 minutes. Working together at those rates, about how long for one bin?"],
+            "choices": ["A) 20 minutes", "B) 30 minutes", "C) 45 minutes", "D) 90 minutes"],
+            "answer": "A",
+            "correct_rationale": ["Rates are 1/30 and 1/60 bin per minute. Together they sort 3/60 = 1/20 bin per minute."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-sequence-multiply-add",
+            "title": "Sequence: multiply then add",
+            "summary": "Original numerical-reasoning sequence item.",
+            "response_format": "multiple_choice",
+            "scenario": ["Find the next number: 2, 5, 11, 23, 47, ?"],
+            "choices": ["A) 71", "B) 89", "C) 95", "D) 96"],
+            "answer": "C",
+            "correct_rationale": ["Each term is previous x 2 + 1. 47 x 2 + 1 = 95."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-sequence-position-rule",
+            "title": "Sequence: position rule",
+            "summary": "Original pattern item using position increments.",
+            "response_format": "numeric_fill",
+            "scenario": ["Find the next number: 4, 6, 9, 13, 18, ?"],
+            "expected_answer": "24",
+            "correct_rationale": ["The differences are +2, +3, +4, +5, so next is +6. 18 + 6 = 24."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-table-efficiency",
+            "title": "Table reasoning: efficiency",
+            "summary": "Original table-comparison item.",
+            "response_format": "multiple_choice",
+            "scenario": ["Team A completes 40 tasks using 5 hours. Team B completes 54 tasks using 9 hours. Which team has better tasks-per-hour efficiency?"],
+            "choices": ["A) Team A", "B) Team B", "C) Same", "D) Cannot tell"],
+            "answer": "A",
+            "correct_rationale": ["Team A: 8 tasks/hour. Team B: 6 tasks/hour."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-reading-main-purpose",
+            "title": "Reading: main purpose",
+            "summary": "Original main-idea reading item.",
+            "response_format": "multiple_choice",
+            "scenario": [
+                "Passage: The testing notice explains what to bring, what is not allowed in the room, and when to arrive. Applicants who arrive late may need to reschedule. Question: What is the main purpose of the notice?"
+            ],
+            "choices": ["A) To teach electrical theory", "B) To explain test-day requirements", "C) To advertise a job", "D) To compare training programs"],
+            "answer": "B",
+            "correct_rationale": ["The passage focuses on what to bring, restrictions, arrival time, and rescheduling."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-reading-inference",
+            "title": "Reading: supported inference",
+            "summary": "Original inference item requiring passage support.",
+            "response_format": "multiple_choice",
+            "scenario": [
+                "Passage: Applicants may update contact information online until the application deadline. After the deadline, updates must be made by contacting the office. Which inference is best supported?"
+            ],
+            "choices": ["A) Online updates are always available", "B) No updates are allowed after the deadline", "C) The update method changes after the deadline", "D) Applicants never need contact information"],
+            "answer": "C",
+            "correct_rationale": ["Before the deadline updates are online; after the deadline they require contacting the office."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-reading-not-permitted",
+            "title": "Reading: not permitted",
+            "summary": "Original detail item about a negative condition.",
+            "response_format": "multiple_choice",
+            "scenario": ["Passage: Bags must remain outside the testing room. Photo ID and pencils may be brought to the desk. Which item is not permitted at the desk?"],
+            "choices": ["A) Bag", "B) Photo ID", "C) Pencil", "D) Appointment notice"],
+            "answer": "A",
+            "correct_rationale": ["The passage says bags must remain outside the testing room."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-mechanical-wheel-radius",
+            "title": "Mechanical: wheel radius and turning",
+            "summary": "Original mechanical item about radius and distance per turn.",
+            "response_format": "true_false",
+            "scenario": ["True or false: If two wheels turn once, the wheel with the larger radius moves a point on its rim through a longer distance."],
+            "answer": "True",
+            "correct_rationale": ["Circumference grows with radius, so the larger wheel rim travels farther per revolution."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-mechanical-open-belt",
+            "title": "Mechanical: open belt direction",
+            "summary": "Original motion-tracing item for belt direction.",
+            "response_format": "multiple_choice",
+            "scenario": ["Pulley A is connected to Pulley B by an open belt. If A turns clockwise and the belt does not cross, which way does B turn?"],
+            "choices": ["A) Clockwise", "B) Counterclockwise", "C) It cannot move", "D) It alternates direction every turn"],
+            "answer": "A",
+            "correct_rationale": ["An open belt usually turns the connected pulley in the same direction."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-mechanical-crossed-belt",
+            "title": "Mechanical: crossed belt direction",
+            "summary": "Original motion-tracing item for crossed belts.",
+            "response_format": "multiple_choice",
+            "scenario": ["Pulley A is connected to Pulley B by a crossed belt. If A turns clockwise, which way does B turn?"],
+            "choices": ["A) Clockwise", "B) Counterclockwise", "C) It cannot move", "D) Same direction only if B is larger"],
+            "answer": "B",
+            "correct_rationale": ["A crossed belt reverses the direction between the pulleys."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-spatial-clockwise-feature",
+            "title": "Spatial: clockwise feature tracking",
+            "summary": "Original rotation item using feature tracking.",
+            "response_format": "multiple_choice",
+            "scenario": ["A triangle has a dot near its top corner. After a 180-degree rotation, where is the dot?"],
+            "choices": ["A) Top", "B) Bottom", "C) Left", "D) It disappears"],
+            "answer": "B",
+            "correct_rationale": ["A 180-degree rotation moves the top feature to the bottom."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-spatial-reflection-letter",
+            "title": "Spatial: reflection trap",
+            "summary": "Original item checking mirror versus rotation.",
+            "response_format": "true_false",
+            "scenario": ["True or false: A reflected letter F can always be made identical to the original by rotating it on the page."],
+            "answer": "False",
+            "correct_rationale": ["Reflection reverses handedness; rotating does not undo that mirror reversal."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-fold-edge-hole",
+            "title": "Paper folding: hole on fold line",
+            "summary": "Original paper-folding item about fold-line placement.",
+            "response_format": "multiple_choice",
+            "scenario": ["A paper is folded once vertically. A hole is punched exactly on the fold line. After unfolding, how many holes appear?"],
+            "choices": ["A) 1", "B) 2", "C) 3", "D) 4"],
+            "answer": "A",
+            "correct_rationale": ["A punch on the fold line lies on the mirror axis, so it does not duplicate to a separate position."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-constraint-order",
+            "title": "Problem solving: order constraints",
+            "summary": "Original constraint-satisfaction item.",
+            "response_format": "multiple_choice",
+            "scenario": ["Tasks must be done with Measure before Cut, Label after Cut, and Review last. Which order works?"],
+            "choices": ["A) Cut, Measure, Label, Review", "B) Measure, Cut, Label, Review", "C) Measure, Review, Cut, Label", "D) Label, Measure, Cut, Review"],
+            "answer": "B",
+            "correct_rationale": ["Measure is before Cut, Label is after Cut, and Review is last."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-confidence-calibration",
+            "title": "Timed block: confidence calibration",
+            "summary": "Original metacognitive item for mock review.",
+            "response_format": "multiple_choice",
+            "scenario": ["After a timed block, which result most needs review first?"],
+            "choices": ["A) Correct with high confidence", "B) Correct with low confidence", "C) Incorrect with high confidence", "D) Skipped intentionally and returned later"],
+            "answer": "C",
+            "correct_rationale": ["Incorrect with high confidence signals a misconception, not just uncertainty."],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-scenario-entrance-pef-deadline",
+            "title": "PEF: deadline control",
+            "summary": "Original document-readiness item.",
+            "response_format": "multiple_choice",
+            "scenario": ["Which action best protects a PEF submission close to a deadline?"],
+            "choices": ["A) Wait until test day to gather evidence", "B) Keep a dated checklist of required documents and unresolved items", "C) Submit vague claims without support", "D) Ignore official messages after applying"],
+            "answer": "B",
+            "correct_rationale": ["A dated checklist makes missing evidence and deadlines visible."],
+            "source_ref_ids": ["laett.inside_wireman.2026-01-26", "gan.validation.2026-09-03"],
+        },
+    ]
+
+
+def exam_deepening_flashcard_decks() -> list[dict]:
+    return [
+        {
+            "id": "cec-flashcards-entrance-section-triage",
+            "title": "Entrance section triage cues",
+            "summary": "Cards for selecting the right solving method before answering.",
+            "cards": [
+                "Numbers only: estimate, compute, check units.",
+                "Relationship words: define x and write the equation.",
+                "Sequence: test differences, multiplication, alternating tracks.",
+                "Passage: locate controlling phrase before choosing.",
+                "Mechanism: identify pivot, contact, belt, or rope path.",
+                "Fold/shape: track one feature and reverse unfold.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+        {
+            "id": "cec-flashcards-entrance-final-week",
+            "title": "Entrance final-week rules",
+            "summary": "Cards for protecting score and confidence near the test date.",
+            "cards": [
+                "Repair repeated errors before adding new content.",
+                "Use skip/mark/return when stuck.",
+                "Review incorrect-high-confidence answers first.",
+                "Sleep and documents are part of readiness.",
+                "Short mixed blocks beat panic cramming.",
+                "Do not treat Tutor practice as official exam questions.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        },
+    ]
+
+
+def exam_deepening_readiness_checkpoints() -> list[dict]:
+    return [
+        {
+            "id": "cec-checkpoint-entrance-half-mock-readiness",
+            "title": "Entrance Exam half-mock readiness checkpoint",
+            "summary": (
+                "Use before moving from focused drills into longer mixed timed practice."
+            ),
+            "checkpoint_prompts": [
+                "Can the learner classify each item section before solving?",
+                "Can the learner complete numeric-fill math without answer choices?",
+                "Can the learner identify reading evidence in one sentence?",
+                "Can the learner trace visual items without jumping to choices?",
+                "Can the learner review incorrect-high-confidence answers first?",
+            ],
+            "mastery_evidence": [
+                "at least 75% across a mixed short diagnostic",
+                "no unresolved repeated miss in the same section",
+                "written top-two error labels and repair plan",
+                "one successful adaptive retest after a miss",
+            ],
+            "remediation": [
+                "If section triage is weak, run section-classification warmups.",
+                "If incorrect-high-confidence errors appear, slow down and require method explanation.",
+                "If time pressure causes broad collapse, use smaller timed blocks before half mock.",
+            ],
+            "source_ref_ids": SOURCE_REFS,
+        }
+    ]
+
+
 def provenance_refs() -> list[dict]:
     return [
         {
@@ -929,10 +1425,25 @@ def main() -> None:
     knowledge = data["knowledge"]
     added = {
         "lesson_cards": append_unique(knowledge, "lesson_cards", lesson_cards()),
+        "exam_deepening_lesson_cards": append_unique(
+            knowledge, "lesson_cards", exam_deepening_lesson_cards()
+        ),
         "practice_blueprints": append_unique(knowledge, "practice_blueprints", practice_blueprints()),
+        "exam_deepening_practice_blueprints": append_unique(
+            knowledge, "practice_blueprints", exam_deepening_practice_blueprints()
+        ),
         "scenario_cards": append_unique(knowledge, "scenario_cards", scenario_cards()),
+        "exam_deepening_scenario_cards": append_unique(
+            knowledge, "scenario_cards", exam_deepening_scenario_cards()
+        ),
         "flashcard_decks": append_unique(knowledge, "flashcard_decks", flashcard_decks()),
+        "exam_deepening_flashcard_decks": append_unique(
+            knowledge, "flashcard_decks", exam_deepening_flashcard_decks()
+        ),
         "readiness_checkpoints": append_unique(knowledge, "readiness_checkpoints", readiness_checkpoints()),
+        "exam_deepening_readiness_checkpoints": append_unique(
+            knowledge, "readiness_checkpoints", exam_deepening_readiness_checkpoints()
+        ),
         "learning_activity_templates": append_unique(
             knowledge, "learning_activity_templates", learning_activity_templates()
         ),
