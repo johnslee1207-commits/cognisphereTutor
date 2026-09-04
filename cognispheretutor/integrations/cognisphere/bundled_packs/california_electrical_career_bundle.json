@@ -2475,6 +2475,172 @@
           "ca_dir.general_electrician.eligibility.2026-09-03",
           "cslb.contractor_experience.2026-09-03"
         ]
+      },
+      {
+        "id": "cec-activity-entrance-warmup-ladder",
+        "title": "Entrance Exam warmup ladder",
+        "summary": "A short daily warmup that moves from recall to calculation to one timed item before the main lesson.",
+        "activity_modes": [
+          "one-minute recall",
+          "numeric-fill calculation",
+          "one timed choice",
+          "error tag"
+        ],
+        "steps": [
+          "Ask one flashcard-style trigger question from the current section.",
+          "Ask one no-choice numeric or short-answer item.",
+          "Ask one timed multiple-choice item.",
+          "Tag the miss if any, then continue to the planned mini-lesson."
+        ],
+        "learner_action": [
+          "Answer quickly without overexplaining.",
+          "Write the setup before arithmetic when math is involved.",
+          "Name the error pattern after feedback."
+        ],
+        "feedback_rule": [
+          "Keep warmups under five minutes.",
+          "Do not block the lesson unless the same error repeats twice."
+        ],
+        "exam_alignment": [
+          "Builds daily retrieval and pacing for aptitude-section readiness."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-activity-reading-annotation-drill",
+        "title": "Reading annotation drill",
+        "summary": "A passage-first drill where the learner marks controlling words before seeing or choosing the answer.",
+        "activity_modes": [
+          "short passage",
+          "qualifier marking",
+          "evidence choice",
+          "unsupported-choice review"
+        ],
+        "steps": [
+          "Show a short original technical or admissions passage.",
+          "Ask the learner to identify the controlling phrase.",
+          "Ask a multiple-choice or short evidence question.",
+          "After grading, explain whether the miss was add, reverse, overstate, or ignore-condition."
+        ],
+        "learner_action": [
+          "Underline mentally: only, except, before, after, must, may, not permitted.",
+          "Answer from the passage rather than outside knowledge."
+        ],
+        "feedback_rule": [
+          "If the learner chooses an unsupported answer, require the controlling phrase on the replacement item."
+        ],
+        "exam_alignment": [
+          "Supports reading-comprehension sections without using official passages."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-activity-mechanical-visual-trace",
+        "title": "Mechanical visual trace board",
+        "summary": "A visual-thinking activity for levers, gears, pulleys, ramps, rotation, and paper folding.",
+        "activity_modes": [
+          "identify parts",
+          "trace one connection",
+          "predict result",
+          "compare to answer choices"
+        ],
+        "steps": [
+          "Name the system: lever, ramp, gear train, pulley, rotation, reflection, or fold.",
+          "Pick one feature, pivot, fold line, or gear contact to track.",
+          "Predict direction, force tradeoff, or final position before choices.",
+          "Grade the tracing step and the final answer separately."
+        ],
+        "learner_action": [
+          "Say what is being tracked.",
+          "Move one connection or fold at a time.",
+          "Avoid jumping to the final image before tracing."
+        ],
+        "feedback_rule": [
+          "If the final answer is right but tracing is wrong, mark as fragile and give one more visual trace."
+        ],
+        "exam_alignment": [
+          "Supports mechanical comprehension and paper-folding/spatial readiness."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-activity-adaptive-retest-loop",
+        "title": "Adaptive retest loop",
+        "summary": "A remediation loop that retests the exact skill behind a miss after one short repair explanation.",
+        "activity_modes": [
+          "grade",
+          "error label",
+          "micro repair",
+          "parallel retest"
+        ],
+        "steps": [
+          "Grade the learner's response as correct, incorrect, or fragile.",
+          "Assign one error label.",
+          "Teach a one-paragraph repair tied to that label.",
+          "Ask a new original item with the same underlying skill but different surface story."
+        ],
+        "learner_action": [
+          "Read the error label.",
+          "Apply the repair method on a new item.",
+          "Continue only after the repeated miss is resolved or scheduled for review."
+        ],
+        "feedback_rule": [
+          "Never advance after a wrong answer without correction and a retest decision.",
+          "Avoid long free-response gates unless the learner repeatedly guesses."
+        ],
+        "exam_alignment": [
+          "Turns quick quizzes into mastery evidence instead of simple exposure."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-activity-final-week-mock-block",
+        "title": "Final-week mock block",
+        "summary": "A compressed mixed block for learners close to an Entrance Exam date, balancing speed, coverage, and document readiness.",
+        "activity_modes": [
+          "timed mixed set",
+          "confidence mark",
+          "section score",
+          "document check"
+        ],
+        "steps": [
+          "Run a short mixed set across math, numerical, reading, mechanical, and spatial items.",
+          "Have the learner mark confidence on each answer.",
+          "Grade by section and error label.",
+          "Close with one application or PEF/document readiness reminder."
+        ],
+        "learner_action": [
+          "Use the skip/mark/return rule.",
+          "Do not spend too long on one visual item.",
+          "Review only the top two error types after the block."
+        ],
+        "feedback_rule": [
+          "In final-week mode, prioritize repeated high-yield errors and test execution over broad new content."
+        ],
+        "exam_alignment": [
+          "Builds near-term readiness for timed aptitude selection."
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
       }
     ],
     "study_sequences": [
@@ -2846,6 +3012,100 @@
           "contract/change-order scenario",
           "employment/payroll scenario",
           "public works recognition scenario"
+        ]
+      },
+      {
+        "id": "cec-sequence-entrance-10-day-bootcamp",
+        "title": "Entrance Exam 10-day bootcamp",
+        "summary": "A compressed sequence for a learner who needs immediate Entrance Exam preparation across every aptitude section.",
+        "objective_ids": [
+          "cec-apprentice-baseline-diagnostic",
+          "cec-apprentice-math-reasoning",
+          "cec-apprentice-numerical-reasoning",
+          "cec-apprentice-reading",
+          "cec-apprentice-mechanical",
+          "cec-apprentice-spatial",
+          "cec-apprentice-timed-practice",
+          "cec-apprentice-pef"
+        ],
+        "lesson_card_ids": [
+          "cec-lesson-entrance-exam-format-boundary",
+          "cec-lesson-entrance-math-fractions-decimals",
+          "cec-lesson-entrance-math-equation-from-words",
+          "cec-lesson-entrance-numerical-pattern-map",
+          "cec-lesson-entrance-reading-evidence-ladder",
+          "cec-lesson-entrance-mechanical-force-distance",
+          "cec-lesson-entrance-mechanical-motion-tracing",
+          "cec-lesson-entrance-spatial-rotation-reflection",
+          "cec-lesson-entrance-paper-folding-unfold-order",
+          "cec-lesson-entrance-daily-cycle"
+        ],
+        "activity_template_ids": [
+          "cec-activity-entrance-warmup-ladder",
+          "cec-activity-mini-lesson-quick-check",
+          "cec-activity-adaptive-retest-loop",
+          "cec-activity-final-week-mock-block"
+        ],
+        "day_plan": [
+          "Day 1: baseline diagnostic and format boundary",
+          "Day 2: fraction/decimal/percent bridge",
+          "Day 3: algebra setup from words",
+          "Day 4: sequence and table reasoning",
+          "Day 5: reading evidence ladder",
+          "Day 6: levers, ramps, and force-distance tradeoffs",
+          "Day 7: gears, pulleys, and motion tracing",
+          "Day 8: rotation, reflection, and paper folding",
+          "Day 9: timed mixed set and error repair",
+          "Day 10: final mock block and PEF/document check"
+        ],
+        "checkpoint_prompts": [
+          "Which two sections are now strongest?",
+          "Which two error labels repeat most often?",
+          "Can the learner use skip/mark/return without prompting?"
+        ],
+        "mastery_evidence": [
+          "completed one focused drill in each Entrance Exam section",
+          "completed one mixed timed block",
+          "error log shows fewer repeated misses"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
+        ]
+      },
+      {
+        "id": "cec-sequence-entrance-daily-maintenance",
+        "title": "Entrance Exam daily maintenance",
+        "summary": "A lighter ongoing sequence for learners who have finished core lessons and need retention until the exam date.",
+        "objective_ids": [
+          "cec-apprentice-math-reasoning",
+          "cec-apprentice-numerical-reasoning",
+          "cec-apprentice-reading",
+          "cec-apprentice-mechanical",
+          "cec-apprentice-spatial",
+          "cec-apprentice-timed-practice"
+        ],
+        "activity_template_ids": [
+          "cec-activity-entrance-warmup-ladder",
+          "cec-activity-reading-annotation-drill",
+          "cec-activity-mechanical-visual-trace",
+          "cec-activity-adaptive-retest-loop"
+        ],
+        "rotation_rule": [
+          "Every day includes one math/numerical item, one reading item, and one mechanical or spatial item.",
+          "Every third day includes a timed mini-block.",
+          "Any repeated miss becomes the next day's first warmup."
+        ],
+        "mastery_evidence": [
+          "stable accuracy over three separate days",
+          "no repeated qualifier-trap or setup-error miss",
+          "learner can explain the chosen pacing rule"
+        ],
+        "source_ref_ids": [
+          "laett.inside_wireman.2026-01-26",
+          "gan.aptitude_test.2026-09-03",
+          "cceti.gan_how_to_apply.2026-09-03"
         ]
       }
     ],
@@ -4676,6 +4936,33 @@
         "remediation": [
           "Use NEC navigation rehearsal.",
           "Score route choice separately from final answer."
+        ]
+      },
+      {
+        "id": "cec-error-entrance-qualifier-trap",
+        "title": "Entrance reading qualifier trap",
+        "summary": "The learner misses because they overlook words like except, only, unless, before, after, required, or not permitted.",
+        "remediation": [
+          "Require the learner to identify the controlling phrase before answer choices.",
+          "Use a short evidence-answer replacement item before another multiple-choice item."
+        ]
+      },
+      {
+        "id": "cec-error-entrance-answer-choice-dependence",
+        "title": "Answer-choice dependence",
+        "summary": "The learner can sometimes pick from choices but cannot produce the quantity, setup, or reasoning without options.",
+        "remediation": [
+          "Switch the next math or spatial item to numeric-fill or short-answer format.",
+          "Ask for an estimate before showing choices."
+        ]
+      },
+      {
+        "id": "cec-error-entrance-visual-jump",
+        "title": "Visual reasoning jump",
+        "summary": "The learner jumps to the final gear direction, fold result, or rotated shape without tracing one connection or fold at a time.",
+        "remediation": [
+          "Ask the learner to name the tracked feature, pivot, gear contact, or fold line.",
+          "Grade the trace step before grading the final answer."
         ]
       }
     ],

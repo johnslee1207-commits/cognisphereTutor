@@ -17,9 +17,9 @@ csphere-california_electrical_career
 ```
 
 当前版包含 6 个模块、39 个学习目标，并补充了 75 张可用于 Tutor
-mini-lesson 的 lesson cards、19 个 practice blueprint、8 个 learning
-activity templates、8 条 study sequences、52 张 scenario cards、17 组
-flashcard decks、8 个 readiness checkpoints 和 5 类 error taxonomy：
+mini-lesson 的 lesson cards、19 个 practice blueprint、13 个 learning
+activity templates、10 条 study sequences、52 张 scenario cards、17 组
+flashcard decks、8 个 readiness checkpoints 和 8 类 error taxonomy：
 
 1. Career Orientation
 2. Shared Electrical Foundations
@@ -75,12 +75,19 @@ flashcard decks、8 个 readiness checkpoints 和 5 类 error taxonomy：
 - timed mixed set
 - field visualization prompt
 - document evidence coach
+- Entrance Exam warmup ladder
+- Reading annotation drill
+- Mechanical visual trace board
+- Adaptive retest loop
+- Final-week mock block
 
 新增连续学习与个性化复习数据：
 
 - Beginner first-week path
 - Inside Wireman apprenticeship entry path
 - Apprenticeship four-week sprint
+- Entrance Exam 10-day bootcamp
+- Entrance Exam daily maintenance
 - California General Electrician core path
 - C-10 contractor trade path
 - Contractor Law and Business scenario path
