@@ -22,6 +22,30 @@ if TYPE_CHECKING:
     from cognispheretutor.learning.scheduler import SpacedRepetitionScheduler
 
 
+_AWS_CANONICAL_PATH_ID = "csphere-aws_certification"
+_AWS_LEGACY_MARKERS = (
+    "aws",
+    "cloud practitioner",
+    "clf-c02",
+    "saa-c03",
+    "dva-c02",
+    "cognisphere · aws_certification",
+)
+
+
+def _looks_like_legacy_aws_path(book_id: str, display_name: str, progress: LearningProgress) -> bool:
+    if not book_id.startswith("unified_"):
+        return False
+    haystack = " ".join(
+        [
+            display_name,
+            *(module.name for module in progress.modules),
+            *(kp.name for module in progress.modules for kp in module.knowledge_points[:3]),
+        ]
+    ).casefold()
+    return any(marker in haystack for marker in _AWS_LEGACY_MARKERS)
+
+
 class LearningService:
     def __init__(self, store: LearningStore | None = None) -> None:
         self._store = store or LearningStore()
@@ -253,6 +277,7 @@ class LearningService:
         logger = logging.getLogger(__name__)
 
         book_ids = self._store.list_all()
+        has_canonical_aws_path = _AWS_CANONICAL_PATH_ID in book_ids
         summaries = []
         errors = []
         for bid in book_ids:
@@ -270,6 +295,10 @@ class LearningService:
                 display_name = ""
                 if progress.modules:
                     display_name = progress.modules[0].name or ""
+                if has_canonical_aws_path and _looks_like_legacy_aws_path(
+                    progress.book_id, display_name, progress
+                ):
+                    continue
                 summaries.append(
                     {
                         "book_id": progress.book_id,

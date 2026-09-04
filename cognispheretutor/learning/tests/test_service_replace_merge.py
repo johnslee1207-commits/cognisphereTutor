@@ -39,6 +39,44 @@ def _make_module(mod_id: str, kp_ids: list[str]) -> LearningModule:
     )
 
 
+def test_list_progress_collapses_legacy_aws_unified_paths(tmp_path: Path) -> None:
+    store = LearningStore(root=tmp_path)
+    service = LearningService(store)
+
+    canonical = LearningProgress(book_id="csphere-aws_certification")
+    canonical.modules = [
+        LearningModule(
+            id="aws-m1",
+            name="AWS Cloud Foundations",
+            order=0,
+            knowledge_points=[_make_kp("aws-kp1", "aws-m1")],
+        )
+    ]
+    legacy = LearningProgress(book_id="unified_123")
+    legacy.modules = [
+        LearningModule(
+            id="legacy-m1",
+            name="AWS Certification Overview",
+            order=0,
+            knowledge_points=[_make_kp("legacy-kp1", "legacy-m1")],
+        )
+    ]
+    custom = LearningProgress(book_id="custom_python")
+    custom.modules = [_make_module("python-m1", ["python-kp1"])]
+
+    store.save(canonical)
+    store.save(legacy)
+    store.save(custom)
+
+    listed = service.list_progress()
+    book_ids = {row["book_id"] for row in listed["summaries"]}
+
+    assert "csphere-aws_certification" in book_ids
+    assert "custom_python" in book_ids
+    assert "unified_123" not in book_ids
+    assert service.load("unified_123") is not None
+
+
 # ── replace_modules / init_modules (replace semantics) ────────────────────
 
 
