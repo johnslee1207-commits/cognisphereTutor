@@ -1484,6 +1484,17 @@ export default function ChatPage() {
     }
   }, [capabilityNeedsConfig, ensureActivityPanelOpen]);
   const hasMessages = state.messages.length > 0;
+  const urlMasteryAutoStart = searchParams?.get("autostart") ?? null;
+  const urlMasteryStartPoint =
+    searchParams?.get("start_point") ??
+    searchParams?.get("mastery_start_point") ??
+    "";
+  const hasPendingMasteryLaunch = Boolean(
+    masteryLaunchRequest ||
+      (masteryPathParam && (urlMasteryAutoStart || urlMasteryStartPoint)),
+  );
+  const displayedMasteryStartPoint =
+    activeMasteryStartPoint || urlMasteryStartPoint;
   useEffect(() => {
     if (!masteryPathParam) {
       setMasteryMap(null);
@@ -3141,7 +3152,7 @@ export default function ChatPage() {
                   <SessionLoadingView onCancel={cancelSessionLoad} />
                 </div>
               </div>
-            ) : !hasMessages && !state.isStreaming && !masteryLaunchRequest ? (
+            ) : !hasMessages && !state.isStreaming && !hasPendingMasteryLaunch ? (
               <div className="w-full flex-1 min-h-0 overflow-y-auto px-6 py-8 animate-fade-in">
                 <div className="mx-auto flex w-full max-w-[760px] flex-col items-stretch gap-5">
                   <div className="flex items-center justify-center gap-4">
@@ -3164,7 +3175,7 @@ export default function ChatPage() {
                       tr={goalTr}
                       disabled={masteryProgressBusy}
                       controlsDisabled={masteryProgressBusy || state.isStreaming}
-                      activePointId={activeMasteryStartPoint}
+                      activePointId={displayedMasteryStartPoint}
                       onContinue={handleContinueMasteryPath}
                       onRestart={() => void handleNewMasterySession("restart")}
                       onRestore={handleRestoreMasteryProgress}
@@ -3215,7 +3226,7 @@ export default function ChatPage() {
                       disabled={masteryProgressBusy}
                       controlsDisabled={masteryProgressBusy || state.isStreaming}
                       compact
-                      activePointId={activeMasteryStartPoint}
+                      activePointId={displayedMasteryStartPoint}
                       onContinue={handleContinueMasteryPath}
                       onRestart={() => void handleNewMasterySession("restart")}
                       onRestore={handleRestoreMasteryProgress}
