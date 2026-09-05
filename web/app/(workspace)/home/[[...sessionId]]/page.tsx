@@ -822,6 +822,9 @@ function MasteryStartingPointPanel({
 }) {
   const points = masteryStartingPointsForPath(pathId);
   const actionsDisabled = controlsDisabled ?? disabled;
+  const [compactExpanded, setCompactExpanded] = useState(false);
+  const flattenedPoints = flattenMasteryStartingPoints(points);
+  const activePoint = flattenedPoints.find((point) => point.id === activePointId);
   const activeParentPoint =
     points.find((point) => point.id === activePointId) ||
     points.find((point) =>
@@ -841,63 +844,84 @@ function MasteryStartingPointPanel({
   };
   if (compact) {
     return (
-      <div className="rounded-lg border border-[var(--border)] bg-[var(--card)]/80 p-3 shadow-sm">
+      <div className="rounded-lg border border-[var(--border)] bg-[var(--card)]/80 p-2.5 shadow-sm">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div className="min-w-0">
-            <div className="text-xs font-medium text-[var(--foreground)]">
+            <div className="flex items-center gap-2 text-xs font-medium text-[var(--foreground)]">
               {tr("切换学习内容", "Switch learning area")}
+              {activePoint ? (
+                <span className="truncate rounded-sm bg-[var(--muted)] px-1.5 py-0.5 text-[10px] font-normal text-[var(--muted-foreground)]">
+                  {tr(activePoint.title.zh, activePoint.title.en)}
+                </span>
+              ) : null}
             </div>
             <div className="mt-0.5 truncate text-[11px] text-[var(--muted-foreground)]">
               {title}
             </div>
           </div>
-          <button
-            type="button"
-            disabled={actionsDisabled}
-            onClick={onContinue}
-            className="inline-flex h-7 shrink-0 items-center justify-center gap-1.5 rounded-md border border-[var(--border)] px-2 text-[11px] text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <MessageCirclePlus className="h-3.5 w-3.5" />
-            {tr("继续进度", "Continue")}
-          </button>
+          <div className="flex shrink-0 items-center gap-1.5">
+            <button
+              type="button"
+              disabled={actionsDisabled}
+              onClick={onContinue}
+              className="inline-flex h-7 items-center justify-center gap-1.5 rounded-md border border-[var(--border)] px-2 text-[11px] text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <MessageCirclePlus className="h-3.5 w-3.5" />
+              {tr("继续进度", "Continue")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setCompactExpanded((value) => !value)}
+              className="inline-flex h-7 items-center justify-center gap-1 rounded-md border border-[var(--border)] px-2 text-[11px] text-[var(--foreground)] hover:bg-[var(--accent)]"
+              aria-expanded={compactExpanded}
+              title={compactExpanded ? tr("收起学习切换", "Collapse learning switcher") : tr("展开学习切换", "Expand learning switcher")}
+            >
+              <ChevronDown
+                className={`h-3.5 w-3.5 transition-transform ${compactExpanded ? "rotate-180" : ""}`}
+              />
+              {compactExpanded ? tr("收起", "Collapse") : tr("展开", "Expand")}
+            </button>
+          </div>
         </div>
-        <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
-          {points.map((point) => {
-            const Icon = point.icon;
-            const active =
-              activeParentPoint?.id === point.id || activePointId === point.id;
-            return (
-              <a
-                key={point.id}
-                href={masteryChatHref(pathId, {
-                  autoStart: "start",
-                  startPoint: point.id,
-                })}
-                aria-disabled={disabled}
-                tabIndex={disabled ? -1 : 0}
-                onClick={openStartLink}
-                className={`flex min-h-[54px] min-w-[150px] items-start gap-2 rounded-md border px-2.5 py-2 text-left transition-colors ${
-                  active
-                    ? "border-[var(--primary)] bg-[var(--primary)]/10"
-                    : "border-[var(--border)] bg-[var(--background)] hover:bg-[var(--accent)]"
-                }`}
-                title={tr(point.title.zh, point.title.en)}
-              >
-                <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
-                <span className="min-w-0">
-                  <span className="block truncate text-xs font-medium text-[var(--foreground)]">
-                    {tr(point.title.zh, point.title.en)}
-                  </span>
-                  <span className="mt-0.5 block line-clamp-2 text-[10px] leading-snug text-[var(--muted-foreground)]">
-                    {tr(point.blurb.zh, point.blurb.en)}
-                  </span>
-                </span>
-              </a>
-            );
-          })}
-        </div>
-        {activeChildren.length ? (
-          <div className="mt-2 border-t border-[var(--border)] pt-2">
+        {compactExpanded ? (
+          <div className="mt-2">
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {points.map((point) => {
+                const Icon = point.icon;
+                const active =
+                  activeParentPoint?.id === point.id || activePointId === point.id;
+                return (
+                  <a
+                    key={point.id}
+                    href={masteryChatHref(pathId, {
+                      autoStart: "start",
+                      startPoint: point.id,
+                    })}
+                    aria-disabled={disabled}
+                    tabIndex={disabled ? -1 : 0}
+                    onClick={openStartLink}
+                    className={`flex min-h-[54px] min-w-[150px] items-start gap-2 rounded-md border px-2.5 py-2 text-left transition-colors ${
+                      active
+                        ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                        : "border-[var(--border)] bg-[var(--background)] hover:bg-[var(--accent)]"
+                    }`}
+                    title={tr(point.title.zh, point.title.en)}
+                  >
+                    <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
+                    <span className="min-w-0">
+                      <span className="block truncate text-xs font-medium text-[var(--foreground)]">
+                        {tr(point.title.zh, point.title.en)}
+                      </span>
+                      <span className="mt-0.5 block line-clamp-2 text-[10px] leading-snug text-[var(--muted-foreground)]">
+                        {tr(point.blurb.zh, point.blurb.en)}
+                      </span>
+                    </span>
+                  </a>
+                );
+              })}
+            </div>
+            {activeChildren.length ? (
+              <div className="mt-2 border-t border-[var(--border)] pt-2">
             <div className="mb-1.5 text-[10px] font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
               {tr("具体训练", "Practice areas")}
             </div>
@@ -935,6 +959,8 @@ function MasteryStartingPointPanel({
                 );
               })}
             </div>
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>
