@@ -370,12 +370,13 @@ const AssistantMessage = memo(function AssistantMessage({
   // message will actually render through the default branch (the
   // research / quiz / animator / visualize branches have their own
   // layout and pin the card elsewhere).
+  const isMasteryMessage = msg.capability === "mastery_path";
   const useInlineAskUserSegments =
     !outlinePreview &&
     !mathAnimatorResult &&
     !visualizeResult &&
-    !(quizQuestions && quizQuestions.length > 0);
-  const isMasteryMessage = msg.capability === "mastery_path";
+    !(quizQuestions && quizQuestions.length > 0) &&
+    (isMasteryMessage ? events.length > 0 : true);
   const messageSegments = useMemo(
     () =>
       useInlineAskUserSegments
@@ -476,7 +477,7 @@ const AssistantMessage = memo(function AssistantMessage({
             language={language}
           />
         </>
-      ) : hasInlineAskUser ? (
+      ) : useInlineAskUserSegments && (hasInlineAskUser || isMasteryMessage) ? (
         // Default chat surface with one or more ask_user calls: render
         // text and cards in the exact order they were streamed, so the
         // pre-ask_user narration sits above the card and the resumed
