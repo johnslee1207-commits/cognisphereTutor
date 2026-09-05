@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import {
   type KeyboardEvent,
+  type MouseEvent as ReactMouseEvent,
   useCallback,
   useEffect,
   useMemo,
@@ -817,6 +818,16 @@ function MasteryStartingPointPanel({
 }) {
   const points = masteryStartingPointsForPath(pathId);
   const actionsDisabled = controlsDisabled ?? disabled;
+  const openStartLink = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    if (disabled) {
+      event.preventDefault();
+      return;
+    }
+    event.preventDefault();
+    const target = new URL(event.currentTarget.href);
+    target.searchParams.set("launch", String(Date.now()));
+    window.location.assign(`${target.pathname}?${target.searchParams.toString()}`);
+  };
   return (
     <div className="mx-auto flex w-full max-w-[720px] flex-col gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)]/70 p-4 shadow-sm">
       <div className="flex items-start gap-3">
@@ -856,14 +867,7 @@ function MasteryStartingPointPanel({
                 })}
                 aria-disabled={disabled}
                 tabIndex={disabled ? -1 : 0}
-                onClick={(event) => {
-                  if (disabled) {
-                    event.preventDefault();
-                    return;
-                  }
-                  event.preventDefault();
-                  window.location.assign(event.currentTarget.href);
-                }}
+                onClick={openStartLink}
                 className={`flex min-h-[96px] w-full items-start gap-3 rounded-md px-3 py-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                   primary
                     ? "hover:bg-[var(--primary)]/10"
@@ -903,14 +907,7 @@ function MasteryStartingPointPanel({
                           })}
                           aria-disabled={disabled}
                           tabIndex={disabled ? -1 : 0}
-                          onClick={(event) => {
-                            if (disabled) {
-                              event.preventDefault();
-                              return;
-                            }
-                            event.preventDefault();
-                            window.location.assign(event.currentTarget.href);
-                          }}
+                          onClick={openStartLink}
                           className="flex min-h-[72px] items-start gap-2 rounded-md border border-[var(--border)] bg-[var(--card)] px-2.5 py-2 text-left transition-colors hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
                           title={tr(child.title.zh, child.title.en)}
                         >
@@ -1031,14 +1028,16 @@ export default function ChatPage() {
     pathId: string;
     autoStart: string;
     startPoint: string;
+    launch: string;
   } | null>(() => {
     if (typeof window === "undefined" || !masteryPathParam) return null;
     const params = new URLSearchParams(window.location.search);
     const autoStart = params.get("autostart") ?? "";
     const startPoint =
       params.get("start_point") ?? params.get("mastery_start_point") ?? "";
+    const launch = params.get("launch") ?? "";
     if (!autoStart && !startPoint) return null;
-    return { pathId: masteryPathParam, autoStart, startPoint };
+    return { pathId: masteryPathParam, autoStart, startPoint, launch };
   });
   const pendingMasteryAutoStartRef = useRef<string | null | undefined>(undefined);
   const masteryAutoStartSentRef = useRef(false);
@@ -1062,6 +1061,7 @@ export default function ChatPage() {
       searchParams?.get("start_point") ??
       searchParams?.get("mastery_start_point") ??
       "";
+    const launch = searchParams?.get("launch") ?? "";
     if (!autoStart && !startPoint) return;
     pendingMasteryPathRef.current = masteryPathParam;
     pendingMasteryAutoStartRef.current = autoStart;
@@ -1071,7 +1071,8 @@ export default function ChatPage() {
       if (
         previous?.pathId === masteryPathParam &&
         previous.autoStart === (autoStart || "") &&
-        previous.startPoint === startPoint
+        previous.startPoint === startPoint &&
+        previous.launch === launch
       ) {
         return previous;
       }
@@ -1079,6 +1080,7 @@ export default function ChatPage() {
         pathId: masteryPathParam,
         autoStart: autoStart || "",
         startPoint,
+        launch,
       };
     });
   }, [masteryPathParam, searchParams]);
@@ -2555,7 +2557,8 @@ export default function ChatPage() {
     if (autoStart !== "next" && autoStart !== "start") return;
     const masteryPathId = masteryLaunchRequest.pathId;
     if (!masteryPathId) return;
-    if (state.isStreaming) return;
+    const isExplicitLaunch = Boolean(masteryLaunchRequest.launch);
+    if (state.isStreaming && !isExplicitLaunch) return;
     const startPointId = masteryLaunchRequest.startPoint;
     const startPoint = startPointId
       ? flattenMasteryStartingPoints(
