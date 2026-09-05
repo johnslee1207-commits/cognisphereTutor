@@ -1029,16 +1029,7 @@ export default function ChatPage() {
     autoStart: string;
     startPoint: string;
     launch: string;
-  } | null>(() => {
-    if (typeof window === "undefined" || !masteryPathParam) return null;
-    const params = new URLSearchParams(window.location.search);
-    const autoStart = params.get("autostart") ?? "";
-    const startPoint =
-      params.get("start_point") ?? params.get("mastery_start_point") ?? "";
-    const launch = params.get("launch") ?? "";
-    if (!autoStart && !startPoint) return null;
-    return { pathId: masteryPathParam, autoStart, startPoint, launch };
-  });
+  } | null>(null);
   const pendingMasteryAutoStartRef = useRef<string | null | undefined>(undefined);
   const masteryAutoStartSentRef = useRef(false);
   if (pendingAgentRef.current === undefined) {
@@ -2579,6 +2570,12 @@ export default function ChatPage() {
     const content = startPoint
       ? goalTr(startPoint.prompt.zh, startPoint.prompt.en)
       : "Continue the current mastery path in order.";
+    const displayContent = startPoint
+      ? goalTr(
+          `开始学习：${startPoint.title.zh}`,
+          `Start learning: ${startPoint.title.en}`,
+        )
+      : goalTr("继续当前学习路径", "Continue the current learning path");
     const config = {
       mastery_path_id: masteryPathId,
       ...(startPoint
@@ -2608,7 +2605,8 @@ export default function ChatPage() {
       [],
       [],
       {
-        displayUserMessage: false,
+        displayUserMessage: true,
+        displayContent,
         persistUserMessage: false,
         requestSnapshotOverride,
       },
@@ -3031,7 +3029,7 @@ export default function ChatPage() {
                   <SessionLoadingView onCancel={cancelSessionLoad} />
                 </div>
               </div>
-            ) : !hasMessages ? (
+            ) : !hasMessages && !state.isStreaming && !masteryLaunchRequest ? (
               <div className="w-full flex-1 min-h-0 overflow-y-auto px-6 py-8 animate-fade-in">
                 <div className="mx-auto flex w-full max-w-[760px] flex-col items-stretch gap-5">
                   <div className="flex items-center justify-center gap-4">

@@ -43,6 +43,9 @@ import {
   type BookReferencePayload,
 } from "@/lib/book-references";
 
+const WS_SEND_RETRY_DELAY_MS = 200;
+const WS_SEND_MAX_ATTEMPTS = 75;
+
 type SessionRuntimeStatus =
   | "idle"
   | "running"
@@ -72,6 +75,7 @@ type MemoryReferencePayload = Array<"summary" | "profile">;
 
 export interface SendMessageOptions {
   displayUserMessage?: boolean;
+  displayContent?: string;
   persistUserMessage?: boolean;
   requestSnapshotOverride?: MessageRequestSnapshot;
   bookReferences?: BookReferencePayload[];
@@ -924,6 +928,7 @@ export function UnifiedChatProvider({
       }
     >
   >(new Map());
+  const runnerAliasesRef = useRef<Map<string, string>>(new Map());
   const draftCounterRef = useRef(0);
   const retryTimersRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
   // Tracks in-flight regenerate requests so we can restore the popped
@@ -996,12 +1001,16 @@ export function UnifiedChatProvider({
     runnersRef.current.delete(oldKey);
     runner.key = newKey;
     runnersRef.current.set(newKey, runner);
+    runnerAliasesRef.current.set(oldKey, newKey);
   }, []);
 
   const handleRunnerEvent = useCallback(
     (runnerKey: string, event: StreamEvent) => {
-      const runner = runnersRef.current.get(runnerKey);
-      const effectiveKey = runner?.key || runnerKey;
+      const aliasKey = runnerAliasesRef.current.get(runnerKey) || "";
+      const runner =
+        runnersRef.current.get(runnerKey) ||
+        (aliasKey ? runnersRef.current.get(aliasKey) : undefined);
+      const effectiveKey = runner?.key || aliasKey || runnerKey;
       if (event.type === "session") {
         const sessionId =
           (event.metadata as { session_id?: string } | undefined)?.session_id ||
@@ -1063,6 +1072,11 @@ export function UnifiedChatProvider({
         // synchronously on ``done`` would race that publish.
         if (runner) {
           runnersRef.current.delete(effectiveKey);
+          runnerAliasesRef.current.forEach((value, key) => {
+            if (value === effectiveKey || key === effectiveKey) {
+              runnerAliasesRef.current.delete(key);
+            }
+          });
           window.setTimeout(() => {
             runner.client.disconnect();
           }, POST_DONE_DISCONNECT_DELAY_MS);
@@ -1185,7 +1199,7 @@ export function UnifiedChatProvider({
     function dispatchToRunner(key: string, msg: ChatMessage, attempt = 0) {
       const runner = ensureRunner(key);
       if (!runner.client.connected) {
-        if (attempt >= 10) {
+        if (attempt >= WS_SEND_MAX_ATTEMPTS) {
           console.error("WebSocket failed to connect after retries");
           dispatch({ type: "STREAM_END", key, status: "failed" });
           // Surfaces the dead-after-N-retries case (different code path
@@ -1202,7 +1216,7 @@ export function UnifiedChatProvider({
         const timerId = setTimeout(() => {
           retryTimersRef.current.delete(timerId);
           dispatchToRunner(key, msg, attempt + 1);
-        }, 200);
+        }, WS_SEND_RETRY_DELAY_MS);
         retryTimersRef.current.add(timerId);
         return;
       }
@@ -1472,7 +1486,7 @@ export function UnifiedChatProvider({
         dispatch({
           type: "ADD_USER_MSG",
           key,
-          content,
+          content: options?.displayContent ?? content,
           capability: effectiveCapability,
           attachments: effectiveAttachments,
           requestSnapshot,

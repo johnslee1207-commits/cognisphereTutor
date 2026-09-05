@@ -1,4 +1,4 @@
-import type { StreamEvent } from "@/lib/unified-ws";
+import type { StreamEvent } from "./unified-ws";
 
 type ContentMeta = {
   call_id?: string;
@@ -33,6 +33,7 @@ export function shouldAppendEventContent(event: StreamEvent): boolean {
  */
 export function collectNarrationCallIds(events: StreamEvent[]): Set<string> {
   const ids = new Set<string>();
+  if (hasPendingAskUserResult(events)) return ids;
   for (const event of events) {
     const meta = eventMeta(event);
     if (
@@ -45,6 +46,18 @@ export function collectNarrationCallIds(events: StreamEvent[]): Set<string> {
     }
   }
   return ids;
+}
+
+function hasPendingAskUserResult(events: StreamEvent[]): boolean {
+  return events.some((event) => {
+    if (event.type !== "tool_result") return false;
+    const meta = eventMeta(event);
+    return (
+      meta.call_kind === "tool_planning" &&
+      (event.metadata as { tool?: string } | undefined)?.tool === "ask_user" &&
+      String(event.content || "").includes("[awaiting user reply")
+    );
+  });
 }
 
 /** True for the per-round marker that flips a round to "narration". */
