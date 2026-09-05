@@ -10,7 +10,25 @@ export interface CognispherePluginInfo {
   version?: string;
   lifecycle?: string;
   capabilities: string[];
-  distribution?: Record<string, unknown>;
+  distribution?: Record<string, unknown> & {
+    import_status?: {
+      installed?: boolean;
+      status?: string;
+      update_available?: boolean;
+      reasons?: string[];
+      bundled?: {
+        bundle_id?: string;
+        exported_at?: string;
+        counts?: Record<string, number>;
+      };
+      imported?: {
+        bundle_id?: string;
+        exported_at?: string;
+        imported_at?: string;
+        counts?: Record<string, number>;
+      };
+    };
+  };
   tutor_pack?: Record<string, unknown>;
   path_id?: string;
   source?: string;

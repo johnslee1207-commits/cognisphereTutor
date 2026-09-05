@@ -446,6 +446,52 @@ def test_bundled_pack_status_and_import_without_external_plugins(
     )
 
 
+def test_bundled_pack_status_reports_import_update_available(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    missing_root = tmp_path / "missing_plugins"
+    import_root = tmp_path / "imports"
+    domain = "california_electrical_career"
+    monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(missing_root))
+    monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(import_root))
+
+    from cognispheretutor.integrations.cognisphere.pack_distribution import (
+        get_bundled_pack,
+    )
+
+    bundled = get_bundled_pack(domain)
+    assert bundled is not None
+    old_bundle = dict(bundled["bundle"])
+    old_bundle["knowledge"] = {
+        **old_bundle["knowledge"],
+        "lesson_cards": [],
+        "scenario_cards": [],
+    }
+    cache_dir = import_root / domain
+    cache_dir.mkdir(parents=True)
+    (cache_dir / "bundle.json").write_text(
+        json.dumps(old_bundle, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    app = FastAPI()
+    app.include_router(cognisphere_learning.router, prefix="/api/v1/learning/cognisphere")
+    client = TestClient(app)
+
+    status = client.get("/api/v1/learning/cognisphere/status")
+    assert status.status_code == 200, status.text
+    plugin = {
+        item["domain"]: item for item in status.json()["plugins"]
+    }["california_electrical_career"]
+    import_status = plugin["distribution"]["import_status"]
+    assert import_status["installed"] is True
+    assert import_status["update_available"] is True
+    assert "more_lesson_cards" in import_status["reasons"]
+    assert import_status["bundled"]["counts"]["lesson_cards"] > 0
+    assert import_status["imported"]["counts"]["lesson_cards"] == 0
+
+
 def test_bundled_pack_radar_axes_are_domain_specific(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

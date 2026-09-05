@@ -14,6 +14,7 @@ from typing import Any
 
 from cognispheretutor.integrations.cognisphere.plugin_importer import (
     import_bundle_json,
+    resolve_import_cache_dir,
     validate_bundle_safety,
 )
 
@@ -55,6 +56,7 @@ def list_bundled_packs() -> dict[str, Any]:
         validation = validate_bundle_safety(bundle)
         knowledge = bundle.get("knowledge") if isinstance(bundle.get("knowledge"), dict) else {}
         sparse = _knowledge_is_sparse(knowledge)
+        import_status = _bundled_pack_import_status(domain, bundle)
         manifest = {
             "plugin_id": bundle.get("plugin_id") or f"cognisphere.domain.{domain}.bundled_pack",
             "domain": domain,
@@ -82,6 +84,7 @@ def list_bundled_packs() -> dict[str, Any]:
                     "package": "cognispheretutor",
                     "bundle_id": bundle.get("bundle_id"),
                     "sparse": sparse,
+                    "import_status": import_status,
                 },
                 "tutor_pack": {
                     "check_command": f"cognispheretutor cognisphere import-seed {domain}",
@@ -202,6 +205,98 @@ def _knowledge_is_sparse(knowledge: dict[str, Any]) -> bool:
             elif value:
                 meaningful += 1
     return meaningful <= 1
+
+
+def _bundled_pack_import_status(domain: str, bundle: dict[str, Any]) -> dict[str, Any]:
+    imported_bundle = _load_imported_bundle(domain)
+    imported_receipt = _load_import_receipt(domain)
+    bundled_counts = _bundle_content_counts(bundle)
+    imported_counts = _bundle_content_counts(imported_bundle) if imported_bundle else {}
+    imported_at = imported_receipt.get("imported_at") if imported_receipt else None
+    installed = bool(imported_bundle or imported_receipt)
+    reasons: list[str] = []
+
+    if not installed:
+        status = "not_installed"
+    else:
+        bundled_exported = str(bundle.get("exported_at") or "")
+        imported_exported = str(
+            (imported_bundle or {}).get("exported_at")
+            or (imported_receipt or {}).get("exported_at")
+            or ""
+        )
+        if bundled_exported and imported_exported and bundled_exported > imported_exported:
+            reasons.append("newer_exported_at")
+        for key, bundled_count in bundled_counts.items():
+            imported_count = int(imported_counts.get(key) or 0)
+            if bundled_count > imported_count:
+                reasons.append(f"more_{key}")
+        status = "update_available" if reasons else "current"
+
+    return {
+        "installed": installed,
+        "status": status,
+        "update_available": status == "update_available",
+        "reasons": reasons,
+        "bundled": {
+            "bundle_id": bundle.get("bundle_id"),
+            "exported_at": bundle.get("exported_at"),
+            "counts": bundled_counts,
+        },
+        "imported": {
+            "bundle_id": (imported_bundle or imported_receipt or {}).get("bundle_id"),
+            "exported_at": (
+                (imported_bundle or {}).get("exported_at")
+                or (imported_receipt or {}).get("exported_at")
+            ),
+            "imported_at": imported_at,
+            "counts": imported_counts,
+        },
+    }
+
+
+def _load_imported_bundle(domain: str) -> dict[str, Any] | None:
+    try:
+        path = resolve_import_cache_dir(domain=domain) / "bundle.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def _load_import_receipt(domain: str) -> dict[str, Any] | None:
+    try:
+        path = resolve_import_cache_dir(domain=domain) / "import_receipt.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return data if isinstance(data, dict) else None
+
+
+def _bundle_content_counts(bundle: dict[str, Any] | None) -> dict[str, int]:
+    if not isinstance(bundle, dict):
+        return {}
+    knowledge = bundle.get("knowledge")
+    if not isinstance(knowledge, dict):
+        return {}
+    counts: dict[str, int] = {}
+    keys = (
+        "mastery_modules",
+        "lesson_cards",
+        "practice_blueprints",
+        "learning_activity_templates",
+        "study_sequences",
+        "scenario_cards",
+        "flashcard_decks",
+        "readiness_checkpoints",
+        "visual_prompts",
+        "cognisphere_provenance_refs",
+    )
+    for key in keys:
+        value = knowledge.get(key)
+        if isinstance(value, list):
+            counts[key] = len(value)
+    return counts
 
 
 __all__ = [

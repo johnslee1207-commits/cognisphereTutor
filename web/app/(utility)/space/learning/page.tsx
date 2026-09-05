@@ -328,6 +328,7 @@ function MasteryPathPageInner() {
           setCsphereNote(result.mastery_path.note);
         }
         await loadList();
+        await loadCsphere();
         if (pathId) setSelected(pathId);
       } catch (err) {
         setCsphereError(
@@ -337,7 +338,7 @@ function MasteryPathPageInner() {
         setCsphereBusy(false);
       }
     },
-    [loadList, tr],
+    [loadCsphere, loadList, tr],
   );
 
   const awsTwinGate = csphere?.gates?.aws_twin_mastery;
@@ -611,11 +612,12 @@ function MasteryPathPageInner() {
       const result = await composeAndSeedCognisphere({ domains });
       setCsphereNote(
         tr(
-          `已添加 ${result.seeded_count} 门课程，${result.failed_count} 门未完成`,
-          `Added ${result.seeded_count} courses; ${result.failed_count} not completed`,
+          `已同步 ${result.seeded_count} 门课程，${result.failed_count} 门未完成`,
+          `Synced ${result.seeded_count} courses; ${result.failed_count} not completed`,
         ),
       );
       await loadList();
+      await loadCsphere();
       const firstPath = result.seeds?.find(
         (s) => "mastery_path" in s && s.mastery_path?.path_id,
       );
@@ -631,7 +633,7 @@ function MasteryPathPageInner() {
     } finally {
       setCsphereBusy(false);
     }
-  }, [csphere?.plugins, loadList, tr]);
+  }, [csphere?.plugins, loadCsphere, loadList, tr]);
 
   const handleRecommendGoal = useCallback(async () => {
     const goal = goalText.trim();
@@ -773,6 +775,9 @@ function MasteryPathPageInner() {
   const coursePacks = (csphere?.plugins || []).filter(
     (plugin) => plugin.kind !== "twin" && !plugin.domain.endsWith("_twin"),
   );
+  const updateAvailableCount = coursePacks.filter((plugin) =>
+    Boolean(plugin.distribution?.import_status?.update_available),
+  ).length;
   const hasBundledCourses = coursePacks.some(
     (plugin) => plugin.source === "bundled_pack",
   );
@@ -853,7 +858,9 @@ function MasteryPathPageInner() {
               onClick={handleImportAvailableDomains}
               className="text-[10px] text-[var(--primary)] hover:underline disabled:opacity-50 cursor-pointer"
             >
-              {tr("添加全部", "Add all")}
+              {updateAvailableCount > 0
+                ? tr("同步全部", "Sync all")
+                : tr("添加全部", "Add all")}
             </button>
           </div>
           <div className="space-y-1.5 px-0.5">
@@ -1077,6 +1084,12 @@ function MasteryPathPageInner() {
                   .replace(/\s*\(thin-complete\)\s*/i, "")
                   .trim();
                 const bundled = plugin.source === "bundled_pack";
+                const importStatus = plugin.distribution?.import_status;
+                const updateAvailable = Boolean(importStatus?.update_available);
+                const bundledLessonCount =
+                  importStatus?.bundled?.counts?.lesson_cards;
+                const importedLessonCount =
+                  importStatus?.imported?.counts?.lesson_cards;
                 return (
                   <div
                     key={`launch-${plugin.domain}`}
@@ -1101,7 +1114,12 @@ function MasteryPathPageInner() {
                             {courseTitle || plugin.domain}
                         </div>
                         <div className="mt-0.5 text-[10px] text-[var(--muted-foreground)] truncate">
-                          {path
+                          {updateAvailable && importedLessonCount != null && bundledLessonCount != null
+                            ? tr(
+                                `可更新：${importedLessonCount} → ${bundledLessonCount} 节课`,
+                                `Update available: ${importedLessonCount} → ${bundledLessonCount} lessons`,
+                              )
+                            : path
                             ? tr(
                                 `${path.kp_count} 个知识点 · ${path.avg_mastery_pct}%`,
                                 `${path.kp_count} objectives · ${path.avg_mastery_pct}%`,
@@ -1114,14 +1132,18 @@ function MasteryPathPageInner() {
                       </label>
                       <span
                         className={`shrink-0 text-[10px] ${
-                          path
+                          updateAvailable
+                            ? "text-amber-600"
+                            : path
                             ? "text-[var(--primary)]"
                             : plugin.valid
                               ? "text-green-600"
                               : "text-[var(--muted-foreground)]"
                         }`}
                       >
-                        {path
+                        {updateAvailable
+                          ? tr("有更新", "Update")
+                          : path
                           ? tr("学习中", "Active")
                           : plugin.valid
                             ? tr("可添加", "Available")
@@ -1129,7 +1151,21 @@ function MasteryPathPageInner() {
                       </span>
                     </div>
                     <div className="mt-2 flex gap-1">
-                      {path?.book_id ? (
+                      {updateAvailable ? (
+                        <button
+                          type="button"
+                          disabled={csphereBusy || !plugin.valid}
+                          onClick={() => handleImportDomain(plugin.domain)}
+                          className="flex-1 flex items-center justify-center gap-1 px-2 py-1 text-[11px] rounded-md border border-amber-500/50 text-amber-700 hover:bg-amber-500/10 disabled:opacity-50 cursor-pointer"
+                        >
+                          {csphereBusy ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <Package className="w-3 h-3" />
+                          )}
+                          {tr("更新课程", "Update course")}
+                        </button>
+                      ) : path?.book_id ? (
                         <a
                           href={masteryChatHref(path.book_id, {
                             autoStart: "next",
