@@ -2721,6 +2721,9 @@ export default function ChatPage() {
       llmSelection: state.llmSelection,
       persona: state.personaSelection,
     };
+    if (startPoint) {
+      shouldAutoScrollRef.current = false;
+    }
     sendMessage(
       content,
       [],
@@ -2734,7 +2737,6 @@ export default function ChatPage() {
         requestSnapshotOverride,
       },
     );
-    shouldAutoScrollRef.current = true;
   }, [
     goalTr,
     masteryLaunchRequest,
