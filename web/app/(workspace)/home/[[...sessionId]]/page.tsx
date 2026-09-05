@@ -803,6 +803,8 @@ function MasteryStartingPointPanel({
   tr,
   disabled,
   controlsDisabled,
+  compact,
+  activePointId,
   onContinue,
   onRestart,
   onRestore,
@@ -812,11 +814,14 @@ function MasteryStartingPointPanel({
   tr: GoalTranslator;
   disabled: boolean;
   controlsDisabled?: boolean;
+  compact?: boolean;
+  activePointId?: string;
   onContinue: () => void;
   onRestart: () => void;
   onRestore: () => void;
 }) {
   const points = masteryStartingPointsForPath(pathId);
+  const compactPoints = flattenMasteryStartingPoints(points);
   const actionsDisabled = controlsDisabled ?? disabled;
   const openStartLink = (event: ReactMouseEvent<HTMLAnchorElement>) => {
     if (disabled) {
@@ -828,6 +833,65 @@ function MasteryStartingPointPanel({
     target.searchParams.set("launch", String(Date.now()));
     window.location.assign(`${target.pathname}?${target.searchParams.toString()}`);
   };
+  if (compact) {
+    return (
+      <div className="rounded-lg border border-[var(--border)] bg-[var(--card)]/80 p-3 shadow-sm">
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
+            <div className="text-xs font-medium text-[var(--foreground)]">
+              {tr("切换学习内容", "Switch learning area")}
+            </div>
+            <div className="mt-0.5 truncate text-[11px] text-[var(--muted-foreground)]">
+              {title}
+            </div>
+          </div>
+          <button
+            type="button"
+            disabled={actionsDisabled}
+            onClick={onContinue}
+            className="inline-flex h-7 shrink-0 items-center justify-center gap-1.5 rounded-md border border-[var(--border)] px-2 text-[11px] text-[var(--foreground)] hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <MessageCirclePlus className="h-3.5 w-3.5" />
+            {tr("继续进度", "Continue")}
+          </button>
+        </div>
+        <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
+          {compactPoints.map((point) => {
+            const Icon = point.icon;
+            const active = activePointId === point.id;
+            return (
+              <a
+                key={point.id}
+                href={masteryChatHref(pathId, {
+                  autoStart: "start",
+                  startPoint: point.id,
+                })}
+                aria-disabled={disabled}
+                tabIndex={disabled ? -1 : 0}
+                onClick={openStartLink}
+                className={`flex min-h-[54px] min-w-[150px] items-start gap-2 rounded-md border px-2.5 py-2 text-left transition-colors ${
+                  active
+                    ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                    : "border-[var(--border)] bg-[var(--background)] hover:bg-[var(--accent)]"
+                }`}
+                title={tr(point.title.zh, point.title.en)}
+              >
+                <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
+                <span className="min-w-0">
+                  <span className="block truncate text-xs font-medium text-[var(--foreground)]">
+                    {tr(point.title.zh, point.title.en)}
+                  </span>
+                  <span className="mt-0.5 block line-clamp-2 text-[10px] leading-snug text-[var(--muted-foreground)]">
+                    {tr(point.blurb.zh, point.blurb.en)}
+                  </span>
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="mx-auto flex w-full max-w-[720px] flex-col gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)]/70 p-4 shadow-sm">
       <div className="flex items-start gap-3">
@@ -3052,6 +3116,7 @@ export default function ChatPage() {
                       tr={goalTr}
                       disabled={masteryProgressBusy}
                       controlsDisabled={masteryProgressBusy || state.isStreaming}
+                      activePointId={activeMasteryStartPoint}
                       onContinue={handleContinueMasteryPath}
                       onRestart={() => void handleNewMasterySession("restart")}
                       onRestore={handleRestoreMasteryProgress}
@@ -3094,6 +3159,20 @@ export default function ChatPage() {
                 }
               >
                 <div className="mx-auto w-full max-w-[960px] space-y-9 px-6">
+                  {masteryPathParam ? (
+                    <MasteryStartingPointPanel
+                      title={masteryPathTitle}
+                      pathId={masteryPathParam}
+                      tr={goalTr}
+                      disabled={masteryProgressBusy}
+                      controlsDisabled={masteryProgressBusy || state.isStreaming}
+                      compact
+                      activePointId={activeMasteryStartPoint}
+                      onContinue={handleContinueMasteryPath}
+                      onRestart={() => void handleNewMasterySession("restart")}
+                      onRestore={handleRestoreMasteryProgress}
+                    />
+                  ) : null}
                   <ChatMessageList
                     messages={state.messages}
                     isStreaming={state.isStreaming}
