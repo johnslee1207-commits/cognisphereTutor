@@ -450,7 +450,14 @@ export async function startCognisphereTutor(opts: {
 /** Chat deep-link that pre-selects Mastery Path mode. */
 export function masteryChatHref(
   pathId: string,
-  opts?: { tutorSessionId?: string; autoStart?: "next" | "start"; startPoint?: string },
+  opts?: {
+    tutorSessionId?: string;
+    autoStart?: "next" | "start";
+    startPoint?: string;
+    focusModule?: string;
+    focusObjective?: string;
+    launch?: string;
+  },
 ): string {
   const params = new URLSearchParams({ capability: "mastery_path" });
   if (opts?.tutorSessionId) {
@@ -461,6 +468,15 @@ export function masteryChatHref(
   }
   if (opts?.startPoint) {
     params.set("start_point", opts.startPoint);
+  }
+  if (opts?.focusModule) {
+    params.set("focus_module", opts.focusModule);
+  }
+  if (opts?.focusObjective) {
+    params.set("focus_objective", opts.focusObjective);
+  }
+  if (opts?.launch) {
+    params.set("launch", opts.launch);
   }
   return `/home/${encodeURIComponent(pathId)}?${params.toString()}`;
 }

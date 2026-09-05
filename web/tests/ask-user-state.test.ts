@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   hasPendingAskUser,
   hasPendingAskUserInMessages,
+  pendingAskUserTurnIdInMessages,
 } from "../lib/ask-user-state";
 import type { StreamEvent } from "../lib/unified-ws";
 
@@ -75,4 +76,54 @@ test("hasPendingAskUserInMessages ignores ask_user cards from other turns", () =
   ];
 
   assert.equal(hasPendingAskUserInMessages(messages, "turn-1"), false);
+});
+
+test("pendingAskUserTurnIdInMessages recovers an unresolved ask_user turn", () => {
+  const messages = [
+    {
+      events: [
+        event(
+          "tool_result",
+          {
+            tool_call_id: "call-latest",
+            tool_metadata: {
+              ask_user: { questions: [{ id: "q", prompt: "Continue?" }] },
+            },
+          },
+          "turn-latest",
+        ),
+      ],
+    },
+  ];
+
+  assert.equal(pendingAskUserTurnIdInMessages(messages), "turn-latest");
+});
+
+test("pendingAskUserTurnIdInMessages ignores resolved ask_user cards", () => {
+  const messages = [
+    {
+      events: [
+        event(
+          "tool_result",
+          {
+            tool_call_id: "call-done",
+            tool_metadata: {
+              ask_user: { questions: [{ id: "q", prompt: "Done?" }] },
+            },
+          },
+          "turn-done",
+        ),
+        event(
+          "progress",
+          {
+            ask_user_resolved: true,
+            ask_user_tool_call_id: "call-done",
+          },
+          "turn-done",
+        ),
+      ],
+    },
+  ];
+
+  assert.equal(pendingAskUserTurnIdInMessages(messages), "");
 });

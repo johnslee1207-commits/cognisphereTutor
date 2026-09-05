@@ -311,7 +311,7 @@ const AssistantMessage = memo(function AssistantMessage({
           text?: string;
           answers?: Array<{ questionId: string; text: string }>;
         },
-  ) => void;
+  ) => boolean | void;
 }) {
   const events = useMemo(() => msg.events ?? [], [msg.events]);
   const resultEvent = useMemo(
@@ -422,8 +422,8 @@ const AssistantMessage = memo(function AssistantMessage({
             <AskUserOptions
               data={askUserPayload}
               onSubmit={(reply) => {
-                if (!onSubmitUserReply) return;
-                onSubmitUserReply(reply);
+                if (!onSubmitUserReply) return false;
+                return onSubmitUserReply(reply);
               }}
               collapsible={researchInProgress}
               defaultCollapsed={researchInProgress}
@@ -499,8 +499,8 @@ const AssistantMessage = memo(function AssistantMessage({
               key={seg.key}
               data={seg.data}
               onSubmit={(reply) => {
-                if (!onSubmitUserReply) return;
-                onSubmitUserReply(reply);
+                if (!onSubmitUserReply) return false;
+                return onSubmitUserReply(reply);
               }}
             />
           ),
@@ -524,8 +524,8 @@ const AssistantMessage = memo(function AssistantMessage({
         <AskUserOptions
           data={askUserPayload}
           onSubmit={(reply) => {
-            if (!onSubmitUserReply) return;
-            onSubmitUserReply(reply);
+            if (!onSubmitUserReply) return false;
+            return onSubmitUserReply(reply);
           }}
         />
       ) : null}
@@ -1185,7 +1185,7 @@ export const ChatMessageList = memo(function ChatMessageList({
           text?: string;
           answers?: Array<{ questionId: string; text: string }>;
         },
-  ) => void;
+  ) => boolean | void;
 }) {
   const { t } = useTranslation();
   // Visible path: when no branching has happened the result is identical
@@ -1407,7 +1407,12 @@ export const ChatMessageList = memo(function ChatMessageList({
         })();
 
         return (
-          <div key={`${msg.role}-${i}`} className="w-full">
+          <div
+            key={`${msg.role}-${i}`}
+            className="w-full"
+            data-chat-message-role={msg.role}
+            data-chat-message-capability={msg.capability || ""}
+          >
             <InlineFileCardProvider
               attachments={msg.attachments ?? []}
               events={msg.events}

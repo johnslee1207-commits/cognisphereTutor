@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import {
@@ -80,6 +80,8 @@ function MasteryPathPageInner() {
   const searchParams = useSearchParams();
   const goalFromUrl = (searchParams.get("goal") || "").trim();
   const panelFromUrl = (searchParams.get("panel") || "").trim().toLowerCase();
+  const focusModuleFromUrl = (searchParams.get("focus_module") || "").trim();
+  const focusObjectiveFromUrl = (searchParams.get("focus_objective") || "").trim();
   const domainsFromUrl = (searchParams.get("domains") || "")
     .split(",")
     .map((d) => d.trim())
@@ -1300,10 +1302,18 @@ function MasteryPathPageInner() {
             twinReady={twinReady}
             focusHint={focusHint}
             planHint={planHint}
+            focusModule={focusModuleFromUrl}
+            focusObjective={focusObjectiveFromUrl}
             tutorBusy={tutorBusy}
             onContinue={() =>
               selected &&
-              router.push(masteryChatHref(selected, { autoStart: "next" }))
+              router.push(
+                masteryChatHref(selected, {
+                  autoStart: "next",
+                  focusModule: focusModuleFromUrl || undefined,
+                  focusObjective: focusObjectiveFromUrl || undefined,
+                }),
+              )
             }
             onSocratic={handleSocraticPractice}
             onAwsTwinPractice={() => void handleRunAwsTwinMastery()}
@@ -1351,6 +1361,10 @@ function StatusIcon({ status }: { status: ObjectiveStatus }) {
   if (status === "mastered") return <CircleCheck className={cls} />;
   if (status === "learning") return <CircleDot className={cls} />;
   return <Circle className={cls} />;
+}
+
+function normalizeFocusLabel(value: string | undefined): string {
+  return (value || "").trim().replace(/\s+/g, " ").toLowerCase();
 }
 
 function AbilityRadarChart({
@@ -1464,6 +1478,8 @@ function MapView({
   twinReady,
   focusHint,
   planHint,
+  focusModule,
+  focusObjective,
   tutorBusy,
   onContinue,
   onSocratic,
@@ -1483,6 +1499,8 @@ function MapView({
   twinReady?: boolean;
   focusHint: string | null;
   planHint: string | null;
+  focusModule: string;
+  focusObjective: string;
   tutorBusy: boolean;
   onContinue: () => void;
   onSocratic: () => void;
@@ -1493,6 +1511,9 @@ function MapView({
   onDelete: () => void;
 }) {
   const { map, next } = result;
+  const focusRef = useRef<HTMLDivElement | null>(null);
+  const normalizedFocusModule = normalizeFocusLabel(focusModule);
+  const normalizedFocusObjective = normalizeFocusLabel(focusObjective);
   const pct = map.counts.total
     ? Math.round((map.counts.mastered / map.counts.total) * 100)
     : 0;
@@ -1509,6 +1530,11 @@ function MapView({
       total: m.total,
     }));
   const weakAreas = selectedRadar?.weak_areas ?? [];
+
+  useEffect(() => {
+    if (!focusRef.current) return;
+    focusRef.current.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [normalizedFocusModule, normalizedFocusObjective, result.book_id]);
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-5">
@@ -1708,8 +1734,26 @@ function MapView({
       )}
 
       <div className="mt-5 space-y-4">
-        {map.modules.map((module) => (
-          <div key={module.id}>
+        {map.modules.map((module) => {
+          const moduleFocused =
+            normalizedFocusModule !== "" &&
+            normalizeFocusLabel(module.name) === normalizedFocusModule;
+          const hasFocusedObjective = module.knowledge_points.some(
+            (kp) =>
+              normalizedFocusObjective !== "" &&
+              normalizeFocusLabel(kp.name) === normalizedFocusObjective,
+          );
+          const highlightModule = moduleFocused || hasFocusedObjective;
+          return (
+          <div
+            key={module.id}
+            ref={highlightModule && !normalizedFocusObjective ? focusRef : undefined}
+            className={`rounded-lg border px-3 py-3 transition-colors ${
+              highlightModule
+                ? "border-[var(--primary)]/45 bg-[var(--primary)]/5"
+                : "border-transparent"
+            }`}
+          >
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-medium text-[var(--foreground)]">
                 {module.name}
@@ -1718,11 +1762,25 @@ function MapView({
                 {module.mastered}/{module.total}
               </span>
             </div>
+            {highlightModule && (
+              <div className="mt-1 text-[11px] text-[var(--primary)]">
+                {tr("当前入口对应此模块", "Current start area maps to this module")}
+              </div>
+            )}
             <div className="mt-1.5 space-y-1">
-              {module.knowledge_points.map((kp) => (
+              {module.knowledge_points.map((kp) => {
+                const objectiveFocused =
+                  normalizedFocusObjective !== "" &&
+                  normalizeFocusLabel(kp.name) === normalizedFocusObjective;
+                return (
                 <div
                   key={kp.id}
-                  className="flex items-center gap-2 px-2 py-1 rounded-md text-sm"
+                  ref={objectiveFocused ? focusRef : undefined}
+                  className={`flex items-center gap-2 px-2 py-1 rounded-md text-sm ${
+                    objectiveFocused
+                      ? "bg-[var(--primary)]/10 ring-1 ring-[var(--primary)]/35"
+                      : ""
+                  }`}
                 >
                   <StatusIcon status={kp.status} />
                   <span className="flex-1 truncate text-[var(--foreground)]">
@@ -1737,10 +1795,12 @@ function MapView({
                     {zh ? STATUS_META[kp.status].cn : STATUS_META[kp.status].en}
                   </span>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

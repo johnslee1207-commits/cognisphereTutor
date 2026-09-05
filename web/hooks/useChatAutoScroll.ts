@@ -9,6 +9,7 @@ interface AutoScrollOptions {
   messageCount: number;
   lastMessageContent?: string;
   lastEventCount?: number;
+  preferLatestMessageStart?: boolean;
 }
 
 /**
@@ -54,6 +55,7 @@ export function useChatAutoScroll({
   messageCount,
   lastMessageContent,
   lastEventCount,
+  preferLatestMessageStart = false,
 }: AutoScrollOptions) {
   const containerRef = useRef<HTMLDivElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
@@ -69,6 +71,19 @@ export function useChatAutoScroll({
     container.scrollTop = container.scrollHeight;
   }, []);
 
+  const pinToLatestMessageStart = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const messages = container.querySelectorAll<HTMLElement>(
+      '[data-chat-message-role="assistant"][data-chat-message-capability="mastery_path"]',
+    );
+    const latest = messages[messages.length - 1];
+    if (!latest) return;
+    const containerTop = container.getBoundingClientRect().top;
+    const latestTop = latest.getBoundingClientRect().top;
+    container.scrollTop += latestTop - containerTop;
+  }, []);
+
   // Primary pin: runs in layout phase after every render that bumps
   // message count / streaming content / events / composer height /
   // mount. ``useLayoutEffect`` (not ``useEffect``) is required so the
@@ -77,15 +92,21 @@ export function useChatAutoScroll({
   // and we observe a flash.
   useLayoutEffect(() => {
     if (!hasMessages || !shouldAutoScrollRef.current) return;
+    if (preferLatestMessageStart) {
+      pinToLatestMessageStart();
+      return;
+    }
     pinToBottom();
   }, [
     pinToBottom,
+    pinToLatestMessageStart,
     hasMessages,
     isStreaming,
     messageCount,
     lastMessageContent,
     lastEventCount,
     composerHeight,
+    preferLatestMessageStart,
   ]);
 
   // Companion pin: a frame-aligned rAF loop that runs ONLY while the
@@ -111,6 +132,7 @@ export function useChatAutoScroll({
   // content height changed.
   useEffect(() => {
     if (!isStreaming || !hasMessages) return;
+    if (preferLatestMessageStart) return;
     let rafId = 0;
     const tick = () => {
       if (shouldAutoScrollRef.current) {
@@ -121,7 +143,7 @@ export function useChatAutoScroll({
     };
     rafId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId);
-  }, [isStreaming, hasMessages]);
+  }, [isStreaming, hasMessages, preferLatestMessageStart]);
 
   // After streaming ends, capability viewers loaded via ``next/dynamic``
   // (MathAnimatorViewer, QuizViewer, VisualizationViewer, RichCodeBlock,
@@ -136,6 +158,7 @@ export function useChatAutoScroll({
   useEffect(() => {
     if (isStreaming) return;
     if (!hasMessages) return;
+    if (preferLatestMessageStart) return;
 
     const container = containerRef.current;
     if (!container) return;

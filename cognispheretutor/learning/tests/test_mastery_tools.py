@@ -9,6 +9,7 @@ import json
 
 import pytest
 
+from cognispheretutor.learning.service import LearningService
 from cognispheretutor.learning.storage import LearningStore
 from cognispheretutor.services.session.sqlite_store import SQLiteSessionStore
 from cognispheretutor.tools.mastery_tool import (
@@ -191,6 +192,47 @@ async def test_status_honors_selected_apprenticeship_subtopic(path_id):
     assert payload["next"]["knowledge_point_name"] == (
         "Reading comprehension for technical instructions"
     )
+
+
+@pytest.mark.asyncio
+async def test_selected_start_point_completion_does_not_fall_back_to_global(path_id):
+    await MasteryBuildTool().execute(
+        _mastery_path_id=path_id,
+        mode="replace",
+        modules=[
+            {
+                "name": "California Electrical Career Orientation",
+                "knowledge_points": [{"name": "Choose a career goal", "type": "concept"}],
+            },
+            {
+                "name": "ETI / IBEW Local 11 Apprenticeship Entrance",
+                "knowledge_points": [
+                    {
+                        "id": "cec-apprentice-baseline-diagnostic",
+                        "name": "Baseline diagnostic for apprenticeship readiness",
+                        "type": "procedure",
+                    }
+                ],
+            },
+        ],
+    )
+    progress = LearningService(LearningStore()).get_or_create(path_id)
+    apprenticeship_kp_id = progress.modules[1].knowledge_points[0].id
+    progress.mastery_levels[apprenticeship_kp_id] = 0.95
+    LearningStore().save(progress)
+
+    payload = json.loads(
+        (
+            await MasteryStatusTool().execute(
+                _mastery_path_id=path_id,
+                _mastery_start_point="apprenticeship_entry",
+            )
+        ).content
+    )
+
+    assert payload["requested_start_point"] == "apprenticeship_entry"
+    assert payload["next"]["action"] == "complete"
+    assert "selected learning area" in payload["next"]["reason"]
 
 
 @pytest.mark.asyncio

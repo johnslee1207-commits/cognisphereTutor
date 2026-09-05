@@ -18,6 +18,9 @@ from __future__ import annotations
 import re
 
 from cognispheretutor.agents.chat.agentic_pipeline import AgenticChatPipeline
+from cognispheretutor.capabilities.mastery.deterministic_flow import (
+    maybe_run_deterministic_mastery_flow,
+)
 from cognispheretutor.capabilities.mastery.tools import MASTERY_TOOL_NAMES
 from cognispheretutor.core.capability_protocol import BaseCapability, CapabilityManifest
 from cognispheretutor.core.context import UnifiedContext
@@ -116,6 +119,8 @@ class MasteryPathCapability(BaseCapability):
         start_action = str(context.config_overrides.get("mastery_start_action") or "").strip()
         if start_action:
             context.metadata["mastery_start_action"] = start_action
+        if await maybe_run_deterministic_mastery_flow(context, stream):
+            return
         pipeline = AgenticChatPipeline(language=context.language)
         await pipeline.run(context, stream)
 

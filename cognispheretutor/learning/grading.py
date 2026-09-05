@@ -30,6 +30,10 @@ def grade_answer(user_answer: str, expected_answer: str, question_type: str = "s
     if question_type == "choice":
         user_norm = user.replace(" ", "")
         expected_norm = expected.replace(" ", "")
+        if re.fullmatch(r"[a-z0-9]", expected_norm):
+            user_label = re.match(r"^\s*([a-z0-9])\s*(?:[.:：、)）-].*)?$", user)
+            if user_label:
+                return user_label.group(1).lower() == expected_norm
         return user_norm == expected_norm
 
     if question_type == "short":

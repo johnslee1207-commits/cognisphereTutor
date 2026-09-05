@@ -231,6 +231,7 @@ def next_objective_for_start_point(
     normalized = str(start_point or "").strip().lower()
     if not normalized:
         return next_objective(progress, now=now)
+    recognized = normalized in _START_POINT_KP_IDS or normalized in _START_POINT_MODULE_SIGNALS
     if normalized in _START_POINT_KP_IDS:
         selected_step = _step_for_selected_kp(
             progress,
@@ -257,6 +258,14 @@ def next_objective_for_start_point(
         for kp in module.knowledge_points:
             if not is_mastered(progress, kp):
                 return _step_for_kp(progress, module, kp)
+    if recognized:
+        return NextStep(
+            action="complete",
+            reason=(
+                "The selected learning area is mastered. Choose another area "
+                "or continue the full path when you are ready."
+            ),
+        )
     return next_objective(progress, now=now)
 
 
@@ -276,6 +285,9 @@ def _numbers_close(left: float, right: float) -> bool:
 
 def _infer_numeric_answer(question: str) -> float | None:
     text = " ".join(str(question or "").lower().replace(",", "").split())
+    sequence = _infer_next_sequence_number(question)
+    if sequence is not None:
+        return sequence
     match = re.search(
         r"requires\s+(\d+(?:\.\d+)?)\s+feet.*?"
         r"installs\s+(\d+(?:\.\d+)?)\s+feet.*?"
@@ -306,6 +318,41 @@ def _infer_numeric_answer(question: str) -> float | None:
         workers, hours, target_hours = (float(value) for value in match.groups())
         if target_hours:
             return workers * hours / target_hours
+
+    return None
+
+
+def _infer_next_sequence_number(question: str) -> float | None:
+    normalized = str(question or "").replace("…", "?")
+    marker = re.search(
+        r"(?i)(?:next\s+(?:number|term)|find\s+the\s+next\s+number)\D+"
+        r"((?:-?\d+(?:\.\d+)?\s*,\s*){2,}-?\d+(?:\.\d+)?)",
+        normalized,
+    )
+    if not marker:
+        return None
+    values = [float(v) for v in re.findall(r"-?\d+(?:\.\d+)?", marker.group(1))]
+    if len(values) < 4:
+        return None
+
+    first_diffs = [values[i + 1] - values[i] for i in range(len(values) - 1)]
+    if len(first_diffs) >= 3:
+        second_diffs = [
+            first_diffs[i + 1] - first_diffs[i]
+            for i in range(len(first_diffs) - 1)
+        ]
+        if second_diffs and all(_numbers_close(diff, second_diffs[0]) for diff in second_diffs):
+            return values[-1] + first_diffs[-1] + second_diffs[0]
+
+    denominator = values[1] - values[0]
+    if not _numbers_close(denominator, 0):
+        ratio = (values[2] - values[1]) / denominator
+        add = values[1] - values[0] * ratio
+        if all(
+            _numbers_close(values[i] * ratio + add, values[i + 1])
+            for i in range(len(values) - 1)
+        ):
+            return values[-1] * ratio + add
 
     return None
 

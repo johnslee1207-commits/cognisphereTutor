@@ -406,6 +406,8 @@ def _render_item(item: dict[str, Any]) -> dict[str, Any]:
         "render_type",
         "prompt",
         "diagram_focus",
+        "answer",
+        "expected_answer",
     ):
         value = item.get(key)
         if isinstance(value, str) and value.strip():

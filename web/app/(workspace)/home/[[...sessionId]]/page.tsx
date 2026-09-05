@@ -373,6 +373,8 @@ interface MasteryStartingPoint {
   blurb: { zh: string; en: string };
   prompt: { zh: string; en: string };
   tone?: "primary" | "default";
+  targetModule?: string;
+  targetObjective?: string;
   children?: MasteryStartingPoint[];
 }
 
@@ -385,27 +387,24 @@ function flattenMasteryStartingPoints(
   ]);
 }
 
+function masteryStartingPointHref(pathId: string, point: MasteryStartingPoint): string {
+  return masteryChatHref(pathId, {
+    autoStart: "start",
+    startPoint: point.id,
+    focusModule: point.targetModule,
+    focusObjective: point.targetObjective,
+  });
+}
+
 function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
   if (pathId === "csphere-california_electrical_career") {
     return [
       {
-        id: "newcomer_sprint",
-        icon: Target,
-        tone: "primary",
-        title: { zh: "14 天新手冲刺", en: "14-day newcomer sprint" },
-        blurb: {
-          zh: "从职业路线、基础电学、数学到 apprenticeship 入学题型，直接进入每日短课和快测。",
-          en: "Start with route choice, foundations, math, and apprenticeship-style daily quick checks.",
-        },
-        prompt: {
-          zh: "Start from the 14-day newcomer sprint for California Electrical Career. Skip broad orientation beyond two sentences. Teach the first needed mini-lesson, then give a graded quick quiz and continue one by one.",
-          en: "Start from the 14-day newcomer sprint for California Electrical Career. Skip broad orientation beyond two sentences. Teach the first needed mini-lesson, then give a graded quick quiz and continue one by one.",
-        },
-      },
-      {
         id: "apprenticeship_entry",
         icon: ListChecks,
+        tone: "primary",
         title: { zh: "Entrance Exam", en: "Entrance Exam" },
+        targetModule: "ETI / IBEW Local 11 Apprenticeship Entrance",
         blurb: {
           zh: "面向下月初入学考试：先选具体题型，也可以从综合诊断开始。",
           en: "Prepare for the entrance exam by choosing a test area or starting with a diagnostic.",
@@ -419,6 +418,8 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
             id: "apprenticeship_diagnostic",
             icon: ListChecks,
             title: { zh: "入学诊断", en: "Entry diagnostic" },
+            targetModule: "ETI / IBEW Local 11 Apprenticeship Entrance",
+            targetObjective: "Baseline diagnostic for apprenticeship readiness",
             blurb: {
               zh: "先做基线诊断，确认 math、reading、mechanical、spatial 的薄弱点。",
               en: "Baseline check across math, reading, mechanical, and spatial skills.",
@@ -432,6 +433,8 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
             id: "apprenticeship_math",
             icon: Calculator,
             title: { zh: "Math reasoning", en: "Math reasoning" },
+            targetModule: "ETI / IBEW Local 11 Apprenticeship Entrance",
+            targetObjective: "Mathematical reasoning for aptitude testing",
             blurb: {
               zh: "比例、百分比、代数设式、速算和文字题建模。",
               en: "Ratios, percentages, algebra setup, quick arithmetic, and word problems.",
@@ -445,6 +448,8 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
             id: "apprenticeship_numerical",
             icon: BarChart3,
             title: { zh: "Numerical reasoning", en: "Numerical reasoning" },
+            targetModule: "ETI / IBEW Local 11 Apprenticeship Entrance",
+            targetObjective: "Numerical reasoning, sequences, and data interpretation",
             blurb: {
               zh: "数列、表格、图表、趋势判断和数据解释。",
               en: "Sequences, tables, charts, trend judgment, and data interpretation.",
@@ -458,6 +463,8 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
             id: "apprenticeship_reading",
             icon: BookOpenCheck,
             title: { zh: "Reading comprehension", en: "Reading comprehension" },
+            targetModule: "ETI / IBEW Local 11 Apprenticeship Entrance",
+            targetObjective: "Reading comprehension for technical instructions",
             blurb: {
               zh: "技术说明、条件限制、关键词定位和题干陷阱。",
               en: "Technical instructions, constraints, keyword location, and question traps.",
@@ -471,6 +478,8 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
             id: "apprenticeship_mechanical",
             icon: BrainCircuit,
             title: { zh: "Mechanical physics", en: "Mechanical physics" },
+            targetModule: "ETI / IBEW Local 11 Apprenticeship Entrance",
+            targetObjective: "Mechanical reasoning: force, levers, pulleys, gears, and motion",
             blurb: {
               zh: "力、杠杆、滑轮、齿轮、运动方向和机械直觉。",
               en: "Force, levers, pulleys, gears, motion direction, and mechanical intuition.",
@@ -484,6 +493,8 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
             id: "apprenticeship_spatial",
             icon: Compass,
             title: { zh: "Spatial reasoning", en: "Spatial reasoning" },
+            targetModule: "ETI / IBEW Local 11 Apprenticeship Entrance",
+            targetObjective: "Spatial reasoning and paper folding",
             blurb: {
               zh: "图形旋转、折纸、视角转换和空间判断。",
               en: "Shape rotation, paper folding, perspective shifts, and spatial judgment.",
@@ -497,6 +508,8 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
             id: "apprenticeship_timed",
             icon: Timer,
             title: { zh: "Timed mixed practice", en: "Timed mixed practice" },
+            targetModule: "ETI / IBEW Local 11 Apprenticeship Entrance",
+            targetObjective: "Timed mixed practice for a 2 hour 20 minute aptitude test",
             blurb: {
               zh: "按入学选拔节奏做混合题，训练取舍和时间管理。",
               en: "Mixed sets with pacing, triage, and time management.",
@@ -510,6 +523,8 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
             id: "apprenticeship_pef",
             icon: FileSearch,
             title: { zh: "PEF preparation", en: "PEF preparation" },
+            targetModule: "ETI / IBEW Local 11 Apprenticeship Entrance",
+            targetObjective: "Personal Experience Form preparation and evidence organization",
             blurb: {
               zh: "整理 Personal Experience Form 的经历证据和表达。",
               en: "Organize Personal Experience Form evidence and wording.",
@@ -522,9 +537,24 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
         ],
       },
       {
+        id: "newcomer_sprint",
+        icon: Target,
+        title: { zh: "14 天新手冲刺", en: "14-day newcomer sprint" },
+        targetModule: "California Electrical Career Orientation",
+        blurb: {
+          zh: "从职业路线、基础电学、数学到 apprenticeship 入学题型，直接进入每日短课和快测。",
+          en: "Start with route choice, foundations, math, and apprenticeship-style daily quick checks.",
+        },
+        prompt: {
+          zh: "Start from the 14-day newcomer sprint for California Electrical Career. Skip broad orientation beyond two sentences. Teach the first needed mini-lesson, then give a graded quick quiz and continue one by one.",
+          en: "Start from the 14-day newcomer sprint for California Electrical Career. Skip broad orientation beyond two sentences. Teach the first needed mini-lesson, then give a graded quick quiz and continue one by one.",
+        },
+      },
+      {
         id: "shared_foundations",
         icon: BookOpenCheck,
         title: { zh: "电工基础", en: "Electrical foundations" },
+        targetModule: "Shared Electrical Foundations",
         blurb: {
           zh: "从单位、比例、代数、欧姆定律、电路、测量、安全和故障排查开始。",
           en: "Start with units, ratios, algebra, Ohm's Law, circuits, measurement, safety, and troubleshooting.",
@@ -538,6 +568,7 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
         id: "ge",
         icon: Compass,
         title: { zh: "California GE", en: "California GE" },
+        targetModule: "California General Electrician",
         blurb: {
           zh: "进入 General Electrician 蓝图、开卷 NEC 导航、计算和 sectional practice。",
           en: "Enter the General Electrician blueprint, open-book NEC navigation, calculations, and sectional practice.",
@@ -551,6 +582,7 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
         id: "c10",
         icon: BrainCircuit,
         title: { zh: "C-10 Trade", en: "C-10 trade" },
+        targetModule: "California C-10 Electrical Trade",
         blurb: {
           zh: "闭卷 trade 判断：估算、rough/finish wiring、特殊系统、启动、排障、安全。",
           en: "Closed-book trade judgment: estimating, rough/finish wiring, special systems, startup, troubleshooting, and safety.",
@@ -564,6 +596,7 @@ function masteryStartingPointsForPath(pathId: string): MasteryStartingPoint[] {
         id: "law_business",
         icon: FileSearch,
         title: { zh: "Law & Business", en: "Law & Business" },
+        targetModule: "California Contractor Law and Business",
         blurb: {
           zh: "从合同、雇佣、保险、liens、public works 和场景判断进入。",
           en: "Start with contracts, employment, insurance, liens, public works, and scenario judgment.",
@@ -808,6 +841,7 @@ function MasteryStartingPointPanel({
   onContinue,
   onRestart,
   onRestore,
+  onOpenStart,
 }: {
   title: string;
   pathId: string;
@@ -819,6 +853,7 @@ function MasteryStartingPointPanel({
   onContinue: () => void;
   onRestart: () => void;
   onRestore: () => void;
+  onOpenStart: (href: string) => void;
 }) {
   const points = masteryStartingPointsForPath(pathId);
   const actionsDisabled = controlsDisabled ?? disabled;
@@ -840,7 +875,7 @@ function MasteryStartingPointPanel({
     event.preventDefault();
     const target = new URL(event.currentTarget.href);
     target.searchParams.set("launch", String(Date.now()));
-    window.location.assign(`${target.pathname}?${target.searchParams.toString()}`);
+    onOpenStart(`${target.pathname}?${target.searchParams.toString()}`);
   };
   if (compact) {
     return (
@@ -893,10 +928,7 @@ function MasteryStartingPointPanel({
                 return (
                   <a
                     key={point.id}
-                    href={masteryChatHref(pathId, {
-                      autoStart: "start",
-                      startPoint: point.id,
-                    })}
+                    href={masteryStartingPointHref(pathId, point)}
                     aria-disabled={disabled}
                     tabIndex={disabled ? -1 : 0}
                     onClick={openStartLink}
@@ -915,6 +947,11 @@ function MasteryStartingPointPanel({
                       <span className="mt-0.5 block line-clamp-2 text-[10px] leading-snug text-[var(--muted-foreground)]">
                         {tr(point.blurb.zh, point.blurb.en)}
                       </span>
+                      {point.targetModule ? (
+                        <span className="mt-1 block truncate text-[10px] text-[var(--primary)]">
+                          {tr("对应", "Maps to")}: {point.targetModule}
+                        </span>
+                      ) : null}
                     </span>
                   </a>
                 );
@@ -932,10 +969,7 @@ function MasteryStartingPointPanel({
                 return (
                   <a
                     key={child.id}
-                    href={masteryChatHref(pathId, {
-                      autoStart: "start",
-                      startPoint: child.id,
-                    })}
+                    href={masteryStartingPointHref(pathId, child)}
                     aria-disabled={disabled}
                     tabIndex={disabled ? -1 : 0}
                     onClick={openStartLink}
@@ -954,6 +988,11 @@ function MasteryStartingPointPanel({
                       <span className="mt-0.5 block line-clamp-2 text-[10px] leading-snug text-[var(--muted-foreground)]">
                         {tr(child.blurb.zh, child.blurb.en)}
                       </span>
+                      {child.targetObjective ? (
+                        <span className="mt-1 block truncate text-[10px] text-[var(--primary)]">
+                          {tr("目标", "Objective")}: {child.targetObjective}
+                        </span>
+                      ) : null}
                     </span>
                   </a>
                 );
@@ -999,10 +1038,7 @@ function MasteryStartingPointPanel({
               }`}
             >
               <a
-                href={masteryChatHref(pathId, {
-                  autoStart: "start",
-                  startPoint: point.id,
-                })}
+                href={masteryStartingPointHref(pathId, point)}
                 aria-disabled={disabled}
                 tabIndex={disabled ? -1 : 0}
                 onClick={openStartLink}
@@ -1026,6 +1062,11 @@ function MasteryStartingPointPanel({
                   <span className="mt-1 block text-xs leading-relaxed text-[var(--muted-foreground)]">
                     {tr(point.blurb.zh, point.blurb.en)}
                   </span>
+                  {point.targetModule ? (
+                    <span className="mt-2 block text-[11px] leading-snug text-[var(--primary)]">
+                      {tr("对应大纲模块", "Maps to module")}: {point.targetModule}
+                    </span>
+                  ) : null}
                 </span>
               </a>
               {hasChildren ? (
@@ -1039,10 +1080,7 @@ function MasteryStartingPointPanel({
                       return (
                         <a
                           key={child.id}
-                          href={masteryChatHref(pathId, {
-                            autoStart: "start",
-                            startPoint: child.id,
-                          })}
+                          href={masteryStartingPointHref(pathId, child)}
                           aria-disabled={disabled}
                           tabIndex={disabled ? -1 : 0}
                           onClick={openStartLink}
@@ -1059,6 +1097,11 @@ function MasteryStartingPointPanel({
                             <span className="mt-0.5 block text-[11px] leading-snug text-[var(--muted-foreground)]">
                               {tr(child.blurb.zh, child.blurb.en)}
                             </span>
+                            {child.targetObjective ? (
+                              <span className="mt-1 block text-[10px] leading-snug text-[var(--primary)]">
+                                {tr("目标", "Objective")}: {child.targetObjective}
+                              </span>
+                            ) : null}
                           </span>
                         </a>
                       );
@@ -1212,6 +1255,20 @@ export default function ChatPage() {
         launch,
       };
     });
+  }, [masteryPathParam, searchParams]);
+
+  useEffect(() => {
+    if (!masteryPathParam) {
+      setActiveMasteryStartPoint("");
+      return;
+    }
+    const startPoint =
+      searchParams?.get("start_point") ??
+      searchParams?.get("mastery_start_point") ??
+      "";
+    if (startPoint) {
+      setActiveMasteryStartPoint(startPoint);
+    }
   }, [masteryPathParam, searchParams]);
   useEffect(() => {
     if (!sessionIdParam?.startsWith("unified_")) return;
@@ -1914,6 +1971,9 @@ export default function ChatPage() {
     };
   }, [state.activeCapability, state.language, state.messages, state.sessionId]);
   const lastMessage = state.messages[state.messages.length - 1];
+  const preferLatestLessonStart =
+    state.activeCapability === "mastery_path" ||
+    lastMessage?.capability === "mastery_path";
   const {
     containerRef: messagesContainerRef,
     endRef: messagesEndRef,
@@ -1926,6 +1986,7 @@ export default function ChatPage() {
     messageCount: state.messages.length,
     lastMessageContent: lastMessage?.content,
     lastEventCount: lastMessage?.events?.length,
+    preferLatestMessageStart: preferLatestLessonStart,
   });
   const copyAssistantMessage = useCallback(async (content: string) => {
     if (!content.trim()) return;
@@ -2521,14 +2582,20 @@ export default function ChatPage() {
     if (!masteryPathParam || masteryProgressBusy || state.isStreaming) return;
     setCapability("mastery_path");
     pendingMasteryPathRef.current = masteryPathParam;
-    pendingMasteryStartPointRef.current = "";
-    setActiveMasteryStartPoint("");
+    const currentStartPoint =
+      pendingMasteryStartPointRef.current || activeMasteryStartPoint;
+    pendingMasteryStartPointRef.current = currentStartPoint;
     masteryAutoStartSentRef.current = true;
     sendMessage(
-      "Continue the current mastery path in order.",
+      currentStartPoint
+        ? "Continue the selected learning area in order."
+        : "Continue the current mastery path in order.",
       [],
       {
         mastery_path_id: masteryPathParam,
+        ...(currentStartPoint
+          ? { mastery_start_point: currentStartPoint }
+          : {}),
         ...(pendingTutorSessionRef.current
           ? { cognisphere_tutor_session_id: pendingTutorSessionRef.current }
           : {}),
@@ -2542,6 +2609,7 @@ export default function ChatPage() {
     );
     shouldAutoScrollRef.current = true;
   }, [
+    activeMasteryStartPoint,
     masteryPathParam,
     masteryProgressBusy,
     sendMessage,
@@ -2550,13 +2618,45 @@ export default function ChatPage() {
     state.isStreaming,
   ]);
 
+  const activeMasteryStartPointDef = useMemo<MasteryStartingPoint | null>(() => {
+    if (!masteryPathParam || !activeMasteryStartPoint) return null;
+    return (
+      flattenMasteryStartingPoints(
+        masteryStartingPointsForPath(masteryPathParam),
+      ).find((item) => item.id === activeMasteryStartPoint) || null
+    );
+  }, [activeMasteryStartPoint, masteryPathParam]);
+
   const activeMasteryStartPointLabel = useMemo(() => {
-    if (!masteryPathParam || !activeMasteryStartPoint) return "";
-    const point = flattenMasteryStartingPoints(
-      masteryStartingPointsForPath(masteryPathParam),
-    ).find((item) => item.id === activeMasteryStartPoint);
-    return point ? goalTr(point.title.zh, point.title.en) : "";
-  }, [activeMasteryStartPoint, goalTr, masteryPathParam]);
+    if (!activeMasteryStartPointDef) return "";
+    return goalTr(
+      activeMasteryStartPointDef.title.zh,
+      activeMasteryStartPointDef.title.en,
+    );
+  }, [activeMasteryStartPointDef, goalTr]);
+
+  const openMasteryPathMap = useCallback(() => {
+    if (!masteryPathParam) return;
+    const params = new URLSearchParams({
+      domains: cognispherePathDomain(masteryPathParam),
+    });
+    if (activeMasteryStartPointDef) {
+      if (activeMasteryStartPointDef.targetModule) {
+        params.set("focus_module", activeMasteryStartPointDef.targetModule);
+      }
+      if (activeMasteryStartPointDef.targetObjective) {
+        params.set("focus_objective", activeMasteryStartPointDef.targetObjective);
+      }
+    }
+    router.push(`/space/learning?${params.toString()}`);
+  }, [activeMasteryStartPointDef, masteryPathParam, router]);
+
+  const openMasteryStartLink = useCallback(
+    (href: string) => {
+      router.push(href);
+    },
+    [router],
+  );
 
   const handleSend = useCallback(
     async (content: string) => {
@@ -2695,6 +2795,8 @@ export default function ChatPage() {
     if (!masteryLaunchRequest) return;
     const autoStart = masteryLaunchRequest.autoStart;
     if (autoStart !== "next" && autoStart !== "start") return;
+    const currentLaunch = searchParams?.get("launch") ?? "";
+    if (currentLaunch !== masteryLaunchRequest.launch) return;
     const masteryPathId = masteryLaunchRequest.pathId;
     if (!masteryPathId) return;
     const isExplicitLaunch = Boolean(masteryLaunchRequest.launch);
@@ -2766,6 +2868,7 @@ export default function ChatPage() {
   }, [
     goalTr,
     masteryLaunchRequest,
+    searchParams,
     sendMessage,
     setCapability,
     state.enabledTools,
@@ -3161,13 +3264,7 @@ export default function ChatPage() {
               isAiInfra={isAiInfraMasteryPath}
               focusLabel={activeMasteryStartPointLabel}
               tr={goalTr}
-              onOpenPath={() =>
-                router.push(
-                  `/space/learning?domains=${encodeURIComponent(
-                    cognispherePathDomain(masteryPathParam),
-                  )}`,
-                )
-              }
+              onOpenPath={openMasteryPathMap}
               onOpenLabs={() => router.push("/space/ai-infra")}
               onContinue={handleContinueMasteryPath}
               continueDisabled={masteryProgressBusy || state.isStreaming}
@@ -3207,6 +3304,7 @@ export default function ChatPage() {
                       onContinue={handleContinueMasteryPath}
                       onRestart={() => void handleNewMasterySession("restart")}
                       onRestore={handleRestoreMasteryProgress}
+                      onOpenStart={openMasteryStartLink}
                     />
                   )}
                   {!masteryPathParam && <LearningGoalEntry tr={goalTr} />}
@@ -3258,6 +3356,7 @@ export default function ChatPage() {
                       onContinue={handleContinueMasteryPath}
                       onRestart={() => void handleNewMasterySession("restart")}
                       onRestore={handleRestoreMasteryProgress}
+                      onOpenStart={openMasteryStartLink}
                     />
                   ) : null}
                   <ChatMessageList

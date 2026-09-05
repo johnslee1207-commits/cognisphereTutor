@@ -600,6 +600,14 @@ def test_california_electrical_pack_metadata_counts_match_content() -> None:
         "paper_one_fold_hole",
         "three_gears",
     }
+    multiply_add = next(
+        item
+        for item in knowledge["scenario_cards"]
+        if item.get("id") == "cec-scenario-entrance-sequence-multiply-add"
+    )
+    assert multiply_add["scenario"] == ["Find the next number: 2, 5, 11, 23, 47, ?"]
+    assert multiply_add["answer"] == "C"
+    assert multiply_add["choices"][2] == "C) 95"
     assert len(entrance_scenarios) >= 100
     assert len(entrance_lessons) >= 55
 

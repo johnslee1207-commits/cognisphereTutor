@@ -35,7 +35,10 @@ import {
   recomputeAnswerContent,
   shouldAppendEventContent,
 } from "@/lib/stream";
-import { hasPendingAskUserInMessages } from "@/lib/ask-user-state";
+import {
+  hasPendingAskUserInMessages,
+  pendingAskUserTurnIdInMessages,
+} from "@/lib/ask-user-state";
 import { notify } from "@/lib/notifications";
 import i18n from "i18next";
 import {
@@ -195,6 +198,7 @@ type Action =
   | { type: "POP_LAST_ASSISTANT"; key: string }
   | { type: "RESTORE_ASSISTANT"; key: string; message: MessageItem }
   | { type: "STREAM_START"; key: string }
+  | { type: "RESUME_STREAM"; key: string }
   | { type: "STREAM_EVENT"; key: string; event: StreamEvent }
   | {
       type: "STREAM_END";
@@ -436,6 +440,23 @@ function reducer(state: ProviderState, action: Action): ProviderState {
                 parentMessageId: tip?.id ?? null,
               },
             ],
+            updatedAt: Date.now(),
+          },
+        },
+      };
+    }
+    case "RESUME_STREAM": {
+      const session =
+        state.sessions[action.key] ?? createSessionEntry(action.key);
+      return {
+        ...state,
+        sessions: {
+          ...state.sessions,
+          [action.key]: {
+            ...session,
+            isStreaming: true,
+            status: "running",
+            currentStage: session.currentStage || "responding",
             updatedAt: Date.now(),
           },
         },
@@ -758,7 +779,7 @@ interface ChatContextValue {
           text?: string;
           answers?: Array<{ questionId: string; text: string }>;
         },
-  ) => void;
+  ) => boolean;
   regenerateLastMessage: () => void;
   deleteTurn: (messageId: number) => Promise<void>;
   /** Re-send a user message under a new branch (sibling of the original).
@@ -1580,17 +1601,25 @@ export function UnifiedChatProvider({
     ) => {
       const currentState = stateRef.current;
       const key = currentState.selectedKey;
-      if (!key) return;
+      if (!key) return false;
       const session = currentState.sessions[key];
-      const turnId = session?.activeTurnId;
+      const activeTurnId = session?.activeTurnId;
+      const pendingTurnId = session
+        ? pendingAskUserTurnIdInMessages(session.messages, activeTurnId)
+        : "";
+      const turnId = activeTurnId || pendingTurnId;
       const pendingAskUser = session
-        ? hasPendingAskUserInMessages(session.messages, turnId)
+        ? hasPendingAskUserInMessages(session.messages, turnId || activeTurnId)
         : false;
       // Only meaningful while a turn is live. A paused ask_user turn can be
-      // silent long enough for the socket to reconnect, so allow submission
-      // whenever the unresolved card and active turn id are still present.
+      // silent long enough for the socket to reconnect or the page to reload,
+      // so recover the turn id from the unresolved card when needed.
       if (!session || !turnId || (!session.isStreaming && !pendingAskUser)) {
-        return;
+        notify(
+          i18n.t("This question is no longer active. Please refresh or continue the lesson."),
+          { tone: "error", durationMs: 6000 },
+        );
+        return false;
       }
       const message: import("@/lib/unified-ws").SubmitUserReplyMessage = {
         type: "submit_user_reply",
@@ -1602,7 +1631,9 @@ export function UnifiedChatProvider({
         if (typeof reply.text === "string") message.text = reply.text;
         if (Array.isArray(reply.answers)) message.answers = reply.answers;
       }
+      dispatch({ type: "RESUME_STREAM", key });
       sendThroughRunner(key, message);
+      return true;
     },
     [sendThroughRunner],
   );

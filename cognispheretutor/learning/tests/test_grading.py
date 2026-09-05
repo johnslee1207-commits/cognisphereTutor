@@ -29,6 +29,10 @@ class TestChoiceGrading:
     def test_choice_with_spaces(self):
         assert grade_answer("A ", " A", "choice") is True
 
+    def test_choice_accepts_label_with_body(self):
+        assert grade_answer("B: 47", "B", "choice") is True
+        assert grade_answer("B) 47", "B", "choice") is True
+
     def test_choice_wrong(self):
         assert grade_answer("C", "A", "choice") is False
 

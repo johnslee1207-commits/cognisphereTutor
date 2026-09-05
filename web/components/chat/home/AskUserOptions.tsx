@@ -425,7 +425,7 @@ export const AskUserOptions = memo(function AskUserOptions({
   onSubmit: (payload: {
     text?: string;
     answers?: Array<{ questionId: string; text: string }>;
-  }) => void;
+  }) => boolean | void;
   /** When true, the resolved Q&A card renders with an inline toggle so
    * the user can hide / show the question + answer summary. Resolved cards
    * default to collapsible+collapsed (the Q&A history stays addressable
@@ -459,7 +459,7 @@ const InteractiveAskUserCard = memo(function InteractiveAskUserCard({
   onSubmit: (payload: {
     text?: string;
     answers?: Array<{ questionId: string; text: string }>;
-  }) => void;
+  }) => boolean | void;
 }) {
   const { t } = useTranslation();
   const totalQuestions = payload.questions.length;
@@ -509,13 +509,13 @@ const InteractiveAskUserCard = memo(function InteractiveAskUserCard({
     [payload.questions, answers],
   );
 
-  const handleSubmit = useCallback(() => {
+  const submitAnswers = useCallback((answerSnapshot = answers) => {
     if (submitted) return;
     setSubmitted(true);
     const list: Array<{ questionId: string; text: string }> =
       payload.questions.map((q) => ({
         questionId: q.id,
-        text: (answers[q.id] ?? "").trim(),
+        text: (answerSnapshot[q.id] ?? "").trim(),
       }));
     // Always include a flat ``text`` synopsis for back-compat with any
     // older server path that only looks at ``text``.
@@ -523,8 +523,15 @@ const InteractiveAskUserCard = memo(function InteractiveAskUserCard({
       .map(({ text }) => text || "(skipped)")
       .filter((s) => s !== "(skipped)")
       .join(" | ");
-    onSubmit({ text: flat, answers: list });
+    const accepted = onSubmit({ text: flat, answers: list });
+    if (accepted === false) {
+      setSubmitted(false);
+    }
   }, [submitted, payload.questions, answers, onSubmit]);
+
+  const handleSubmit = useCallback(() => {
+    submitAnswers();
+  }, [submitAnswers]);
 
   const pickOption = useCallback(
     (question: AskUserQuestion, label: string) => {

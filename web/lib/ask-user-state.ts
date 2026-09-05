@@ -74,3 +74,47 @@ export function hasPendingAskUserInMessages(
 ): boolean {
   return messages.some((message) => hasPendingAskUser(message.events, turnId));
 }
+
+/**
+ * Return the turn id for the latest unresolved ask_user card in the message
+ * history. This lets the UI resume a paused card after a page refresh or socket
+ * reconnect, when the visible card still exists but the volatile activeTurnId
+ * has been lost.
+ */
+export function pendingAskUserTurnIdInMessages(
+  messages: MessageWithEvents[],
+  preferredTurnId?: string | null,
+): string {
+  const pendingByKey = new Map<string, string>();
+  let anonymousCount = 0;
+
+  for (const message of messages) {
+    for (const event of message.events ?? []) {
+      if (!eventBelongsToTurn(event, preferredTurnId)) continue;
+      const meta = asRecord(event.metadata);
+
+      if (event.type === "tool_result" && askUserPayloadFrom(event)) {
+        const toolCallId = askUserToolCallId(event);
+        const key = toolCallId ? `id:${toolCallId}` : `anon:${anonymousCount++}`;
+        const eventTurnId =
+          typeof event.turn_id === "string" ? event.turn_id.trim() : "";
+        pendingByKey.set(key, eventTurnId);
+        continue;
+      }
+
+      if (event.type === "progress" && meta?.ask_user_resolved === true) {
+        const resolvedId =
+          typeof meta.ask_user_tool_call_id === "string"
+            ? meta.ask_user_tool_call_id.trim()
+            : "";
+        if (resolvedId) {
+          pendingByKey.delete(`id:${resolvedId}`);
+        } else {
+          pendingByKey.clear();
+        }
+      }
+    }
+  }
+
+  return [...pendingByKey.values()].reverse().find(Boolean) ?? "";
+}
