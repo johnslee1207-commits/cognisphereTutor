@@ -821,8 +821,14 @@ function MasteryStartingPointPanel({
   onRestore: () => void;
 }) {
   const points = masteryStartingPointsForPath(pathId);
-  const compactPoints = flattenMasteryStartingPoints(points);
   const actionsDisabled = controlsDisabled ?? disabled;
+  const activeParentPoint =
+    points.find((point) => point.id === activePointId) ||
+    points.find((point) =>
+      (point.children || []).some((child) => child.id === activePointId),
+    ) ||
+    points[0];
+  const activeChildren = activeParentPoint?.children || [];
   const openStartLink = (event: ReactMouseEvent<HTMLAnchorElement>) => {
     if (disabled) {
       event.preventDefault();
@@ -856,9 +862,10 @@ function MasteryStartingPointPanel({
           </button>
         </div>
         <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
-          {compactPoints.map((point) => {
+          {points.map((point) => {
             const Icon = point.icon;
-            const active = activePointId === point.id;
+            const active =
+              activeParentPoint?.id === point.id || activePointId === point.id;
             return (
               <a
                 key={point.id}
@@ -889,6 +896,47 @@ function MasteryStartingPointPanel({
             );
           })}
         </div>
+        {activeChildren.length ? (
+          <div className="mt-2 border-t border-[var(--border)] pt-2">
+            <div className="mb-1.5 text-[10px] font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+              {tr("具体训练", "Practice areas")}
+            </div>
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {activeChildren.map((child) => {
+                const ChildIcon = child.icon;
+                const active = activePointId === child.id;
+                return (
+                  <a
+                    key={child.id}
+                    href={masteryChatHref(pathId, {
+                      autoStart: "start",
+                      startPoint: child.id,
+                    })}
+                    aria-disabled={disabled}
+                    tabIndex={disabled ? -1 : 0}
+                    onClick={openStartLink}
+                    className={`flex min-h-[50px] min-w-[140px] items-start gap-2 rounded-md border px-2.5 py-2 text-left transition-colors ${
+                      active
+                        ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                        : "border-[var(--border)] bg-[var(--background)] hover:bg-[var(--accent)]"
+                    }`}
+                    title={tr(child.title.zh, child.title.en)}
+                  >
+                    <ChildIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
+                    <span className="min-w-0">
+                      <span className="block truncate text-xs font-medium text-[var(--foreground)]">
+                        {tr(child.title.zh, child.title.en)}
+                      </span>
+                      <span className="mt-0.5 block line-clamp-2 text-[10px] leading-snug text-[var(--muted-foreground)]">
+                        {tr(child.blurb.zh, child.blurb.en)}
+                      </span>
+                    </span>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
       </div>
     );
   }
