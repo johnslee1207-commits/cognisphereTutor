@@ -180,3 +180,96 @@ async def test_explicit_start_point_clears_stale_pending_question(tmp_path, monk
         for event in events
     )
     assert not any(event.type == "tool_result" and "Old question?" in event.content for event in events)
+
+
+@pytest.mark.asyncio
+async def test_correct_answer_previews_next_lesson_without_immediate_next_quiz(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    import time
+
+    import cognispheretutor.capabilities.mastery.deterministic_flow as flow
+    import cognispheretutor.learning.storage as storage_mod
+    from cognispheretutor.core.context import UnifiedContext
+    from cognispheretutor.core.stream_bus import StreamBus
+    from cognispheretutor.learning.models import (
+        KnowledgePoint,
+        KnowledgeType,
+        LearningModule,
+        LearningProgress,
+        PendingQuestion,
+    )
+
+    real_store_cls = storage_mod.LearningStore
+    store = real_store_cls(tmp_path)
+    progress = LearningProgress(
+        book_id="csphere-test_domain",
+        modules=[
+            LearningModule(
+                id="m1",
+                name="Entrance Exam",
+                order=0,
+                knowledge_points=[
+                    KnowledgePoint(
+                        id="kp1",
+                        name="First lesson",
+                        type=KnowledgeType.CONCEPT,
+                        module_id="m1",
+                    ),
+                    KnowledgePoint(
+                        id="kp2",
+                        name="Second lesson",
+                        type=KnowledgeType.CONCEPT,
+                        module_id="m1",
+                    ),
+                ],
+            )
+        ],
+        knowledge_types={
+            "kp1": KnowledgeType.CONCEPT,
+            "kp2": KnowledgeType.CONCEPT,
+        },
+        pending_question=PendingQuestion(
+            question_id="pending-first",
+            knowledge_point_id="kp1",
+            module_id="m1",
+            prompt="First check?",
+            question_type="choice",
+            expected_answer="A",
+            options=["A: correct", "B: wrong"],
+            created_at=time.time(),
+        ),
+    )
+    store.save(progress)
+    monkeypatch.setattr(flow, "LearningStore", lambda: real_store_cls(tmp_path))
+
+    context = UnifiedContext(
+        session_id="s1",
+        user_message="A",
+        active_capability="mastery_path",
+        metadata={
+            "mastery_path_id": "csphere-test_domain",
+            "turn_id": "t1",
+        },
+    )
+    bus = StreamBus()
+
+    handled = await flow.maybe_run_deterministic_mastery_flow(context, bus)
+    await bus.close()
+    events = [event async for event in bus.subscribe()]
+    updated = store.load("csphere-test_domain")
+
+    assert handled is True
+    assert updated is not None
+    assert updated.pending_question is not None
+    assert updated.pending_question.knowledge_point_id == "kp2"
+    assert any(event.type == "content" and "## Second lesson" in event.content for event in events)
+    next_quiz_cards = [
+        event
+        for event in events
+        if event.type == "tool_result"
+        and "Second lesson" in event.content
+        and (event.metadata.get("tool_metadata") or {}).get("ask_user")
+    ]
+    assert next_quiz_cards == []

@@ -153,8 +153,13 @@ async def _run_flow_cycles(
                 if not answer:
                     return
                 continue
-            if cycle < max_cycles - 1:
-                continue
+            await _preview_next_lesson(
+                context=context,
+                stream=stream,
+                service=service,
+                path_id=path_id,
+                domain=domain,
+            )
             return
 
         step = next_objective_for_start_point(
@@ -197,10 +202,76 @@ async def _teach_and_ask(
     domain: str,
     prefer_same_objective: str,
 ) -> PendingQuestion:
+    question = await _teach_and_prepare_question(
+        context=context,
+        stream=stream,
+        service=service,
+        path_id=path_id,
+        domain=domain,
+        prefer_same_objective=prefer_same_objective,
+        include_quick_check_prompt=True,
+    )
+    await _emit_quiz_registration(stream, question)
+    await _emit_ask_user(stream, question)
+    return question
+
+
+async def _preview_next_lesson(
+    *,
+    context: UnifiedContext,
+    stream: StreamBus,
+    service: LearningService,
+    path_id: str,
+    domain: str,
+) -> None:
+    progress = service.get_or_create(path_id)
+    step = next_objective_for_start_point(
+        progress,
+        str(context.metadata.get("mastery_start_point") or "").strip(),
+    )
+    if step.action == "complete":
+        scope = (
+            "Selected learning area"
+            if str(context.metadata.get("mastery_start_point") or "").strip()
+            else "All objectives in this path"
+        )
+        await stream.content(
+            f"{scope} is mastered. Source: local plugin pack, Cognisphere materialized\n",
+            source="mastery_path",
+            stage="responding",
+        )
+        return
+    await _teach_and_prepare_question(
+        context=context,
+        stream=stream,
+        service=service,
+        path_id=path_id,
+        domain=domain,
+        prefer_same_objective=step.knowledge_point_id,
+        include_quick_check_prompt=False,
+    )
+    await stream.content(
+        "When you are ready, continue to take the quick check for this lesson.\n\n"
+        "Source: local plugin pack, Cognisphere materialized\n\n",
+        source="mastery_path",
+        stage="responding",
+    )
+
+
+async def _teach_and_prepare_question(
+    *,
+    context: UnifiedContext,
+    stream: StreamBus,
+    service: LearningService,
+    path_id: str,
+    domain: str,
+    prefer_same_objective: str,
+    include_quick_check_prompt: bool,
+) -> PendingQuestion:
     progress = service.get_or_create(path_id)
     kp, module_id, module_name = find_knowledge_point(progress, prefer_same_objective)
     if kp is None:
-        return
+        raise RuntimeError(f"Unknown mastery objective: {prefer_same_objective}")
     objective = {
         "module_id": module_id,
         "module_name": module_name,
@@ -209,13 +280,16 @@ async def _teach_and_ask(
         "knowledge_point_type": kp.type.value,
     }
     grounding = _grounding_items(domain, objective, context.user_message)
-    lesson = _lesson_text(module_name=module_name, objective_name=kp.name, items=grounding)
+    lesson = _lesson_text(
+        module_name=module_name,
+        objective_name=kp.name,
+        items=grounding,
+        include_quick_check_prompt=include_quick_check_prompt,
+    )
     await stream.content(lesson, source="mastery_path", stage="responding")
 
     question = _question_from_grounding(kp.id, module_id, kp.name, grounding)
     service.set_pending_question(progress, question)
-    await _emit_quiz_registration(stream, question)
-    await _emit_ask_user(stream, question)
     return question
 
 
@@ -265,6 +339,7 @@ async def _ask_existing_pending(
     stream: StreamBus,
     pending: PendingQuestion,
 ) -> str:
+    await _emit_quiz_registration(stream, pending)
     await _emit_ask_user(stream, pending)
     reply = await _wait_for_reply(context, stream)
     await _emit_ask_user_resolved(stream, pending.question_id, reply)
@@ -407,7 +482,13 @@ def _grounding_items(domain: str, objective: dict[str, Any], learner_goal: str) 
     return [_render_item(item) for item in ranked]
 
 
-def _lesson_text(*, module_name: str, objective_name: str, items: list[dict[str, Any]]) -> str:
+def _lesson_text(
+    *,
+    module_name: str,
+    objective_name: str,
+    items: list[dict[str, Any]],
+    include_quick_check_prompt: bool = True,
+) -> str:
     lines = [f"## {objective_name}", "", f"Area: {module_name}", ""]
     points = _lesson_points(items)
     if points:
@@ -418,7 +499,9 @@ def _lesson_text(*, module_name: str, objective_name: str, items: list[dict[str,
         lines.append(
             "The local pack has only sparse detail for this objective, so we will keep this lesson focused on the path definition and practice gate."
         )
-    lines.extend(["", "Source: local plugin pack, Cognisphere materialized", "", "Now answer the quick check below."])
+    lines.extend(["", "Source: local plugin pack, Cognisphere materialized"])
+    if include_quick_check_prompt:
+        lines.extend(["", "Now answer the quick check below."])
     return "\n".join(lines) + "\n\n"
 
 
