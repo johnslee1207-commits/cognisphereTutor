@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from zipfile import ZipFile
 
 import httpx
@@ -291,6 +292,72 @@ async def test_in_memory_adapter_exports_real_local_artifacts() -> None:
         manifest_json = json.loads(zip_file.read("manifest.json").decode("utf-8"))
     assert manifest_json["stage"]["id"] == course.course_id
     assert len(manifest_json["scenes"]) == 6
+
+
+@pytest.mark.asyncio
+async def test_in_memory_html_export_renders_builtin_openmaic_classroom() -> None:
+    adapter = InMemoryCourseRuntimeAdapter()
+    manifest = _valid_manifest()
+    course = await adapter.create_draft(manifest)
+    await adapter.upsert_scene(
+        {
+            "course_id": course.course_id,
+            "scene_id": "scene-html-slide",
+            "kind": "concept",
+            "title": "HTML slide",
+            "objective_ids": ["obj-branch-circuit-load"],
+            "runtime_scene_type": "slide",
+            "openmaic_content": {
+                "type": "slide",
+                "canvas": {
+                    "elements": [
+                        {
+                            "type": "text",
+                            "content": "<p>Start with total connected load.</p>",
+                        }
+                    ]
+                },
+            },
+        }
+    )
+    await adapter.upsert_scene(
+        {
+            "course_id": course.course_id,
+            "scene_id": "scene-diagnostic-quiz",
+            "kind": "diagnose",
+            "title": "Diagnostic quick check",
+            "objective_ids": ["obj-branch-circuit-load"],
+            "assessment_refs": ["assess-branch-circuit-load"],
+            "runtime_scene_type": "quiz",
+            "openmaic_content": {
+                "type": "quiz",
+                "questions": [
+                    {
+                        "id": "q1",
+                        "type": "single",
+                        "question": "What should you calculate first?",
+                        "options": [
+                            {"value": "q1::A", "label": "Voltage drop"},
+                            {"value": "q1::B", "label": "Total load"},
+                        ],
+                        "answer": ["q1::B"],
+                        "analysis": "Total load comes before sizing decisions.",
+                    }
+                ],
+            },
+        }
+    )
+
+    html = await adapter.export(course, "html")
+
+    assert html.uri is not None
+    body = Path(html.uri).read_text(encoding="utf-8")
+    assert "OpenMAIC Classroom" in body
+    assert 'data-scene-tab="0"' in body
+    assert 'data-option data-value="q1::B"' in body
+    assert "Start with total connected load." in body
+    assert "&lt;p&gt;Start with total connected load" not in body
+    assert "Total load comes before sizing decisions." in body
 
 
 @pytest.mark.asyncio
