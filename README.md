@@ -25,6 +25,54 @@
 | LeetCode | `cognispheretutor/integrations/cognisphere/bundled_packs/leetcode_bundle.json` | 6 个模块 / 18 个目标 |
 | California Electrical Career | `cognispheretutor/integrations/cognisphere/bundled_packs/california_electrical_career_bundle.json` | 6 个模块 / 39 个目标 / 99 张 lesson cards / 33 个 practice blueprints / 21 个 activity templates / 14 条 study sequences / 123 张 scenario cards / 26 组 flashcard decks / 13 个 readiness checkpoints / 10 个 visual prompts |
 
+## OpenMAIC 内嵌课件
+
+Tutor 现在随包分发 OpenMAIC 原生 classroom courseware seed。普通用户安装/打开
+Tutor 后，不需要手动复制课件 JSON；当 Tutor 启动 managed OpenMAIC runtime
+sidecar 时，会自动把包内课件导入 OpenMAIC 的 `/api/classroom`，由 OpenMAIC
+负责展示课堂页面。
+
+当前内嵌 OpenMAIC 课件：
+
+| OpenMAIC course id | 语言 | 内容规模 | 文件 |
+| --- | --- | --- | --- |
+| `california-electrical-entrance-courseware-en-v1` | English / `en-US` | 122 个 scenes / 21 个 quiz scenes / 41 道原创练习题 | `cognispheretutor/vendor/openmaic-courseware/california-electrical-entrance-courseware-en-v1.json` |
+| `california-electrical-entrance-courseware-v5` | 中文 / `zh-CN` | 110 个 scenes / 64 个 quiz scenes | `cognispheretutor/vendor/openmaic-courseware/california-electrical-entrance-courseware-v5.json` |
+
+英文版课件面向 electrician apprenticeship entrance exam prep，覆盖：
+
+- diagnostic baseline and study-plan routing
+- arithmetic, fractions, decimals, percent, ratios, proportions, and unit conversion
+- basic algebra, formula substitution, tables, graphs, and slope
+- reading main idea, evidence, sequence words, conditions, `EXCEPT` / `NOT` traps
+- mechanical reasoning for levers, pulleys, gears, force direction, and tradeoffs
+- spatial reasoning for rotation, reflection, folding, and cube nets
+- word-problem translation, timed-test strategy, personal experience evidence, and a seven-day review plan
+
+课件不是把 learning pack 内容搬成 PPT。它按“诊断 -> 方法讲解 -> worked example
+-> common traps -> Tutor diagnosis and planning -> practice check”的结构组织，
+用于支持后续按错因标签做个性化复习。
+
+OpenMAIC runtime 有两种接入方式：
+
+- **内置/托管模式：** 发布包可通过 `scripts/package_openmaic_runtime.py` 把
+  OpenMAIC standalone build 打进
+  `cognispheretutor/vendor/openmaic-runtime/`。Tutor 启动后会自动发现、启动并
+  seed 上面的课件。
+- **外部 OpenMAIC app：** 在 `data/user/settings/integrations.json` 配置
+  `openmaic_course_runtime_base_url` 和 `openmaic_course_export_routes`。Tutor
+  会把课程发布、课堂展示和 `html` / `pptx` / `maic-zip` 导出交给该 OpenMAIC
+  endpoint。
+
+可用状态可通过接口检查：
+
+```text
+GET /api/v1/courses/runtime/status
+```
+
+返回中的 `embedded_openmaic_courseware` 会列出 Tutor 当前随包携带的 OpenMAIC
+课件。
+
 California Electrical Career 当前已从课程路径 seed 扩展为可进入 mini-lesson 的
 内容 seed，覆盖：
 
@@ -137,6 +185,29 @@ http://127.0.0.1:3782
 ```text
 http://127.0.0.1:3782/space/learning
 ```
+
+### 5. 打开 OpenMAIC 电工入门课件
+
+如果当前安装包已经包含 OpenMAIC runtime bundle，`cognispheretutor start`
+会自动启动 OpenMAIC sidecar 并导入内嵌课件。默认 OpenMAIC 本地地址为：
+
+```text
+http://127.0.0.1:33100
+```
+
+英文电工入门考试课件：
+
+```text
+http://127.0.0.1:33100/classroom/california-electrical-entrance-courseware-en-v1
+```
+
+中文电工入门考试课件：
+
+```text
+http://127.0.0.1:33100/classroom/california-electrical-entrance-courseware-v5
+```
+
+如果使用的是外部 OpenMAIC app，把上面的 host 换成实际 OpenMAIC 地址即可。
 
 ## 第一次学习 AWS
 
