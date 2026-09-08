@@ -601,6 +601,76 @@ async def test_http_openmaic_adapter_publishes_persistence_document_to_classroom
     assert result["classroom_url"] == (
         "https://openmaic.example/classroom/california-electrician-ge-foundation"
     )
+    assert result["storage"] == "openmaic_persistence"
+
+
+@pytest.mark.asyncio
+async def test_http_openmaic_adapter_uses_classroom_file_store_when_persistence_unconfigured() -> None:
+    calls: list[tuple[str, str, dict | None]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        body = json_body(request)
+        calls.append((request.method, request.url.path, body))
+        if request.url.path.startswith("/api/persistence/"):
+            return httpx.Response(
+                404,
+                json={
+                    "error": {
+                        "code": "PERSISTENCE_NOT_CONFIGURED",
+                        "message": "server persistence not configured",
+                    }
+                },
+            )
+        if request.method == "POST" and request.url.path == "/api/classroom":
+            assert body is not None
+            return httpx.Response(
+                201,
+                json={
+                    "success": True,
+                    "id": body["stage"]["id"],
+                    "url": f"https://openmaic.example/classroom/{body['stage']['id']}",
+                },
+            )
+        if request.method == "POST" and request.url.path == "/api/export/html":
+            return httpx.Response(
+                200,
+                content=b"<html>OpenMAIC export</html>",
+                headers={"content-type": "text/html", "x-artifact-id": "artifact-html"},
+            )
+        return httpx.Response(404)
+
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(handler),
+        base_url="https://openmaic.example",
+    ) as client:
+        adapter = HttpOpenMaicCourseRuntimeAdapter(
+            "https://openmaic.example/api/persistence",
+            client=client,
+            export_routes={"html": "/api/export/html"},
+        )
+        course = await adapter.create_draft(_valid_manifest())
+        await adapter.upsert_scene(
+            {
+                "course_id": course.course_id,
+                "scene_id": "scene-load-lab",
+                "kind": "execute_lab",
+                "objective_ids": ["obj-branch-circuit-load"],
+            }
+        )
+        published = await adapter.publish_classroom(course)
+        exported = await adapter.export(course, "html")
+
+    assert calls[0][:2] == (
+        "PUT",
+        "/api/persistence/documents/california-electrician-ge-foundation",
+    )
+    classroom_writes = [call for call in calls if call[:2] == ("POST", "/api/classroom")]
+    assert len(classroom_writes) >= 2
+    assert published["storage"] == "openmaic_classroom_file"
+    assert published["classroom_url"] == (
+        "https://openmaic.example/classroom/california-electrician-ge-foundation"
+    )
+    assert exported.artifact_id == "artifact-html"
 
 
 @pytest.mark.asyncio

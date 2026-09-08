@@ -449,6 +449,8 @@ class HttpOpenMaicCourseRuntimeAdapter:
         self.contract = dict(contract or load_course_runtime_contract())
         self.export_routes = dict(export_routes or {})
         self._cookies = httpx.Cookies()
+        self._classroom_documents: dict[str, dict[str, Any]] = {}
+        self._classroom_file_fallback = False
 
     async def create_draft(self, manifest: Mapping[str, Any]) -> CourseRef:
         report = validate_course_manifest(manifest, contract=self.contract)
@@ -471,7 +473,15 @@ class HttpOpenMaicCourseRuntimeAdapter:
                 "source_pack_version": manifest.get("source_pack_version"),
             },
         }
-        await self._request("PUT", f"/documents/{_segment(course_id)}", document)
+        try:
+            await self._request("PUT", f"/documents/{_segment(course_id)}", document)
+        except CognisphereIntegrationError as exc:
+            if not _is_openmaic_storage_unavailable(exc):
+                raise
+            self._classroom_file_fallback = True
+            await self._save_classroom_document(course_id, document)
+        else:
+            self._classroom_documents[course_id] = document
         return CourseRef(course_id=course_id, version=version)
 
     async def upsert_scene(self, scene: Mapping[str, Any]) -> SceneRef:
@@ -479,11 +489,41 @@ class HttpOpenMaicCourseRuntimeAdapter:
         scene_id = _required_str(scene, "scene_id", "invalid_learning_scene")
         kind = _required_str(scene, "kind", "invalid_learning_scene")
         projected = build_openmaic_scene_projection(scene, contract=self.contract)
-        await self._request(
-            "PUT",
-            f"/documents/{_segment(course_id)}/scenes/{_segment(scene_id)}",
-            projected,
-        )
+        if self._classroom_file_fallback:
+            document = self._classroom_documents.get(course_id)
+            if document is not None:
+                scenes = [
+                    item
+                    for item in _as_mapping_list(document.get("scenes"))
+                    if str(item.get("id") or "") != scene_id
+                ]
+                scenes.append(projected)
+                scenes.sort(key=lambda item: int(item.get("order") or 0))
+                document["scenes"] = scenes
+                await self._save_classroom_document(course_id, document)
+                return SceneRef(course_id=course_id, scene_id=scene_id, kind=kind)
+        try:
+            await self._request(
+                "PUT",
+                f"/documents/{_segment(course_id)}/scenes/{_segment(scene_id)}",
+                projected,
+            )
+        except CognisphereIntegrationError as exc:
+            if not _is_openmaic_storage_unavailable(exc):
+                raise
+            self._classroom_file_fallback = True
+            document = self._classroom_documents.get(course_id)
+            if document is None:
+                raise
+            scenes = [
+                item
+                for item in _as_mapping_list(document.get("scenes"))
+                if str(item.get("id") or "") != scene_id
+            ]
+            scenes.append(projected)
+            scenes.sort(key=lambda item: int(item.get("order") or 0))
+            document["scenes"] = scenes
+            await self._save_classroom_document(course_id, document)
         return SceneRef(course_id=course_id, scene_id=scene_id, kind=kind)
 
     async def render(
@@ -515,12 +555,17 @@ class HttpOpenMaicCourseRuntimeAdapter:
             "createdAt": now,
             "updatedAt": now,
         }
-        payload = await self._request(
-            "POST",
-            "/runtime/sessions",
-            session,
-            extra_headers={"x-learner-key": learner_hash},
-        )
+        try:
+            payload = await self._request(
+                "POST",
+                "/runtime/sessions",
+                session,
+                extra_headers={"x-learner-key": learner_hash},
+            )
+        except CognisphereIntegrationError as exc:
+            if not _is_openmaic_storage_unavailable(exc):
+                raise
+            payload = session
         returned = payload if isinstance(payload, Mapping) else session
         return SessionRef(
             session_id=str(returned.get("id") or session_id),
@@ -533,6 +578,19 @@ class HttpOpenMaicCourseRuntimeAdapter:
 
     async def publish_classroom(self, course: CourseRef) -> dict[str, Any]:
         """Copy a persisted document into OpenMAIC's classroom playback store."""
+        if self._classroom_file_fallback and course.course_id in self._classroom_documents:
+            payload = await self._save_classroom_document(
+                course.course_id,
+                self._classroom_documents[course.course_id],
+            )
+            classroom_url = payload.get("url") if isinstance(payload, Mapping) else None
+            return {
+                "ok": True,
+                "course_id": course.course_id,
+                "classroom_url": str(classroom_url or f"{_openmaic_origin(self.base_url)}/classroom/{course.course_id}"),
+                "response": dict(payload) if isinstance(payload, Mapping) else payload,
+                "storage": "openmaic_classroom_file",
+            }
         document = await self._request("GET", f"/documents/{_segment(course.course_id)}")
         if not isinstance(document, Mapping):
             raise CognisphereIntegrationError(
@@ -561,6 +619,7 @@ class HttpOpenMaicCourseRuntimeAdapter:
             "course_id": course.course_id,
             "classroom_url": str(classroom_url or f"{_openmaic_origin(self.base_url)}/classroom/{course.course_id}"),
             "response": dict(payload) if isinstance(payload, Mapping) else payload,
+            "storage": "openmaic_persistence",
         }
 
     async def _export_artifact(
@@ -630,18 +689,48 @@ class HttpOpenMaicCourseRuntimeAdapter:
         sub_anchor = str(event.get("sub_anchor") or event.get("trace_id") or "").strip()
         if sub_anchor:
             record["subAnchor"] = sub_anchor
-        payload = await self._request(
-            "POST",
-            f"/runtime/sessions/{_segment(session_id)}/records",
-            record,
-            extra_headers={"x-learner-key": str(event["learner_hash"])},
-        )
+        try:
+            payload = await self._request(
+                "POST",
+                f"/runtime/sessions/{_segment(session_id)}/records",
+                record,
+                extra_headers={"x-learner-key": str(event["learner_hash"])},
+            )
+        except CognisphereIntegrationError as exc:
+            if not _is_openmaic_storage_unavailable(exc):
+                raise
+            payload = {"id": record_id, "status": "accepted_without_runtime_store"}
         return {
             "ok": True,
             "event_type": event["event_type"],
             "trace_id": event["trace_id"],
             "runtime_record": payload,
         }
+
+    async def _save_classroom_document(
+        self,
+        course_id: str,
+        document: Mapping[str, Any],
+    ) -> Any:
+        stage = document.get("stage")
+        scenes = document.get("scenes")
+        if not isinstance(stage, Mapping) or not isinstance(scenes, list):
+            raise CognisphereIntegrationError(
+                "openmaic_malformed_response",
+                message="OpenMAIC classroom fallback document missing stage or scenes",
+                details={"course_id": course_id},
+            )
+        payload = await self._request(
+            "POST",
+            f"{_openmaic_origin(self.base_url)}/api/classroom",
+            {"stage": dict(stage), "scenes": scenes},
+        )
+        self._classroom_documents[course_id] = {
+            **dict(document),
+            "stage": dict(stage),
+            "scenes": scenes,
+        }
+        return payload
 
     async def _request(
         self,
@@ -1062,6 +1151,16 @@ def _first_string(payload: Mapping[str, Any], keys: tuple[str, ...]) -> str | No
         if isinstance(value, str) and value.strip():
             return value
     return None
+
+
+def _is_openmaic_storage_unavailable(exc: CognisphereIntegrationError) -> bool:
+    return exc.code in {
+        "openmaic_persistence_not_configured",
+        "openmaic_persistence_dev_token_missing",
+    } or (
+        exc.code == "openmaic_http_error"
+        and int(exc.details.get("status_code", 0)) in {404, 503}
+    )
 
 
 def _stable_hash(value: str) -> str:
