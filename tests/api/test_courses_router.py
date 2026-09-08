@@ -217,6 +217,9 @@ def test_prepublish_course_compiles_exports_and_lists_catalog(
     class _Paths:
         user_data_dir = tmp_path
 
+        def get_public_outputs_root(self) -> Path:
+            return Path.cwd()
+
     monkeypatch.setattr(courses, "get_path_service", lambda: _Paths())
     client = _client()
 
@@ -237,12 +240,20 @@ def test_prepublish_course_compiles_exports_and_lists_catalog(
     assert payload["result"]["scene_count"] == 1
     assert published["status"] == "available"
     assert published["runtime"] == "in_memory_contract_adapter"
+    assert published["classroom_url"] == (
+        "/api/v1/courses/ai-infra-vllm-network/classroom?version=1.0.0"
+    )
     assert published["artifact_formats"] == ["html", "pptx", "maic-zip"]
     assert all(Path(artifact["uri"]).exists() for artifact in published["artifacts"])
 
     listed = client.get(f"{PREFIX}/courses/published")
     assert listed.status_code == 200
     assert listed.json()["courses"][0]["course_id"] == "ai-infra-vllm-network"
+
+    classroom = client.get(published["classroom_url"])
+    assert classroom.status_code == 200
+    assert "text/html" in classroom.headers["content-type"]
+    assert "vLLM network fixture" in classroom.text
 
 
 def test_prepublish_course_records_openmaic_classroom_url(

@@ -12,8 +12,10 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from cognispheretutor.integrations.cognisphere.course_compiler import (
@@ -370,6 +372,36 @@ async def list_published_courses() -> dict[str, Any]:
     }
 
 
+@router.get("/courses/{course_id}/classroom")
+async def open_builtin_classroom(course_id: str, version: str | None = None) -> FileResponse:
+    """Serve the built-in OpenMAIC-compatible classroom HTML for a published course."""
+    record = _find_published_course(course_id, version=version)
+    if record is None:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "ok": False,
+                "code": "course_not_published",
+                "message": f"course is not prepublished: {course_id}",
+            },
+        )
+    html_path = _published_html_artifact_path(record)
+    if html_path is None:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "ok": False,
+                "code": "course_classroom_artifact_not_found",
+                "message": f"published course has no readable HTML classroom artifact: {course_id}",
+            },
+        )
+    return FileResponse(
+        path=str(html_path),
+        media_type="text/html; charset=utf-8",
+        filename=f"{course_id}.html",
+    )
+
+
 @router.post("/courses/{course_id}/launch")
 async def launch_course(course_id: str, request: CourseLaunchRequest) -> dict[str, Any]:
     """Launch an anonymized learner session in the configured course runtime."""
@@ -582,7 +614,8 @@ def _published_course_record(
         "title": title,
         "status": "available",
         "runtime": _runtime_label(adapter),
-        "classroom_url": classroom_url or _default_classroom_url(course.course_id, adapter),
+        "classroom_url": classroom_url
+        or _default_classroom_url(course.course_id, course.version, adapter),
         "scene_count": scene_count,
         "artifact_formats": [artifact.get("format") for artifact in artifacts],
         "artifacts": artifacts,
@@ -591,13 +624,59 @@ def _published_course_record(
     }
 
 
-def _default_classroom_url(course_id: str, adapter: CourseRuntimeAdapter) -> str | None:
+def _default_classroom_url(
+    course_id: str,
+    version: str,
+    adapter: CourseRuntimeAdapter,
+) -> str | None:
     if isinstance(adapter, HttpOpenMaicCourseRuntimeAdapter):
         base = adapter.base_url
         marker = "/api/persistence"
         origin = base[: -len(marker)] if base.endswith(marker) else base
         return f"{origin.rstrip('/')}/classroom/{course_id}"
+    suffix = f"?version={quote(version, safe='')}" if version else ""
+    return f"/api/v1/courses/{quote(course_id, safe='')}/classroom{suffix}"
+
+
+def _find_published_course(course_id: str, *, version: str | None = None) -> dict[str, Any] | None:
+    for record in _load_published_courses():
+        if not isinstance(record, dict) or record.get("course_id") != course_id:
+            continue
+        if version and str(record.get("version") or "") != version:
+            continue
+        return record
     return None
+
+
+def _published_html_artifact_path(record: dict[str, Any]) -> Path | None:
+    artifacts = record.get("artifacts") if isinstance(record.get("artifacts"), list) else []
+    for artifact in artifacts:
+        if not isinstance(artifact, dict) or artifact.get("format") != "html":
+            continue
+        raw_uri = str(artifact.get("uri") or "").strip()
+        if not raw_uri:
+            continue
+        try:
+            path = Path(raw_uri).expanduser().resolve()
+        except OSError:
+            continue
+        if not path.exists() or not path.is_file():
+            continue
+        if _is_public_output_artifact(path):
+            return path
+    return None
+
+
+def _is_public_output_artifact(path: Path) -> bool:
+    try:
+        public_root = get_path_service().get_public_outputs_root().resolve()
+    except Exception:
+        return False
+    try:
+        path.relative_to(public_root)
+    except ValueError:
+        return False
+    return True
 
 
 def _event_for_course(course_id: str, event: dict[str, Any]) -> dict[str, Any]:

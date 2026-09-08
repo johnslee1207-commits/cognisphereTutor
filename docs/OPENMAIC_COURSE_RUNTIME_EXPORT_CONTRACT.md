@@ -11,6 +11,11 @@ Tutor first honors explicit environment/settings endpoints, then probes the
 configured managed candidates and local OpenMAIC origins such as
 `http://127.0.0.1:33100`. If no endpoint is reachable, Tutor keeps using the
 in-process course runtime so course authoring still works.
+In that built-in path, `/courses/{course_id}/prepublish` records a Tutor
+classroom URL (`/api/v1/courses/{course_id}/classroom?version=...`) that serves
+the generated OpenMAIC-compatible HTML artifact directly from Tutor. A normal
+user can therefore install/open Tutor and view prepared courseware without
+cloning the OpenMAIC repository.
 
 Operators can still configure the runtime adapter explicitly through
 `data/user/settings/integrations.json`:
