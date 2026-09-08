@@ -184,7 +184,9 @@ def register(app: typer.Typer) -> None:
     ) -> None:
         """Export domain package via plugin entrypoint and import into learning loop."""
         from cognispheretutor.integrations.cognisphere import export_and_import
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
 
         options: dict = {"persist": not no_persist}
         if cache_dir is not None:
@@ -206,7 +208,9 @@ def register(app: typer.Typer) -> None:
     ) -> None:
         """Import an on-disk cognisphereTutor handoff bundle JSON."""
         from cognispheretutor.integrations.cognisphere import import_bundle_json
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
 
         bundle = json.loads(path.read_text(encoding="utf-8"))
         try:
@@ -283,7 +287,9 @@ def register(app: typer.Typer) -> None:
     ) -> None:
         """Start offline Socratic tutor session (DT-P4 → plugin P2)."""
         from cognispheretutor.integrations.cognisphere import start_tutor_session
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
 
         try:
             result = start_tutor_session(
@@ -315,7 +321,9 @@ def register(app: typer.Typer) -> None:
     ) -> None:
         """Advance an offline Socratic tutor session (DT-P4)."""
         from cognispheretutor.integrations.cognisphere import advance_tutor_session
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
 
         session = json.loads(session_file.read_text(encoding="utf-8"))
         try:
@@ -353,7 +361,9 @@ def register(app: typer.Typer) -> None:
     ) -> None:
         """Analyze an offline sandbox outcome and ingest (DT-P4/P5)."""
         from cognispheretutor.integrations.cognisphere import verify_submission
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
 
         try:
             result = verify_submission(
@@ -381,7 +391,9 @@ def register(app: typer.Typer) -> None:
     ) -> None:
         """Suggest next tutor focus from mistake memory (DT-P5)."""
         from cognispheretutor.integrations.cognisphere import suggest_tutor_focus
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
 
         try:
             result = suggest_tutor_focus(domain=domain, problem_slug=slug, root=root)
@@ -403,7 +415,9 @@ def register(app: typer.Typer) -> None:
     ) -> None:
         """Plan next skill-graph learning path (DT-P5)."""
         from cognispheretutor.integrations.cognisphere import plan_skill_path
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
 
         try:
             result = plan_skill_path(domain=domain, learner_id=learner_id, root=root)
@@ -431,7 +445,9 @@ def register(app: typer.Typer) -> None:
     ) -> None:
         """Start or run offline interview/benchmark session (DT-P6)."""
         from cognispheretutor.integrations.cognisphere import run_interview_session
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
 
         responses = (
             {
@@ -480,7 +496,9 @@ def register(app: typer.Typer) -> None:
         root: Optional[Path] = typer.Option(None, "--root"),
     ) -> None:
         """Thin LearningPlugins handshake (fail-closed without packs root)."""
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
         from cognispheretutor.integrations.cognisphere.handshake_client import (
             handshake,
             list_domains,
@@ -512,7 +530,9 @@ def register(app: typer.Typer) -> None:
         root: Optional[Path] = typer.Option(None, "--root"),
     ) -> None:
         """List learning↔twin pairs (SDK SoT; fail-closed without packs root)."""
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
         from cognispheretutor.integrations.cognisphere.handshake_client import (
             list_learning_twin_pairs,
             require_packs_root,
@@ -547,7 +567,9 @@ def register(app: typer.Typer) -> None:
         root: Optional[Path] = typer.Option(None, "--root"),
     ) -> None:
         """Run learning→twin combined flow (fail-closed without packs root)."""
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
         from cognispheretutor.integrations.cognisphere.handshake_client import (
             learning_twin_flow,
             require_packs_root,
@@ -599,7 +621,9 @@ def register(app: typer.Typer) -> None:
             aws_digital_twin_mastery_status,
             run_aws_digital_twin_mastery,
         )
-        from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
         from cognispheretutor.integrations.cognisphere.handshake_client import require_packs_root
 
         try:
@@ -619,5 +643,59 @@ def register(app: typer.Typer) -> None:
             console.print_json(json.dumps(exc.to_dict(), indent=2, ensure_ascii=False))
             raise typer.Exit(code=1) from exc
         console.print_json(json.dumps(result, indent=2, ensure_ascii=False))
+        if not result.get("ok"):
+            raise typer.Exit(code=1)
+
+    @app.command("course-demo")
+    def cognisphere_course_demo(
+        topic: str = typer.Argument(..., help="Course topic for the local MVP course."),
+        locale: str = typer.Option("zh-CN", "--locale", help="Course locale."),
+        audience: str = typer.Option("adult_beginner", "--audience", help="Audience profile."),
+    ) -> None:
+        """Build a local MVP course and export HTML/PPTX/MAIC-ZIP artifacts."""
+        import asyncio
+
+        from cognispheretutor.integrations.cognisphere.course_compiler import (
+            compile_minimal_course_manifest,
+        )
+        from cognispheretutor.integrations.cognisphere.course_runtime import (
+            InMemoryCourseRuntimeAdapter,
+            validate_course_manifest,
+        )
+        from cognispheretutor.integrations.cognisphere.error_codes import (
+            CognisphereIntegrationError,
+        )
+
+        async def run() -> dict:
+            manifest = compile_minimal_course_manifest(
+                topic=topic,
+                locale=locale,
+                audience_profile=audience,
+            )
+            validation = validate_course_manifest(manifest)
+            if not validation["ok"]:
+                return {"ok": False, "validation": validation}
+            adapter = InMemoryCourseRuntimeAdapter()
+            course = await adapter.create_draft(manifest)
+            for lesson in manifest.get("lessons") or []:
+                for scene in lesson.get("scenes") or []:
+                    await adapter.upsert_scene(scene)
+            artifacts = [
+                (await adapter.export(course, format)).__dict__
+                for format in ("html", "pptx", "maic-zip")
+            ]
+            return {
+                "ok": True,
+                "course": course.__dict__,
+                "validation": validation,
+                "artifacts": artifacts,
+            }
+
+        try:
+            result = asyncio.run(run())
+        except CognisphereIntegrationError as exc:
+            console.print_json(json.dumps(exc.to_dict(), indent=2, ensure_ascii=False))
+            raise typer.Exit(code=1) from exc
+        console.print_json(json.dumps(result, indent=2, ensure_ascii=False, default=str))
         if not result.get("ok"):
             raise typer.Exit(code=1)

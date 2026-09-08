@@ -29,6 +29,8 @@ RUNTIME_ENV_KEYS = (
     "POCKETBASE_EXTERNAL_URL",
     "POCKETBASE_ADMIN_EMAIL",
     "POCKETBASE_ADMIN_PASSWORD",
+    "OPENMAIC_COURSE_RUNTIME_BASE_URL",
+    "OPENMAIC_COURSE_EXPORT_ROUTES",
 )
 
 
@@ -114,7 +116,61 @@ def test_render_environment_uses_json_backed_runtime_names(monkeypatch, tmp_path
     assert env["COGNISPHERETUTOR_API_BASE_URL"] == "http://localhost:8010"
     assert env["AUTH_TOKEN_EXPIRE_HOURS"] == "12"
     assert env["POCKETBASE_URL"] == "http://pocketbase:8090"
+    assert env["OPENMAIC_COURSE_RUNTIME_BASE_URL"] == ""
+    assert env["OPENMAIC_COURSE_RUNTIME_HEADERS"] == "{}"
+    assert env["OPENMAIC_COURSE_EXPORT_ROUTES"] == "{}"
     assert "AUTH_SECRET" not in env
+
+
+def test_integrations_settings_include_openmaic_course_runtime(tmp_path: Path) -> None:
+    service = RuntimeSettingsService(tmp_path / "settings", process_env={})
+
+    saved = service.save_integrations(
+        {
+            "openmaic_course_runtime_base_url": " https://openmaic.example/ ",
+            "openmaic_course_runtime_headers": {
+                "authorization": "Bearer token",
+            },
+            "openmaic_course_export_routes": {
+                "pptx": "/api/export/pptx",
+                "maic-zip": "https://exports.example/classroom",
+            },
+        }
+    )
+
+    assert saved["openmaic_course_runtime_base_url"] == "https://openmaic.example"
+    assert saved["openmaic_course_runtime_headers"] == {"authorization": "Bearer token"}
+    assert saved["openmaic_course_export_routes"] == {
+        "pptx": "/api/export/pptx",
+        "maic-zip": "https://exports.example/classroom",
+    }
+
+
+def test_integrations_openmaic_process_env_override(tmp_path: Path) -> None:
+    service = RuntimeSettingsService(
+        tmp_path / "settings",
+        process_env={
+            "OPENMAIC_COURSE_RUNTIME_BASE_URL": "https://openmaic.env",
+            "OPENMAIC_COURSE_RUNTIME_HEADERS": '{"authorization":"Bearer env"}',
+            "OPENMAIC_COURSE_EXPORT_ROUTES": '{"html":"/api/export/html"}',
+        },
+    )
+    service.save_integrations(
+        {
+            "openmaic_course_runtime_base_url": "https://openmaic.file",
+            "openmaic_course_runtime_headers": {"authorization": "Bearer file"},
+            "openmaic_course_export_routes": {"pptx": "/api/export/pptx"},
+        }
+    )
+
+    effective = service.load_integrations()
+
+    assert effective["openmaic_course_runtime_base_url"] == "https://openmaic.env"
+    assert effective["openmaic_course_runtime_headers"] == {"authorization": "Bearer env"}
+    assert effective["openmaic_course_export_routes"] == {"html": "/api/export/html"}
+    assert _read_json(service.path_for("integrations"))["openmaic_course_runtime_base_url"] == (
+        "https://openmaic.file"
+    )
 
 
 def test_system_settings_accept_public_api_base_alias_and_normalize_origins(

@@ -64,6 +64,9 @@ DEFAULT_INTEGRATIONS_SETTINGS: dict[str, Any] = {
     "pocketbase_external_url": "",
     "pocketbase_admin_email": "",
     "pocketbase_admin_password": "",
+    "openmaic_course_runtime_base_url": "",
+    "openmaic_course_runtime_headers": {},
+    "openmaic_course_export_routes": {},
 }
 
 # Document parsing settings. The parse layer (cognispheretutor/services/parsing)
@@ -306,6 +309,21 @@ def _string(value: Any) -> str:
     return "" if value is None else str(value).strip()
 
 
+def _string_map(value: Any) -> dict[str, str]:
+    if isinstance(value, str):
+        try:
+            value = json.loads(value)
+        except ValueError:
+            return {}
+    if not isinstance(value, dict):
+        return {}
+    return {
+        _string(key): _string(item)
+        for key, item in value.items()
+        if _string(key) and _string(item)
+    }
+
+
 class RuntimeSettingsService:
     """JSON-backed runtime settings rooted in data/user/settings.
 
@@ -537,6 +555,17 @@ class RuntimeSettingsService:
             "POCKETBASE_EXTERNAL_URL": integrations["pocketbase_external_url"],
             "POCKETBASE_ADMIN_EMAIL": integrations["pocketbase_admin_email"],
             "POCKETBASE_ADMIN_PASSWORD": integrations["pocketbase_admin_password"],
+            "OPENMAIC_COURSE_RUNTIME_BASE_URL": integrations["openmaic_course_runtime_base_url"],
+            "OPENMAIC_COURSE_RUNTIME_HEADERS": json.dumps(
+                integrations["openmaic_course_runtime_headers"],
+                ensure_ascii=True,
+                sort_keys=True,
+            ),
+            "OPENMAIC_COURSE_EXPORT_ROUTES": json.dumps(
+                integrations["openmaic_course_export_routes"],
+                ensure_ascii=True,
+                sort_keys=True,
+            ),
         }
 
     def export_environment(self, *, overwrite: bool = True) -> dict[str, str]:
@@ -664,6 +693,12 @@ class RuntimeSettingsService:
             payload["pocketbase_admin_email"] = value
         if value := self._process_env_value("POCKETBASE_ADMIN_PASSWORD"):
             payload["pocketbase_admin_password"] = value
+        if value := self._process_env_value("OPENMAIC_COURSE_RUNTIME_BASE_URL"):
+            payload["openmaic_course_runtime_base_url"] = value
+        if value := self._process_env_value("OPENMAIC_COURSE_RUNTIME_HEADERS"):
+            payload["openmaic_course_runtime_headers"] = value
+        if value := self._process_env_value("OPENMAIC_COURSE_EXPORT_ROUTES"):
+            payload["openmaic_course_export_routes"] = value
         return self._normalize_integrations(payload)
 
     def _apply_mineru_process_overrides(self, settings: dict[str, Any]) -> dict[str, Any]:
@@ -924,6 +959,15 @@ class RuntimeSettingsService:
             "pocketbase_external_url": _string(settings.get("pocketbase_external_url")).rstrip("/"),
             "pocketbase_admin_email": _string(settings.get("pocketbase_admin_email")),
             "pocketbase_admin_password": _string(settings.get("pocketbase_admin_password")),
+            "openmaic_course_runtime_base_url": _string(
+                settings.get("openmaic_course_runtime_base_url")
+            ).rstrip("/"),
+            "openmaic_course_runtime_headers": _string_map(
+                settings.get("openmaic_course_runtime_headers")
+            ),
+            "openmaic_course_export_routes": _string_map(
+                settings.get("openmaic_course_export_routes")
+            ),
         }
 
 

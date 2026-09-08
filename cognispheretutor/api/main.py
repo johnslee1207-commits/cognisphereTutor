@@ -314,6 +314,7 @@ from cognispheretutor.api.routers import (
     chat,
     co_writer,
     cognisphere_learning,
+    courses,
     dashboard,
     imports,
     knowledge,
@@ -383,6 +384,7 @@ app.include_router(
     tags=["cognisphere-learning"],
     dependencies=_auth,
 )
+app.include_router(courses.router, prefix="/api/v1", tags=["courses"], dependencies=_auth)
 app.include_router(
     aetherinfra_twin.router,
     prefix="/api/v1/learning/ai-infra-twin",
