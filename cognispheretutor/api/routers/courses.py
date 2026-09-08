@@ -505,7 +505,7 @@ async def _upsert_manifest_scenes(
 def _runtime_label(adapter: CourseRuntimeAdapter) -> str:
     if isinstance(adapter, HttpOpenMaicCourseRuntimeAdapter):
         return "openmaic_http_adapter"
-    return "in_memory_contract_adapter"
+    return "openmaic_compat_fallback_adapter"
 
 
 async def _publish_openmaic_classroom(

@@ -990,6 +990,8 @@ def _join_url(base_url: str, path_or_url: str) -> str:
     if urlsplit(path_or_url).scheme in {"http", "https"}:
         return path_or_url
     path = path_or_url if path_or_url.startswith("/") else f"/{path_or_url}"
+    if path.startswith("/api/") and base_url.rstrip("/").endswith("/api/persistence"):
+        return f"{_openmaic_origin(base_url)}{path}"
     return f"{base_url}{path}"
 
 

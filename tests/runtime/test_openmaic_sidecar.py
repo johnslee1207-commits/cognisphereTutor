@@ -78,3 +78,52 @@ def test_openmaic_sidecar_starts_configured_command(monkeypatch, tmp_path: Path)
     assert plan.command == ["C:/Program Files/node/node.exe", "server.js"]
     assert plan.cwd == tmp_path
     assert plan.health_url == "http://127.0.0.1:33123/api/healthz"
+    assert plan.source == "managed"
+
+
+def test_openmaic_sidecar_starts_bundled_manifest(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(
+        openmaic_sidecar,
+        "resolve_openmaic_course_runtime_endpoint",
+        lambda settings, **kwargs: OpenMaicRuntimeResolution(
+            endpoint=None,
+            mode="auto",
+            candidates=("http://127.0.0.1:33100",),
+            reason="no reachable OpenMAIC endpoint found",
+        ),
+    )
+    bundle = tmp_path / "bundle"
+    bundle.mkdir()
+    (bundle / "openmaic-runtime.json").write_text(
+        """
+        {
+          "command": ["node", "server.js"],
+          "cwd": ".",
+          "origin": "http://127.0.0.1:33144",
+          "health_path": "/api/health",
+          "export_routes": {
+            "html": "/api/export/html",
+            "pptx": "/api/export/pptx",
+            "maic-zip": "/api/export/classroom"
+          }
+        }
+        """,
+        encoding="utf-8",
+    )
+
+    plan = openmaic_sidecar.plan_openmaic_sidecar(
+        {"openmaic_course_runtime_mode": "auto"},
+        runtime_home=tmp_path / "home",
+        process_env={"OPENMAIC_COURSE_RUNTIME_BUNDLE_DIR": str(bundle)},
+    )
+
+    assert plan.should_start is True
+    assert plan.source == "bundled"
+    assert plan.command == ["node", "server.js"]
+    assert plan.cwd == bundle
+    assert plan.origin == "http://127.0.0.1:33144"
+    assert plan.export_routes == {
+        "html": "/api/export/html",
+        "pptx": "/api/export/pptx",
+        "maic-zip": "/api/export/classroom",
+    }

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 import os
 from pathlib import Path
 import shlex
@@ -22,6 +23,13 @@ _MANAGED_COMMAND_ENV = "OPENMAIC_COURSE_RUNTIME_MANAGED_COMMAND"
 _MANAGED_CWD_ENV = "OPENMAIC_COURSE_RUNTIME_MANAGED_CWD"
 _MANAGED_ORIGIN_ENV = "OPENMAIC_COURSE_RUNTIME_MANAGED_ORIGIN"
 _MANAGED_HEALTH_PATH_ENV = "OPENMAIC_COURSE_RUNTIME_MANAGED_HEALTH_PATH"
+_BUNDLE_DIR_ENV = "OPENMAIC_COURSE_RUNTIME_BUNDLE_DIR"
+_BUNDLE_MANIFEST_NAME = "openmaic-runtime.json"
+_DEFAULT_EXPORT_ROUTES = {
+    "html": "/api/export/html",
+    "pptx": "/api/export/pptx",
+    "maic-zip": "/api/export/classroom",
+}
 
 
 @dataclass(frozen=True, slots=True)
@@ -35,6 +43,8 @@ class OpenMaicSidecarPlan:
     cwd: Path
     health_url: str
     reason: str
+    source: str
+    export_routes: dict[str, str]
 
 
 def plan_openmaic_sidecar(
@@ -66,23 +76,37 @@ def plan_openmaic_sidecar(
     if resolution.endpoint is not None:
         return _empty_plan(runtime_home, reason=f"using {resolution.endpoint.source} OpenMAIC")
 
-    command = _managed_command(env)
+    bundle = _bundled_runtime(env, runtime_home)
+    command = _managed_command(env) or (bundle.get("command") if bundle else [])
     if not command:
         return _empty_plan(
             runtime_home,
             reason="no managed OpenMAIC command configured",
         )
 
-    origin = _managed_origin(env)
-    cwd = _managed_cwd(env, runtime_home)
+    origin = _managed_origin(env) if env.get(_MANAGED_ORIGIN_ENV) else str(
+        bundle.get("origin") if bundle else DEFAULT_MANAGED_OPENMAIC_ORIGIN
+    )
+    cwd = _managed_cwd(env, runtime_home) if env.get(_MANAGED_CWD_ENV) else (
+        bundle.get("cwd") if bundle else runtime_home
+    )
+    health_path = env.get(_MANAGED_HEALTH_PATH_ENV) or (
+        str(bundle.get("health_path")) if bundle else None
+    )
+    source = str(bundle.get("source") if bundle else "managed")
+    export_routes = _string_map(bundle.get("export_routes") if bundle else {}) or dict(
+        _DEFAULT_EXPORT_ROUTES
+    )
     return OpenMaicSidecarPlan(
         should_start=True,
-        origin=origin,
-        base_url=origin,
+        origin=_valid_origin(origin),
+        base_url=_valid_origin(origin),
         command=command,
         cwd=cwd,
-        health_url=_health_url(origin, env.get(_MANAGED_HEALTH_PATH_ENV)),
-        reason="starting managed OpenMAIC sidecar",
+        health_url=_health_url(_valid_origin(origin), health_path),
+        reason=f"starting {source} OpenMAIC sidecar",
+        source=source,
+        export_routes=export_routes,
     )
 
 
@@ -95,6 +119,8 @@ def _empty_plan(runtime_home: Path, *, reason: str) -> OpenMaicSidecarPlan:
         cwd=runtime_home,
         health_url="",
         reason=reason,
+        source="none",
+        export_routes={},
     )
 
 
@@ -120,6 +146,78 @@ def _managed_cwd(env: Mapping[str, str], runtime_home: Path) -> Path:
     if not raw:
         return runtime_home
     return Path(raw).expanduser().resolve()
+
+
+def _bundled_runtime(env: Mapping[str, str], runtime_home: Path) -> dict[str, Any] | None:
+    candidates = []
+    raw_bundle = str(env.get(_BUNDLE_DIR_ENV) or "").strip()
+    if raw_bundle:
+        candidates.append(Path(raw_bundle).expanduser())
+    candidates.extend(
+        [
+            runtime_home / "openmaic-runtime",
+            Path(__file__).resolve().parents[1] / "vendor" / "openmaic-runtime",
+        ]
+    )
+    for candidate in candidates:
+        manifest_path = candidate / _BUNDLE_MANIFEST_NAME
+        if not manifest_path.exists():
+            continue
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(manifest, Mapping):
+            continue
+        command = _manifest_command(manifest.get("command"))
+        if not command:
+            continue
+        cwd = _manifest_cwd(candidate, manifest.get("cwd"))
+        return {
+            "source": "bundled",
+            "command": command,
+            "cwd": cwd,
+            "origin": _valid_origin(str(manifest.get("origin") or DEFAULT_MANAGED_OPENMAIC_ORIGIN)),
+            "health_path": str(
+                manifest.get("health_path") or DEFAULT_MANAGED_OPENMAIC_HEALTH_PATH
+            ),
+            "export_routes": _string_map(manifest.get("export_routes")),
+        }
+    return None
+
+
+def _manifest_command(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item) for item in value if str(item).strip()]
+    if isinstance(value, str):
+        return shlex.split(value, posix=True)
+    return []
+
+
+def _manifest_cwd(bundle_root: Path, value: Any) -> Path:
+    raw = str(value or ".").strip()
+    path = Path(raw)
+    if not path.is_absolute():
+        path = bundle_root / path
+    return path.expanduser().resolve()
+
+
+def _string_map(value: Any) -> dict[str, str]:
+    if not isinstance(value, Mapping):
+        return {}
+    return {
+        str(key): str(item)
+        for key, item in value.items()
+        if str(key).strip() and str(item).strip()
+    }
+
+
+def _valid_origin(value: str) -> str:
+    raw = value.strip().rstrip("/")
+    parsed = urlsplit(raw)
+    if parsed.scheme in {"http", "https"} and parsed.netloc:
+        return raw
+    return DEFAULT_MANAGED_OPENMAIC_ORIGIN
 
 
 def _health_url(origin: str, raw_path: str | None) -> str:

@@ -239,7 +239,7 @@ def test_prepublish_course_compiles_exports_and_lists_catalog(
     assert payload["status"] == "completed"
     assert payload["result"]["scene_count"] == 1
     assert published["status"] == "available"
-    assert published["runtime"] == "in_memory_contract_adapter"
+    assert published["runtime"] == "openmaic_compat_fallback_adapter"
     assert published["classroom_url"] == (
         "/api/v1/courses/ai-infra-vllm-network/classroom?version=1.0.0"
     )

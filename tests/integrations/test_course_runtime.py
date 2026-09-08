@@ -508,6 +508,41 @@ async def test_http_openmaic_adapter_calls_configured_export_route() -> None:
 
 
 @pytest.mark.asyncio
+async def test_http_openmaic_export_route_uses_app_origin_with_persistence_base_url() -> None:
+    calls: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(str(request.url))
+        return httpx.Response(
+            200,
+            json={
+                "artifact_id": "artifact-html-1",
+                "download_url": "https://openmaic.example/downloads/artifact-html-1",
+            },
+        )
+
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(handler),
+        base_url="https://openmaic.example",
+    ) as client:
+        adapter = HttpOpenMaicCourseRuntimeAdapter(
+            "https://openmaic.example/api/persistence",
+            client=client,
+            export_routes={"html": "/api/export/html"},
+        )
+        artifact = await adapter.export(
+            CourseRef(
+                course_id="california-electrician-ge-foundation",
+                version="1.0.0",
+            ),
+            "html",
+        )
+
+    assert calls == ["https://openmaic.example/api/export/html"]
+    assert artifact.uri == "https://openmaic.example/downloads/artifact-html-1"
+
+
+@pytest.mark.asyncio
 async def test_http_openmaic_adapter_publishes_persistence_document_to_classroom() -> None:
     calls: list[tuple[str, str, dict | None]] = []
 

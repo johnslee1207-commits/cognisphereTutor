@@ -837,6 +837,8 @@ def start(home: str | Path | None = None) -> None:
     )
     if openmaic_plan.should_start:
         common_env["OPENMAIC_COURSE_RUNTIME_BASE_URL"] = openmaic_plan.base_url
+        if openmaic_plan.export_routes:
+            common_env["OPENMAIC_COURSE_EXPORT_ROUTES"] = json.dumps(openmaic_plan.export_routes)
         common_env.setdefault(
             "OPENMAIC_COURSE_RUNTIME_MANAGED_ORIGIN",
             openmaic_plan.origin,
