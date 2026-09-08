@@ -88,10 +88,11 @@ def test_course_runtime_status_exposes_contract() -> None:
     assert payload["ok"] is True
     assert "execute_lab" in payload["scene_kinds"]
     assert "pbl" in payload["openmaic_scene_types"]
-    assert payload["embedded_openmaic_courseware"][0]["course_id"] == (
-        "california-electrical-entrance-courseware-v5"
-    )
-    assert payload["embedded_openmaic_courseware"][0]["scene_count"] >= 100
+    embedded = {
+        course["course_id"]: course for course in payload["embedded_openmaic_courseware"]
+    }
+    assert embedded["california-electrical-entrance-courseware-v5"]["scene_count"] >= 100
+    assert embedded["california-electrical-entrance-courseware-en-v1"]["scene_count"] >= 120
 
 
 def test_course_runtime_status_reflects_openmaic_settings(monkeypatch) -> None:
