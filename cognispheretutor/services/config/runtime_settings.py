@@ -64,7 +64,9 @@ DEFAULT_INTEGRATIONS_SETTINGS: dict[str, Any] = {
     "pocketbase_external_url": "",
     "pocketbase_admin_email": "",
     "pocketbase_admin_password": "",
+    "openmaic_course_runtime_mode": "auto",
     "openmaic_course_runtime_base_url": "",
+    "openmaic_course_runtime_auto_candidates": [],
     "openmaic_course_runtime_headers": {},
     "openmaic_course_export_routes": {},
 }
@@ -324,6 +326,26 @@ def _string_map(value: Any) -> dict[str, str]:
     }
 
 
+def _string_list(value: Any) -> list[str]:
+    if isinstance(value, str):
+        values = value.replace(";", ",").split(",")
+    elif isinstance(value, list):
+        values = value
+    else:
+        values = []
+    out: list[str] = []
+    for item in values:
+        text = _string(item)
+        if text and text not in out:
+            out.append(text)
+    return out
+
+
+def _openmaic_runtime_mode(value: Any) -> str:
+    mode = _string(value).lower() or "auto"
+    return mode if mode in {"auto", "configured", "disabled"} else "auto"
+
+
 class RuntimeSettingsService:
     """JSON-backed runtime settings rooted in data/user/settings.
 
@@ -555,7 +577,11 @@ class RuntimeSettingsService:
             "POCKETBASE_EXTERNAL_URL": integrations["pocketbase_external_url"],
             "POCKETBASE_ADMIN_EMAIL": integrations["pocketbase_admin_email"],
             "POCKETBASE_ADMIN_PASSWORD": integrations["pocketbase_admin_password"],
+            "OPENMAIC_COURSE_RUNTIME_MODE": integrations["openmaic_course_runtime_mode"],
             "OPENMAIC_COURSE_RUNTIME_BASE_URL": integrations["openmaic_course_runtime_base_url"],
+            "OPENMAIC_COURSE_RUNTIME_AUTO_CANDIDATES": ",".join(
+                integrations["openmaic_course_runtime_auto_candidates"]
+            ),
             "OPENMAIC_COURSE_RUNTIME_HEADERS": json.dumps(
                 integrations["openmaic_course_runtime_headers"],
                 ensure_ascii=True,
@@ -693,8 +719,12 @@ class RuntimeSettingsService:
             payload["pocketbase_admin_email"] = value
         if value := self._process_env_value("POCKETBASE_ADMIN_PASSWORD"):
             payload["pocketbase_admin_password"] = value
+        if value := self._process_env_value("OPENMAIC_COURSE_RUNTIME_MODE"):
+            payload["openmaic_course_runtime_mode"] = value
         if value := self._process_env_value("OPENMAIC_COURSE_RUNTIME_BASE_URL"):
             payload["openmaic_course_runtime_base_url"] = value
+        if value := self._process_env_value("OPENMAIC_COURSE_RUNTIME_AUTO_CANDIDATES"):
+            payload["openmaic_course_runtime_auto_candidates"] = value
         if value := self._process_env_value("OPENMAIC_COURSE_RUNTIME_HEADERS"):
             payload["openmaic_course_runtime_headers"] = value
         if value := self._process_env_value("OPENMAIC_COURSE_EXPORT_ROUTES"):
@@ -959,9 +989,15 @@ class RuntimeSettingsService:
             "pocketbase_external_url": _string(settings.get("pocketbase_external_url")).rstrip("/"),
             "pocketbase_admin_email": _string(settings.get("pocketbase_admin_email")),
             "pocketbase_admin_password": _string(settings.get("pocketbase_admin_password")),
+            "openmaic_course_runtime_mode": _openmaic_runtime_mode(
+                settings.get("openmaic_course_runtime_mode")
+            ),
             "openmaic_course_runtime_base_url": _string(
                 settings.get("openmaic_course_runtime_base_url")
             ).rstrip("/"),
+            "openmaic_course_runtime_auto_candidates": _string_list(
+                settings.get("openmaic_course_runtime_auto_candidates")
+            ),
             "openmaic_course_runtime_headers": _string_map(
                 settings.get("openmaic_course_runtime_headers")
             ),

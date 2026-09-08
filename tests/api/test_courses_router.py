@@ -9,6 +9,10 @@ from fastapi.testclient import TestClient
 import pytest
 
 from cognispheretutor.api.routers import courses
+from cognispheretutor.integrations.cognisphere.openmaic_runtime_discovery import (
+    OpenMaicRuntimeEndpoint,
+    OpenMaicRuntimeResolution,
+)
 
 PREFIX = "/api/v1"
 
@@ -19,7 +23,9 @@ def _use_in_memory_course_runtime(monkeypatch: pytest.MonkeyPatch) -> None:
         courses,
         "load_integrations_settings",
         lambda: {
+            "openmaic_course_runtime_mode": "disabled",
             "openmaic_course_runtime_base_url": "",
+            "openmaic_course_runtime_auto_candidates": [],
             "openmaic_course_runtime_headers": {},
             "openmaic_course_export_routes": {},
         },
@@ -89,7 +95,9 @@ def test_course_runtime_status_reflects_openmaic_settings(monkeypatch) -> None:
         courses,
         "load_integrations_settings",
         lambda: {
+            "openmaic_course_runtime_mode": "configured",
             "openmaic_course_runtime_base_url": "https://openmaic.example",
+            "openmaic_course_runtime_auto_candidates": [],
             "openmaic_course_export_routes": {
                 "pptx": "/api/export/pptx",
                 "maic-zip": "/api/export/classroom",
@@ -103,7 +111,40 @@ def test_course_runtime_status_reflects_openmaic_settings(monkeypatch) -> None:
     assert response.status_code == 200
     payload = response.json()
     assert payload["runtime"] == "openmaic_http_adapter"
+    assert payload["runtime_resolution"]["source"] == "configured"
     assert payload["export_routes_configured"] == ["maic-zip", "pptx"]
+
+
+def test_course_runtime_status_uses_auto_discovered_openmaic(monkeypatch) -> None:
+    endpoint = OpenMaicRuntimeEndpoint(
+        base_url="http://127.0.0.1:33100/api/persistence",
+        headers={},
+        export_routes={"html": "/api/export/html"},
+        source="auto",
+        available=True,
+        message="discovered OpenMAIC at http://127.0.0.1:33100",
+    )
+    monkeypatch.setattr(
+        courses,
+        "resolve_openmaic_course_runtime_endpoint",
+        lambda settings: OpenMaicRuntimeResolution(
+            endpoint=endpoint,
+            mode="auto",
+            candidates=("http://127.0.0.1:33100",),
+            reason="discovered endpoint",
+        ),
+    )
+    client = _client()
+
+    response = client.get(f"{PREFIX}/courses/runtime/status")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["runtime"] == "openmaic_http_adapter"
+    assert payload["runtime_mode"] == "auto"
+    assert payload["runtime_resolution"]["base_url"] == (
+        "http://127.0.0.1:33100/api/persistence"
+    )
 
 
 def test_plan_course_returns_runnable_manifest() -> None:

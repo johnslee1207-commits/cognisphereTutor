@@ -8,6 +8,7 @@ from zipfile import ZipFile
 import httpx
 import pytest
 
+from cognispheretutor.integrations.cognisphere import openmaic_runtime_discovery as discovery
 from cognispheretutor.integrations.cognisphere.course_compiler import (
     compile_minimal_course_manifest,
 )
@@ -178,6 +179,55 @@ def test_course_runtime_adapter_factory_selects_memory_or_http() -> None:
     )
     assert isinstance(adapter, HttpOpenMaicCourseRuntimeAdapter)
     assert adapter.export_routes["pptx"] == "/api/export/pptx"
+
+
+def test_openmaic_runtime_discovery_prefers_configured_endpoint() -> None:
+    resolution = discovery.resolve_openmaic_course_runtime_endpoint(
+        {
+            "openmaic_course_runtime_mode": "auto",
+            "openmaic_course_runtime_base_url": "https://openmaic.example",
+            "openmaic_course_runtime_headers": {"authorization": "Bearer token"},
+            "openmaic_course_export_routes": {"html": "/api/export/html"},
+        }
+    )
+
+    assert resolution.endpoint is not None
+    assert resolution.endpoint.base_url == "https://openmaic.example/api/persistence"
+    assert resolution.endpoint.source == "configured"
+    assert resolution.endpoint.headers == {"authorization": "Bearer token"}
+    assert resolution.endpoint.export_routes == {"html": "/api/export/html"}
+
+
+def test_openmaic_runtime_discovery_can_be_disabled() -> None:
+    resolution = discovery.resolve_openmaic_course_runtime_endpoint(
+        {"openmaic_course_runtime_mode": "disabled"}
+    )
+
+    assert resolution.endpoint is None
+    assert resolution.reason == "openmaic runtime integration is disabled"
+
+
+def test_openmaic_runtime_discovery_probes_auto_candidates(monkeypatch) -> None:
+    seen: list[str] = []
+
+    def fake_get(url: str, **kwargs) -> httpx.Response:
+        seen.append(url)
+        if url == "https://managed.openmaic.example/api/health":
+            return httpx.Response(200)
+        raise httpx.ConnectError("offline")
+
+    discovery.clear_openmaic_runtime_discovery_cache()
+    monkeypatch.setattr(discovery.httpx, "get", fake_get)
+
+    resolution = discovery.resolve_openmaic_course_runtime_endpoint(
+        {"openmaic_course_runtime_auto_candidates": ["https://managed.openmaic.example"]},
+        process_env={},
+    )
+
+    assert resolution.endpoint is not None
+    assert resolution.endpoint.base_url == "https://managed.openmaic.example/api/persistence"
+    assert resolution.endpoint.source == "auto"
+    assert seen[0] == "https://managed.openmaic.example/api/health"
 
 
 @pytest.mark.asyncio

@@ -31,6 +31,10 @@ from cognispheretutor.integrations.cognisphere.course_runtime import (
     validate_course_manifest,
 )
 from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
+from cognispheretutor.integrations.cognisphere.openmaic_runtime_discovery import (
+    OpenMaicRuntimeResolution,
+    resolve_openmaic_course_runtime_endpoint,
+)
 from cognispheretutor.services.config.runtime_settings import load_integrations_settings
 from cognispheretutor.services.path_service import get_path_service
 
@@ -101,12 +105,21 @@ def _http_error(exc: CognisphereIntegrationError) -> HTTPException:
 async def course_runtime_status() -> dict[str, Any]:
     """Return the configured course-runtime contract surface."""
     contract = load_course_runtime_contract()
+    resolution = _course_runtime_resolution()
     adapter = _course_runtime_adapter()
     configured_routes = getattr(adapter, "export_routes", {})
     return {
         "ok": True,
         "contract_id": contract.get("contract_id"),
         "runtime": _runtime_label(adapter),
+        "runtime_mode": resolution.mode,
+        "runtime_resolution": {
+            "source": resolution.endpoint.source if resolution.endpoint else None,
+            "available": bool(resolution.endpoint and resolution.endpoint.available),
+            "reason": resolution.reason,
+            "base_url": resolution.endpoint.base_url if resolution.endpoint else None,
+            "candidates": list(resolution.candidates),
+        },
         "external_runtime": "openmaic",
         "export_formats": contract.get("export_formats") or [],
         "export_routes_configured": sorted(configured_routes),
@@ -419,24 +432,26 @@ async def get_job(job_id: str) -> dict[str, Any]:
 
 
 def _course_runtime_adapter() -> CourseRuntimeAdapter:
-    settings = load_integrations_settings()
-    base_url = str(settings.get("openmaic_course_runtime_base_url") or "").strip()
-    if not base_url:
+    resolution = _course_runtime_resolution()
+    endpoint = resolution.endpoint
+    if not endpoint:
         return _IN_MEMORY_ADAPTER
-    headers = settings.get("openmaic_course_runtime_headers") or {}
-    export_routes = settings.get("openmaic_course_export_routes") or {}
     key = (
-        base_url,
-        tuple(sorted((str(name), str(value)) for name, value in headers.items())),
-        tuple(sorted((str(format), str(route)) for format, route in export_routes.items())),
+        endpoint.base_url,
+        tuple(sorted((str(name), str(value)) for name, value in endpoint.headers.items())),
+        tuple(sorted((str(format), str(route)) for format, route in endpoint.export_routes.items())),
     )
     if key not in _HTTP_ADAPTERS:
         _HTTP_ADAPTERS[key] = create_course_runtime_adapter(
-            base_url=base_url,
-            headers=headers,
-            export_routes=export_routes,
+            base_url=endpoint.base_url,
+            headers=endpoint.headers,
+            export_routes=endpoint.export_routes,
         )
     return _HTTP_ADAPTERS[key]
+
+
+def _course_runtime_resolution() -> OpenMaicRuntimeResolution:
+    return resolve_openmaic_course_runtime_endpoint(load_integrations_settings())
 
 
 async def _upsert_manifest_scenes(

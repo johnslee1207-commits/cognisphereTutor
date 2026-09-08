@@ -79,6 +79,12 @@ from cognispheretutor.integrations.cognisphere.learning_mastery_paths_client imp
     list_learning_mastery_paths,
     start_learning_mastery_path,
 )
+from cognispheretutor.integrations.cognisphere.openmaic_runtime_discovery import (
+    OpenMaicRuntimeEndpoint,
+    OpenMaicRuntimeResolution,
+    clear_openmaic_runtime_discovery_cache,
+    resolve_openmaic_course_runtime_endpoint,
+)
 from cognispheretutor.integrations.cognisphere.pack_distribution import (
     get_bundled_pack,
     import_bundled_pack,
@@ -165,6 +171,8 @@ __all__ = [
     "handshake",
     "HttpOpenMaicCourseRuntimeAdapter",
     "InMemoryCourseRuntimeAdapter",
+    "OpenMaicRuntimeEndpoint",
+    "OpenMaicRuntimeResolution",
     "learning_twin_flow",
     "import_bundled_pack",
     "import_benchmark_case",
@@ -182,6 +190,7 @@ __all__ = [
     "start_learning_mastery_path",
     "list_visualization_adverts",
     "require_packs_root",
+    "clear_openmaic_runtime_discovery_cache",
     "load_cognisphere_entrypoint",
     "load_course_runtime_contract",
     "load_deeptutor_entrypoint",
@@ -194,6 +203,7 @@ __all__ = [
     "query_cross_domain",
     "request_cp_tutor_llm_turn",
     "reset_context_api",
+    "resolve_openmaic_course_runtime_endpoint",
     "resolve_plugins_root",
     "run_aws_digital_twin_mastery",
     "run_cp_package_experience",
