@@ -37,6 +37,7 @@ from cognispheretutor.integrations.cognisphere.openmaic_runtime_discovery import
     OpenMaicRuntimeResolution,
     resolve_openmaic_course_runtime_endpoint,
 )
+from cognispheretutor.runtime.openmaic_seed_courses import DEFAULT_OPENMAIC_COURSEWARE_DIR
 from cognispheretutor.services.config.runtime_settings import load_integrations_settings
 from cognispheretutor.services.path_service import get_path_service
 
@@ -127,6 +128,7 @@ async def course_runtime_status() -> dict[str, Any]:
         "export_routes_configured": sorted(configured_routes),
         "scene_kinds": contract.get("scene_kinds") or [],
         "openmaic_scene_types": contract.get("openmaic_scene_types") or [],
+        "embedded_openmaic_courseware": _embedded_openmaic_courseware(),
         "pipeline_stages": contract.get("pipeline_stages") or [],
         "event_types": contract.get("event_types") or [],
     }
@@ -484,6 +486,33 @@ def _course_runtime_adapter() -> CourseRuntimeAdapter:
 
 def _course_runtime_resolution() -> OpenMaicRuntimeResolution:
     return resolve_openmaic_course_runtime_endpoint(load_integrations_settings())
+
+
+def _embedded_openmaic_courseware() -> list[dict[str, Any]]:
+    if not DEFAULT_OPENMAIC_COURSEWARE_DIR.exists():
+        return []
+    out: list[dict[str, Any]] = []
+    for path in sorted(DEFAULT_OPENMAIC_COURSEWARE_DIR.glob("*.json")):
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(payload, dict):
+            continue
+        stage = payload.get("stage")
+        scenes = payload.get("scenes")
+        if not isinstance(stage, dict) or not isinstance(scenes, list):
+            continue
+        course_id = str(stage.get("id") or path.stem)
+        out.append(
+            {
+                "course_id": course_id,
+                "title": str(stage.get("name") or course_id),
+                "scene_count": len(scenes),
+                "classroom_url": f"/classroom/{quote(course_id, safe='')}",
+            }
+        )
+    return out
 
 
 async def _upsert_manifest_scenes(

@@ -922,6 +922,16 @@ def start(home: str | Path | None = None) -> None:
                 timeout=BACKEND_READY_TIMEOUT,
                 should_stop=lambda: shutdown_requested,
             )
+            try:
+                from cognispheretutor.runtime.openmaic_seed_courses import seed_openmaic_courseware
+
+                seed_results = seed_openmaic_courseware(openmaic_plan.origin)
+                for result in seed_results:
+                    status = "seeded" if result.ok else f"seed failed: {result.error}"
+                    suffix = f" -> {result.classroom_url}" if result.classroom_url else ""
+                    _log(f"{'OpenMAIC':<10} course {result.course_id}: {status}{suffix}")
+            except Exception as exc:
+                _log(f"{'OpenMAIC':<10} course seed skipped: {exc}")
 
         _log(_t("start.starting_backend"))
         backend = _spawn(backend_cmd, cwd=runtime_home, env=common_env, name="backend")

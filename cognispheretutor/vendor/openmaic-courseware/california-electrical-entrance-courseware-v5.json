@@ -1,0 +1,5999 @@
+{
+  "stage": {
+    "id": "california-electrical-entrance-courseware-v5",
+    "name": "电工入门考试详细讲课课件",
+    "description": "Detailed OpenMAIC courseware for electrician apprenticeship entrance preparation.",
+    "createdAt": 0,
+    "updatedAt": 0,
+    "languageDirective": "zh-CN",
+    "style": "deeptutor-entrance-courseware"
+  },
+  "scenes": [
+    {
+      "id": "scene-01-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "课程目标：入门考试不是电工实操考试",
+      "order": 1,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-01-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-01-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">课程目标：入门考试不是电工实操考试</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-01-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">本课面向电工学徒/入门选拔常见能力：数学、阅读、机械、空间、证据表达</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">核心原则：练能力，不背泄露真题；用原创题和可解释步骤训练</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">不同地区考试结构会不同：有的偏 Algebra + Reading，有的包含机械和纸折叠</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">学习路线：诊断 -&gt; 分项讲解 -&gt; 随堂测 -&gt; 错因标签 -&gt; 7 天复习计划</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-02-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "考试能力地图",
+      "order": 2,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-02-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-02-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">考试能力地图</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-02-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">数学计算：整数、小数、分数、百分比、比例、单位换算</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">代数函数：解方程、代入、斜率、表格关系、函数变化</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">阅读理解：抓主旨、定位证据、分辨题干和原文</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">机械理解：杠杆、滑轮、齿轮、力的方向、平衡</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">空间推理：旋转、展开图、纸折叠、镜像陷阱</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">个人经历表：把真实经历写成可验证证据</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-03-5",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "诊断先行：5 个维度决定学习计划",
+      "order": 3,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-03-5",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-03-5-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">诊断先行：5 个维度决定学习计划</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-03-5-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">目标：你申请的是哪类 apprenticeship 或入门项目？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">时间：考试前还有几周？每天可练多久？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">基础：数学和阅读是否需要从零补？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">速度：正确率稳定后才加计时压力</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">证据：个人经历、课程、证书、推荐信是否已经整理</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-04-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "课前诊断测验 - 第 1 题",
+      "order": 4,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-04-course-scene-q1::q1",
+            "type": "single",
+            "question": "如果你不知道考试具体版本，最稳妥的备考策略是什么？",
+            "options": [
+              {
+                "value": "scene-04-course-scene-q1::q1::A",
+                "label": "只刷网上所谓真题"
+              },
+              {
+                "value": "scene-04-course-scene-q1::q1::B",
+                "label": "先练通用能力，再按本地官方通知调整"
+              },
+              {
+                "value": "scene-04-course-scene-q1::q1::C",
+                "label": "跳过阅读理解"
+              },
+              {
+                "value": "scene-04-course-scene-q1::q1::D",
+                "label": "只背电工工具名称"
+              }
+            ],
+            "answer": [
+              "scene-04-course-scene-q1::q1::B"
+            ],
+            "analysis": "不同项目测试结构不同；通用能力训练加官方确认最稳。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-05-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "课前诊断测验 - 第 2 题",
+      "order": 5,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-05-course-scene-q2::q1",
+            "type": "single",
+            "question": "如果基础计算经常错，第一周最应强化什么？",
+            "options": [
+              {
+                "value": "scene-05-course-scene-q2::q1::A",
+                "label": "复杂 NEC 查表"
+              },
+              {
+                "value": "scene-05-course-scene-q2::q1::B",
+                "label": "分数、比例、百分比、单位换算"
+              },
+              {
+                "value": "scene-05-course-scene-q2::q1::C",
+                "label": "C-10 合同法"
+              },
+              {
+                "value": "scene-05-course-scene-q2::q1::D",
+                "label": "企业税务"
+              }
+            ],
+            "answer": [
+              "scene-05-course-scene-q2::q1::B"
+            ],
+            "analysis": "入门考试和后续电工计算都会放大基础计算缺口。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-06-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "数学一：分数、小数、百分比",
+      "order": 6,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-06-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-06-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">数学一：分数、小数、百分比</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-06-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">分数转小数：1/4 = 0.25，3/8 = 0.375</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">百分比本质：百分之几 = 除以 100</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">增长率公式：(新值 - 旧值) / 旧值</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">常见错因：把增加量当百分比、用新值当分母、忘记单位</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-07-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "例题：百分比增长",
+      "order": 7,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-07-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-07-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">例题：百分比增长</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-07-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">题目：练习正确数从 40 题提高到 50 题，增长百分比是多少？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Step 1：增加量 = 50 - 40 = 10</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Step 2：用旧值作分母，10 / 40 = 0.25</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Step 3：转成百分比 = 25%</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">检查：不是 10%，因为 10 是增加的题数，不是百分比</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-08-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：百分比和比例 - 第 1 题",
+      "order": 8,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-08-course-scene-q1::q1",
+            "type": "single",
+            "question": "某练习从 24 题正确增加到 30 题，增长率是多少？",
+            "options": [
+              {
+                "value": "scene-08-course-scene-q1::q1::A",
+                "label": "6%"
+              },
+              {
+                "value": "scene-08-course-scene-q1::q1::B",
+                "label": "20%"
+              },
+              {
+                "value": "scene-08-course-scene-q1::q1::C",
+                "label": "25%"
+              },
+              {
+                "value": "scene-08-course-scene-q1::q1::D",
+                "label": "30%"
+              }
+            ],
+            "answer": [
+              "scene-08-course-scene-q1::q1::C"
+            ],
+            "analysis": "增加 6，旧值 24，6/24 = 25%。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-09-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：百分比和比例 - 第 2 题",
+      "order": 9,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-09-course-scene-q2::q1",
+            "type": "single",
+            "question": "小捆和大捆比例为 3:2，总共 30 捆，大捆有多少？",
+            "options": [
+              {
+                "value": "scene-09-course-scene-q2::q1::A",
+                "label": "10"
+              },
+              {
+                "value": "scene-09-course-scene-q2::q1::B",
+                "label": "12"
+              },
+              {
+                "value": "scene-09-course-scene-q2::q1::C",
+                "label": "15"
+              },
+              {
+                "value": "scene-09-course-scene-q2::q1::D",
+                "label": "18"
+              }
+            ],
+            "answer": [
+              "scene-09-course-scene-q2::q1::B"
+            ],
+            "analysis": "总份数 5，每份 6，大捆 2 份，所以 12。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-10-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "数学二：代数方程",
+      "order": 10,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-10-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-10-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">数学二：代数方程</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-10-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">目标：把文字题翻译成等式</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">解一元方程：两边做同样操作</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">常见形式：2x + 5 = 17，x/3 = 8，4(x - 2) = 20</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">电工相关迁移：未知量、单位、公式选择，比死背更重要</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-11-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "例题：线性方程",
+      "order": 11,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-11-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-11-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">例题：线性方程</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-11-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">题目：2x + 5 = 17，求 x</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Step 1：两边减 5，2x = 12</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Step 2：两边除以 2，x = 6</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">检查：2*6+5 = 17</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">错因标签：漏减常数、除法对象错、没有回代检查</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-12-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：代数 - 第 1 题",
+      "order": 12,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-12-course-scene-q1::q1",
+            "type": "single",
+            "question": "3x - 4 = 20，x 等于多少？",
+            "options": [
+              {
+                "value": "scene-12-course-scene-q1::q1::A",
+                "label": "6"
+              },
+              {
+                "value": "scene-12-course-scene-q1::q1::B",
+                "label": "8"
+              },
+              {
+                "value": "scene-12-course-scene-q1::q1::C",
+                "label": "12"
+              },
+              {
+                "value": "scene-12-course-scene-q1::q1::D",
+                "label": "16"
+              }
+            ],
+            "answer": [
+              "scene-12-course-scene-q1::q1::B"
+            ],
+            "analysis": "两边加 4 得 3x=24，所以 x=8。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-13-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：代数 - 第 2 题",
+      "order": 13,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-13-course-scene-q2::q1",
+            "type": "single",
+            "question": "如果 y = 2x + 1，当 x = 5 时 y 等于多少？",
+            "options": [
+              {
+                "value": "scene-13-course-scene-q2::q1::A",
+                "label": "10"
+              },
+              {
+                "value": "scene-13-course-scene-q2::q1::B",
+                "label": "11"
+              },
+              {
+                "value": "scene-13-course-scene-q2::q1::C",
+                "label": "12"
+              },
+              {
+                "value": "scene-13-course-scene-q2::q1::D",
+                "label": "15"
+              }
+            ],
+            "answer": [
+              "scene-13-course-scene-q2::q1::B"
+            ],
+            "analysis": "代入 x=5，y=10+1=11。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-14-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "数学四：文字题建模",
+      "order": 14,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-14-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-14-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">数学四：文字题建模</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-14-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">文字题不要先算，先写变量</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">关键词：total 表示总和，twice 表示 2 倍，more than 表示加法</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">建模四步：设未知数 -&gt; 写另一部分 -&gt; 列总量方程 -&gt; 回代检查</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">考试陷阱：选项里常放“较长那段”或“漏掉额外量”的结果</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-15-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "例题：电缆长度文字题",
+      "order": 15,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-15-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-15-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">例题：电缆长度文字题</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-15-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">题目：一根电缆分成两段，长段比短段的 2 倍多 3 ft，总长 24 ft，短段多长？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">设短段 = x</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">长段 = 2x + 3</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">方程：x + 2x + 3 = 24，所以 3x = 21，x = 7</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">检查：短段 7，长段 17，总长 24</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-16-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：文字题建模 - 第 1 题",
+      "order": 16,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-16-course-scene-q1::q1",
+            "type": "single",
+            "question": "短段为 x，长段比短段 3 倍少 2，总长 26。方程应是？",
+            "options": [
+              {
+                "value": "scene-16-course-scene-q1::q1::A",
+                "label": "x + 3x - 2 = 26"
+              },
+              {
+                "value": "scene-16-course-scene-q1::q1::B",
+                "label": "x + 3x + 2 = 26"
+              },
+              {
+                "value": "scene-16-course-scene-q1::q1::C",
+                "label": "3x - 2 = 26"
+              },
+              {
+                "value": "scene-16-course-scene-q1::q1::D",
+                "label": "x - 3x = 26"
+              }
+            ],
+            "answer": [
+              "scene-16-course-scene-q1::q1::A"
+            ],
+            "analysis": "长段是 3x - 2，总长是短段加长段。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-17-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：文字题建模 - 第 2 题",
+      "order": 17,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-17-course-scene-q2::q1",
+            "type": "single",
+            "question": "若 x + (2x + 6) = 30，则 x 等于多少？",
+            "options": [
+              {
+                "value": "scene-17-course-scene-q2::q1::A",
+                "label": "6"
+              },
+              {
+                "value": "scene-17-course-scene-q2::q1::B",
+                "label": "8"
+              },
+              {
+                "value": "scene-17-course-scene-q2::q1::C",
+                "label": "10"
+              },
+              {
+                "value": "scene-17-course-scene-q2::q1::D",
+                "label": "12"
+              }
+            ],
+            "answer": [
+              "scene-17-course-scene-q2::q1::B"
+            ],
+            "analysis": "3x + 6 = 30，3x = 24，x = 8。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-18-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "数学五：数列与表格速率",
+      "order": 18,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-18-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-18-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">数学五：数列与表格速率</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-18-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">数列题先判断是等差、等比、交替，还是分组规律</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">表格题不要被总数迷惑，要看题目要比较 total 还是 rate</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">速率公式：rate = quantity / time</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">常见错因：总量更大不代表效率更高</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-19-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：数列与速率 - 第 1 题",
+      "order": 19,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-19-course-scene-q1::q1",
+            "type": "single",
+            "question": "数列 2, 10, 4, 20, 6, 30, __ 下一项是？",
+            "options": [
+              {
+                "value": "scene-19-course-scene-q1::q1::A",
+                "label": "8"
+              },
+              {
+                "value": "scene-19-course-scene-q1::q1::B",
+                "label": "32"
+              },
+              {
+                "value": "scene-19-course-scene-q1::q1::C",
+                "label": "40"
+              },
+              {
+                "value": "scene-19-course-scene-q1::q1::D",
+                "label": "60"
+              }
+            ],
+            "answer": [
+              "scene-19-course-scene-q1::q1::A"
+            ],
+            "analysis": "奇数位是 2,4,6,8；偶数位是 10,20,30。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-20-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：数列与速率 - 第 2 题",
+      "order": 20,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-20-course-scene-q2::q1",
+            "type": "single",
+            "question": "周一 48 个灯具/6 小时，周二 54 个/9 小时，哪天每小时更多？",
+            "options": [
+              {
+                "value": "scene-20-course-scene-q2::q1::A",
+                "label": "周一"
+              },
+              {
+                "value": "scene-20-course-scene-q2::q1::B",
+                "label": "周二"
+              },
+              {
+                "value": "scene-20-course-scene-q2::q1::C",
+                "label": "一样"
+              },
+              {
+                "value": "scene-20-course-scene-q2::q1::D",
+                "label": "不能比较"
+              }
+            ],
+            "answer": [
+              "scene-20-course-scene-q2::q1::A"
+            ],
+            "analysis": "周一 8 个/小时，周二 6 个/小时。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-21-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "数学三：单位换算与电工计算入口",
+      "order": 21,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-21-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-21-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">数学三：单位换算与电工计算入口</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-21-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">单位换算先写已知/未知：known、unknown、unit</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">常见电工入口：V 电压、I 电流、R 电阻、P 功率</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">欧姆定律：V = I * R，可变形为 I = V/R，R = V/I</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">功率关系：P = V * I；不要把功率公式和电阻公式混用</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-22-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "例题：欧姆定律",
+      "order": 22,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-22-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-22-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">例题：欧姆定律</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-22-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">题目：120V 电路中，电流为 2A，等效电阻是多少？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">已知：V=120V，I=2A</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">未知：R</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">公式：R = V / I = 120 / 2 = 60 ohms</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">检查：单位是 ohms，不是 watts</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-23-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：公式选择 - 第 1 题",
+      "order": 23,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-23-course-scene-q1::q1",
+            "type": "single",
+            "question": "120V、2A 求功率 P，应使用哪个公式？",
+            "options": [
+              {
+                "value": "scene-23-course-scene-q1::q1::A",
+                "label": "R=V/I"
+              },
+              {
+                "value": "scene-23-course-scene-q1::q1::B",
+                "label": "P=V*I"
+              },
+              {
+                "value": "scene-23-course-scene-q1::q1::C",
+                "label": "I=V/R"
+              },
+              {
+                "value": "scene-23-course-scene-q1::q1::D",
+                "label": "V=I/R"
+              }
+            ],
+            "answer": [
+              "scene-23-course-scene-q1::q1::B"
+            ],
+            "analysis": "功率用 P=V*I。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-24-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：公式选择 - 第 2 题",
+      "order": 24,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-24-course-scene-q2::q1",
+            "type": "single",
+            "question": "24V、6A 求电阻 R，答案是多少？",
+            "options": [
+              {
+                "value": "scene-24-course-scene-q2::q1::A",
+                "label": "4 ohms"
+              },
+              {
+                "value": "scene-24-course-scene-q2::q1::B",
+                "label": "30 ohms"
+              },
+              {
+                "value": "scene-24-course-scene-q2::q1::C",
+                "label": "144 watts"
+              },
+              {
+                "value": "scene-24-course-scene-q2::q1::D",
+                "label": "18 amps"
+              }
+            ],
+            "answer": [
+              "scene-24-course-scene-q2::q1::A"
+            ],
+            "analysis": "R=V/I=24/6=4 ohms。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-25-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "阅读理解：先定位，再判断",
+      "order": 25,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-25-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-25-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">阅读理解：先定位，再判断</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-25-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">第一遍：看题干问主旨、细节、推论还是词义</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">第二遍：在原文中找证据句，不凭印象答题</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">答案必须被文本支持；常见陷阱是“听起来对，但文中没说”</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">计时策略：先做确定题，标记耗时题，最后回看</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-26-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "例题：技术说明阅读",
+      "order": 26,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-26-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-26-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">例题：技术说明阅读</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-26-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">短文：A trainee must verify that a circuit is de-energized before inspection.</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">问题：检查前必须确认什么？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">证据词：must verify、de-energized、before inspection</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">答案方向：确认电路已断电/无电</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">错因：看到 inspection 就只回答“开始检查”，漏掉 before 条件</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-27-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：阅读定位 - 第 1 题",
+      "order": 27,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-27-course-scene-q1::q1",
+            "type": "single",
+            "question": "短文说：The form must be submitted before the deadline. 题目问必须什么时候提交？",
+            "options": [
+              {
+                "value": "scene-27-course-scene-q1::q1::A",
+                "label": "截止日前"
+              },
+              {
+                "value": "scene-27-course-scene-q1::q1::B",
+                "label": "截止日后"
+              },
+              {
+                "value": "scene-27-course-scene-q1::q1::C",
+                "label": "任何时候"
+              },
+              {
+                "value": "scene-27-course-scene-q1::q1::D",
+                "label": "面试当天才交"
+              }
+            ],
+            "answer": [
+              "scene-27-course-scene-q1::q1::A"
+            ],
+            "analysis": "before the deadline 直接给出时间条件。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-28-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：阅读定位 - 第 2 题",
+      "order": 28,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-28-course-scene-q2::q1",
+            "type": "single",
+            "question": "阅读题遇到听起来合理但原文没出现的选项，应如何处理？",
+            "options": [
+              {
+                "value": "scene-28-course-scene-q2::q1::A",
+                "label": "优先选"
+              },
+              {
+                "value": "scene-28-course-scene-q2::q1::B",
+                "label": "只要专业就选"
+              },
+              {
+                "value": "scene-28-course-scene-q2::q1::C",
+                "label": "除非能定位证据，否则不选"
+              },
+              {
+                "value": "scene-28-course-scene-q2::q1::D",
+                "label": "跳过所有细节题"
+              }
+            ],
+            "answer": [
+              "scene-28-course-scene-q2::q1::C"
+            ],
+            "analysis": "阅读理解考文本证据，不考个人常识联想。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-29-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "阅读二：限定词陷阱",
+      "order": 29,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-29-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-29-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">阅读二：限定词陷阱</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-29-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">重点圈词：before、after、only、unless、except、not、required</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">限定词会改变动作顺序、条件和例外</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">答题前先说出控制答案的短语</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">错因标签：看到关键词但漏掉否定或时间顺序</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-30-before-instead-of",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "例题：before / instead of",
+      "order": 30,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-30-before-instead-of",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-30-before-instead-of-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">例题：before / instead of</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-30-before-instead-of-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">短文：Before a tool is returned to storage, it must be wiped clean and inspected.</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">短文：If damage is found, report it instead of placing it back on the shelf.</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">问题一：入库前做什么？答案必须包含 wipe + inspect</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">问题二：发现损坏后做什么？答案是 report，不是 return</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">方法：把 before 和 instead of 直接标出来</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-31-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：阅读限定词 - 第 1 题",
+      "order": 31,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-31-course-scene-q1::q1",
+            "type": "single",
+            "question": "Passage: Report damage instead of returning the tool. 哪个动作被替代？",
+            "options": [
+              {
+                "value": "scene-31-course-scene-q1::q1::A",
+                "label": "报告损坏"
+              },
+              {
+                "value": "scene-31-course-scene-q1::q1::B",
+                "label": "归还工具"
+              },
+              {
+                "value": "scene-31-course-scene-q1::q1::C",
+                "label": "清洁工具"
+              },
+              {
+                "value": "scene-31-course-scene-q1::q1::D",
+                "label": "检查工具"
+              }
+            ],
+            "answer": [
+              "scene-31-course-scene-q1::q1::B"
+            ],
+            "analysis": "instead of 后面的 returning the tool 是被替代的动作。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-32-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：阅读限定词 - 第 2 题",
+      "order": 32,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-32-course-scene-q2::q1",
+            "type": "single",
+            "question": "题干含有 EXCEPT 时，最稳的第一步是什么？",
+            "options": [
+              {
+                "value": "scene-32-course-scene-q2::q1::A",
+                "label": "直接选最熟悉的"
+              },
+              {
+                "value": "scene-32-course-scene-q2::q1::B",
+                "label": "把 EXCEPT 圈出来并找不符合项"
+              },
+              {
+                "value": "scene-32-course-scene-q2::q1::C",
+                "label": "忽略大写词"
+              },
+              {
+                "value": "scene-32-course-scene-q2::q1::D",
+                "label": "只看最后一句"
+              }
+            ],
+            "answer": [
+              "scene-32-course-scene-q2::q1::B"
+            ],
+            "analysis": "EXCEPT 要找例外，不是找普通正确项。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-33-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "阅读三：排除法不是猜",
+      "order": 33,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-33-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-33-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">阅读三：排除法不是猜</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-33-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">每个选项都问：原文是否支持？是否过度推论？是否偷换时间/对象？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">先排掉与原文冲突的选项</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">再排掉原文没说的选项</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">最后比较剩下选项的精确程度</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">如果两个选项都像对，回到证据句，不看个人感觉</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-34-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "机械理解：杠杆、滑轮、齿轮",
+      "order": 34,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-34-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-34-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">机械理解：杠杆、滑轮、齿轮</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-34-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">杠杆：力臂越长，所需力通常越小</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">滑轮：更多承重绳段通常降低单段受力，但改变移动距离</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">齿轮：相邻齿轮旋转方向相反；大小影响速度和扭矩</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">平衡题先找支点、力的方向和距离</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-35-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "例题：杠杆平衡",
+      "order": 35,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-35-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-35-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">例题：杠杆平衡</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-35-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">题目：同样重量离支点越远，会发生什么？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">关键：力矩 = 力 * 距离</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">距离越远，对平衡影响越大</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">如果要保持平衡，另一侧需要更大的力或更长距离</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">错因：只看重量，不看距离</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-36-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：机械推理 - 第 1 题",
+      "order": 36,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-36-course-scene-q1::q1",
+            "type": "single",
+            "question": "两个齿轮咬合，左齿轮顺时针转，右齿轮通常如何转？",
+            "options": [
+              {
+                "value": "scene-36-course-scene-q1::q1::A",
+                "label": "顺时针"
+              },
+              {
+                "value": "scene-36-course-scene-q1::q1::B",
+                "label": "逆时针"
+              },
+              {
+                "value": "scene-36-course-scene-q1::q1::C",
+                "label": "不动"
+              },
+              {
+                "value": "scene-36-course-scene-q1::q1::D",
+                "label": "上下移动"
+              }
+            ],
+            "answer": [
+              "scene-36-course-scene-q1::q1::B"
+            ],
+            "analysis": "相邻咬合齿轮方向相反。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-37-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：机械推理 - 第 2 题",
+      "order": 37,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-37-course-scene-q2::q1",
+            "type": "single",
+            "question": "杠杆题中同样重量离支点更远，通常意味着什么？",
+            "options": [
+              {
+                "value": "scene-37-course-scene-q2::q1::A",
+                "label": "影响更小"
+              },
+              {
+                "value": "scene-37-course-scene-q2::q1::B",
+                "label": "影响更大"
+              },
+              {
+                "value": "scene-37-course-scene-q2::q1::C",
+                "label": "没有影响"
+              },
+              {
+                "value": "scene-37-course-scene-q2::q1::D",
+                "label": "重量变轻"
+              }
+            ],
+            "answer": [
+              "scene-37-course-scene-q2::q1::B"
+            ],
+            "analysis": "力矩与距离有关，距离越远力矩越大。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-38-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "机械二：滑轮和力的方向",
+      "order": 38,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-38-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-38-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">机械二：滑轮和力的方向</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-38-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">固定滑轮主要改变用力方向</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">动滑轮通常能降低所需力，但绳子要拉更长距离</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">题目问省力还是改变方向，要分开判断</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">先数承重绳段，再看拉力方向</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-39-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：滑轮 - 第 1 题",
+      "order": 39,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-39-course-scene-q1::q1",
+            "type": "single",
+            "question": "一个固定滑轮最典型的作用是什么？",
+            "options": [
+              {
+                "value": "scene-39-course-scene-q1::q1::A",
+                "label": "改变用力方向"
+              },
+              {
+                "value": "scene-39-course-scene-q1::q1::B",
+                "label": "让物体消失"
+              },
+              {
+                "value": "scene-39-course-scene-q1::q1::C",
+                "label": "一定让力变成零"
+              },
+              {
+                "value": "scene-39-course-scene-q1::q1::D",
+                "label": "改变材料重量"
+              }
+            ],
+            "answer": [
+              "scene-39-course-scene-q1::q1::A"
+            ],
+            "analysis": "固定滑轮主要改变力的方向，不自动消除重量。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-40-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：滑轮 - 第 2 题",
+      "order": 40,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-40-course-scene-q2::q1",
+            "type": "single",
+            "question": "动滑轮省力通常带来的代价是什么？",
+            "options": [
+              {
+                "value": "scene-40-course-scene-q2::q1::A",
+                "label": "绳子需要拉更长距离"
+              },
+              {
+                "value": "scene-40-course-scene-q2::q1::B",
+                "label": "重量变大"
+              },
+              {
+                "value": "scene-40-course-scene-q2::q1::C",
+                "label": "方向无法改变"
+              },
+              {
+                "value": "scene-40-course-scene-q2::q1::D",
+                "label": "没有任何代价"
+              }
+            ],
+            "answer": [
+              "scene-40-course-scene-q2::q1::A"
+            ],
+            "analysis": "机械优势常伴随移动距离增加。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-41-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "机械三：齿轮链追踪",
+      "order": 41,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-41-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-41-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">机械三：齿轮链追踪</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-41-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">相邻齿轮方向相反</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">A 带 B，B 带 C：方向反转两次，C 与 A 同向</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">奇数次接触：末端与起点反向；偶数次接触：同向</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">大小齿轮影响速度/扭矩，不改变相邻反向规则</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-42-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：齿轮链 - 第 1 题",
+      "order": 42,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-42-course-scene-q1::q1",
+            "type": "single",
+            "question": "A 咬合 B，B 咬合 C，A 顺时针，则 C 怎么转？",
+            "options": [
+              {
+                "value": "scene-42-course-scene-q1::q1::A",
+                "label": "顺时针"
+              },
+              {
+                "value": "scene-42-course-scene-q1::q1::B",
+                "label": "逆时针"
+              },
+              {
+                "value": "scene-42-course-scene-q1::q1::C",
+                "label": "不转"
+              },
+              {
+                "value": "scene-42-course-scene-q1::q1::D",
+                "label": "无法判断"
+              }
+            ],
+            "answer": [
+              "scene-42-course-scene-q1::q1::A"
+            ],
+            "analysis": "A 到 B 反一次，B 到 C 再反一次，所以 C 与 A 同向。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-43-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：齿轮链 - 第 2 题",
+      "order": 43,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-43-course-scene-q2::q1",
+            "type": "single",
+            "question": "三个相邻接触的齿轮对方向意味着什么？",
+            "options": [
+              {
+                "value": "scene-43-course-scene-q2::q1::A",
+                "label": "方向反转三次"
+              },
+              {
+                "value": "scene-43-course-scene-q2::q1::B",
+                "label": "方向永远相同"
+              },
+              {
+                "value": "scene-43-course-scene-q2::q1::C",
+                "label": "没有运动传递"
+              },
+              {
+                "value": "scene-43-course-scene-q2::q1::D",
+                "label": "大小决定方向"
+              }
+            ],
+            "answer": [
+              "scene-43-course-scene-q2::q1::A"
+            ],
+            "analysis": "每次直接咬合都会反转方向。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-44-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "机械四：斜面和力的分解",
+      "order": 44,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-44-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-44-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">机械四：斜面和力的分解</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-44-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">斜面通常降低直接抬起所需的瞬时力</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">坡越缓，路径越长，所需推力通常越小</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">问题问方向时，先画重力向下，再画沿斜面的运动方向</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">错因：只看高度，不看坡长和方向</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-45-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "空间推理：旋转、展开、纸折叠",
+      "order": 45,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-45-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-45-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">空间推理：旋转、展开、纸折叠</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-45-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">旋转题：固定一个标记点，跟踪它的位置变化</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">展开图：找相邻面，不要只看形状相似</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">纸折叠：先判断折叠轴，再把孔或图案镜像过去</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">常见错因：把旋转当镜像，把镜像当平移</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-46-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "例题：纸折叠思路",
+      "order": 46,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-46-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-46-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">例题：纸折叠思路</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-46-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">题目：纸向右对折，在折后左上角打孔，展开后孔在哪里？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Step 1：折叠轴在中线</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Step 2：孔会在折叠轴两侧镜像出现</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Step 3：高度不变，左右位置镜像</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">不要猜图案，先画轴线</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-47-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：空间推理 - 第 1 题",
+      "order": 47,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-47-course-scene-q1::q1",
+            "type": "single",
+            "question": "纸向右对折后打孔，展开时孔的位置关系通常是什么？",
+            "options": [
+              {
+                "value": "scene-47-course-scene-q1::q1::A",
+                "label": "只保留一个孔"
+              },
+              {
+                "value": "scene-47-course-scene-q1::q1::B",
+                "label": "关于折叠轴镜像"
+              },
+              {
+                "value": "scene-47-course-scene-q1::q1::C",
+                "label": "随机分布"
+              },
+              {
+                "value": "scene-47-course-scene-q1::q1::D",
+                "label": "全部移到下方"
+              }
+            ],
+            "answer": [
+              "scene-47-course-scene-q1::q1::B"
+            ],
+            "analysis": "折叠展开后的孔以折叠轴为镜像关系。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-48-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：空间推理 - 第 2 题",
+      "order": 48,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-48-course-scene-q2::q1",
+            "type": "single",
+            "question": "旋转题最稳的第一步是什么？",
+            "options": [
+              {
+                "value": "scene-48-course-scene-q2::q1::A",
+                "label": "凭感觉选"
+              },
+              {
+                "value": "scene-48-course-scene-q2::q1::B",
+                "label": "固定一个标记点跟踪"
+              },
+              {
+                "value": "scene-48-course-scene-q2::q1::C",
+                "label": "只看颜色"
+              },
+              {
+                "value": "scene-48-course-scene-q2::q1::D",
+                "label": "跳过题干"
+              }
+            ],
+            "answer": [
+              "scene-48-course-scene-q2::q1::B"
+            ],
+            "analysis": "跟踪标记点可以避免把旋转误判成镜像。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-49-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "空间二：旋转不是镜像",
+      "order": 49,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-49-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-49-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">空间二：旋转不是镜像</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-49-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">旋转：图形整体绕中心转，左右手性不改变</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">镜像：像照镜子，左右关系会翻转</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">方法：选一个不对称标记点，追踪它转到哪里</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">如果标记点相对顺序反了，可能是镜像，不是旋转</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-50-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：旋转与镜像 - 第 1 题",
+      "order": 50,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-50-course-scene-q1::q1",
+            "type": "single",
+            "question": "判断旋转题时，为什么要选一个不对称标记点？",
+            "options": [
+              {
+                "value": "scene-50-course-scene-q1::q1::A",
+                "label": "为了跟踪位置变化"
+              },
+              {
+                "value": "scene-50-course-scene-q1::q1::B",
+                "label": "为了忽略题干"
+              },
+              {
+                "value": "scene-50-course-scene-q1::q1::C",
+                "label": "为了猜最长选项"
+              },
+              {
+                "value": "scene-50-course-scene-q1::q1::D",
+                "label": "为了改变图形大小"
+              }
+            ],
+            "answer": [
+              "scene-50-course-scene-q1::q1::A"
+            ],
+            "analysis": "标记点能帮助区分旋转、平移和镜像。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-51-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：旋转与镜像 - 第 2 题",
+      "order": 51,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-51-course-scene-q2::q1",
+            "type": "single",
+            "question": "镜像变换最常见的变化是什么？",
+            "options": [
+              {
+                "value": "scene-51-course-scene-q2::q1::A",
+                "label": "左右关系翻转"
+              },
+              {
+                "value": "scene-51-course-scene-q2::q1::B",
+                "label": "面积一定变大"
+              },
+              {
+                "value": "scene-51-course-scene-q2::q1::C",
+                "label": "颜色一定改变"
+              },
+              {
+                "value": "scene-51-course-scene-q2::q1::D",
+                "label": "图形消失"
+              }
+            ],
+            "answer": [
+              "scene-51-course-scene-q2::q1::A"
+            ],
+            "analysis": "镜像会翻转左右关系，但大小通常不变。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-52-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "空间三：展开图邻接判断",
+      "order": 52,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-52-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-52-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">空间三：展开图邻接判断</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-52-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">展开图题先找中心面，再找直接相邻的边</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">对面不能在立方体上共享一条边</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">不要只按视觉距离判断，要按折叠后的接触边判断</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">做题顺序：标中心 -&gt; 标上下左右 -&gt; 推对面 -&gt; 排除矛盾</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-53-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：展开图 - 第 1 题",
+      "order": 53,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-53-course-scene-q1::q1",
+            "type": "single",
+            "question": "立方体展开图中，两个折叠后相对的面能否共享一条边？",
+            "options": [
+              {
+                "value": "scene-53-course-scene-q1::q1::A",
+                "label": "能"
+              },
+              {
+                "value": "scene-53-course-scene-q1::q1::B",
+                "label": "不能"
+              },
+              {
+                "value": "scene-53-course-scene-q1::q1::C",
+                "label": "一定重叠"
+              },
+              {
+                "value": "scene-53-course-scene-q1::q1::D",
+                "label": "一定相邻"
+              }
+            ],
+            "answer": [
+              "scene-53-course-scene-q1::q1::B"
+            ],
+            "analysis": "相对面在立方体上不共享边。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-54-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：展开图 - 第 2 题",
+      "order": 54,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-54-course-scene-q2::q1",
+            "type": "single",
+            "question": "展开图题最稳的第一步是什么？",
+            "options": [
+              {
+                "value": "scene-54-course-scene-q2::q1::A",
+                "label": "找中心面和相邻边"
+              },
+              {
+                "value": "scene-54-course-scene-q2::q1::B",
+                "label": "数颜色"
+              },
+              {
+                "value": "scene-54-course-scene-q2::q1::C",
+                "label": "选最大面"
+              },
+              {
+                "value": "scene-54-course-scene-q2::q1::D",
+                "label": "直接猜立体图"
+              }
+            ],
+            "answer": [
+              "scene-54-course-scene-q2::q1::A"
+            ],
+            "analysis": "中心面和相邻边决定折叠关系。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-55-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "个人经历表：把经历写成证据",
+      "order": 55,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-55-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-55-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">个人经历表：把经历写成证据</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-55-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">不要写空泛形容词：勤奋、感兴趣、愿意学习</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">要写可验证事实：课程、证书、工作任务、志愿经历、工具使用、安全培训</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">结构：情境 -&gt; 行动 -&gt; 结果 -&gt; 证据附件</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">边界：没有做过的事不要编；不确定的资格不要承诺</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-56-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：证据表达",
+      "order": 56,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-56-course-scene-q1::q1",
+            "type": "single",
+            "question": "哪一句更像有效证据？",
+            "options": [
+              {
+                "value": "scene-56-course-scene-q1::q1::A",
+                "label": "我很喜欢电工"
+              },
+              {
+                "value": "scene-56-course-scene-q1::q1::B",
+                "label": "我很努力"
+              },
+              {
+                "value": "scene-56-course-scene-q1::q1::C",
+                "label": "我完成了 40 小时安全课程，并能提供证书"
+              },
+              {
+                "value": "scene-56-course-scene-q1::q1::D",
+                "label": "我以后会学得很快"
+              }
+            ],
+            "answer": [
+              "scene-56-course-scene-q1::q1::C"
+            ],
+            "analysis": "可验证事实比泛泛态度更能支撑申请材料。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-57-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "申请证据清单",
+      "order": 57,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-57-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-57-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">申请证据清单</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-57-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">身份和联系方式：按项目要求准备，不在课堂里猜具体表格</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">教育经历：高中、GED、相关课程或培训证明</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">工作/志愿经历：写清任务、时间、负责人、可验证材料</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">安全/工具经历：证书、照片、主管证明要能对应到事实</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">缺口管理：没有材料就列待办，不编造经历</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-58-pef-star-e",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "PEF 写作框架：STAR-E",
+      "order": 58,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-58-pef-star-e",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-58-pef-star-e-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">PEF 写作框架：STAR-E</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-58-pef-star-e-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">S Situation：当时是什么场景</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">T Task：你负责什么任务</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">A Action：你具体做了什么</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">R Result：结果或反馈是什么</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">E Evidence：有什么证据能证明</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-59-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：申请材料边界 - 第 1 题",
+      "order": 59,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-59-course-scene-q1::q1",
+            "type": "single",
+            "question": "如果没有某项安全培训证书，最合适的写法是什么？",
+            "options": [
+              {
+                "value": "scene-59-course-scene-q1::q1::A",
+                "label": "写已完成但找不到"
+              },
+              {
+                "value": "scene-59-course-scene-q1::q1::B",
+                "label": "列为待补证据"
+              },
+              {
+                "value": "scene-59-course-scene-q1::q1::C",
+                "label": "夸大为现场经验"
+              },
+              {
+                "value": "scene-59-course-scene-q1::q1::D",
+                "label": "删除所有经历"
+              }
+            ],
+            "answer": [
+              "scene-59-course-scene-q1::q1::B"
+            ],
+            "analysis": "高风险申请材料必须区分已有证据和待补证据。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-60-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "随堂测：申请材料边界 - 第 2 题",
+      "order": 60,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-60-course-scene-q2::q1",
+            "type": "single",
+            "question": "STAR-E 中 E 代表什么？",
+            "options": [
+              {
+                "value": "scene-60-course-scene-q2::q1::A",
+                "label": "Energy"
+              },
+              {
+                "value": "scene-60-course-scene-q2::q1::B",
+                "label": "Evidence"
+              },
+              {
+                "value": "scene-60-course-scene-q2::q1::C",
+                "label": "Estimate"
+              },
+              {
+                "value": "scene-60-course-scene-q2::q1::D",
+                "label": "Exam"
+              }
+            ],
+            "answer": [
+              "scene-60-course-scene-q2::q1::B"
+            ],
+            "analysis": "E 是 Evidence，用来连接可验证材料。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-61-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "错因标签与补救策略",
+      "order": 61,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-61-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-61-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">错因标签与补救策略</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-61-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">计算错：回到 known/unknown/unit，再做同型变式</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">公式错：先判断求什么量，再选公式</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">阅读错：标证据句，不允许凭印象</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">机械错：画力、支点、方向、距离</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">空间错：画折叠轴或跟踪标记点</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">时间错：先降速保正确率，再逐步计时</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-62-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "错题日志模板",
+      "order": 62,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-62-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-62-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">错题日志模板</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-62-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">题型：数学 / 阅读 / 机械 / 空间 / 证据表达</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">错因：公式、单位、限定词、方向、镜像、速度、粗心</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">修复动作：重讲概念、再做一步、同型变式、计时复测</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">复测证据：第二天同型题是否独立做对</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">升级条件：连续两次复测达标，再进入混合练习</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-63-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "计时策略：先准后快",
+      "order": 63,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-63-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-63-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">计时策略：先准后快</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-63-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">第一阶段：不计时，保证方法正确</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">第二阶段：小组计时，例如 5 题 8 分钟</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">第三阶段：混合计时，训练题型切换</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">跳题规则：超过预设时间仍没思路，标记后继续</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">复盘时看错因，不只看总分</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-64-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "单元综合测 - 第 1 题",
+      "order": 64,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-64-course-scene-q1::q1",
+            "type": "single",
+            "question": "2x + 7 = 19，x 等于多少？",
+            "options": [
+              {
+                "value": "scene-64-course-scene-q1::q1::A",
+                "label": "4"
+              },
+              {
+                "value": "scene-64-course-scene-q1::q1::B",
+                "label": "5"
+              },
+              {
+                "value": "scene-64-course-scene-q1::q1::C",
+                "label": "6"
+              },
+              {
+                "value": "scene-64-course-scene-q1::q1::D",
+                "label": "12"
+              }
+            ],
+            "answer": [
+              "scene-64-course-scene-q1::q1::C"
+            ],
+            "analysis": "两边减 7 得 2x=12，所以 x=6。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-65-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "单元综合测 - 第 2 题",
+      "order": 65,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-65-course-scene-q2::q1",
+            "type": "single",
+            "question": "如果 3 个小捆对应 2 个大捆，总份数是多少？",
+            "options": [
+              {
+                "value": "scene-65-course-scene-q2::q1::A",
+                "label": "2"
+              },
+              {
+                "value": "scene-65-course-scene-q2::q1::B",
+                "label": "3"
+              },
+              {
+                "value": "scene-65-course-scene-q2::q1::C",
+                "label": "5"
+              },
+              {
+                "value": "scene-65-course-scene-q2::q1::D",
+                "label": "6"
+              }
+            ],
+            "answer": [
+              "scene-65-course-scene-q2::q1::C"
+            ],
+            "analysis": "比例 3:2 的总份数是 5。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-66-course-scene-q3",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "单元综合测 - 第 3 题",
+      "order": 66,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-66-course-scene-q3::q1",
+            "type": "single",
+            "question": "阅读题最需要依赖什么？",
+            "options": [
+              {
+                "value": "scene-66-course-scene-q3::q1::A",
+                "label": "文本证据"
+              },
+              {
+                "value": "scene-66-course-scene-q3::q1::B",
+                "label": "常识联想"
+              },
+              {
+                "value": "scene-66-course-scene-q3::q1::C",
+                "label": "最长选项"
+              },
+              {
+                "value": "scene-66-course-scene-q3::q1::D",
+                "label": "专业词数量"
+              }
+            ],
+            "answer": [
+              "scene-66-course-scene-q3::q1::A"
+            ],
+            "analysis": "答案必须由原文支持。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-67-course-scene-q4",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "单元综合测 - 第 4 题",
+      "order": 67,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-67-course-scene-q4::q1",
+            "type": "single",
+            "question": "相邻咬合齿轮的方向通常怎样？",
+            "options": [
+              {
+                "value": "scene-67-course-scene-q4::q1::A",
+                "label": "相同"
+              },
+              {
+                "value": "scene-67-course-scene-q4::q1::B",
+                "label": "相反"
+              },
+              {
+                "value": "scene-67-course-scene-q4::q1::C",
+                "label": "随机"
+              },
+              {
+                "value": "scene-67-course-scene-q4::q1::D",
+                "label": "都静止"
+              }
+            ],
+            "answer": [
+              "scene-67-course-scene-q4::q1::B"
+            ],
+            "analysis": "相邻齿轮方向相反。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-68-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "错因诊断测 - 第 1 题",
+      "order": 68,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-68-course-scene-q1::q1",
+            "type": "single",
+            "question": "学习者会选答案，但没有选项时不会列式，这属于什么问题？",
+            "options": [
+              {
+                "value": "scene-68-course-scene-q1::q1::A",
+                "label": "答案选择依赖"
+              },
+              {
+                "value": "scene-68-course-scene-q1::q1::B",
+                "label": "阅读证据强"
+              },
+              {
+                "value": "scene-68-course-scene-q1::q1::C",
+                "label": "机械推理强"
+              },
+              {
+                "value": "scene-68-course-scene-q1::q1::D",
+                "label": "资格证据完整"
+              }
+            ],
+            "answer": [
+              "scene-68-course-scene-q1::q1::A"
+            ],
+            "analysis": "能认选项不等于能独立生成解法，需要切换到无选项练习。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-69-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "错因诊断测 - 第 2 题",
+      "order": 69,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-69-course-scene-q2::q1",
+            "type": "single",
+            "question": "空间题直接猜结果、不画折叠轴，最适合的补救是什么？",
+            "options": [
+              {
+                "value": "scene-69-course-scene-q2::q1::A",
+                "label": "要求画轴线并说出镜像步骤"
+              },
+              {
+                "value": "scene-69-course-scene-q2::q1::B",
+                "label": "加快计时"
+              },
+              {
+                "value": "scene-69-course-scene-q2::q1::C",
+                "label": "跳到合同法"
+              },
+              {
+                "value": "scene-69-course-scene-q2::q1::D",
+                "label": "只背答案"
+              }
+            ],
+            "answer": [
+              "scene-69-course-scene-q2::q1::A"
+            ],
+            "analysis": "视觉推理要先修复过程追踪，再看最终答案。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-70-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化段：考试日解题流水线",
+      "order": 70,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-70-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-70-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">强化段：考试日解题流水线</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-70-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">第一遍：先做自己稳定拿分的题，不在陌生题上硬耗</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">第二遍：回到标记题，用 known / unknown / unit 重新建模</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">第三遍：只检查高风险项：符号、单位、百分比分母、题干限定词</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">每 10 分钟做一次微检查：我是在推理，还是在猜？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">目标不是每题都快，而是把会做题稳定做对</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-71-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "数学强化：单位换算三栏表",
+      "order": 71,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-71-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-71-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">数学强化：单位换算三栏表</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-71-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">三栏：已知量 | 换算关系 | 目标单位</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">例：18 inches 转 feet，换算关系是 12 inches = 1 foot</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">写成 18 inches x 1 foot / 12 inches，inches 抵消</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">得到 18/12 = 1.5 feet</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">错因警报：如果单位没有抵消，式子方向可能反了</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-72-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：单位换算 - 第 1 题",
+      "order": 72,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-72-course-scene-q1::q1",
+            "type": "single",
+            "question": "36 inches 等于多少 feet？",
+            "options": [
+              {
+                "value": "scene-72-course-scene-q1::q1::A",
+                "label": "2"
+              },
+              {
+                "value": "scene-72-course-scene-q1::q1::B",
+                "label": "3"
+              },
+              {
+                "value": "scene-72-course-scene-q1::q1::C",
+                "label": "4"
+              },
+              {
+                "value": "scene-72-course-scene-q1::q1::D",
+                "label": "12"
+              }
+            ],
+            "answer": [
+              "scene-72-course-scene-q1::q1::B"
+            ],
+            "analysis": "12 inches = 1 foot，所以 36 / 12 = 3 feet。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-73-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：单位换算 - 第 2 题",
+      "order": 73,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-73-course-scene-q2::q1",
+            "type": "single",
+            "question": "5 feet 等于多少 inches？",
+            "options": [
+              {
+                "value": "scene-73-course-scene-q2::q1::A",
+                "label": "17"
+              },
+              {
+                "value": "scene-73-course-scene-q2::q1::B",
+                "label": "36"
+              },
+              {
+                "value": "scene-73-course-scene-q2::q1::C",
+                "label": "60"
+              },
+              {
+                "value": "scene-73-course-scene-q2::q1::D",
+                "label": "72"
+              }
+            ],
+            "answer": [
+              "scene-73-course-scene-q2::q1::C"
+            ],
+            "analysis": "1 foot = 12 inches，所以 5 x 12 = 60 inches。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-74-course-scene-q3",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：单位换算 - 第 3 题",
+      "order": 74,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-74-course-scene-q3::q1",
+            "type": "single",
+            "question": "单位换算列式时，最先检查什么？",
+            "options": [
+              {
+                "value": "scene-74-course-scene-q3::q1::A",
+                "label": "答案是否最大"
+              },
+              {
+                "value": "scene-74-course-scene-q3::q1::B",
+                "label": "单位是否抵消"
+              },
+              {
+                "value": "scene-74-course-scene-q3::q1::C",
+                "label": "选项是否熟悉"
+              },
+              {
+                "value": "scene-74-course-scene-q3::q1::D",
+                "label": "题干是否很短"
+              }
+            ],
+            "answer": [
+              "scene-74-course-scene-q3::q1::B"
+            ],
+            "analysis": "单位抵消能快速发现分子分母放反的问题。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-75-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "数学强化：平均数、速率和工作量",
+      "order": 75,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-75-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-75-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">数学强化：平均数、速率和工作量</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-75-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">平均数：总量 / 个数</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">速率：总距离或总工作量 / 时间</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">工作题：先设总工作量为 1，再写每小时完成几分之几</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">表格题：看每一步变化是否固定，不固定时不要套等差</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">检查：答案单位要和题目问法一致</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-76-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：平均数与速率 - 第 1 题",
+      "order": 76,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-76-course-scene-q1::q1",
+            "type": "single",
+            "question": "四次数学练习分数为 70、80、85、85，平均分是多少？",
+            "options": [
+              {
+                "value": "scene-76-course-scene-q1::q1::A",
+                "label": "78"
+              },
+              {
+                "value": "scene-76-course-scene-q1::q1::B",
+                "label": "80"
+              },
+              {
+                "value": "scene-76-course-scene-q1::q1::C",
+                "label": "82"
+              },
+              {
+                "value": "scene-76-course-scene-q1::q1::D",
+                "label": "85"
+              }
+            ],
+            "answer": [
+              "scene-76-course-scene-q1::q1::B"
+            ],
+            "analysis": "总分 320，除以 4 得 80。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-77-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：平均数与速率 - 第 2 题",
+      "order": 77,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-77-course-scene-q2::q1",
+            "type": "single",
+            "question": "一人 3 小时完成 24 个同类任务，平均每小时完成多少个？",
+            "options": [
+              {
+                "value": "scene-77-course-scene-q2::q1::A",
+                "label": "6"
+              },
+              {
+                "value": "scene-77-course-scene-q2::q1::B",
+                "label": "8"
+              },
+              {
+                "value": "scene-77-course-scene-q2::q1::C",
+                "label": "12"
+              },
+              {
+                "value": "scene-77-course-scene-q2::q1::D",
+                "label": "72"
+              }
+            ],
+            "answer": [
+              "scene-77-course-scene-q2::q1::B"
+            ],
+            "analysis": "速率 = 24 / 3 = 8 个/小时。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-78-course-scene-q3",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：平均数与速率 - 第 3 题",
+      "order": 78,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-78-course-scene-q3::q1",
+            "type": "single",
+            "question": "如果题目问 minutes per item，应该用什么方向？",
+            "options": [
+              {
+                "value": "scene-78-course-scene-q3::q1::A",
+                "label": "item / minutes"
+              },
+              {
+                "value": "scene-78-course-scene-q3::q1::B",
+                "label": "minutes / item"
+              },
+              {
+                "value": "scene-78-course-scene-q3::q1::C",
+                "label": "item x minutes"
+              },
+              {
+                "value": "scene-78-course-scene-q3::q1::D",
+                "label": "只看最大数"
+              }
+            ],
+            "answer": [
+              "scene-78-course-scene-q3::q1::B"
+            ],
+            "analysis": "per 后面的量在分母；minutes per item 是分钟数除以件数。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-79-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "代数强化：括号与负号",
+      "order": 79,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-79-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-79-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">代数强化：括号与负号</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-79-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">先处理括号，再合并同类项</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">负号分配：-(a - b) = -a + b</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">两边同时做同一件事，方程才保持平衡</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">代入检查：把求出的 x 放回原式，看左右是否相等</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">常见错因：把 -2(x - 3) 写成 -2x - 6</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-80-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：括号与负号 - 第 1 题",
+      "order": 80,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-80-course-scene-q1::q1",
+            "type": "single",
+            "question": "2(x + 3) = 14，x 等于多少？",
+            "options": [
+              {
+                "value": "scene-80-course-scene-q1::q1::A",
+                "label": "4"
+              },
+              {
+                "value": "scene-80-course-scene-q1::q1::B",
+                "label": "5"
+              },
+              {
+                "value": "scene-80-course-scene-q1::q1::C",
+                "label": "7"
+              },
+              {
+                "value": "scene-80-course-scene-q1::q1::D",
+                "label": "11"
+              }
+            ],
+            "answer": [
+              "scene-80-course-scene-q1::q1::A"
+            ],
+            "analysis": "展开得 2x + 6 = 14，所以 2x = 8，x = 4。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-81-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：括号与负号 - 第 2 题",
+      "order": 81,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-81-course-scene-q2::q1",
+            "type": "single",
+            "question": "-(x - 5) 等于什么？",
+            "options": [
+              {
+                "value": "scene-81-course-scene-q2::q1::A",
+                "label": "-x - 5"
+              },
+              {
+                "value": "scene-81-course-scene-q2::q1::B",
+                "label": "-x + 5"
+              },
+              {
+                "value": "scene-81-course-scene-q2::q1::C",
+                "label": "x - 5"
+              },
+              {
+                "value": "scene-81-course-scene-q2::q1::D",
+                "label": "x + 5"
+              }
+            ],
+            "answer": [
+              "scene-81-course-scene-q2::q1::B"
+            ],
+            "analysis": "负号要分配给括号内每一项，所以是 -x + 5。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-82-course-scene-q3",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：括号与负号 - 第 3 题",
+      "order": 82,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-82-course-scene-q3::q1",
+            "type": "single",
+            "question": "解完方程后最可靠的检查方式是什么？",
+            "options": [
+              {
+                "value": "scene-82-course-scene-q3::q1::A",
+                "label": "看选项位置"
+              },
+              {
+                "value": "scene-82-course-scene-q3::q1::B",
+                "label": "把答案代回原式"
+              },
+              {
+                "value": "scene-82-course-scene-q3::q1::C",
+                "label": "把答案乘 2"
+              },
+              {
+                "value": "scene-82-course-scene-q3::q1::D",
+                "label": "重新读标题"
+              }
+            ],
+            "answer": [
+              "scene-82-course-scene-q3::q1::B"
+            ],
+            "analysis": "代回原式能直接验证左右是否相等。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-83-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "阅读强化：题干先分类",
+      "order": 83,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-83-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-83-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">阅读强化：题干先分类</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-83-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">主旨题：问整段在讲什么，不要只抓一个细节词</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">细节题：回原文定位同义表达</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">推断题：只能做小推断，不能加入外部常识</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">否定题：圈出 NOT / EXCEPT / least likely</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">排序题：把步骤词标出来，例如 first, then, after</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-84-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：阅读题型 - 第 1 题",
+      "order": 84,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-84-course-scene-q1::q1",
+            "type": "single",
+            "question": "题干问 main purpose，最应该找什么？",
+            "options": [
+              {
+                "value": "scene-84-course-scene-q1::q1::A",
+                "label": "整段目的"
+              },
+              {
+                "value": "scene-84-course-scene-q1::q1::B",
+                "label": "最难的单词"
+              },
+              {
+                "value": "scene-84-course-scene-q1::q1::C",
+                "label": "最长数字"
+              },
+              {
+                "value": "scene-84-course-scene-q1::q1::D",
+                "label": "最后一个选项"
+              }
+            ],
+            "answer": [
+              "scene-84-course-scene-q1::q1::A"
+            ],
+            "analysis": "main purpose 是主旨/目的题，答案要覆盖整段。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-85-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：阅读题型 - 第 2 题",
+      "order": 85,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-85-course-scene-q2::q1",
+            "type": "single",
+            "question": "题干出现 EXCEPT 时，第一步是什么？",
+            "options": [
+              {
+                "value": "scene-85-course-scene-q2::q1::A",
+                "label": "圈出 EXCEPT"
+              },
+              {
+                "value": "scene-85-course-scene-q2::q1::B",
+                "label": "直接选最熟悉的"
+              },
+              {
+                "value": "scene-85-course-scene-q2::q1::C",
+                "label": "跳过原文"
+              },
+              {
+                "value": "scene-85-course-scene-q2::q1::D",
+                "label": "只看第一句"
+              }
+            ],
+            "answer": [
+              "scene-85-course-scene-q2::q1::A"
+            ],
+            "analysis": "否定限定词会反转任务，必须先标出来。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-86-course-scene-q3",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：阅读题型 - 第 3 题",
+      "order": 86,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-86-course-scene-q3::q1",
+            "type": "single",
+            "question": "推断题最安全的答案通常是什么？",
+            "options": [
+              {
+                "value": "scene-86-course-scene-q3::q1::A",
+                "label": "原文可支持的小推论"
+              },
+              {
+                "value": "scene-86-course-scene-q3::q1::B",
+                "label": "听起来专业的说法"
+              },
+              {
+                "value": "scene-86-course-scene-q3::q1::C",
+                "label": "外部经验"
+              },
+              {
+                "value": "scene-86-course-scene-q3::q1::D",
+                "label": "绝对化判断"
+              }
+            ],
+            "answer": [
+              "scene-86-course-scene-q3::q1::A"
+            ],
+            "analysis": "推断仍要被文本证据约束。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-87-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "机械强化：杠杆三问",
+      "order": 87,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-87-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-87-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">机械强化：杠杆三问</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-87-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">问 1：支点在哪里？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">问 2：力臂哪边更长？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">问 3：题目问省力、方向，还是平衡？</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">力臂越长，达到同样转动效果所需力越小</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">图题先标支点，不标支点就容易凭感觉乱选</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-88-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：杠杆 - 第 1 题",
+      "order": 88,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-88-course-scene-q1::q1",
+            "type": "single",
+            "question": "同样重量下，手离支点越远，通常会怎样？",
+            "options": [
+              {
+                "value": "scene-88-course-scene-q1::q1::A",
+                "label": "更省力"
+              },
+              {
+                "value": "scene-88-course-scene-q1::q1::B",
+                "label": "更费力"
+              },
+              {
+                "value": "scene-88-course-scene-q1::q1::C",
+                "label": "没有影响"
+              },
+              {
+                "value": "scene-88-course-scene-q1::q1::D",
+                "label": "一定断裂"
+              }
+            ],
+            "answer": [
+              "scene-88-course-scene-q1::q1::A"
+            ],
+            "analysis": "力臂变长，所需力通常变小。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-89-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：杠杆 - 第 2 题",
+      "order": 89,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-89-course-scene-q2::q1",
+            "type": "single",
+            "question": "杠杆题第一步最应该标什么？",
+            "options": [
+              {
+                "value": "scene-89-course-scene-q2::q1::A",
+                "label": "支点"
+              },
+              {
+                "value": "scene-89-course-scene-q2::q1::B",
+                "label": "颜色"
+              },
+              {
+                "value": "scene-89-course-scene-q2::q1::C",
+                "label": "题号"
+              },
+              {
+                "value": "scene-89-course-scene-q2::q1::D",
+                "label": "最长文字"
+              }
+            ],
+            "answer": [
+              "scene-89-course-scene-q2::q1::A"
+            ],
+            "analysis": "支点决定力臂方向和长度。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-90-course-scene-q3",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：杠杆 - 第 3 题",
+      "order": 90,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-90-course-scene-q3::q1",
+            "type": "single",
+            "question": "如果两边重量相同，哪边更容易下沉？",
+            "options": [
+              {
+                "value": "scene-90-course-scene-q3::q1::A",
+                "label": "离支点更远的一边"
+              },
+              {
+                "value": "scene-90-course-scene-q3::q1::B",
+                "label": "离支点更近的一边"
+              },
+              {
+                "value": "scene-90-course-scene-q3::q1::C",
+                "label": "字母靠前的一边"
+              },
+              {
+                "value": "scene-90-course-scene-q3::q1::D",
+                "label": "无法判断且永远无关"
+              }
+            ],
+            "answer": [
+              "scene-90-course-scene-q3::q1::A"
+            ],
+            "analysis": "同重量下，力臂更长的一边转矩更大。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-91-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "空间强化：坐标跟踪法",
+      "order": 91,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-91-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-91-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">空间强化：坐标跟踪法</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-91-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">给图形选一个明显标记点，例如右上角的小点</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">旋转题：跟踪这个点绕中心移动到哪里</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">镜像题：左右或上下翻转，距离镜面相等</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">折叠题：折线是镜面，孔洞/标记点沿折线翻过去</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">不要同时凭整体形状和局部点猜，优先跟踪局部点</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-92-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：空间跟踪 - 第 1 题",
+      "order": 92,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-92-course-scene-q1::q1",
+            "type": "single",
+            "question": "判断镜像题时，标记点到镜面的距离会怎样？",
+            "options": [
+              {
+                "value": "scene-92-course-scene-q1::q1::A",
+                "label": "相等"
+              },
+              {
+                "value": "scene-92-course-scene-q1::q1::B",
+                "label": "翻倍"
+              },
+              {
+                "value": "scene-92-course-scene-q1::q1::C",
+                "label": "变成 0"
+              },
+              {
+                "value": "scene-92-course-scene-q1::q1::D",
+                "label": "随机变化"
+              }
+            ],
+            "answer": [
+              "scene-92-course-scene-q1::q1::A"
+            ],
+            "analysis": "镜像前后到镜面的垂直距离相等。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-93-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：空间跟踪 - 第 2 题",
+      "order": 93,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-93-course-scene-q2::q1",
+            "type": "single",
+            "question": "旋转题最可靠的策略是什么？",
+            "options": [
+              {
+                "value": "scene-93-course-scene-q2::q1::A",
+                "label": "跟踪一个标记点"
+              },
+              {
+                "value": "scene-93-course-scene-q2::q1::B",
+                "label": "看哪个选项最大"
+              },
+              {
+                "value": "scene-93-course-scene-q2::q1::C",
+                "label": "只看颜色"
+              },
+              {
+                "value": "scene-93-course-scene-q2::q1::D",
+                "label": "只看题号"
+              }
+            ],
+            "answer": [
+              "scene-93-course-scene-q2::q1::A"
+            ],
+            "analysis": "标记点能减少整体形状错觉。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-94-course-scene-q3",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：空间跟踪 - 第 3 题",
+      "order": 94,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-94-course-scene-q3::q1",
+            "type": "single",
+            "question": "纸折叠打孔题，折线应被看成什么？",
+            "options": [
+              {
+                "value": "scene-94-course-scene-q3::q1::A",
+                "label": "镜面"
+              },
+              {
+                "value": "scene-94-course-scene-q3::q1::B",
+                "label": "比例尺"
+              },
+              {
+                "value": "scene-94-course-scene-q3::q1::C",
+                "label": "电阻"
+              },
+              {
+                "value": "scene-94-course-scene-q3::q1::D",
+                "label": "速度单位"
+              }
+            ],
+            "answer": [
+              "scene-94-course-scene-q3::q1::A"
+            ],
+            "analysis": "折叠后的孔位沿折线镜像展开。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-95-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "申请材料强化：证据不是口号",
+      "order": 95,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-95-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-95-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">申请材料强化：证据不是口号</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-95-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">弱表达：我很努力、我很感兴趣、我能吃苦</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">强表达：做过什么、持续多久、谁能证明、结果是什么</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">电工相关证据：数学课程、动手项目、安全意识、准时可靠、团队合作</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">不夸大：没有做过的不要写成经验</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">目标：让面试官能追问、能验证、能相信</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-96-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：证据质量 - 第 1 题",
+      "order": 96,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-96-course-scene-q1::q1",
+            "type": "single",
+            "question": "下面哪句更像可验证证据？",
+            "options": [
+              {
+                "value": "scene-96-course-scene-q1::q1::A",
+                "label": "我很有激情"
+              },
+              {
+                "value": "scene-96-course-scene-q1::q1::B",
+                "label": "我连续 8 周完成晚间数学复习记录"
+              },
+              {
+                "value": "scene-96-course-scene-q1::q1::C",
+                "label": "我一定最强"
+              },
+              {
+                "value": "scene-96-course-scene-q1::q1::D",
+                "label": "我什么都能做"
+              }
+            ],
+            "answer": [
+              "scene-96-course-scene-q1::q1::B"
+            ],
+            "analysis": "时间、动作和记录让陈述可验证。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-97-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：证据质量 - 第 2 题",
+      "order": 97,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-97-course-scene-q2::q1",
+            "type": "single",
+            "question": "没有正式电工经验时，最应展示什么？",
+            "options": [
+              {
+                "value": "scene-97-course-scene-q2::q1::A",
+                "label": "可迁移能力和学习证据"
+              },
+              {
+                "value": "scene-97-course-scene-q2::q1::B",
+                "label": "编造项目经验"
+              },
+              {
+                "value": "scene-97-course-scene-q2::q1::C",
+                "label": "只写口号"
+              },
+              {
+                "value": "scene-97-course-scene-q2::q1::D",
+                "label": "隐藏所有经历"
+              }
+            ],
+            "answer": [
+              "scene-97-course-scene-q2::q1::A"
+            ],
+            "analysis": "入门阶段重点是可迁移能力、可靠性和学习能力。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-98-course-scene-q3",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "强化测：证据质量 - 第 3 题",
+      "order": 98,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-98-course-scene-q3::q1",
+            "type": "single",
+            "question": "申请材料中最危险的做法是什么？",
+            "options": [
+              {
+                "value": "scene-98-course-scene-q3::q1::A",
+                "label": "夸大无法证明的经历"
+              },
+              {
+                "value": "scene-98-course-scene-q3::q1::B",
+                "label": "列出真实课程"
+              },
+              {
+                "value": "scene-98-course-scene-q3::q1::C",
+                "label": "说明可用时间"
+              },
+              {
+                "value": "scene-98-course-scene-q3::q1::D",
+                "label": "请推荐人作证"
+              }
+            ],
+            "answer": [
+              "scene-98-course-scene-q3::q1::A"
+            ],
+            "analysis": "不可验证或夸大的经历会破坏可信度。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-99-30",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "小模拟考规则：30 分钟闭卷",
+      "order": 99,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-99-30",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-99-30-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">小模拟考规则：30 分钟闭卷</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-99-30-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">结构建议：数学 8 题、阅读 4 题、机械 4 题、空间 4 题</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">先用原创题模拟，不碰泄露题或来路不明真题</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">做题时只允许草稿纸，不允许查公式讲义</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">结束后先分类错因，再看解析</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">达标线：总正确率 80%，且每类至少 70%</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-100-course-scene-q1",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "小模拟考：混合题 - 第 1 题",
+      "order": 100,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-100-course-scene-q1::q1",
+            "type": "single",
+            "question": "15 是 60 的百分之几？",
+            "options": [
+              {
+                "value": "scene-100-course-scene-q1::q1::A",
+                "label": "15%"
+              },
+              {
+                "value": "scene-100-course-scene-q1::q1::B",
+                "label": "20%"
+              },
+              {
+                "value": "scene-100-course-scene-q1::q1::C",
+                "label": "25%"
+              },
+              {
+                "value": "scene-100-course-scene-q1::q1::D",
+                "label": "40%"
+              }
+            ],
+            "answer": [
+              "scene-100-course-scene-q1::q1::C"
+            ],
+            "analysis": "15 / 60 = 0.25 = 25%。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-101-course-scene-q2",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "小模拟考：混合题 - 第 2 题",
+      "order": 101,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-101-course-scene-q2::q1",
+            "type": "single",
+            "question": "4y - 6 = 10，y 等于多少？",
+            "options": [
+              {
+                "value": "scene-101-course-scene-q2::q1::A",
+                "label": "3"
+              },
+              {
+                "value": "scene-101-course-scene-q2::q1::B",
+                "label": "4"
+              },
+              {
+                "value": "scene-101-course-scene-q2::q1::C",
+                "label": "5"
+              },
+              {
+                "value": "scene-101-course-scene-q2::q1::D",
+                "label": "16"
+              }
+            ],
+            "answer": [
+              "scene-101-course-scene-q2::q1::B"
+            ],
+            "analysis": "4y = 16，所以 y = 4。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-102-course-scene-q3",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "小模拟考：混合题 - 第 3 题",
+      "order": 102,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-102-course-scene-q3::q1",
+            "type": "single",
+            "question": "如果每小时完成 9 题，4 小时完成多少题？",
+            "options": [
+              {
+                "value": "scene-102-course-scene-q3::q1::A",
+                "label": "13"
+              },
+              {
+                "value": "scene-102-course-scene-q3::q1::B",
+                "label": "27"
+              },
+              {
+                "value": "scene-102-course-scene-q3::q1::C",
+                "label": "36"
+              },
+              {
+                "value": "scene-102-course-scene-q3::q1::D",
+                "label": "45"
+              }
+            ],
+            "answer": [
+              "scene-102-course-scene-q3::q1::C"
+            ],
+            "analysis": "9 x 4 = 36。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-103-course-scene-q4",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "小模拟考：混合题 - 第 4 题",
+      "order": 103,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-103-course-scene-q4::q1",
+            "type": "single",
+            "question": "阅读题问 according to the passage，应优先依据什么？",
+            "options": [
+              {
+                "value": "scene-103-course-scene-q4::q1::A",
+                "label": "原文证据"
+              },
+              {
+                "value": "scene-103-course-scene-q4::q1::B",
+                "label": "个人经验"
+              },
+              {
+                "value": "scene-103-course-scene-q4::q1::C",
+                "label": "专业猜测"
+              },
+              {
+                "value": "scene-103-course-scene-q4::q1::D",
+                "label": "最长选项"
+              }
+            ],
+            "answer": [
+              "scene-103-course-scene-q4::q1::A"
+            ],
+            "analysis": "according to the passage 要求回到原文。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-104-course-scene-q5",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "小模拟考：混合题 - 第 5 题",
+      "order": 104,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-104-course-scene-q5::q1",
+            "type": "single",
+            "question": "两个直接咬合齿轮方向如何？",
+            "options": [
+              {
+                "value": "scene-104-course-scene-q5::q1::A",
+                "label": "相同"
+              },
+              {
+                "value": "scene-104-course-scene-q5::q1::B",
+                "label": "相反"
+              },
+              {
+                "value": "scene-104-course-scene-q5::q1::C",
+                "label": "都向上"
+              },
+              {
+                "value": "scene-104-course-scene-q5::q1::D",
+                "label": "都向下"
+              }
+            ],
+            "answer": [
+              "scene-104-course-scene-q5::q1::B"
+            ],
+            "analysis": "相邻咬合齿轮方向相反。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-105-course-scene-q6",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "小模拟考：混合题 - 第 6 题",
+      "order": 105,
+      "type": "quiz",
+      "content": {
+        "type": "quiz",
+        "questions": [
+          {
+            "id": "scene-105-course-scene-q6::q1",
+            "type": "single",
+            "question": "一个定滑轮主要改变什么？",
+            "options": [
+              {
+                "value": "scene-105-course-scene-q6::q1::A",
+                "label": "力的方向"
+              },
+              {
+                "value": "scene-105-course-scene-q6::q1::B",
+                "label": "物体重量"
+              },
+              {
+                "value": "scene-105-course-scene-q6::q1::C",
+                "label": "电压"
+              },
+              {
+                "value": "scene-105-course-scene-q6::q1::D",
+                "label": "长度单位"
+              }
+            ],
+            "answer": [
+              "scene-105-course-scene-q6::q1::A"
+            ],
+            "analysis": "理想定滑轮主要改变施力方向。",
+            "points": 1
+          }
+        ]
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_assessment"
+      }
+    },
+    {
+      "id": "scene-106-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "小模拟考讲评方法",
+      "order": 106,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-106-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-106-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">小模拟考讲评方法</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-106-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">不要只写对错，要写错因标签</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">数学错：补同型 3 题，直到不用看选项也能列式</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">阅读错：回原文标证据句，并说明错误选项为什么不成立</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">机械/空间错：要求补图，图比口头解释更能暴露误区</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">讲评结束后生成下一轮 3 天微计划</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-107-course-scene",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "考前一天检查清单",
+      "order": 107,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-107-course-scene",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-107-course-scene-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">考前一天检查清单</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-107-course-scene-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">确认考试时间、地点、证件、交通和提前到达时间</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">准备普通计算草稿策略，但不依赖未允许的工具</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">复习错题日志中的高频错因，不再大量刷新题</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">睡眠和节奏比临时硬背更重要</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">最后一遍提醒：题目问什么，就回答什么</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-108-7",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "7 天复习安排",
+      "order": 108,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-108-7",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-108-7-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">7 天复习安排</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-108-7-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Day 1：诊断 + 错因分类</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Day 2：分数、小数、百分比、比例</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Day 3：代数方程、函数代入、表格关系</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Day 4：阅读理解定位训练</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Day 5：机械推理和空间推理</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Day 6：混合练习 + 计时策略</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Day 7：综合测 + 个人经历证据清单</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-109-14",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "14 天加厚复习安排",
+      "order": 109,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-109-14",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-109-14-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">14 天加厚复习安排</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-109-14-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Days 1-2：诊断、基础计算、错题日志模板</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Days 3-4：比例/百分比/文字题建模</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Days 5-6：数列、表格速率、函数代入</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Days 7-8：阅读定位、限定词、证据排除</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Days 9-10：杠杆、滑轮、齿轮、斜面</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Days 11-12：旋转、镜像、展开图、纸折叠</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">Days 13-14：混合计时、PEF 证据、readiness gate</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    },
+    {
+      "id": "scene-110-readiness-gate",
+      "stageId": "california-electrical-entrance-courseware-v5",
+      "title": "结课 readiness gate",
+      "order": 110,
+      "type": "slide",
+      "content": {
+        "type": "slide",
+        "schemaVersion": 1,
+        "canvas": {
+          "id": "canvas-scene-110-readiness-gate",
+          "viewportSize": {
+            "width": 1280,
+            "height": 720
+          },
+          "viewportRatio": "16:9",
+          "theme": {
+            "background": "#F8FAFC",
+            "accent": "#2563EB",
+            "text": "#111827"
+          },
+          "elements": [
+            {
+              "id": "scene-110-readiness-gate-title",
+              "type": "text",
+              "left": 80,
+              "top": 74,
+              "width": 1040,
+              "height": 58,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 34px; font-weight: 700; margin: 0 0 8px 0;\">结课 readiness gate</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            },
+            {
+              "id": "scene-110-readiness-gate-body",
+              "type": "text",
+              "left": 110,
+              "top": 164,
+              "width": 1060,
+              "height": 430,
+              "rotate": 0,
+              "fill": "transparent",
+              "opacity": 1,
+              "content": "<p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">数学：基础题正确率 &gt;= 80%，能解释错因</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">阅读：每题能指出证据句</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">机械/空间：能画出关键关系，而不是凭感觉</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">证据材料：能列出已具备和待补证明</p><p style=\"font-size: 23px; font-weight: 400; margin: 0 0 8px 0;\">下一步：按本地 apprenticeship 官方流程确认申请要求和考试版本</p>",
+              "defaultColor": "#111827",
+              "defaultFontName": "Arial",
+              "lineHeight": 1.55,
+              "wordSpace": 0,
+              "paragraphSpace": 6
+            }
+          ]
+        }
+      },
+      "createdAt": 0,
+      "updatedAt": 0,
+      "metadata": {
+        "source": "cognisphereTutor",
+        "demo_role": "entrance_courseware"
+      }
+    }
+  ],
+  "outline": {
+    "source": "cognisphereTutor",
+    "bundle_id": "california_electrical_career.deeptutor_handoff.v1",
+    "mode": "electrical_entrance_courseware",
+    "source_policy": "cognisphere_plugin_pack"
+  }
+}

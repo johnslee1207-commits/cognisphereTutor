@@ -23,6 +23,7 @@ BUNDLE_PATH = (
     / "bundled_packs"
     / "california_electrical_career_bundle.json"
 )
+SEED_DIR = ROOT / "cognispheretutor" / "vendor" / "openmaic-courseware"
 
 
 def main() -> None:
@@ -34,10 +35,19 @@ def main() -> None:
         "--owner-cookie",
         help="OpenMAIC anonymous_id cookie for overwriting an existing owned document.",
     )
+    parser.add_argument(
+        "--write-seed",
+        action="store_true",
+        help="Write the OpenMAIC-native classroom JSON into Tutor's packaged seed directory.",
+    )
     args = parser.parse_args()
 
     origin = args.origin.rstrip("/")
     document = build_document(args.course_id)
+    if args.write_seed:
+        seed_path = write_seed_document(document, args.course_id)
+        print(json.dumps({"ok": True, "seed_path": str(seed_path)}, ensure_ascii=False, indent=2))
+        return
     headers = {"authorization": f"Bearer {args.token}"}
     if args.owner_cookie:
         headers["cookie"] = f"anonymous_id={args.owner_cookie}"
@@ -102,6 +112,19 @@ def build_document(course_id: str) -> dict[str, Any]:
             "source_policy": bundle["safety"]["source_of_truth"],
         },
     }
+
+
+def write_seed_document(document: dict[str, Any], course_id: str) -> Path:
+    packaged = json.loads(json.dumps(document, ensure_ascii=False))
+    packaged["stage"]["createdAt"] = 0
+    packaged["stage"]["updatedAt"] = 0
+    for scene in packaged["scenes"]:
+        scene["createdAt"] = 0
+        scene["updatedAt"] = 0
+    SEED_DIR.mkdir(parents=True, exist_ok=True)
+    path = SEED_DIR / f"{course_id}.json"
+    path.write_text(json.dumps(packaged, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return path
 
 
 def courseware_scenes(course_id: str) -> list[dict[str, Any]]:
