@@ -48,6 +48,28 @@ OpenMAIC origins. `OPENMAIC_COURSE_RUNTIME_HEADERS` and
 `OPENMAIC_COURSE_EXPORT_ROUTES` are JSON objects. Route values may be relative
 to `openmaic_course_runtime_base_url` or absolute URLs for a separate service.
 
+## Managed Local Sidecar
+
+`cognispheretutor start` can also launch an OpenMAIC sidecar before the Tutor
+backend starts. This keeps the ordinary-user path to one command while still
+letting deployment packages decide where the OpenMAIC app binary lives:
+
+- `OPENMAIC_COURSE_RUNTIME_MANAGED_COMMAND` — shell-style command line, for
+  example `node server.js` or `npm run start:course-runtime`.
+- `OPENMAIC_COURSE_RUNTIME_MANAGED_CWD` — optional working directory for that
+  command. Defaults to the active Tutor runtime home.
+- `OPENMAIC_COURSE_RUNTIME_MANAGED_ORIGIN` — expected origin. Defaults to
+  `http://127.0.0.1:33100`.
+- `OPENMAIC_COURSE_RUNTIME_MANAGED_HEALTH_PATH` — health endpoint path.
+  Defaults to `/api/health`.
+
+Tutor starts the sidecar only when `openmaic_course_runtime_mode` is `auto`, no
+configured runtime URL is present, and no existing managed/local OpenMAIC
+endpoint is reachable. The backend then receives
+`OPENMAIC_COURSE_RUNTIME_BASE_URL` pointing at the managed origin, so course
+render/export calls use the real OpenMAIC adapter instead of the in-memory
+fallback.
+
 ## Export Endpoint
 
 Each configured route must accept:
