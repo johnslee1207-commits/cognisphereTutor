@@ -229,6 +229,11 @@ def test_openmaic_runtime_discovery_probes_auto_candidates(monkeypatch) -> None:
     assert resolution.endpoint.base_url == "https://managed.openmaic.example/api/persistence"
     assert resolution.endpoint.source == "auto"
     assert seen[0] == "https://managed.openmaic.example/api/health"
+    assert resolution.endpoint.export_routes == {
+        "html": "/api/export/html",
+        "pptx": "/api/export/pptx",
+        "maic-zip": "/api/export/classroom",
+    }
 
 
 @pytest.mark.asyncio

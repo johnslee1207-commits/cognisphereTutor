@@ -26,6 +26,12 @@ DEFAULT_OPENMAIC_LOCAL_ORIGINS = (
     "http://localhost:33100",
 )
 
+DEFAULT_OPENMAIC_EXPORT_ROUTES = {
+    "html": "/api/export/html",
+    "pptx": "/api/export/pptx",
+    "maic-zip": "/api/export/classroom",
+}
+
 _DISCOVERY_ENV_NAMES = (
     "OPENMAIC_COURSE_RUNTIME_BASE_URL",
     "OPENMAIC_COURSE_RUNTIME_MANAGED_URL",
@@ -163,7 +169,7 @@ def _discover_endpoint(
                 endpoint=OpenMaicRuntimeEndpoint(
                     base_url=base_url,
                     headers=headers,
-                    export_routes=export_routes,
+                    export_routes=export_routes or dict(DEFAULT_OPENMAIC_EXPORT_ROUTES),
                     source="auto",
                     available=True,
                     message=f"discovered OpenMAIC at {origin}",
@@ -216,6 +222,8 @@ def _string_map(value: Any) -> dict[str, str]:
         for key, item in value.items()
         if str(key).strip() and str(item).strip()
     }
+
+
 
 
 def _normalize_base_url(value: Any) -> str:
