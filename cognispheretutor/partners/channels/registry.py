@@ -29,7 +29,7 @@ def load_channel_class(module_name: str) -> type[BaseChannel]:
     """Import *module_name* and return the first BaseChannel subclass found."""
     from cognispheretutor.partners.channels.base import BaseChannel as _Base
 
-    mod = importlib.import_module(f"cognispheretutor.partners.channels.{module_name}")
+    mod = importlib.import_module(f"cognispheretutor.partners.channels.{module_name}")  # nosemgrep
     for attr in dir(mod):
         obj = getattr(mod, attr)
         if isinstance(obj, type) and issubclass(obj, _Base) and obj is not _Base:

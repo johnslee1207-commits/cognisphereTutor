@@ -13,8 +13,8 @@ function nodeModuleBin(...segments) {
   return path.join(webRoot, "node_modules", ...segments);
 }
 
-function run(cmd, args) {
-  const result = spawnSync(cmd, args, {
+function runNode(args) {
+  const result = spawnSync(process.execPath, args, {
     cwd: webRoot,
     stdio: "inherit",
     env: process.env,
@@ -44,7 +44,7 @@ function collectTests(dir) {
 
 rmSync(distRoot, { recursive: true, force: true });
 
-run(process.execPath, [
+runNode([
   nodeModuleBin("typescript", "bin", "tsc"),
   "-p",
   "tsconfig.node-tests.json",
@@ -56,4 +56,4 @@ if (testFiles.length === 0) {
   process.exit(1);
 }
 
-run(process.execPath, ["--test", ...testFiles]);
+runNode(["--test", ...testFiles]);

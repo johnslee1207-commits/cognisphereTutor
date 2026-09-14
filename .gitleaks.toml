@@ -1,0 +1,20 @@
+[allowlist]
+description = "Skip generated, dependency, cache, runtime-log, and Windows shell metadata paths."
+paths = [
+  '''(^|/)node_modules/''',
+  '''(^|/)\.next/''',
+  '''(^|/)\.nuxt/''',
+  '''(^|/)\.output/''',
+  '''(^|/)coverage/''',
+  '''(^|/)dist/''',
+  '''(^|/)build/''',
+  '''(^|/)playwright-report/''',
+  '''(^|/)test-results/''',
+  '''(^|/)\.git/''',
+  '''(^|/)\.pytest_cache/''',
+  '''(^|/)\.ruff_cache/''',
+  '''(^|/)\.codex-run/''',
+  '''(^|/)\.codex_runtime_logs/''',
+  '''(^|/)desktop\.ini$''',
+  '''(^|/).+\.log$''',
+]

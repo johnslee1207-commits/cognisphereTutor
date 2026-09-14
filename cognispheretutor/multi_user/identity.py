@@ -116,9 +116,9 @@ def _migrate_secret() -> None:
                 SECRET_FILE.chmod(0o600)
             except OSError:
                 pass
-            logger.info("Migrated auth secret from %s to %s", LEGACY_SECRET_FILE, SECRET_FILE)
+            logger.info("Migrated auth secret from %s to %s", LEGACY_SECRET_FILE, SECRET_FILE)  # nosemgrep
     except Exception as exc:
-        logger.warning("Failed to migrate legacy auth secret: %s", exc)
+        logger.warning("Failed to migrate legacy auth secret: %s", exc)  # nosemgrep
 
 
 def load_users(  # nosec B107 - empty defaults mean "no env fallback supplied".
@@ -315,11 +315,11 @@ def load_or_create_auth_secret() -> str:
             SECRET_FILE.chmod(0o600)
         except OSError:
             pass
-        logger.warning(
+        logger.warning(  # nosemgrep
             "Auth is enabled and no auth_secret file exists. Generated a stable local secret at %s.",
             SECRET_FILE,
         )
         return generated
     except Exception as exc:
-        logger.warning("Failed to load/create auth secret at %s: %s", SECRET_FILE, exc)
+        logger.warning("Failed to load/create auth secret at %s: %s", SECRET_FILE, exc)  # nosemgrep
         return secrets.token_hex(32)

@@ -30,7 +30,7 @@ loop, not on the answer loop's surface.
 
 from __future__ import annotations
 
-from importlib import resources
+from importlib import resources  # nosemgrep: python.lang.compatibility.python37.python37-compatibility-importlib2
 import logging
 from typing import Any
 

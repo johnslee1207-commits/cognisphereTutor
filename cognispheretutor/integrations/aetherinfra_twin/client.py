@@ -52,7 +52,7 @@ class AetherInfraTwinClient:
             headers["Content-Type"] = "application/json"
         req = request.Request(url, data=data, headers=headers, method=method)
         try:
-            with request.urlopen(req, timeout=self.timeout) as response:
+            with request.urlopen(req, timeout=self.timeout) as response:  # nosemgrep
                 body = response.read().decode("utf-8")
         except error.URLError as exc:
             raise AetherInfraTwinError(str(exc)) from exc

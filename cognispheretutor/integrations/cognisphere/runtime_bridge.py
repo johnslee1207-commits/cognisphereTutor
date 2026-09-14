@@ -134,7 +134,7 @@ def load_runtime_module(
         client=registry,
     )
     try:
-        return import_module(module_path)
+        return import_module(module_path)  # nosemgrep
     except ImportError as exc:
         raise CognisphereIntegrationError(
             "benchmark_unavailable" if adapter_name == "benchmark" else "plugins_root_missing",

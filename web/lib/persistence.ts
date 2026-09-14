@@ -45,7 +45,8 @@ export function loadFromStorage<T>(key: string, defaultValue: T): T {
     // Version check - if version mismatch, return default (can add migration logic here)
     if (wrapper.version !== STORAGE_VERSION) {
       console.warn(
-        `Storage version mismatch for ${key}. Expected ${STORAGE_VERSION}, got ${wrapper.version}. Using default value.`,
+        "Storage version mismatch. Using default value.",
+        { key, expected: STORAGE_VERSION, actual: wrapper.version },
       );
       return defaultValue;
     }
@@ -53,7 +54,7 @@ export function loadFromStorage<T>(key: string, defaultValue: T): T {
     return wrapper.data;
   } catch (error) {
     // Handle JSON parse errors or other issues
-    console.warn(`Failed to load ${key} from localStorage:`, error);
+    console.warn("Failed to load from localStorage:", { key, error });
     return defaultValue;
   }
 }
@@ -81,10 +82,11 @@ export function saveToStorage<T>(key: string, value: T): void {
     // Handle quota exceeded or other storage errors
     if (error instanceof Error && error.name === "QuotaExceededError") {
       console.error(
-        `localStorage quota exceeded when saving ${key}. Consider clearing old data.`,
+        "localStorage quota exceeded. Consider clearing old data.",
+        { key },
       );
     } else {
-      console.warn(`Failed to save ${key} to localStorage:`, error);
+      console.warn("Failed to save to localStorage:", { key, error });
     }
   }
 }
@@ -102,7 +104,7 @@ export function removeFromStorage(key: string): void {
     const prefixedKey = STORAGE_PREFIX + key;
     localStorage.removeItem(prefixedKey);
   } catch (error) {
-    console.warn(`Failed to remove ${key} from localStorage:`, error);
+    console.warn("Failed to remove from localStorage:", { key, error });
   }
 }
 

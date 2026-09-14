@@ -427,7 +427,7 @@ def _wait_for_http(
         if process is not None and process.process.poll() is not None:
             raise RuntimeError(_t("start.exited", name=name, code=process.process.returncode))
         try:
-            with urlrequest.urlopen(url, timeout=1):  # noqa: S310  # nosec B310 - http(s) health-check URL constructed by caller
+            with urlrequest.urlopen(url, timeout=1):  # noqa: S310  # nosec B310 - http(s) health-check URL constructed by caller; nosemgrep
                 _log(_t("start.ready", name=name))
                 return
         except (urlerror.URLError, TimeoutError, OSError):
@@ -437,7 +437,7 @@ def _wait_for_http(
 
 def _http_ready(url: str, *, timeout: float) -> bool:
     try:
-        with urlrequest.urlopen(url, timeout=timeout):  # noqa: S310  # nosec B310 - launcher health check
+        with urlrequest.urlopen(url, timeout=timeout):  # noqa: S310  # nosec B310 - launcher health check; nosemgrep
             return True
     except (urlerror.URLError, TimeoutError, OSError):
         return False

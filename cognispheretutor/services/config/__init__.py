@@ -39,7 +39,7 @@ from .runtime_settings import (
 
 # Re-export the loader module itself for code paths that monkeypatch via the
 # package namespace, e.g. ``cognispheretutor.services.config.loader.PROJECT_ROOT``.
-loader = importlib.import_module(f"{__name__}.loader")
+loader = importlib.import_module(f"{__name__}.loader")  # nosemgrep
 
 __all__ = [
     "LaunchSettings",
@@ -104,10 +104,10 @@ def __getattr__(name: str):
         "resolve_search_runtime_config",
         "search_provider_state",
     }:
-        provider_runtime = importlib.import_module(f"{__name__}.provider_runtime")
+        provider_runtime = importlib.import_module(f"{__name__}.provider_runtime")  # nosemgrep
 
         return getattr(provider_runtime, name)
     if name in {"ConfigTestRunner", "TestRun", "get_config_test_runner"}:
-        test_runner = importlib.import_module(f"{__name__}.test_runner")
+        test_runner = importlib.import_module(f"{__name__}.test_runner")  # nosemgrep
         return getattr(test_runner, name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

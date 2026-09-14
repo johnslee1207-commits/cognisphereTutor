@@ -134,13 +134,14 @@ def _get_aiohttp_connector() -> aiohttp.TCPConnector | None:
         return None
 
     # Emit warning once across threads
+    global _ssl_warning_logged
     with _ssl_warning_lock:
-        if not globals().get("_ssl_warning_logged", False):
+        if not _ssl_warning_logged:
             logger.warning(
                 "SSL verification is disabled via DISABLE_SSL_VERIFY. This is unsafe and must "
                 "not be used in production environments."
             )
-            globals()["_ssl_warning_logged"] = True
+            _ssl_warning_logged = True
     return aiohttp.TCPConnector(ssl=False)
 
 

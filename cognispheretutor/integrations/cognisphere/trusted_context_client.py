@@ -165,7 +165,7 @@ def fetch_trusted_context_package(
 
     req = Request(url, headers=headers, method="GET")
     try:
-        with urlopen(req, timeout=timeout_s) as resp:  # noqa: S310 — operator-configured URL
+        with urlopen(req, timeout=timeout_s) as resp:  # noqa: S310 — operator-configured URL; nosemgrep
             raw = resp.read().decode("utf-8")
             package = json.loads(raw)
     except (HTTPError, URLError, TimeoutError, json.JSONDecodeError, ValueError) as exc:

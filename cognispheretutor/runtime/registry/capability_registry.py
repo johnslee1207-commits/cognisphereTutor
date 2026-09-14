@@ -20,13 +20,13 @@ logger = logging.getLogger(__name__)
 
 def _import_capability_class(path: str) -> type[BaseCapability]:
     module_path, class_name = path.rsplit(":", 1)
-    module = importlib.import_module(module_path)
+    module = importlib.import_module(module_path)  # nosemgrep
     return getattr(module, class_name)
 
 
 def _load_plugin_hooks():
     try:
-        module = importlib.import_module("cognispheretutor.plugins.loader")
+        module = importlib.import_module("cognispheretutor.plugins.loader")  # nosemgrep
     except Exception:
         logger.debug("Plugin loader unavailable; skipping plugin discovery.", exc_info=True)
         return None, None

@@ -162,7 +162,7 @@ class AnswerConsolidator:
         self.custom_template = custom_template
         self.llm_config = llm_config or {}
         self.max_results = max_results
-        self.jinja_env = Environment(loader=BaseLoader(), autoescape=autoescape)  # nosec B701
+        self.jinja_env = Environment(loader=BaseLoader(), autoescape=autoescape)  # nosec B701; nosemgrep
 
         if self.custom_template is not None and autoescape:
             _logger.warning(

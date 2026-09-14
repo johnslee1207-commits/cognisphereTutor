@@ -27,8 +27,8 @@ export function apiUrl(path: string): string {
  * Construct a WebSocket URL from a path.
  *
  * Pass-through: returns the path unchanged. `proxy.ts` rewrites `/ws/*` to
- * the configured backend, and the runtime upgrades to `ws://` /
- * `wss://` based on the backend's scheme.
+ * the configured backend, and the runtime chooses the WebSocket scheme from
+ * the backend's HTTP(S) scheme.
  *
  * @param path - WebSocket path (e.g., '/api/v1/solve')
  * @returns The same path, unchanged

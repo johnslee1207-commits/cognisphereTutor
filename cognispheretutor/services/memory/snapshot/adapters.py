@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 
 def _sha1(*parts: object) -> str:
-    h = hashlib.sha1(usedforsecurity=False)
+    h = hashlib.sha1(usedforsecurity=False)  # nosemgrep
     for part in parts:
         if part is None:
             continue

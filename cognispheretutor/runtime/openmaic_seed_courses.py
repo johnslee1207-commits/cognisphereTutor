@@ -56,7 +56,7 @@ def _seed_one(origin: str, path: Path, *, timeout: float) -> OpenMaicSeedResult:
             headers={"content-type": "application/json"},
             method="POST",
         )
-        with urlrequest.urlopen(request, timeout=timeout) as response:  # noqa: S310
+        with urlrequest.urlopen(request, timeout=timeout) as response:  # noqa: S310; nosemgrep
             data = json.loads(response.read().decode("utf-8"))
         url = _classroom_url(data)
         return OpenMaicSeedResult(course_id, True, classroom_url=url)

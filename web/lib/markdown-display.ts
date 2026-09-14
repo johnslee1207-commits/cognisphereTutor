@@ -539,18 +539,38 @@ function maskProtectedSpans(
   label: string,
 ): { masked: string; restore: (value: string) => string } {
   const protectedSpans: string[] = [];
+  const placeholderPrefix = `\u0000${label}_`;
+  const placeholderSuffix = "\u0000";
   const masked = content.replace(regex, (match) => {
     protectedSpans.push(match);
-    return `\u0000${label}_${protectedSpans.length - 1}\u0000`;
+    return `${placeholderPrefix}${protectedSpans.length - 1}${placeholderSuffix}`;
   });
-  const placeholderRegex = new RegExp(`\\u0000${label}_(\\d+)\\u0000`, "g");
   return {
     masked,
-    restore: (value: string) =>
-      value.replace(
-        placeholderRegex,
-        (_match, idx: string) => protectedSpans[Number(idx)] ?? "",
-      ),
+    restore: (value: string) => {
+      let restored = "";
+      let cursor = 0;
+      while (cursor < value.length) {
+        const start = value.indexOf(placeholderPrefix, cursor);
+        if (start < 0) {
+          restored += value.slice(cursor);
+          break;
+        }
+        const end = value.indexOf(
+          placeholderSuffix,
+          start + placeholderPrefix.length,
+        );
+        if (end < 0) {
+          restored += value.slice(cursor);
+          break;
+        }
+        const idx = Number(value.slice(start + placeholderPrefix.length, end));
+        restored += value.slice(cursor, start);
+        restored += Number.isInteger(idx) ? (protectedSpans[idx] ?? "") : "";
+        cursor = end + placeholderSuffix.length;
+      }
+      return restored;
+    },
   };
 }
 

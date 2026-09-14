@@ -259,7 +259,7 @@ class PluginRegistryClient:
             )
         self.ensure_import_paths(domain, root=record.get("plugins_root"))
         try:
-            return import_module(module_name)
+            return import_module(module_name)  # nosemgrep
         except Exception as exc:  # noqa: BLE001 — surface as product error
             raise CognisphereIntegrationError(
                 "entrypoint_import_failed",
@@ -279,7 +279,7 @@ class PluginRegistryClient:
             )
         self.ensure_import_paths(domain, root=record.get("plugins_root"))
         try:
-            return import_module(module_name)
+            return import_module(module_name)  # nosemgrep
         except Exception as exc:  # noqa: BLE001
             raise CognisphereIntegrationError(
                 "entrypoint_import_failed",

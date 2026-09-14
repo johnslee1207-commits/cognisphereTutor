@@ -45,9 +45,11 @@ const FENCED_PLACEHOLDER_REGEX = /\u0000FENCED_(\d+)\u0000/g;
 //   form and the post-`escapeUnknownHtmlTags` form. The `[^>]*` swallows any
 //   stray attributes some providers emit (e.g. `<thinking duration="3s">`).
 const OPEN_TAG_REGEX = /`?<\s*(think(?:ing)?)\b[^>]*>`?/i;
+const CLOSE_THINK_TAG_REGEX = /`?<\s*\/\s*think\s*>`?/i;
+const CLOSE_THINKING_TAG_REGEX = /`?<\s*\/\s*thinking\s*>`?/i;
 
 function closeTagRegex(tag: string): RegExp {
-  return new RegExp(`\`?<\\s*/\\s*${tag}\\s*>\`?`, "i");
+  return tag === "thinking" ? CLOSE_THINKING_TAG_REGEX : CLOSE_THINK_TAG_REGEX;
 }
 
 function maskFencedCode(input: string): { masked: string; blocks: string[] } {
