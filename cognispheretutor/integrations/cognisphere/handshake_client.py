@@ -14,7 +14,6 @@ from cognispheretutor.integrations.cognisphere._contract import load_plugin_cont
 from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError
 from cognispheretutor.integrations.cognisphere.registry_client import PluginRegistryClient
 
-
 CONTRACT_ID = "cognisphere.tutor.learning_plugin_handshake.v1"
 # Canonical protocol lives in CognisphereLearningPlugins (not duplicated here).
 SOT_DOCS = (
@@ -206,7 +205,9 @@ def handshake(
     )
 
 
-def list_domains(*, root: str | Path | None = None, client: PluginRegistryClient | None = None) -> dict[str, Any]:
+def list_domains(
+    *, root: str | Path | None = None, client: PluginRegistryClient | None = None
+) -> dict[str, Any]:
     """Prefer SDK ``list_handshake_domains``; else Tutor ``list_plugins``."""
     registry = client or PluginRegistryClient(root)
     plugins_root = registry.resolve_plugins_root(root)
@@ -219,9 +220,10 @@ def list_domains(*, root: str | Path | None = None, client: PluginRegistryClient
         payload = list_handshake_domains(root=plugins_root)
         if isinstance(payload, dict):
             out = dict(payload)
-            out.setdefault("source", "cognisphere_plugin_sdk")
-            out["sot_docs"] = SOT_DOCS
-            return out
+            if out.get("ok") is not False:
+                out.setdefault("source", "cognisphere_plugin_sdk")
+                out["sot_docs"] = SOT_DOCS
+                return out
     except Exception:  # noqa: BLE001
         pass
 

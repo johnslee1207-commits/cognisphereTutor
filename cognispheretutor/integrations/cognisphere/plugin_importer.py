@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 import json
 import os
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -12,9 +12,11 @@ from cognispheretutor.integrations.cognisphere._contract import (
     load_learning_loop_mapping,
     load_plugin_contract,
 )
-from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError, format_issue
+from cognispheretutor.integrations.cognisphere.error_codes import (
+    CognisphereIntegrationError,
+    format_issue,
+)
 from cognispheretutor.integrations.cognisphere.registry_client import PluginRegistryClient
-
 
 ALLOWED_TRUE_SAFETY = ("no_answer_keys", "no_full_solution_dump")
 
@@ -150,8 +152,16 @@ def _resolve_expected_knowledge_keys(
     """
     for candidate in (
         bundle.get("expected_knowledge_keys"),
-        (knowledge.get("expected_keys") if isinstance(knowledge.get("expected_keys"), list) else None),
-        ((bundle.get("meta") or {}).get("expected_knowledge_keys") if isinstance(bundle.get("meta"), dict) else None),
+        (
+            knowledge.get("expected_keys")
+            if isinstance(knowledge.get("expected_keys"), list)
+            else None
+        ),
+        (
+            (bundle.get("meta") or {}).get("expected_knowledge_keys")
+            if isinstance(bundle.get("meta"), dict)
+            else None
+        ),
     ):
         if isinstance(candidate, list) and candidate:
             return [str(k) for k in candidate if str(k).strip()]
@@ -203,18 +213,15 @@ def summarize_knowledge(bundle: dict[str, Any]) -> dict[str, Any]:
 
     # Domain-agnostic extras: any top-level *_graph plus common optional blobs.
     graph_flags = {
-        key: bool(bundle.get(key))
-        for key in bundle.keys()
-        if str(key).endswith("_graph")
+        key: bool(bundle.get(key)) for key in bundle.keys() if str(key).endswith("_graph")
     }
     return {
         "domain": domain,
         "counts": counts,
         "expected_keys": expected,
         "empty_reasons": empty_reasons,
-        "nonempty": any(counts.get(k, 0) > 0 for k in expected) or any(
-            v > 0 for k, v in counts.items() if k not in expected
-        ),
+        "nonempty": any(counts.get(k, 0) > 0 for k in expected)
+        or any(v > 0 for k, v in counts.items() if k not in expected),
         "surfaces": surface_payloads,
         "extra_top_level": {
             **graph_flags,
@@ -231,7 +238,9 @@ def resolve_import_cache_dir(
 ) -> Path:
     mapping = load_learning_loop_mapping()
     cache_cfg = dict(mapping.get("import_cache") or {})
-    env_name = str(cache_cfg.get("env_override") or load_plugin_contract().get("import_cache_env") or "")
+    env_name = str(
+        cache_cfg.get("env_override") or load_plugin_contract().get("import_cache_env") or ""
+    )
     if cache_dir is not None:
         base = Path(cache_dir)
     else:

@@ -1,0 +1,4 @@
+[[IgnoredVulns]]
+id = "GHSA-8mgp-746c-j5xp"
+ignoreUntil = 2026-12-14
+reason = "NLTK 3.10.3 is the latest PyPI release as of 2026-09-14 and is pulled transitively by llama-index. Tutor does not expose NLTK model import/export paths to untrusted users; revisit when a patched NLTK or llama-index constraint is available."

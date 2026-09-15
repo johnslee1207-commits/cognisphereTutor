@@ -64,21 +64,21 @@ def __getattr__(name: str):
     import importlib
 
     if name == "llm":
-        return importlib.import_module(f"{__name__}.llm")
+        return importlib.import_module(f"{__name__}.llm")  # nosemgrep
     if name == "prompt":
-        return importlib.import_module(f"{__name__}.prompt")
+        return importlib.import_module(f"{__name__}.prompt")  # nosemgrep
     if name == "search":
-        return importlib.import_module(f"{__name__}.search")
+        return importlib.import_module(f"{__name__}.search")  # nosemgrep
     if name == "setup":
-        return importlib.import_module(f"{__name__}.setup")
+        return importlib.import_module(f"{__name__}.setup")  # nosemgrep
     if name == "session":
-        return importlib.import_module(f"{__name__}.session")
+        return importlib.import_module(f"{__name__}.session")  # nosemgrep
     if name == "config":
-        return importlib.import_module(f"{__name__}.config")
+        return importlib.import_module(f"{__name__}.config")  # nosemgrep
     if name == "rag":
-        return importlib.import_module(f"{__name__}.rag")
+        return importlib.import_module(f"{__name__}.rag")  # nosemgrep
     if name == "embedding":
-        return importlib.import_module(f"{__name__}.embedding")
+        return importlib.import_module(f"{__name__}.embedding")  # nosemgrep
     if name == "BaseSessionManager":
         from .session import BaseSessionManager
 

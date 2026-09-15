@@ -96,7 +96,9 @@ def format_bytes_human_readable(size_bytes: int) -> str:
         return f"{size_bytes} bytes"
 
 
-_kb_base_dir = PROJECT_ROOT / "data" / "knowledge_bases"  # deprecated; tests only — use _current_kb_base_dir()
+_kb_base_dir = (
+    PROJECT_ROOT / "data" / "knowledge_bases"
+)  # deprecated; tests only — use _current_kb_base_dir()
 DEFAULT_KB_ALIASES = {"", "default", "current", "selected", "默认", "默认知识库", "当前知识库"}
 
 # Lazy initialization
@@ -2400,7 +2402,9 @@ async def reindex_knowledge_base(
         kb_dir = kb_base_dir / kb_name
         signature_hash = kb_provider
         if provider_uses_embedding_versions(kb_provider):
-            from cognispheretutor.services.rag.embedding_signature import signature_from_embedding_config
+            from cognispheretutor.services.rag.embedding_signature import (
+                signature_from_embedding_config,
+            )
             from cognispheretutor.services.rag.index_versioning import (
                 find_matching_version,
             )

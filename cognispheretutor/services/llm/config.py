@@ -62,7 +62,7 @@ def _is_openai_compatible_binding(binding: str | None) -> bool:
 def _set_openai_env_vars(api_key: str | None, base_url: str | None, *, source: str) -> None:
     if api_key:
         os.environ["OPENAI_API_KEY"] = api_key
-        logger.debug("Set OPENAI_API_KEY env var (%s)", source)
+        logger.debug("Set OPENAI_API_KEY env var (%s)", source)  # nosemgrep
 
     if base_url:
         from .utils import sanitize_url

@@ -33,7 +33,9 @@ _AWS_LEGACY_MARKERS = (
 )
 
 
-def _looks_like_legacy_aws_path(book_id: str, display_name: str, progress: LearningProgress) -> bool:
+def _looks_like_legacy_aws_path(
+    book_id: str, display_name: str, progress: LearningProgress
+) -> bool:
     if not book_id.startswith("unified_"):
         return False
     haystack = " ".join(

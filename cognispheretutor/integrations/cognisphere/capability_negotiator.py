@@ -53,7 +53,10 @@ def negotiate(
                 payload.setdefault("domain", manifest.get("domain") or domain)
                 payload.setdefault(
                     "forbidden_in_plugin",
-                    list(manifest.get("forbidden_in_plugin") or load_plugin_contract()["forbidden_in_plugin"]),
+                    list(
+                        manifest.get("forbidden_in_plugin")
+                        or load_plugin_contract()["forbidden_in_plugin"]
+                    ),
                 )
                 payload["ok"] = True
                 return payload

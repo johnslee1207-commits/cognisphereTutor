@@ -63,7 +63,9 @@ async def test_persist_when_catalog_dim_empty() -> None:
             "cognispheretutor.services.config.test_runner.resolve_embedding_runtime_config",
             return_value=_resolved_stub(dim=0),
         ),
-        patch("cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client),
+        patch(
+            "cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client
+        ),
         patch.object(runner, "_persist_embedding_dimension", return_value=catalog) as persist_mock,
     ):
         await runner._test_embedding(run, model, catalog)
@@ -93,7 +95,9 @@ async def test_overwrite_when_catalog_dim_disagrees_unknown_model() -> None:
             "cognispheretutor.services.config.test_runner.resolve_embedding_runtime_config",
             return_value=_resolved_stub(dim=3072),
         ),
-        patch("cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client),
+        patch(
+            "cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client
+        ),
         patch.object(runner, "_persist_embedding_dimension", return_value=catalog) as persist_mock,
     ):
         await runner._test_embedding(run, model, catalog)
@@ -125,7 +129,9 @@ async def test_non_numeric_catalog_dim_does_not_block_probe() -> None:
             "cognispheretutor.services.config.test_runner.resolve_embedding_runtime_config",
             return_value=_resolved_stub(dim=0),
         ),
-        patch("cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client),
+        patch(
+            "cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client
+        ),
         patch.object(runner, "_persist_embedding_dimension", return_value=catalog) as persist_mock,
     ):
         await runner._test_embedding(run, model, catalog)
@@ -149,7 +155,9 @@ async def test_empty_vector_still_fatal() -> None:
             "cognispheretutor.services.config.test_runner.resolve_embedding_runtime_config",
             return_value=_resolved_stub(dim=0),
         ),
-        patch("cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client),
+        patch(
+            "cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client
+        ),
     ):
         with pytest.raises(ValueError, match="empty vector"):
             await runner._test_embedding(run, model, catalog)
@@ -203,7 +211,9 @@ async def test_capabilities_event_for_known_model() -> None:
             "cognispheretutor.services.config.test_runner.resolve_embedding_runtime_config",
             return_value=_resolved_stub(dim=0),
         ),
-        patch("cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client),
+        patch(
+            "cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client
+        ),
         patch.object(runner, "_persist_embedding_dimension", return_value=catalog),
     ):
         await runner._test_embedding(run, model, catalog)
@@ -248,7 +258,9 @@ async def test_capabilities_event_for_unknown_model() -> None:
             "cognispheretutor.services.config.test_runner.resolve_embedding_runtime_config",
             return_value=_resolved_stub(dim=0),
         ),
-        patch("cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client),
+        patch(
+            "cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client
+        ),
         patch.object(runner, "_persist_embedding_dimension", return_value=catalog),
     ):
         await runner._test_embedding(run, model, catalog)
@@ -286,7 +298,9 @@ async def test_overwrite_matryoshka_variant_with_native_max() -> None:
             "cognispheretutor.services.config.test_runner.resolve_embedding_runtime_config",
             return_value=_resolved_stub(dim=1024),
         ),
-        patch("cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client),
+        patch(
+            "cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client
+        ),
         patch.object(runner, "_persist_embedding_dimension", return_value=catalog) as persist,
     ):
         await runner._test_embedding(run, model, catalog)
@@ -323,7 +337,9 @@ async def test_overwrite_when_dim_out_of_supported_list() -> None:
             "cognispheretutor.services.config.test_runner.resolve_embedding_runtime_config",
             return_value=_resolved_stub(dim=999),
         ),
-        patch("cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client),
+        patch(
+            "cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client
+        ),
         patch.object(runner, "_persist_embedding_dimension", return_value=catalog) as persist,
     ):
         await runner._test_embedding(run, model, catalog)
@@ -404,7 +420,9 @@ async def test_capabilities_event_carries_active_dim_source() -> None:
             "cognispheretutor.services.config.test_runner.resolve_embedding_runtime_config",
             return_value=_resolved_stub(dim=0),
         ),
-        patch("cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client),
+        patch(
+            "cognispheretutor.services.embedding.client.EmbeddingClient", return_value=fake_client
+        ),
         patch.object(runner, "_persist_embedding_dimension", return_value=catalog),
     ):
         await runner._test_embedding(run, model, catalog)

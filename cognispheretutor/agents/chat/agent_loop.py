@@ -64,7 +64,9 @@ _THINK_CLOSE_RE = re.compile(r"<\s*/\s*think(?:ing)?\s*>", re.IGNORECASE)
 # Longest partial tag worth waiting a chunk for (e.g. "</thinking" + slack).
 _TAG_HOLDBACK_CHARS = 24
 _DSML_TOOL_OPEN_RE = re.compile(r"<\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*tool_calls\s*>", re.IGNORECASE)
-_DSML_TOOL_CLOSE_RE = re.compile(r"<\s*/\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*tool_calls\s*>", re.IGNORECASE)
+_DSML_TOOL_CLOSE_RE = re.compile(
+    r"<\s*/\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*tool_calls\s*>", re.IGNORECASE
+)
 _DSML_TOOL_BLOCK_RE = re.compile(
     r"<\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*tool_calls\s*>.*?"
     r"<\s*/\s*[|｜]{2}\s*DSML\s*[|｜]{2}\s*tool_calls\s*>",
@@ -1017,9 +1019,7 @@ def _source_provenance_for_turn(
 
 
 _PLAIN_CHOICE_OPTION_RE = re.compile(r"(?im)^\s*(?:[-*]\s*)?([A-D])[\).:：]\s+\S+")
-_PLAIN_TRUE_FALSE_RE = re.compile(
-    r"(?i)\b(true\s*/\s*false|true or false|判断题|正确还是错误)\b"
-)
+_PLAIN_TRUE_FALSE_RE = re.compile(r"(?i)\b(true\s*/\s*false|true or false|判断题|正确还是错误)\b")
 _GENERIC_LEARNING_MENU_RE = re.compile(
     r"(?i)\b(what subject|what topic|would you like to learn|tell me what .*learn)\b"
     r"|想学.*什么|学习.*主题"

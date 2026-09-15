@@ -6,9 +6,7 @@ from pathlib import Path
 
 import pytest
 
-FIXTURE_ROOT = (
-    Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
-)
+FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
 
 
 @pytest.fixture()
@@ -133,6 +131,7 @@ def test_learning_twin_flow_fallback_keeps_composition_intent(
     assert result.get("source") == "tutor_local_fallback"
     assert result.get("composition_intent") == "learn_then_practice"
     assert result["summary"].get("composition_intent") == "learn_then_practice"
+
 
 def test_require_packs_root_ok(plugins_root: Path) -> None:
     from cognispheretutor.integrations.cognisphere.handshake_client import require_packs_root

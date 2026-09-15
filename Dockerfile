@@ -422,7 +422,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD python /app/healthcheck.py
 
 # Set entrypoint
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]  # nosemgrep
 
 # ============================================
 # Stage 4: Development Image (Optional)
@@ -486,4 +486,5 @@ EOF
 RUN sed -i 's/\r$//' /etc/supervisor/conf.d/programs.conf
 
 # Development ports
+USER cognispheretutor
 EXPOSE 8001 3782

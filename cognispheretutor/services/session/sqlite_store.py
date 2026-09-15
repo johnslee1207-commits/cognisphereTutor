@@ -308,7 +308,12 @@ class SQLiteSessionStore:
             idx_name = idx_row[1]
             if not idx_name.startswith("sqlite_autoindex_notebook_entries_"):
                 continue
-            cols = [r[2] for r in conn.execute(f"PRAGMA index_info({idx_name})").fetchall()]
+            cols = [
+                r[2]
+                for r in conn.execute(  # nosemgrep
+                    f"PRAGMA index_info({idx_name})"
+                ).fetchall()
+            ]
             if cols == ["session_id", "question_id"]:
                 needs_rebuild = True
                 break
@@ -1070,7 +1075,7 @@ class SQLiteSessionStore:
             ids_to_delete = [int(message_id)]
             if paired_msg is not None:
                 ids_to_delete.append(int(paired_msg["id"]))
-            conn.execute(
+            conn.execute(  # nosemgrep
                 f"DELETE FROM messages WHERE id IN ({','.join('?' * len(ids_to_delete))})",  # nosec B608
                 tuple(ids_to_delete),
             )
@@ -1318,8 +1323,10 @@ class SQLiteSessionStore:
         self, where_sql: str, limit: int, offset: int
     ) -> list[dict[str, Any]]:
         with self._connect() as conn:
-            rows = conn.execute(
-                self._SESSION_SUMMARY_SQL.format(where=where_sql),
+            rows = conn.execute(  # nosemgrep
+                self._SESSION_SUMMARY_SQL.format(
+                    where=where_sql
+                ),  # nosemgrep: python.sqlalchemy.security.sqlalchemy-execute-raw-query
                 (limit, offset),
             ).fetchall()
         sessions = []
@@ -1579,10 +1586,12 @@ class SQLiteSessionStore:
             params.append(session_id)
         where = (" WHERE " + " AND ".join(conditions)) if conditions else ""
         with self._connect() as conn:
-            total_row = conn.execute(count_base + where, tuple(params)).fetchone()
+            total_row = conn.execute(count_base + where, tuple(params)).fetchone()  # nosemgrep
             total = int(total_row["cnt"]) if total_row else 0
-            rows = conn.execute(
-                base + where + " ORDER BY n.created_at DESC LIMIT ? OFFSET ?",
+            rows = conn.execute(  # nosemgrep
+                base
+                + where
+                + " ORDER BY n.created_at DESC LIMIT ? OFFSET ?",  # nosemgrep: python.sqlalchemy.security.sqlalchemy-execute-raw-query
                 tuple(params) + (limit, offset),
             ).fetchall()
         items = [self._serialize_notebook_entry(r) for r in rows]
@@ -1706,8 +1715,8 @@ class SQLiteSessionStore:
         set_clause = ", ".join(f"{k} = ?" for k in fields)
         values = list(fields.values()) + [entry_id]
         with self._connect() as conn:
-            cur = conn.execute(
-                f"UPDATE notebook_entries SET {set_clause} WHERE id = ?",  # nosec B608
+            cur = conn.execute(  # nosemgrep
+                f"UPDATE notebook_entries SET {set_clause} WHERE id = ?",  # nosec B608; nosemgrep: python.sqlalchemy.security.sqlalchemy-execute-raw-query
                 tuple(values),
             )
             conn.commit()

@@ -251,9 +251,7 @@ async def test_status_start_action_clears_stale_pending_question(path_id):
             },
         ],
     )
-    first_status = json.loads(
-        (await MasteryStatusTool().execute(_mastery_path_id=path_id)).content
-    )
+    first_status = json.loads((await MasteryStatusTool().execute(_mastery_path_id=path_id)).content)
     await MasteryQuizTool().execute(
         _mastery_path_id=path_id,
         knowledge_point_id=first_status["next"]["knowledge_point_id"],
@@ -288,10 +286,7 @@ async def test_visual_tool_renders_requested_mechanical_template(path_id):
                 "name": "ETI / IBEW Local 11 Apprenticeship Entrance",
                 "knowledge_points": [
                     {
-                        "name": (
-                            "Mechanical reasoning: force, levers, pulleys, gears, "
-                            "and motion"
-                        ),
+                        "name": ("Mechanical reasoning: force, levers, pulleys, gears, and motion"),
                         "type": "concept",
                     }
                 ],

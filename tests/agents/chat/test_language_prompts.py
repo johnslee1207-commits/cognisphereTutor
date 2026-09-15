@@ -89,9 +89,7 @@ def test_cognisphere_mastery_prompt_binds_to_local_pack(
         "cognispheretutor.agents.chat.agentic_pipeline.get_tool_registry",
         lambda: FakeRegistry(),
     )
-    fixture_root = (
-        Path(__file__).resolve().parents[2] / "fixtures" / "cognisphere_learning_plugins"
-    )
+    fixture_root = Path(__file__).resolve().parents[2] / "fixtures" / "cognisphere_learning_plugins"
     monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(fixture_root))
 
     from cognispheretutor.core.context import UnifiedContext

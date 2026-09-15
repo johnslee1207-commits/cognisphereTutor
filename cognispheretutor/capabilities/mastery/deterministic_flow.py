@@ -9,8 +9,8 @@ import asyncio
 import json
 import re
 import time
-import uuid
 from typing import Any
+import uuid
 
 from cognispheretutor.capabilities.mastery.tools import (
     next_objective_for_start_point,
@@ -32,7 +32,6 @@ from cognispheretutor.learning.service import LearningService
 from cognispheretutor.learning.storage import LearningStore
 from cognispheretutor.tools.ask_user import build_ask_user_payload
 
-
 _FLOW_MESSAGES = {
     "continue",
     "go on",
@@ -46,7 +45,9 @@ _FLOW_MESSAGES = {
     "开始",
     "学习",
 }
-_ANSWER_RE = re.compile(r"(?i)^\s*(?:answer\s*)?(?:option\s*)?([a-h]|true|false|t|f|yes|no|对|错|正确|错误)\s*$")
+_ANSWER_RE = re.compile(
+    r"(?i)^\s*(?:answer\s*)?(?:option\s*)?([a-h]|true|false|t|f|yes|no|对|错|正确|错误)\s*$"
+)
 
 
 async def maybe_run_deterministic_mastery_flow(
@@ -126,7 +127,9 @@ async def _run_flow_cycles(
             service.clear_pending_question(progress)
             progress = service.get_or_create(path_id)
         if progress.pending_question is not None:
-            answered = answer or await _ask_existing_pending(context, stream, progress.pending_question)
+            answered = answer or await _ask_existing_pending(
+                context, stream, progress.pending_question
+            )
             if not answered:
                 return
             grade = _grade_pending(
@@ -348,10 +351,7 @@ async def _ask_existing_pending(
 
 async def _emit_ask_user(stream: StreamBus, pending: PendingQuestion) -> None:
     labels = _option_labels(pending.options)
-    options = [
-        {"label": label, "description": body}
-        for label, body in labels
-    ]
+    options = [{"label": label, "description": body} for label, body in labels]
     payload, err = build_ask_user_payload(
         questions=[
             {
@@ -476,7 +476,9 @@ def _question_from_grounding(
     )
 
 
-def _grounding_items(domain: str, objective: dict[str, Any], learner_goal: str) -> list[dict[str, Any]]:
+def _grounding_items(
+    domain: str, objective: dict[str, Any], learner_goal: str
+) -> list[dict[str, Any]]:
     query = _objective_query(objective, learner_goal=learner_goal)
     ranked = _rank_items(_load_domain_items(domain), query)[:4]
     return [_render_item(item) for item in ranked]
@@ -508,7 +510,14 @@ def _lesson_text(
 def _lesson_points(items: list[dict[str, Any]]) -> list[str]:
     out: list[str] = []
     for item in items:
-        for key in ("key_takeaways", "teaching_points", "learning_outcomes", "summary", "description", "body"):
+        for key in (
+            "key_takeaways",
+            "teaching_points",
+            "learning_outcomes",
+            "summary",
+            "description",
+            "body",
+        ):
             value = item.get(key)
             values = value if isinstance(value, list) else [value]
             for raw in values:

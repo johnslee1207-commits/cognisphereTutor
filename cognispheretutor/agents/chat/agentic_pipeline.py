@@ -453,7 +453,10 @@ class AgenticChatPipeline:
             # users fail closed when no MCP grant is present, while partner
             # turns defer to their owner-scoped metadata whitelist as the
             # authority (see ``_is_partner_turn``).
-            from cognispheretutor.multi_user.tool_access import allowed_mcp_tools, combine_whitelists
+            from cognispheretutor.multi_user.tool_access import (
+                allowed_mcp_tools,
+                combine_whitelists,
+            )
 
             raw_filter = context.metadata.get("mcp_tools_filter")
             caller_allowed = (

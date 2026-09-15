@@ -24,7 +24,9 @@ ALLOWED = {".txt", ".md", ".pdf", ".zip"}
 
 @pytest.fixture(autouse=True)
 def _disable_pocketbase(monkeypatch):
-    monkeypatch.setattr("cognispheretutor.services.pocketbase_client.is_pocketbase_enabled", lambda: False)
+    monkeypatch.setattr(
+        "cognispheretutor.services.pocketbase_client.is_pocketbase_enabled", lambda: False
+    )
 
 
 def _zip_upload(filename: str, entries: list[tuple[str, bytes]]) -> UploadFile:

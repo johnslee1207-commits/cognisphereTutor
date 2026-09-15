@@ -41,9 +41,7 @@ def _fail_closed(
         "renders_ui": False,
         "source": "tutor_local_fallback",
         "sot_docs": SOT_DOCS,
-        "note": (
-            "Install CognisphereLearningPlugins twin pack to drive CP Socratic flows"
-        ),
+        "note": ("Install CognisphereLearningPlugins twin pack to drive CP Socratic flows"),
     }
 
 

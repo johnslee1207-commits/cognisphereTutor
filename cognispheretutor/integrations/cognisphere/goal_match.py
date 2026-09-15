@@ -6,10 +6,10 @@ Executable code only tokenizes / scores; it never hardcodes domain names.
 
 from __future__ import annotations
 
-import json
-import re
 from functools import lru_cache
+import json
 from pathlib import Path
+import re
 from typing import Any
 
 _POLICY_NAME = "goal_match_policy.json"

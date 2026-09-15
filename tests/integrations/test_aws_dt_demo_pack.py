@@ -6,9 +6,7 @@ from pathlib import Path
 
 import pytest
 
-FIXTURE_ROOT = (
-    Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
-)
+FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
 SIBLING_LP = Path(r"D:\Projects\CognisphereLearningPlugins")
 
 
@@ -22,8 +20,8 @@ def test_verify_fail_closed_when_twin_unavailable(
     plugins_root: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import cognispheretutor.integrations.cognisphere.aws_dt_demo_pack as demo
     import cognispheretutor.integrations.cognisphere.aws_digital_twin_mastery_client as mastery
+    import cognispheretutor.integrations.cognisphere.aws_dt_demo_pack as demo
 
     def _boom(self, **kwargs):  # noqa: ANN001, ARG001
         raise ImportError("no twin")

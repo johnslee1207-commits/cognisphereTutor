@@ -1,0 +1,158 @@
+{
+  "contract_id": "deeptutor.openmaic.course_runtime.v1",
+  "description": "Course runtime contract for DeepTutor-owned learning evidence and external course experience runtimes such as OpenMAIC.",
+  "required_manifest_fields": [
+    "course_id",
+    "version",
+    "locale",
+    "audience_profile",
+    "source_pack_version",
+    "competency_graph_version",
+    "risk_level",
+    "approval_status",
+    "lessons"
+  ],
+  "learning_objective_required_fields": [
+    "objective_id",
+    "statement",
+    "domain",
+    "level",
+    "prerequisites",
+    "source_refs",
+    "assessment_refs",
+    "lab_refs",
+    "mastery_threshold"
+  ],
+  "weak_objective_verbs": [
+    "understand",
+    "know",
+    "learn",
+    "familiar",
+    "be familiar",
+    "理解",
+    "了解",
+    "熟悉",
+    "知道",
+    "学习"
+  ],
+  "observable_objective_verbs": [
+    "explain",
+    "calculate",
+    "configure",
+    "diagnose",
+    "compare",
+    "execute",
+    "identify",
+    "justify",
+    "verify",
+    "解释",
+    "计算",
+    "配置",
+    "诊断",
+    "比较",
+    "执行",
+    "识别",
+    "论证",
+    "核验"
+  ],
+  "scene_kinds": [
+    "orient",
+    "concept",
+    "observe",
+    "diagnose",
+    "execute_lab",
+    "reflect_evidence"
+  ],
+  "openmaic_scene_types": [
+    "slide",
+    "quiz",
+    "interactive",
+    "pbl"
+  ],
+  "learning_kind_to_openmaic_type": {
+    "orient": "slide",
+    "concept": "slide",
+    "observe": "interactive",
+    "diagnose": "quiz",
+    "execute_lab": "pbl",
+    "reflect_evidence": "quiz"
+  },
+  "pipeline_stages": [
+    "ingest",
+    "source_verify",
+    "objective_compile",
+    "lesson_plan",
+    "scene_generate",
+    "assessment_generate",
+    "lab_bind",
+    "quality_gate",
+    "publish",
+    "observe_and_improve"
+  ],
+  "event_types": [
+    "session.started",
+    "scene.viewed",
+    "question.answered",
+    "hint.requested",
+    "discussion.joined",
+    "lab.executed",
+    "artifact.submitted",
+    "objective.assessed"
+  ],
+  "export_formats": [
+    "pptx",
+    "html",
+    "maic-zip"
+  ],
+  "export_route_contract": {
+    "status": "external_service_required",
+    "owner": "OpenMAIC app endpoint or dedicated render/export service",
+    "request_method": "POST",
+    "request_body_fields": [
+      "stageId",
+      "courseId",
+      "version",
+      "format",
+      "profile"
+    ],
+    "response_artifact_id_fields": [
+      "artifact_id",
+      "artifactId",
+      "id",
+      "jobId"
+    ],
+    "response_uri_fields": [
+      "url",
+      "download_url",
+      "downloadUrl",
+      "artifact_url",
+      "artifactUrl"
+    ],
+    "notes": "OpenMAIC reference currently implements PPTX and classroom ZIP export in browser-side hooks; MP4 rendering is exposed through render-service. DeepTutor must call a configured export route for PPTX/HTML/MAIC-ZIP instead of treating document storage as an export artifact."
+  },
+  "required_learning_event_fields": [
+    "event_type",
+    "client_time",
+    "server_time",
+    "course_id",
+    "course_version",
+    "objective_ids",
+    "learner_hash",
+    "trace_id"
+  ],
+  "source_authority_levels": [
+    "S0",
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+  ],
+  "release_blocking_gates": {
+    "G0 Source": "High-risk claims require S0/S1 source references.",
+    "G1 Objective": "Lessons and scenes must map to learning objectives.",
+    "G3 Assessment": "Assessment references must be independent from teaching answer chains.",
+    "G4 Lab": "Hands-on objectives must bind execution evidence.",
+    "G6 Security": "Interactive HTML must run in sandboxed runtime profiles.",
+    "G8 Reproducibility": "Course version and generation inputs must be replayable."
+  }
+}

@@ -16,10 +16,12 @@ const ROUTE_BUDGETS_KB = {
 };
 
 const ROOT_SHELL_BUDGET_KB = 220;
+const APP_OUTPUT_PREFIX = `${APP_OUTPUT_DIR}${path.sep}`;
 
 function walkManifestFiles(rootDir) {
   const entries = [];
   for (const item of fs.readdirSync(rootDir, { withFileTypes: true })) {
+    // nosemgrep: javascript.lang.security.audit.path-traversal.path-join-resolve-traversal.path-join-resolve-traversal
     const fullPath = path.join(rootDir, item.name);
     if (item.isDirectory()) {
       entries.push(...walkManifestFiles(fullPath));
@@ -51,7 +53,11 @@ function normalizePublicRoute(manifestKey) {
 }
 
 function resolveChunkSize(chunkPath) {
-  const filePath = path.join(APP_OUTPUT_DIR, chunkPath.replace(/^\/+/, ""));
+  const relativeChunkPath = chunkPath.replace(/^\/+/, "");
+  const filePath = path.resolve(APP_OUTPUT_DIR, relativeChunkPath);
+  if (filePath !== APP_OUTPUT_DIR && !filePath.startsWith(APP_OUTPUT_PREFIX)) {
+    throw new Error(`Manifest chunk escapes .next output: ${chunkPath}`);
+  }
   return fs.existsSync(filePath) ? fs.statSync(filePath).size : 0;
 }
 

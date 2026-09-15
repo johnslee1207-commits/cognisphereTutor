@@ -22,7 +22,10 @@ from cognispheretutor.partners.channels.base import BaseChannel
 from cognispheretutor.partners.config.paths import get_media_dir
 from cognispheretutor.partners.config.schema import DeliveryOverrides, StreamingSupport
 from cognispheretutor.partners.helpers import split_message
-from cognispheretutor.services.partners.commands import build_partner_help_text, partner_command_palette
+from cognispheretutor.services.partners.commands import (
+    build_partner_help_text,
+    partner_command_palette,
+)
 
 TELEGRAM_MAX_MESSAGE_LEN = 4000  # Telegram message character limit
 TELEGRAM_HTML_MAX_LEN = 4096  # Hard API limit for rendered HTML payloads

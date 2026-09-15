@@ -52,7 +52,10 @@ from cognispheretutor.core.agentic.usage import (
 from cognispheretutor.core.stream_bus import StreamBus
 from cognispheretutor.core.trace import merge_trace_metadata
 from cognispheretutor.services.llm import clean_thinking_tags
-from cognispheretutor.services.llm.multimodal import should_degrade_to_text, strip_image_parts_inplace
+from cognispheretutor.services.llm.multimodal import (
+    should_degrade_to_text,
+    strip_image_parts_inplace,
+)
 from cognispheretutor.services.llm.request_compat import (
     is_image_input_unsupported,
     is_stream_options_unsupported,

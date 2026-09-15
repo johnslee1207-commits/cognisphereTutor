@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import types
 from pathlib import Path
+import types
 
 import pytest
 
-FIXTURE_ROOT = (
-    Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
-)
+FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
 SIBLING_LP = Path(r"D:\Projects\CognisphereLearningPlugins")
 
 
@@ -28,9 +26,7 @@ def test_cp_socratic_tutor_status_forwards_to_twin(
         cp_socratic_tutor_status,
     )
 
-    fake_mod = types.ModuleType(
-        "cognisphere_plugins.aws_certification_twin.cp_socratic_tutor"
-    )
+    fake_mod = types.ModuleType("cognisphere_plugins.aws_certification_twin.cp_socratic_tutor")
 
     def _status(**kwargs):  # noqa: ANN001, ARG001
         return {
@@ -118,9 +114,11 @@ def test_live_sibling_cp06_status_when_available(monkeypatch: pytest.MonkeyPatch
     status = cp_socratic_tutor_status(root=SIBLING_LP)
     if not status.get("ok"):
         pytest.skip(f"twin CP-06 not importable: {status.get('issues')}")
-    assert status["phase_id"] == "CP-06" or status.get("validation", {}).get(
-        "phase_id"
-    ) == "CP-06" or status.get("roadmap_band") == "CP"
+    assert (
+        status["phase_id"] == "CP-06"
+        or status.get("validation", {}).get("phase_id") == "CP-06"
+        or status.get("roadmap_band") == "CP"
+    )
 
     started = start_cp_tutor_session("cp_pkg_ec2_vs_lambda", root=SIBLING_LP)
     assert started.get("ok") is True, started.get("issues")

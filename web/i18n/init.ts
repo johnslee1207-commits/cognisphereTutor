@@ -1,7 +1,5 @@
-import i18n, { type Resource } from "i18next";
+import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-
-import enApp from "@/locales/en/app.json";
 
 export type AppLanguage = "en" | "zh";
 
@@ -13,16 +11,19 @@ export function normalizeLanguage(lang: unknown): AppLanguage {
 }
 
 let _initialized = false;
+const loadedLanguages = new Set<AppLanguage>();
+const pendingLanguageLoads = new Map<AppLanguage, Promise<void>>();
+
+const languageLoaders: Record<AppLanguage, () => Promise<Record<string, string>>> = {
+  en: async () => (await import("@/locales/en/app.json")).default,
+  zh: async () => (await import("@/locales/zh/app.json")).default,
+};
 
 export function initI18n(language?: unknown) {
   if (_initialized) return i18n;
 
-  const resources: Resource = {
-    en: { app: enApp },
-  };
-
   i18n.use(initReactI18next).init({
-    resources,
+    resources: {},
     lng: normalizeLanguage(language),
     fallbackLng: "en",
     // Use a single default namespace to keep lookups simple.
@@ -33,6 +34,9 @@ export function initI18n(language?: unknown) {
     interpolation: {
       escapeValue: false,
     },
+    react: {
+      useSuspense: false,
+    },
     returnEmptyString: false,
     returnNull: false,
   });
@@ -42,9 +46,23 @@ export function initI18n(language?: unknown) {
 }
 
 export async function ensureLanguage(language: AppLanguage) {
-  if (i18n.hasResourceBundle(language, "app")) return;
-  if (language === "zh") {
-    const zhApp = (await import("@/locales/zh/app.json")).default;
-    i18n.addResourceBundle("zh", "app", zhApp, true, true);
+  const normalized = normalizeLanguage(language);
+  if (loadedLanguages.has(normalized) && i18n.hasResourceBundle(normalized, "app")) {
+    return;
   }
+
+  const existingLoad = pendingLanguageLoads.get(normalized);
+  if (existingLoad) {
+    await existingLoad;
+    return;
+  }
+
+  const load = languageLoaders[normalized]().then((appMessages) => {
+    i18n.addResourceBundle(normalized, "app", appMessages, true, true);
+    loadedLanguages.add(normalized);
+  }).finally(() => {
+    pendingLanguageLoads.delete(normalized);
+  });
+  pendingLanguageLoads.set(normalized, load);
+  await load;
 }

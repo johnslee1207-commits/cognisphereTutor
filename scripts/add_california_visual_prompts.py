@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-
 BUNDLE_PATH = Path(
     "cognispheretutor/integrations/cognisphere/bundled_packs/"
     "california_electrical_career_bundle.json"

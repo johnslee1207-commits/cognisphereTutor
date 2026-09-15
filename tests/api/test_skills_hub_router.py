@@ -61,7 +61,10 @@ def _mock_provider() -> ClawHubProvider:
                         "tags": ["tutor"],
                         "stats": {"downloads": 8, "stars": 2},
                     },
-                    "owner": {"displayName": "cognisphereTutor", "htmlUrl": "https://cognispheretutor.info"},
+                    "owner": {
+                        "displayName": "cognisphereTutor",
+                        "htmlUrl": "https://cognispheretutor.info",
+                    },
                     "distTags": {"latest": "1.0.0"},
                 },
             )

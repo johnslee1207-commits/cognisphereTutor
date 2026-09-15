@@ -24,7 +24,10 @@ from cognispheretutor.services.rag.factory import (
 from cognispheretutor.services.rag.index_versioning import resolve_storage_dir_for_read
 from cognispheretutor.services.rag.pipelines.graphrag import config as gr_config
 from cognispheretutor.services.rag.pipelines.graphrag import engine, ingestion, storage
-from cognispheretutor.services.rag.pipelines.graphrag.pipeline import GraphRagPipeline, _context_to_sources
+from cognispheretutor.services.rag.pipelines.graphrag.pipeline import (
+    GraphRagPipeline,
+    _context_to_sources,
+)
 
 # --------------------------------------------------------------------------- #
 # factory routing

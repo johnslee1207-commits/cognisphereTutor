@@ -346,7 +346,8 @@ def _all_providers_except(featured: set[str]) -> list[ProviderSpec]:
     return [
         spec
         for spec in PROVIDERS
-        if spec.name not in featured and not spec.is_oauth  # OAuth flows use `cognispheretutor login`
+        if spec.name not in featured
+        and not spec.is_oauth  # OAuth flows use `cognispheretutor login`
     ]
 
 

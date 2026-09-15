@@ -1,0 +1,4 @@
+# NLTK 3.10.3 is the latest PyPI release as of 2026-09-14 and is pulled
+# transitively by llama-index. Tutor does not expose NLTK model import/export
+# paths to untrusted users; revisit with osv-scanner.toml on 2026-12-14.
+CVE-2026-81726

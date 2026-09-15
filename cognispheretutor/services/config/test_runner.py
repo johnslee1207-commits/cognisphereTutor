@@ -515,7 +515,9 @@ class ConfigTestRunner:
     async def _test_imagegen(self, run: TestRun, catalog: dict[str, Any]) -> None:
         import base64
 
-        from cognispheretutor.services.config.provider_runtime import resolve_imagegen_runtime_config
+        from cognispheretutor.services.config.provider_runtime import (
+            resolve_imagegen_runtime_config,
+        )
         from cognispheretutor.services.imagegen import generate_image
 
         run.emit("info", "Loading image-generation config from the active catalog selection.")
@@ -544,7 +546,9 @@ class ConfigTestRunner:
         )
 
     async def _test_videogen(self, run: TestRun, catalog: dict[str, Any]) -> None:
-        from cognispheretutor.services.config.provider_runtime import resolve_videogen_runtime_config
+        from cognispheretutor.services.config.provider_runtime import (
+            resolve_videogen_runtime_config,
+        )
         from cognispheretutor.services.videogen import probe_video
 
         run.emit("info", "Loading video-generation config from the active catalog selection.")

@@ -18,9 +18,7 @@ from cognispheretutor.learning.cognisphere_seed import (
 )
 from cognispheretutor.learning.storage import LearningStore
 
-FIXTURE_ROOT = (
-    Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
-)
+FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
 
 
 def test_mastery_path_id_helpers() -> None:
@@ -116,9 +114,9 @@ def test_ability_radar_path_detail_keeps_weak_domains_scoped(
     body = radar.json()
     assert body["selected"]["path_id"] == "csphere-california_electrical_career"
     assert body["weak_domains"]
-    assert {
-        item["path_id"] for item in body["weak_domains"]
-    } == {"csphere-california_electrical_career"}
+    assert {item["path_id"] for item in body["weak_domains"]} == {
+        "csphere-california_electrical_career"
+    }
 
 
 def test_seed_payload_requires_domain() -> None:
@@ -163,7 +161,7 @@ def test_modules_from_knowledge_uses_course_overview_as_first_module() -> None:
                     "guide_id": "ai_infra.course_guide.v1",
                     "title": "How to Learn AI Infrastructure with Tutor and the Twin",
                     "learner_contract": "The learner advances in order.",
-                }
+                },
             },
             "learning_loop": ["orient", "concept"],
         },
@@ -199,8 +197,8 @@ def test_modules_from_knowledge_maps_assessments_and_references() -> None:
     )
 
     by_name = {module.name: module for module in modules}
-    assert by_name["Practice problems"].knowledge_points[0].id.endswith(
-        "apcalc-assess-related_rates"
+    assert (
+        by_name["Practice problems"].knowledge_points[0].id.endswith("apcalc-assess-related_rates")
     )
     assert by_name["Practice problems"].knowledge_points[0].name == "Related Rates FRQ"
     assert by_name["Patterns"].knowledge_points[0].name == "Optimization"
@@ -227,12 +225,8 @@ def test_modules_from_knowledge_maps_lightweight_learning_loop() -> None:
 def test_modules_from_knowledge_maps_thin_certification_surface() -> None:
     modules = modules_from_knowledge(
         {
-            "certification_tracks": [
-                {"track_id": "aws.clf-c02", "label": "Cloud Practitioner"}
-            ],
-            "topic_families": [
-                {"topic_family_id": "security", "label": "Security and Identity"}
-            ],
+            "certification_tracks": [{"track_id": "aws.clf-c02", "label": "Cloud Practitioner"}],
+            "topic_families": [{"topic_family_id": "security", "label": "Security and Identity"}],
             "learning_fixture": {
                 "excerpts": [
                     {
@@ -440,10 +434,7 @@ def test_bundled_pack_status_and_import_without_external_plugins(
         },
     )
     assert electrical_recommended.status_code == 200, electrical_recommended.text
-    assert (
-        "california_electrical_career"
-        in electrical_recommended.json()["recommended_domains"]
-    )
+    assert "california_electrical_career" in electrical_recommended.json()["recommended_domains"]
 
 
 def test_bundled_pack_status_reports_import_update_available(
@@ -481,9 +472,9 @@ def test_bundled_pack_status_reports_import_update_available(
 
     status = client.get("/api/v1/learning/cognisphere/status")
     assert status.status_code == 200, status.text
-    plugin = {
-        item["domain"]: item for item in status.json()["plugins"]
-    }["california_electrical_career"]
+    plugin = {item["domain"]: item for item in status.json()["plugins"]}[
+        "california_electrical_career"
+    ]
     import_status = plugin["distribution"]["import_status"]
     assert import_status["installed"] is True
     assert import_status["update_available"] is True
@@ -582,14 +573,12 @@ def test_california_electrical_pack_metadata_counts_match_content() -> None:
     entrance_scenarios = [
         item
         for item in knowledge["scenario_cards"]
-        if "entrance" in json.dumps(item).lower()
-        or "apprentice" in json.dumps(item).lower()
+        if "entrance" in json.dumps(item).lower() or "apprentice" in json.dumps(item).lower()
     ]
     entrance_lessons = [
         item
         for item in knowledge["lesson_cards"]
-        if "entrance" in json.dumps(item).lower()
-        or "apprentice" in json.dumps(item).lower()
+        if "entrance" in json.dumps(item).lower() or "apprentice" in json.dumps(item).lower()
     ]
 
     assert metadata["scenario_card_count"] >= 123
@@ -667,9 +656,7 @@ def test_runtime_plan_fallback_seeds_sparse_domain(
     assert any(module["name"] == "Plugin runtime plan" for module in path["modules"])
 
 
-def test_cross_domain_and_compose_api(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_cross_domain_and_compose_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(FIXTURE_ROOT))
     monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
 
@@ -693,14 +680,10 @@ def test_cross_domain_and_compose_api(
     assert composed.status_code == 200, composed.text
     compose_body = composed.json()
     assert compose_body.get("phase") == "DT-P6"
-    assert any(
-        (c.get("domain") == "leetcode") for c in (compose_body.get("contexts") or [])
-    )
+    assert any((c.get("domain") == "leetcode") for c in (compose_body.get("contexts") or []))
 
 
-def test_recommend_from_goal_api(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_recommend_from_goal_api(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("COGNISPHERE_LEARNING_PLUGINS_ROOT", str(FIXTURE_ROOT))
     monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path / "imports"))
 

@@ -155,8 +155,12 @@ def test_embedding_func_returns_numpy_array(monkeypatch) -> None:
 
             return embed
 
-    monkeypatch.setattr("cognispheretutor.services.embedding.get_embedding_config", lambda: _Config())
-    monkeypatch.setattr("cognispheretutor.services.embedding.get_embedding_client", lambda: _Client())
+    monkeypatch.setattr(
+        "cognispheretutor.services.embedding.get_embedding_config", lambda: _Config()
+    )
+    monkeypatch.setattr(
+        "cognispheretutor.services.embedding.get_embedding_client", lambda: _Client()
+    )
 
     embedding = lr_config.build_embedding_func()
     vectors = asyncio.run(embedding.func(["a", "b"]))

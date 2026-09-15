@@ -6,7 +6,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-
 BUNDLE_PATH = Path(
     "cognispheretutor/integrations/cognisphere/bundled_packs/"
     "california_electrical_career_bundle.json"
@@ -218,14 +217,54 @@ def new_lessons() -> list[dict[str, Any]]:
 
 def new_blueprints() -> list[dict[str, Any]]:
     return [
-        _blueprint("cec-practice-entrance-10-minute-arithmetic-sprint", "10-minute arithmetic sprint", "Generate 12 original no-calculator items covering decimals, fractions, percentages, ratios, and unit conversion.", ["timed sprint", "answer-only first pass", "worked review by arithmetic tag"]),
-        _blueprint("cec-practice-entrance-algebra-function-table", "Algebra and function-table set", "Generate original substitution, solve-for-x, slope, and table-rule questions.", ["untimed method drill", "timed 8-item set", "wrong-rule remediation"]),
-        _blueprint("cec-practice-entrance-reading-evidence-set", "Reading evidence set", "Generate short technical passages with main idea, detail, inference, and qualifier traps.", ["passage annotation", "multiple-choice check", "one-sentence evidence answer"]),
-        _blueprint("cec-practice-entrance-mechanical-trace-set", "Mechanical trace set", "Generate lever, pulley, gear, wheel, inclined-plane, and motion-direction items.", ["visual trace", "direction-only drill", "force-distance explanation"]),
-        _blueprint("cec-practice-entrance-spatial-folding-set", "Spatial folding set", "Generate original folding, rotation, reflection, and unfolded-pattern prompts.", ["slow unfold", "timed spatial set", "reflection-vs-rotation remediation"]),
-        _blueprint("cec-practice-entrance-half-mock", "Entrance half-mock", "Generate a balanced half-length practice block across math, numerical, reading, mechanical, and spatial lanes.", ["timed mixed block", "skip-and-return pacing", "error heatmap review"]),
-        _blueprint("cec-practice-entrance-full-mock-rehearsal", "Entrance full-mock rehearsal", "Generate a longer original rehearsal with section pacing, confidence marking, and post-test triage.", ["timed rehearsal", "confidence marking", "readiness gate"]),
-        _blueprint("cec-practice-entrance-pef-interview-bridge", "PEF-to-interview bridge", "Generate prompts that convert honest experience evidence into concise interview-ready stories.", ["STAR evidence drafting", "claim-evidence check", "two-minute spoken rehearsal"]),
+        _blueprint(
+            "cec-practice-entrance-10-minute-arithmetic-sprint",
+            "10-minute arithmetic sprint",
+            "Generate 12 original no-calculator items covering decimals, fractions, percentages, ratios, and unit conversion.",
+            ["timed sprint", "answer-only first pass", "worked review by arithmetic tag"],
+        ),
+        _blueprint(
+            "cec-practice-entrance-algebra-function-table",
+            "Algebra and function-table set",
+            "Generate original substitution, solve-for-x, slope, and table-rule questions.",
+            ["untimed method drill", "timed 8-item set", "wrong-rule remediation"],
+        ),
+        _blueprint(
+            "cec-practice-entrance-reading-evidence-set",
+            "Reading evidence set",
+            "Generate short technical passages with main idea, detail, inference, and qualifier traps.",
+            ["passage annotation", "multiple-choice check", "one-sentence evidence answer"],
+        ),
+        _blueprint(
+            "cec-practice-entrance-mechanical-trace-set",
+            "Mechanical trace set",
+            "Generate lever, pulley, gear, wheel, inclined-plane, and motion-direction items.",
+            ["visual trace", "direction-only drill", "force-distance explanation"],
+        ),
+        _blueprint(
+            "cec-practice-entrance-spatial-folding-set",
+            "Spatial folding set",
+            "Generate original folding, rotation, reflection, and unfolded-pattern prompts.",
+            ["slow unfold", "timed spatial set", "reflection-vs-rotation remediation"],
+        ),
+        _blueprint(
+            "cec-practice-entrance-half-mock",
+            "Entrance half-mock",
+            "Generate a balanced half-length practice block across math, numerical, reading, mechanical, and spatial lanes.",
+            ["timed mixed block", "skip-and-return pacing", "error heatmap review"],
+        ),
+        _blueprint(
+            "cec-practice-entrance-full-mock-rehearsal",
+            "Entrance full-mock rehearsal",
+            "Generate a longer original rehearsal with section pacing, confidence marking, and post-test triage.",
+            ["timed rehearsal", "confidence marking", "readiness gate"],
+        ),
+        _blueprint(
+            "cec-practice-entrance-pef-interview-bridge",
+            "PEF-to-interview bridge",
+            "Generate prompts that convert honest experience evidence into concise interview-ready stories.",
+            ["STAR evidence drafting", "claim-evidence check", "two-minute spoken rehearsal"],
+        ),
     ]
 
 
@@ -242,8 +281,15 @@ def new_activities() -> list[dict[str, Any]]:
                 "Run a five-question mixed set.",
                 "Record one error tag and one fix.",
             ],
-            "learner_action": ["Answer quickly.", "Review only missed or guessed items.", "Name the next drill lane."],
-            "feedback_rule": ["Prefer immediate feedback.", "Move on after one correct quick check unless confidence is low."],
+            "learner_action": [
+                "Answer quickly.",
+                "Review only missed or guessed items.",
+                "Name the next drill lane.",
+            ],
+            "feedback_rule": [
+                "Prefer immediate feedback.",
+                "Move on after one correct quick check unless confidence is low.",
+            ],
             "exam_alignment": ["Builds section switching and pacing for aptitude testing."],
         },
         {
@@ -258,7 +304,9 @@ def new_activities() -> list[dict[str, Any]]:
                 "Select the matching option and cite the phrase.",
             ],
             "learner_action": ["Provide an answer and the evidence phrase."],
-            "feedback_rule": ["Grade unsupported claims as reading-evidence errors even if they sound plausible."],
+            "feedback_rule": [
+                "Grade unsupported claims as reading-evidence errors even if they sound plausible."
+            ],
             "exam_alignment": ["Matches reading-comprehension selection logic."],
         },
         {
@@ -288,7 +336,9 @@ def new_activities() -> list[dict[str, Any]]:
                 "Review misses by accuracy and confidence.",
             ],
             "learner_action": ["Submit answers plus confidence marks."],
-            "feedback_rule": ["Prioritize high-confidence misses and slow correct answers in remediation."],
+            "feedback_rule": [
+                "Prioritize high-confidence misses and slow correct answers in remediation."
+            ],
             "exam_alignment": ["Builds reliable scoring behavior under time pressure."],
         },
     ]
@@ -399,41 +449,369 @@ def new_sequences() -> list[dict[str, Any]]:
 
 def new_scenarios() -> list[dict[str, Any]]:
     return [
-        _scenario("cec-scenario-entrance-decimal-wire-cost", "Decimal multiplication: wire cost", "Wire costs $0.18 per foot. What is the cost of 25 feet?", ["A) $0.45", "B) $4.50", "C) $45.00", "D) $450.00"], "18 cents times 25 is 450 cents, or $4.50.", ["A misses a decimal place.", "C is ten times too large.", "D is one hundred times too large."]),
-        _scenario("cec-scenario-entrance-percent-increase-hours", "Percent increase: practice hours", "A learner increases daily practice from 40 minutes to 50 minutes. What is the percent increase?", ["A) 10%", "B) 20%", "C) 25%", "D) 50%"], "The increase is 10 minutes. 10 divided by the original 40 is 25%.", ["A uses the increase as raw points.", "B divides by 50.", "D confuses 10 with half of 20."]),
-        _scenario("cec-scenario-entrance-ratio-crews", "Ratio: crew assignment", "For every 4 apprentices there are 3 journey workers. If 28 workers are present, how many are apprentices?", ["A) 12", "B) 14", "C) 16", "D) 21"], "The ratio has 7 parts. 28/7=4 per part. Apprentices are 4 parts, so 16.", ["12 gives journey workers.", "14 assumes half.", "21 uses 3/4 of the total."]),
-        _scenario("cec-scenario-entrance-unit-conversion-conduit", "Unit conversion: conduit length", "A piece is 7 feet 6 inches long. How many inches is that?", ["A) 42", "B) 78", "C) 84", "D) 90"], "7 feet is 84 inches; plus 6 inches is 90.", ["42 halves the feet.", "78 subtracts 6.", "84 forgets the extra 6 inches."]),
-        _scenario("cec-scenario-entrance-average-scores", "Average: practice scores", "Three scores are 72, 84, and 90. What fourth score makes the average 82?", ["A) 76", "B) 78", "C) 80", "D) 82"], "Four scores averaging 82 total 328. Current total is 246. The fourth score is 82.", ["76 uses a wrong target total.", "78 is close but low.", "80 estimates without exact total."]),
-        _scenario("cec-scenario-entrance-sequence-add", "Sequence: increasing differences", "What comes next: 3, 6, 10, 15, 21, ?", ["A) 25", "B) 27", "C) 28", "D) 30"], "The differences are +3,+4,+5,+6, so next is +7 and the answer is 28.", ["25 repeats +4.", "27 adds +6 again.", "30 jumps by +9."]),
-        _scenario("cec-scenario-entrance-function-output", "Function output", "If f(x)=2x^2-1, what is f(3)?", ["A) 11", "B) 17", "C) 18", "D) 35"], "2 times 3 squared is 18; 18 minus 1 is 17.", ["11 squares after multiplying.", "18 forgets minus 1.", "35 uses 2 times 9 plus 17."]),
-        _scenario("cec-scenario-entrance-solve-x", "Solve for x", "Solve: 3x + 5 = 20.", ["A) 3", "B) 5", "C) 8", "D) 15"], "Subtract 5 to get 15, then divide by 3 to get 5.", ["3 divides too early.", "8 adds values.", "15 stops before dividing."]),
-        _scenario("cec-scenario-entrance-table-rate", "Table rate comparison", "Crew A installs 18 devices in 3 hours. Crew B installs 20 devices in 5 hours. Which crew has the higher hourly rate?", ["A) Crew A", "B) Crew B", "C) Same rate", "D) Cannot tell"], "Crew A is 6 per hour; Crew B is 4 per hour.", ["B compares raw devices only.", "C assumes similar totals.", "D ignores hours given."]),
-        _scenario("cec-scenario-entrance-reading-qualifier", "Reading qualifier: before", "Passage: Before using a tool, the trainee must inspect the cord and report visible damage. Question: What must happen before use?", ["A) Replace every cord", "B) Inspect the cord and report visible damage", "C) Use the tool first", "D) Ask for a new task"], "The passage says inspect the cord and report visible damage before use.", ["A adds every cord replacement.", "C reverses before/after.", "D is not supported."]),
-        _scenario("cec-scenario-entrance-reading-except", "Reading qualifier: except", "Passage: The class meets Monday through Thursday. Attendance is recorded at the start of each class. Which statement is NOT supported?", ["A) Class meets on Monday", "B) Attendance is recorded", "C) Class meets on Friday", "D) Class meets on Thursday"], "Friday is not included in Monday through Thursday.", ["A is supported.", "B is supported.", "D is supported."]),
-        _scenario("cec-scenario-entrance-main-idea", "Reading main idea", "Passage: The applicant should arrive early, bring required identification, and follow staff instructions. These steps reduce delays during check-in. What is the main idea?", ["A) Check-in readiness prevents delays", "B) Identification is optional", "C) Staff instructions are unnecessary", "D) Arriving late saves time"], "The passage groups actions that reduce check-in delays.", ["B contradicts required ID.", "C contradicts instructions.", "D contradicts arriving early."]),
-        _scenario("cec-scenario-entrance-inference", "Reading inference", "Passage: If a form is incomplete, staff may ask the applicant to correct it before the next step. What can be inferred?", ["A) Complete forms help the process move forward", "B) Staff never review forms", "C) Incomplete forms are ignored", "D) The applicant skips all steps"], "If incomplete forms must be corrected before the next step, complete forms support progress.", ["B contradicts review.", "C contradicts correction.", "D invents a skip."]),
-        _scenario("cec-scenario-entrance-lever-handle", "Lever handle", "Two identical wrenches are used on the same bolt. Wrench A has a longer handle. Which usually requires less force at the hand?", ["A) Wrench A", "B) Wrench B", "C) Both require no force", "D) Handle length never matters"], "A longer handle gives more turning effect for the same force.", ["B reverses lever advantage.", "C ignores force.", "D ignores lever arm."]),
-        _scenario("cec-scenario-entrance-fixed-pulley", "Fixed pulley direction", "A rope passes over a fixed pulley. Pulling down on one side lifts the load on the other. What does the fixed pulley mainly change?", ["A) Direction of force", "B) Weight of the load to zero", "C) Material of the rope", "D) The need for support"], "A fixed pulley mainly changes pulling direction.", ["B invents zero weight.", "C is unrelated.", "D ignores the pulley support."]),
-        _scenario("cec-scenario-entrance-gear-three", "Three touching gears", "Gear A touches B, and B touches C. If A turns clockwise, which way does C turn?", ["A) Clockwise", "B) Counterclockwise", "C) It stops", "D) Direction cannot be traced"], "A reverses B; B reverses C, so C matches A.", ["B misses the second reversal.", "C invents stopping.", "D ignores traceable contacts."]),
-        _scenario("cec-scenario-entrance-belt-open", "Open belt direction", "Two pulleys are connected by an open belt that is not crossed. If the first turns clockwise, the second usually turns which way?", ["A) Clockwise", "B) Counterclockwise", "C) It always doubles speed", "D) It cannot move"], "An open belt usually keeps rotation direction.", ["B describes a crossed-belt style.", "C confuses direction and speed.", "D ignores belt transfer."]),
-        _scenario("cec-scenario-entrance-inclined-plane", "Inclined plane", "A heavy box is moved up a long ramp instead of lifted straight up. What is the main tradeoff?", ["A) Less force over more distance", "B) More force over less distance", "C) No work is needed", "D) Gravity disappears"], "A ramp can reduce required force by spreading work over longer distance.", ["B reverses the tradeoff.", "C violates work idea.", "D is impossible."]),
-        _scenario("cec-scenario-entrance-paper-one-fold", "Paper fold one time", "A square paper is folded left over right, then one hole is punched near the folded edge. After unfolding, what happens?", ["A) One hole only", "B) Two mirrored holes", "C) Four holes in a circle", "D) No holes"], "One fold creates a mirrored pair when unfolded.", ["A forgets the folded layers.", "C assumes two folds.", "D ignores the punch."]),
-        _scenario("cec-scenario-entrance-rotation-reflection", "Rotation versus reflection", "A shape is flipped over a vertical line. Which description is best?", ["A) Reflection", "B) Rotation", "C) Translation only", "D) Enlargement"], "Flipping across a line is reflection.", ["B turns around a point.", "C slides without flipping.", "D changes size."]),
-        _scenario("cec-scenario-entrance-fold-order", "Fold order", "A paper is folded twice, first horizontally then vertically. When reasoning backward, which fold should be undone first?", ["A) Vertical fold", "B) Horizontal fold", "C) Both at once", "D) Neither fold"], "Reverse operations undo the last fold first, so vertical is first to undo.", ["B undoes the first fold first.", "C loses tracking.", "D gives up."]),
-        _scenario("cec-scenario-entrance-cube-net", "Cube net adjacency", "On a cube net, two squares share an edge before folding. What is usually true after folding?", ["A) They become adjacent faces", "B) They vanish", "C) They must be opposite faces", "D) They become the same face"], "Shared-edge squares in a valid cube net usually fold into adjacent faces.", ["B is impossible.", "C confuses opposite with adjacent.", "D merges faces."]),
-        _scenario("cec-scenario-entrance-pacing-skip", "Pacing decision", "A spatial item has taken too long and easier questions remain. What is the best scoring move?", ["A) Mark it and return", "B) Spend all remaining time", "C) Quit the section", "D) Randomly change previous answers"], "Mark-and-return protects easier points and keeps momentum.", ["B risks many easy points.", "C forfeits work.", "D introduces new errors."]),
-        _scenario("cec-scenario-entrance-confidence-review", "Confidence review", "After a timed set, which miss should be reviewed first?", ["A) A high-confidence wrong answer", "B) A skipped hard item", "C) A correct sure answer", "D) The neatest solution"], "High-confidence misses reveal dangerous misconceptions.", ["B matters later but may be expected difficulty.", "C is low priority.", "D is not an error criterion."]),
-        _scenario("cec-scenario-entrance-pef-specificity", "PEF specificity", "Which PEF statement is strongest?", ["A) I am good with tools", "B) I helped repair a fence every Saturday for six weeks and tracked materials", "C) I always work harder than everyone", "D) I deserve a chance"], "Specific, honest evidence beats vague claims.", ["A is vague.", "C is broad and hard to verify.", "D is motivation without evidence."]),
+        _scenario(
+            "cec-scenario-entrance-decimal-wire-cost",
+            "Decimal multiplication: wire cost",
+            "Wire costs $0.18 per foot. What is the cost of 25 feet?",
+            ["A) $0.45", "B) $4.50", "C) $45.00", "D) $450.00"],
+            "18 cents times 25 is 450 cents, or $4.50.",
+            [
+                "A misses a decimal place.",
+                "C is ten times too large.",
+                "D is one hundred times too large.",
+            ],
+        ),
+        _scenario(
+            "cec-scenario-entrance-percent-increase-hours",
+            "Percent increase: practice hours",
+            "A learner increases daily practice from 40 minutes to 50 minutes. What is the percent increase?",
+            ["A) 10%", "B) 20%", "C) 25%", "D) 50%"],
+            "The increase is 10 minutes. 10 divided by the original 40 is 25%.",
+            [
+                "A uses the increase as raw points.",
+                "B divides by 50.",
+                "D confuses 10 with half of 20.",
+            ],
+        ),
+        _scenario(
+            "cec-scenario-entrance-ratio-crews",
+            "Ratio: crew assignment",
+            "For every 4 apprentices there are 3 journey workers. If 28 workers are present, how many are apprentices?",
+            ["A) 12", "B) 14", "C) 16", "D) 21"],
+            "The ratio has 7 parts. 28/7=4 per part. Apprentices are 4 parts, so 16.",
+            ["12 gives journey workers.", "14 assumes half.", "21 uses 3/4 of the total."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-unit-conversion-conduit",
+            "Unit conversion: conduit length",
+            "A piece is 7 feet 6 inches long. How many inches is that?",
+            ["A) 42", "B) 78", "C) 84", "D) 90"],
+            "7 feet is 84 inches; plus 6 inches is 90.",
+            ["42 halves the feet.", "78 subtracts 6.", "84 forgets the extra 6 inches."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-average-scores",
+            "Average: practice scores",
+            "Three scores are 72, 84, and 90. What fourth score makes the average 82?",
+            ["A) 76", "B) 78", "C) 80", "D) 82"],
+            "Four scores averaging 82 total 328. Current total is 246. The fourth score is 82.",
+            [
+                "76 uses a wrong target total.",
+                "78 is close but low.",
+                "80 estimates without exact total.",
+            ],
+        ),
+        _scenario(
+            "cec-scenario-entrance-sequence-add",
+            "Sequence: increasing differences",
+            "What comes next: 3, 6, 10, 15, 21, ?",
+            ["A) 25", "B) 27", "C) 28", "D) 30"],
+            "The differences are +3,+4,+5,+6, so next is +7 and the answer is 28.",
+            ["25 repeats +4.", "27 adds +6 again.", "30 jumps by +9."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-function-output",
+            "Function output",
+            "If f(x)=2x^2-1, what is f(3)?",
+            ["A) 11", "B) 17", "C) 18", "D) 35"],
+            "2 times 3 squared is 18; 18 minus 1 is 17.",
+            ["11 squares after multiplying.", "18 forgets minus 1.", "35 uses 2 times 9 plus 17."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-solve-x",
+            "Solve for x",
+            "Solve: 3x + 5 = 20.",
+            ["A) 3", "B) 5", "C) 8", "D) 15"],
+            "Subtract 5 to get 15, then divide by 3 to get 5.",
+            ["3 divides too early.", "8 adds values.", "15 stops before dividing."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-table-rate",
+            "Table rate comparison",
+            "Crew A installs 18 devices in 3 hours. Crew B installs 20 devices in 5 hours. Which crew has the higher hourly rate?",
+            ["A) Crew A", "B) Crew B", "C) Same rate", "D) Cannot tell"],
+            "Crew A is 6 per hour; Crew B is 4 per hour.",
+            ["B compares raw devices only.", "C assumes similar totals.", "D ignores hours given."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-reading-qualifier",
+            "Reading qualifier: before",
+            "Passage: Before using a tool, the trainee must inspect the cord and report visible damage. Question: What must happen before use?",
+            [
+                "A) Replace every cord",
+                "B) Inspect the cord and report visible damage",
+                "C) Use the tool first",
+                "D) Ask for a new task",
+            ],
+            "The passage says inspect the cord and report visible damage before use.",
+            ["A adds every cord replacement.", "C reverses before/after.", "D is not supported."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-reading-except",
+            "Reading qualifier: except",
+            "Passage: The class meets Monday through Thursday. Attendance is recorded at the start of each class. Which statement is NOT supported?",
+            [
+                "A) Class meets on Monday",
+                "B) Attendance is recorded",
+                "C) Class meets on Friday",
+                "D) Class meets on Thursday",
+            ],
+            "Friday is not included in Monday through Thursday.",
+            ["A is supported.", "B is supported.", "D is supported."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-main-idea",
+            "Reading main idea",
+            "Passage: The applicant should arrive early, bring required identification, and follow staff instructions. These steps reduce delays during check-in. What is the main idea?",
+            [
+                "A) Check-in readiness prevents delays",
+                "B) Identification is optional",
+                "C) Staff instructions are unnecessary",
+                "D) Arriving late saves time",
+            ],
+            "The passage groups actions that reduce check-in delays.",
+            [
+                "B contradicts required ID.",
+                "C contradicts instructions.",
+                "D contradicts arriving early.",
+            ],
+        ),
+        _scenario(
+            "cec-scenario-entrance-inference",
+            "Reading inference",
+            "Passage: If a form is incomplete, staff may ask the applicant to correct it before the next step. What can be inferred?",
+            [
+                "A) Complete forms help the process move forward",
+                "B) Staff never review forms",
+                "C) Incomplete forms are ignored",
+                "D) The applicant skips all steps",
+            ],
+            "If incomplete forms must be corrected before the next step, complete forms support progress.",
+            ["B contradicts review.", "C contradicts correction.", "D invents a skip."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-lever-handle",
+            "Lever handle",
+            "Two identical wrenches are used on the same bolt. Wrench A has a longer handle. Which usually requires less force at the hand?",
+            [
+                "A) Wrench A",
+                "B) Wrench B",
+                "C) Both require no force",
+                "D) Handle length never matters",
+            ],
+            "A longer handle gives more turning effect for the same force.",
+            ["B reverses lever advantage.", "C ignores force.", "D ignores lever arm."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-fixed-pulley",
+            "Fixed pulley direction",
+            "A rope passes over a fixed pulley. Pulling down on one side lifts the load on the other. What does the fixed pulley mainly change?",
+            [
+                "A) Direction of force",
+                "B) Weight of the load to zero",
+                "C) Material of the rope",
+                "D) The need for support",
+            ],
+            "A fixed pulley mainly changes pulling direction.",
+            ["B invents zero weight.", "C is unrelated.", "D ignores the pulley support."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-gear-three",
+            "Three touching gears",
+            "Gear A touches B, and B touches C. If A turns clockwise, which way does C turn?",
+            ["A) Clockwise", "B) Counterclockwise", "C) It stops", "D) Direction cannot be traced"],
+            "A reverses B; B reverses C, so C matches A.",
+            [
+                "B misses the second reversal.",
+                "C invents stopping.",
+                "D ignores traceable contacts.",
+            ],
+        ),
+        _scenario(
+            "cec-scenario-entrance-belt-open",
+            "Open belt direction",
+            "Two pulleys are connected by an open belt that is not crossed. If the first turns clockwise, the second usually turns which way?",
+            [
+                "A) Clockwise",
+                "B) Counterclockwise",
+                "C) It always doubles speed",
+                "D) It cannot move",
+            ],
+            "An open belt usually keeps rotation direction.",
+            [
+                "B describes a crossed-belt style.",
+                "C confuses direction and speed.",
+                "D ignores belt transfer.",
+            ],
+        ),
+        _scenario(
+            "cec-scenario-entrance-inclined-plane",
+            "Inclined plane",
+            "A heavy box is moved up a long ramp instead of lifted straight up. What is the main tradeoff?",
+            [
+                "A) Less force over more distance",
+                "B) More force over less distance",
+                "C) No work is needed",
+                "D) Gravity disappears",
+            ],
+            "A ramp can reduce required force by spreading work over longer distance.",
+            ["B reverses the tradeoff.", "C violates work idea.", "D is impossible."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-paper-one-fold",
+            "Paper fold one time",
+            "A square paper is folded left over right, then one hole is punched near the folded edge. After unfolding, what happens?",
+            [
+                "A) One hole only",
+                "B) Two mirrored holes",
+                "C) Four holes in a circle",
+                "D) No holes",
+            ],
+            "One fold creates a mirrored pair when unfolded.",
+            ["A forgets the folded layers.", "C assumes two folds.", "D ignores the punch."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-rotation-reflection",
+            "Rotation versus reflection",
+            "A shape is flipped over a vertical line. Which description is best?",
+            ["A) Reflection", "B) Rotation", "C) Translation only", "D) Enlargement"],
+            "Flipping across a line is reflection.",
+            ["B turns around a point.", "C slides without flipping.", "D changes size."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-fold-order",
+            "Fold order",
+            "A paper is folded twice, first horizontally then vertically. When reasoning backward, which fold should be undone first?",
+            ["A) Vertical fold", "B) Horizontal fold", "C) Both at once", "D) Neither fold"],
+            "Reverse operations undo the last fold first, so vertical is first to undo.",
+            ["B undoes the first fold first.", "C loses tracking.", "D gives up."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-cube-net",
+            "Cube net adjacency",
+            "On a cube net, two squares share an edge before folding. What is usually true after folding?",
+            [
+                "A) They become adjacent faces",
+                "B) They vanish",
+                "C) They must be opposite faces",
+                "D) They become the same face",
+            ],
+            "Shared-edge squares in a valid cube net usually fold into adjacent faces.",
+            ["B is impossible.", "C confuses opposite with adjacent.", "D merges faces."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-pacing-skip",
+            "Pacing decision",
+            "A spatial item has taken too long and easier questions remain. What is the best scoring move?",
+            [
+                "A) Mark it and return",
+                "B) Spend all remaining time",
+                "C) Quit the section",
+                "D) Randomly change previous answers",
+            ],
+            "Mark-and-return protects easier points and keeps momentum.",
+            ["B risks many easy points.", "C forfeits work.", "D introduces new errors."],
+        ),
+        _scenario(
+            "cec-scenario-entrance-confidence-review",
+            "Confidence review",
+            "After a timed set, which miss should be reviewed first?",
+            [
+                "A) A high-confidence wrong answer",
+                "B) A skipped hard item",
+                "C) A correct sure answer",
+                "D) The neatest solution",
+            ],
+            "High-confidence misses reveal dangerous misconceptions.",
+            [
+                "B matters later but may be expected difficulty.",
+                "C is low priority.",
+                "D is not an error criterion.",
+            ],
+        ),
+        _scenario(
+            "cec-scenario-entrance-pef-specificity",
+            "PEF specificity",
+            "Which PEF statement is strongest?",
+            [
+                "A) I am good with tools",
+                "B) I helped repair a fence every Saturday for six weeks and tracked materials",
+                "C) I always work harder than everyone",
+                "D) I deserve a chance",
+            ],
+            "Specific, honest evidence beats vague claims.",
+            ["A is vague.", "C is broad and hard to verify.", "D is motivation without evidence."],
+        ),
     ]
 
 
 def new_flashcards() -> list[dict[str, Any]]:
     return [
-        {"id": "cec-flashcards-entrance-no-calculator", "title": "Entrance no-calculator arithmetic", "summary": "Fast cues for arithmetic under time pressure.", "cards": ["Estimate magnitude before calculating.", "Percent change uses original value as the base.", "Ratio total parts usually means add the parts.", "For decimal multiplication, multiply first and place decimals last.", "Convert feet to inches by multiplying by 12."], "source_ref_ids": SOURCE_IDS},
-        {"id": "cec-flashcards-entrance-algebra-functions", "title": "Entrance algebra and functions", "summary": "Recognition cards for algebra/function items.", "cards": ["f(4) means substitute 4 for x.", "Solve equations by keeping both sides balanced.", "Table rules often start with differences or multiplication.", "Slope is change in y divided by change in x.", "Check final answers by substitution when possible."], "source_ref_ids": SOURCE_IDS},
-        {"id": "cec-flashcards-entrance-reading-evidence", "title": "Entrance reading evidence", "summary": "Passage-first reading cards.", "cards": ["Question first, passage second.", "Locate the controlling sentence.", "Qualifiers decide many answers: only, always, except, before, after.", "Outside knowledge cannot replace passage evidence.", "Unsupported but plausible choices are traps."], "source_ref_ids": SOURCE_IDS},
-        {"id": "cec-flashcards-entrance-mechanical-advantage", "title": "Entrance mechanical advantage", "summary": "Levers, pulleys, and direction trace cards.", "cards": ["Longer lever arm usually reduces effort force.", "Fixed pulley changes force direction.", "Movable pulley can reduce effort by increasing rope movement.", "Touching gears reverse direction.", "Open belts usually keep direction; crossed belts reverse direction."], "source_ref_ids": SOURCE_IDS},
-        {"id": "cec-flashcards-entrance-visual-spatial", "title": "Entrance visual-spatial tracking", "summary": "Spatial reasoning cards.", "cards": ["Undo the last fold first.", "Each unfold mirrors across the fold line.", "Reflection flips; rotation turns.", "Do not rotate the page mentally unless the item rotates it.", "Shared edges on cube nets usually become adjacent faces."], "source_ref_ids": SOURCE_IDS},
+        {
+            "id": "cec-flashcards-entrance-no-calculator",
+            "title": "Entrance no-calculator arithmetic",
+            "summary": "Fast cues for arithmetic under time pressure.",
+            "cards": [
+                "Estimate magnitude before calculating.",
+                "Percent change uses original value as the base.",
+                "Ratio total parts usually means add the parts.",
+                "For decimal multiplication, multiply first and place decimals last.",
+                "Convert feet to inches by multiplying by 12.",
+            ],
+            "source_ref_ids": SOURCE_IDS,
+        },
+        {
+            "id": "cec-flashcards-entrance-algebra-functions",
+            "title": "Entrance algebra and functions",
+            "summary": "Recognition cards for algebra/function items.",
+            "cards": [
+                "f(4) means substitute 4 for x.",
+                "Solve equations by keeping both sides balanced.",
+                "Table rules often start with differences or multiplication.",
+                "Slope is change in y divided by change in x.",
+                "Check final answers by substitution when possible.",
+            ],
+            "source_ref_ids": SOURCE_IDS,
+        },
+        {
+            "id": "cec-flashcards-entrance-reading-evidence",
+            "title": "Entrance reading evidence",
+            "summary": "Passage-first reading cards.",
+            "cards": [
+                "Question first, passage second.",
+                "Locate the controlling sentence.",
+                "Qualifiers decide many answers: only, always, except, before, after.",
+                "Outside knowledge cannot replace passage evidence.",
+                "Unsupported but plausible choices are traps.",
+            ],
+            "source_ref_ids": SOURCE_IDS,
+        },
+        {
+            "id": "cec-flashcards-entrance-mechanical-advantage",
+            "title": "Entrance mechanical advantage",
+            "summary": "Levers, pulleys, and direction trace cards.",
+            "cards": [
+                "Longer lever arm usually reduces effort force.",
+                "Fixed pulley changes force direction.",
+                "Movable pulley can reduce effort by increasing rope movement.",
+                "Touching gears reverse direction.",
+                "Open belts usually keep direction; crossed belts reverse direction.",
+            ],
+            "source_ref_ids": SOURCE_IDS,
+        },
+        {
+            "id": "cec-flashcards-entrance-visual-spatial",
+            "title": "Entrance visual-spatial tracking",
+            "summary": "Spatial reasoning cards.",
+            "cards": [
+                "Undo the last fold first.",
+                "Each unfold mirrors across the fold line.",
+                "Reflection flips; rotation turns.",
+                "Do not rotate the page mentally unless the item rotates it.",
+                "Shared edges on cube nets usually become adjacent faces.",
+            ],
+            "source_ref_ids": SOURCE_IDS,
+        },
     ]
 
 
@@ -505,10 +883,46 @@ def new_checkpoints() -> list[dict[str, Any]]:
 
 def new_errors() -> list[dict[str, Any]]:
     return [
-        {"id": "cec-error-entrance-decimal-placement", "title": "Decimal placement error", "summary": "The learner performs the operation but places the decimal by pattern matching instead of magnitude.", "remediation": ["Estimate the answer range first.", "Redo the item with whole-number multiplication and decimal-place count.", "Ask one similar item with different numbers."]},
-        {"id": "cec-error-entrance-reading-unsupported-choice", "title": "Unsupported reading choice", "summary": "The learner chooses a plausible answer that is not actually supported by the passage.", "remediation": ["Ask for the controlling sentence.", "Have the learner eliminate any choice that adds an unsupported claim.", "Repeat with an except/before/after qualifier item."]},
-        {"id": "cec-error-entrance-visual-trace-skip", "title": "Visual trace skip", "summary": "The learner jumps to the answer without tracing fold, gear, pulley, or lever relationships one connection at a time.", "remediation": ["Force an arrow or unfold step before answering.", "Replay only the first wrong connection.", "Use a slower no-timer item before returning to timed practice."]},
-        {"id": "cec-error-entrance-confidence-miscalibration", "title": "Confidence miscalibration", "summary": "The learner is highly confident on wrong answers or repeatedly guesses without marking uncertainty.", "remediation": ["Record sure/maybe/guess on each timed answer.", "Review high-confidence misses first.", "Ask the learner to state the method before seeing choices."]},
+        {
+            "id": "cec-error-entrance-decimal-placement",
+            "title": "Decimal placement error",
+            "summary": "The learner performs the operation but places the decimal by pattern matching instead of magnitude.",
+            "remediation": [
+                "Estimate the answer range first.",
+                "Redo the item with whole-number multiplication and decimal-place count.",
+                "Ask one similar item with different numbers.",
+            ],
+        },
+        {
+            "id": "cec-error-entrance-reading-unsupported-choice",
+            "title": "Unsupported reading choice",
+            "summary": "The learner chooses a plausible answer that is not actually supported by the passage.",
+            "remediation": [
+                "Ask for the controlling sentence.",
+                "Have the learner eliminate any choice that adds an unsupported claim.",
+                "Repeat with an except/before/after qualifier item.",
+            ],
+        },
+        {
+            "id": "cec-error-entrance-visual-trace-skip",
+            "title": "Visual trace skip",
+            "summary": "The learner jumps to the answer without tracing fold, gear, pulley, or lever relationships one connection at a time.",
+            "remediation": [
+                "Force an arrow or unfold step before answering.",
+                "Replay only the first wrong connection.",
+                "Use a slower no-timer item before returning to timed practice.",
+            ],
+        },
+        {
+            "id": "cec-error-entrance-confidence-miscalibration",
+            "title": "Confidence miscalibration",
+            "summary": "The learner is highly confident on wrong answers or repeatedly guesses without marking uncertainty.",
+            "remediation": [
+                "Record sure/maybe/guess on each timed answer.",
+                "Review high-confidence misses first.",
+                "Ask the learner to state the method before seeing choices.",
+            ],
+        },
     ]
 
 
@@ -563,8 +977,12 @@ def thicken(path: Path) -> dict[str, Any]:
         "learning_activity_templates": _append_unique(
             knowledge.setdefault("learning_activity_templates", []), new_activities()
         ),
-        "study_sequences": _append_unique(knowledge.setdefault("study_sequences", []), new_sequences()),
-        "scenario_cards": _append_unique(knowledge.setdefault("scenario_cards", []), new_scenarios()),
+        "study_sequences": _append_unique(
+            knowledge.setdefault("study_sequences", []), new_sequences()
+        ),
+        "scenario_cards": _append_unique(
+            knowledge.setdefault("scenario_cards", []), new_scenarios()
+        ),
         "flashcard_decks": _append_unique(
             knowledge.setdefault("flashcard_decks", []), new_flashcards()
         ),

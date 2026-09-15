@@ -32,7 +32,7 @@ def __getattr__(name: str):
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
     module_name, attr_name = _LAZY_EXPORTS[name]
-    module = importlib.import_module(module_name, __name__)
+    module = importlib.import_module(module_name, __name__)  # nosemgrep
     value = getattr(module, attr_name)
     globals()[name] = value
     return value

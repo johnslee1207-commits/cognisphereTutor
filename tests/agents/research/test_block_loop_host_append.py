@@ -43,7 +43,9 @@ def _make_pipeline(monkeypatch: pytest.MonkeyPatch) -> ResearchPipeline:
         api_version = None
         extra_headers = {}
 
-    monkeypatch.setattr("cognispheretutor.agents.research.pipeline.get_llm_config", lambda: _FakeLLM())
+    monkeypatch.setattr(
+        "cognispheretutor.agents.research.pipeline.get_llm_config", lambda: _FakeLLM()
+    )
     monkeypatch.setattr(
         "cognispheretutor.agents.research.pipeline.get_tool_registry", lambda: _FakeRegistry()
     )
@@ -154,10 +156,16 @@ def _make_pipeline_with_registry(
         api_version = None
         extra_headers = {}
 
-    monkeypatch.setattr("cognispheretutor.agents.research.pipeline.get_llm_config", lambda: _FakeLLM())
-    monkeypatch.setattr("cognispheretutor.agents.research.pipeline.get_tool_registry", lambda: registry)
+    monkeypatch.setattr(
+        "cognispheretutor.agents.research.pipeline.get_llm_config", lambda: _FakeLLM()
+    )
+    monkeypatch.setattr(
+        "cognispheretutor.agents.research.pipeline.get_tool_registry", lambda: registry
+    )
     monkeypatch.setattr("cognispheretutor.agents.research.pipeline.user_has_memory", lambda: False)
-    monkeypatch.setattr("cognispheretutor.agents.research.pipeline.user_has_notebooks", lambda: False)
+    monkeypatch.setattr(
+        "cognispheretutor.agents.research.pipeline.user_has_notebooks", lambda: False
+    )
     # code_execution is now auto-mounted under sandbox availability; simulate a
     # configured sandbox so the block loop exposes it as an evidence tool.
     monkeypatch.setattr(

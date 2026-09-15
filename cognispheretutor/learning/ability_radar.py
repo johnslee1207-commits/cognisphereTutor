@@ -146,8 +146,7 @@ def build_ability_radar(
             svc,
             book_id,
             weak_limit=weak_limit,
-            include_skill_graph=include_skill_graph
-            and (path_id is None or path_id == book_id),
+            include_skill_graph=include_skill_graph and (path_id is None or path_id == book_id),
         )
         if not radar:
             continue

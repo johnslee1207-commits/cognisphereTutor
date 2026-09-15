@@ -86,7 +86,13 @@ def _progress_backup_dir(book_id: str) -> Path:
 
 
 def _progress_backup_path(book_id: str, backup_id: str) -> Path:
-    if not backup_id or ".." in backup_id or "/" in backup_id or "\\" in backup_id or ":" in backup_id:
+    if (
+        not backup_id
+        or ".." in backup_id
+        or "/" in backup_id
+        or "\\" in backup_id
+        or ":" in backup_id
+    ):
         raise HTTPException(status_code=400, detail="Invalid backup_id")
     path = _progress_backup_dir(book_id) / f"{backup_id}.json"
     if not path.exists():

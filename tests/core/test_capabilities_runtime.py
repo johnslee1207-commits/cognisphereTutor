@@ -150,7 +150,9 @@ async def test_deep_solve_capability_runs_chat_loop_in_solve_mode(
             captured["attachments"] = list(context.attachments or [])
             await stream.content("final solution", source="chat", stage="responding")
 
-    monkeypatch.setattr("cognispheretutor.capabilities.solve.capability.AgenticChatPipeline", FakePipeline)
+    monkeypatch.setattr(
+        "cognispheretutor.capabilities.solve.capability.AgenticChatPipeline", FakePipeline
+    )
 
     context = UnifiedContext(
         user_message="solve x^2=4",

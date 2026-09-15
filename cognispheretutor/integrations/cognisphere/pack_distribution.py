@@ -8,7 +8,9 @@ Mastery Path without cloning Cognisphere or CognisphereLearningPlugins.
 
 from __future__ import annotations
 
-from importlib import resources
+from importlib import (
+    resources,  # nosemgrep: python.lang.compatibility.python37.python37-compatibility-importlib2
+)
 import json
 from typing import Any
 
@@ -62,9 +64,7 @@ def list_bundled_packs() -> dict[str, Any]:
             "domain": domain,
             "display_name": _display_name(domain),
             "name": _display_name(domain),
-            "description": (
-                "Bundled Cognisphere learning pack shipped with cognisphereTutor."
-            ),
+            "description": ("Bundled Cognisphere learning pack shipped with cognisphereTutor."),
             "version": str(bundle.get("bundle_schema_version") or "1"),
             "capabilities": ["deeptutor_export", "mastery_path_seed"],
             "keywords": _keywords_for_bundle(domain, knowledge),

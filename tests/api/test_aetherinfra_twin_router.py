@@ -114,7 +114,9 @@ def test_diagnosis_payload_is_translated(monkeypatch: pytest.MonkeyPatch) -> Non
         notes="ok",
     )
 
-    result = asyncio.run(aetherinfra_twin.submit_diagnosis("lab.container.docker-lifecycle", payload))
+    result = asyncio.run(
+        aetherinfra_twin.submit_diagnosis("lab.container.docker-lifecycle", payload)
+    )
 
     assert result["payload"]["selectedDiagnosis"] == "docker_lifecycle_clean"
     assert result["payload"]["evidenceRefs"] == ["run-1"]
@@ -166,7 +168,9 @@ def test_learning_workspace_round_trips_state(tmp_path, monkeypatch: pytest.Monk
     assert loaded["state"]["selected_course_id"] == "course.containers"
     assert loaded["state"]["quiz_answers"] == {"q1": "A"}
     assert loaded["state"]["completed_units"]["ai_infra.expert.containers.l1"] is True
-    assert loaded["state"]["diagnosis_notes"]["ai_infra.expert.containers.l1"] == "bounded diagnosis"
+    assert (
+        loaded["state"]["diagnosis_notes"]["ai_infra.expert.containers.l1"] == "bounded diagnosis"
+    )
 
 
 def test_learning_event_append_persists_evaluation_ledger(

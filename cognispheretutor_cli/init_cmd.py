@@ -386,7 +386,10 @@ def run_init(*, cli_only: bool = False, home: str | Path | None = None) -> None:
     _reset_runtime_singletons()
 
     from cognispheretutor.runtime.banner import labels_for, print_banner, resolve_language
-    from cognispheretutor.services.config import get_model_catalog_service, get_runtime_settings_service
+    from cognispheretutor.services.config import (
+        get_model_catalog_service,
+        get_runtime_settings_service,
+    )
     from cognispheretutor.services.setup import init_user_directories
 
     init_user_directories(runtime_home)

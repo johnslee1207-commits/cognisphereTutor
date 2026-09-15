@@ -315,7 +315,9 @@ class TestRegenerateLastTurn:
             "cognispheretutor.services.session.context_builder.ContextBuilder",
             FakeContextBuilder,
         )
-        monkeypatch.setattr("cognispheretutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator)
+        monkeypatch.setattr(
+            "cognispheretutor.runtime.orchestrator.ChatOrchestrator", FakeOrchestrator
+        )
         monkeypatch.setattr(
             "cognispheretutor.services.memory.get_memory_store",
             lambda: SimpleNamespace(

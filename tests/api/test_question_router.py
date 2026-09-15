@@ -67,7 +67,9 @@ def _load_question_router_module(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setitem(sys.modules, "cognispheretutor.services.llm.config", fake_llm_config)
 
     fake_settings_package = _package("cognispheretutor.services.settings")
-    fake_interface_settings = types.ModuleType("cognispheretutor.services.settings.interface_settings")
+    fake_interface_settings = types.ModuleType(
+        "cognispheretutor.services.settings.interface_settings"
+    )
     fake_interface_settings.get_ui_language = lambda default="en": default
     fake_settings_package.interface_settings = fake_interface_settings
     monkeypatch.setitem(sys.modules, "cognispheretutor.services.settings", fake_settings_package)

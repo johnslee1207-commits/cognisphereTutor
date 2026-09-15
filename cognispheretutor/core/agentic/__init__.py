@@ -33,7 +33,12 @@ from cognispheretutor.core.agentic.labels import (
     find_inline_labels,
     strip_label_probe_prefix,
 )
-from cognispheretutor.core.agentic.loop import LabelProtocol, LoopHost, LoopOutcome, run_agentic_loop
+from cognispheretutor.core.agentic.loop import (
+    LabelProtocol,
+    LoopHost,
+    LoopOutcome,
+    run_agentic_loop,
+)
 from cognispheretutor.core.agentic.tool_dispatch import (
     MAX_PARALLEL_TOOL_CALLS,
     DispatchOutcome,

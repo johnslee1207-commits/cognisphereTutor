@@ -111,7 +111,9 @@ async def _dispatch_many(
 class TestSendRetry:
     @pytest.mark.asyncio
     async def test_send_retries_on_failure_then_succeeds(self, monkeypatch):
-        monkeypatch.setattr("cognispheretutor.partners.channels.manager._SEND_RETRY_DELAYS", (0, 0, 0))
+        monkeypatch.setattr(
+            "cognispheretutor.partners.channels.manager._SEND_RETRY_DELAYS", (0, 0, 0)
+        )
         msg = OutboundMessage(channel="zulip", chat_id="1", content="hi")
         channel = _DummyChannel()
         channel.send.side_effect = [RuntimeError("boom"), None]
@@ -123,7 +125,9 @@ class TestSendRetry:
 
     @pytest.mark.asyncio
     async def test_send_gives_up_after_max_retries(self, monkeypatch):
-        monkeypatch.setattr("cognispheretutor.partners.channels.manager._SEND_RETRY_DELAYS", (0, 0, 0))
+        monkeypatch.setattr(
+            "cognispheretutor.partners.channels.manager._SEND_RETRY_DELAYS", (0, 0, 0)
+        )
         msg = OutboundMessage(channel="zulip", chat_id="1", content="hi")
         channel = _DummyChannel()
         channel.send.side_effect = RuntimeError("boom")

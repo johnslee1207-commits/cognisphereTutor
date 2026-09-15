@@ -117,7 +117,7 @@ def build_plugin_grounding_seed(
     if not domain:
         return ""
     query = _objective_query(objective or {}, learner_goal=learner_goal)
-    items = _rank_items(_load_domain_items(domain), query)[:max(1, max_items)]
+    items = _rank_items(_load_domain_items(domain), query)[: max(1, max_items)]
     payload = {
         "status": "grounded" if items else "missing",
         "domain": domain,
@@ -474,9 +474,7 @@ def _item_text(item: dict[str, Any]) -> str:
 
 def _tokens(text: str) -> set[str]:
     return {
-        token
-        for token in re.findall(r"[a-zA-Z0-9]{2,}", text.lower())
-        if token not in _STOPWORDS
+        token for token in re.findall(r"[a-zA-Z0-9]{2,}", text.lower()) if token not in _STOPWORDS
     }
 
 

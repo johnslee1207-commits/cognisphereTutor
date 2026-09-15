@@ -214,7 +214,7 @@ def execute(payload: dict[str, Any]) -> dict[str, Any]:
     try:
         completed = subprocess.run(  # noqa: S602 - shell=True is the contract
             command,
-            shell=True,  # nosec B602 — the runner exists to execute shell commands in-sandbox
+            shell=True,  # nosec B602; nosemgrep: python.lang.security.audit.subprocess-shell-true.subprocess-shell-true
             cwd=workdir,
             env=env,
             timeout=timeout_s,

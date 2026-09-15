@@ -162,8 +162,7 @@ class LearningTwinFlowRequest(BaseModel):
         default=None,
         max_length=64,
         description=(
-            "SDK composition intent (pass-through). Wired: "
-            "learn_then_practice | failure_drill"
+            "SDK composition intent (pass-through). Wired: learn_then_practice | failure_drill"
         ),
     )
     accept_twin_stubs: bool = True
@@ -502,9 +501,7 @@ async def cognisphere_learning_status():
     learning_plugins = [p for p in plugins if p.get("kind") != "twin"]
     learning_ok = any(bool(p.get("valid")) for p in learning_plugins)
     learning_issues = [
-        issue
-        for issue in list(discovery.get("issues") or [])
-        if "_twin:" not in str(issue)
+        issue for issue in list(discovery.get("issues") or []) if "_twin:" not in str(issue)
     ]
 
     aws_twin_gate: dict[str, Any] = {
@@ -526,7 +523,8 @@ async def cognisphere_learning_status():
         if isinstance(twin_status, dict):
             aws_twin_gate = {
                 "ok": bool(twin_status.get("ok")),
-                "status": twin_status.get("status") or ("ready" if twin_status.get("ok") else "blocked"),
+                "status": twin_status.get("status")
+                or ("ready" if twin_status.get("ok") else "blocked"),
                 "path": twin_status.get("path") or "aws_digital_twin_mastery",
                 "domain": twin_status.get("domain") or "aws_certification_twin",
                 "runtime_mode": twin_status.get("runtime_mode"),
@@ -553,11 +551,11 @@ async def cognisphere_learning_status():
         "path_ids": [],
     }
     try:
-        from cognispheretutor.integrations.cognisphere.learning_mastery_paths_client import (
-            list_learning_mastery_paths,
-        )
         from cognispheretutor.integrations.cognisphere.handshake_client import (
             require_packs_root as _require_paths_root,
+        )
+        from cognispheretutor.integrations.cognisphere.learning_mastery_paths_client import (
+            list_learning_mastery_paths,
         )
 
         learning_entry_points = list_learning_mastery_paths(root=_require_paths_root())
@@ -570,9 +568,7 @@ async def cognisphere_learning_status():
         "plugin_count": discovery.get("plugin_count"),
         "issues": learning_issues,
         "twin_issues": [
-            issue
-            for issue in list(discovery.get("issues") or [])
-            if "_twin:" in str(issue)
+            issue for issue in list(discovery.get("issues") or []) if "_twin:" in str(issue)
         ],
         "gates": {
             **gate_status(),
@@ -709,11 +705,7 @@ async def recommend_from_goal(body: RecommendFromGoalRequest):
             "goal": goal,
         }
     )
-    domains = [
-        str(m.get("domain"))
-        for m in (cross.get("matches") or [])
-        if m.get("domain")
-    ]
+    domains = [str(m.get("domain")) for m in (cross.get("matches") or []) if m.get("domain")]
     # De-dupe while preserving order
     seen: set[str] = set()
     recommended: list[str] = []

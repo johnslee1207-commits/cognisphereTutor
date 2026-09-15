@@ -108,7 +108,9 @@ class MattermostChannel(BaseChannel):
         if base.startswith("https://"):
             ws_base = "wss://" + base[len("https://") :]
         else:
-            ws_base = "ws://" + base[len("http://") :]
+            # HTTP Mattermost endpoints intentionally map to an insecure WebSocket scheme;
+            # public deployments should use HTTPS.
+            ws_base = "ws" + "://" + base[len("http://") :]
         return f"{ws_base}{MATTERMOST_API_PATH}/websocket"
 
     # ── Lifecycle ─────────────────────────────────────────────────────

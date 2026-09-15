@@ -260,8 +260,8 @@ class TestInlineToolMarkupFilter:
         text = self._run(
             [
                 "Let me register the final check.\n",
-                "<｜｜DSML｜｜tool_calls> <｜｜DSML｜｜invoke name=\"mastery_grade\">",
-                "<｜｜DSML｜｜parameter name=\"answer\" string=\"true\">B</｜｜DSML｜｜parameter>",
+                '<｜｜DSML｜｜tool_calls> <｜｜DSML｜｜invoke name="mastery_grade">',
+                '<｜｜DSML｜｜parameter name="answer" string="true">B</｜｜DSML｜｜parameter>',
                 "</｜｜DSML｜｜invoke> </｜｜DSML｜｜tool_calls>",
             ]
         )
@@ -932,8 +932,7 @@ async def test_mastery_plain_text_choice_is_repaired_into_quiz_card(
                                 {
                                     "knowledge_point_id": "sk-aws-clf-c02",
                                     "question": (
-                                        "Which AWS component is an isolated set "
-                                        "of data centers?"
+                                        "Which AWS component is an isolated set of data centers?"
                                     ),
                                     "expected_answer": "B",
                                     "question_type": "choice",
@@ -989,8 +988,10 @@ async def test_mastery_plain_text_choice_is_repaired_into_quiz_card(
     monkeypatch.setattr(
         pipeline,
         "_capability_pre_loop_seed",
-        lambda context: context.metadata.setdefault("mastery_status_injected", True)
-        and "### Deterministic Mastery Status\n{}",
+        lambda context: (
+            context.metadata.setdefault("mastery_status_injected", True)
+            and "### Deterministic Mastery Status\n{}"
+        ),
     )
 
     events = await _run(
@@ -1061,9 +1062,7 @@ async def test_mastery_generic_menu_after_plain_choice_gets_repaired_again(
             ],
             [
                 _llm_chunk(
-                    content=(
-                        "Hello! What subject or topic would you like to learn about today?"
-                    )
+                    content=("Hello! What subject or topic would you like to learn about today?")
                 )
             ],
             [
@@ -1095,8 +1094,10 @@ async def test_mastery_generic_menu_after_plain_choice_gets_repaired_again(
     monkeypatch.setattr(
         pipeline,
         "_capability_pre_loop_seed",
-        lambda context: context.metadata.setdefault("mastery_status_injected", True)
-        and "### Deterministic Mastery Status\n{}",
+        lambda context: (
+            context.metadata.setdefault("mastery_status_injected", True)
+            and "### Deterministic Mastery Status\n{}"
+        ),
     )
 
     events = await _run(
@@ -1201,8 +1202,10 @@ async def test_mastery_quiz_format_negotiation_is_repaired_to_default_card(
     monkeypatch.setattr(
         pipeline,
         "_capability_pre_loop_seed",
-        lambda context: context.metadata.setdefault("mastery_status_injected", True)
-        and "### Deterministic Mastery Status\n{}",
+        lambda context: (
+            context.metadata.setdefault("mastery_status_injected", True)
+            and "### Deterministic Mastery Status\n{}"
+        ),
     )
 
     events = await _run(
@@ -1311,8 +1314,10 @@ async def test_mastery_ask_user_without_quiz_is_repaired_before_dispatch(
     monkeypatch.setattr(
         pipeline,
         "_capability_pre_loop_seed",
-        lambda context: context.metadata.setdefault("mastery_status_injected", True)
-        and "### Deterministic Mastery Status\n{}",
+        lambda context: (
+            context.metadata.setdefault("mastery_status_injected", True)
+            and "### Deterministic Mastery Status\n{}"
+        ),
     )
 
     events = await _run(
@@ -1706,8 +1711,8 @@ async def test_inline_dsml_mastery_grade_executes_without_leaking_content(
     registry = _GradeRegistry()
     dsml_grade = (
         "<｜｜DSML｜｜tool_calls> "
-        "<｜｜DSML｜｜invoke name=\"mastery_grade\"> "
-        "<｜｜DSML｜｜parameter name=\"answer\" string=\"true\">B</｜｜DSML｜｜parameter> "
+        '<｜｜DSML｜｜invoke name="mastery_grade"> '
+        '<｜｜DSML｜｜parameter name="answer" string="true">B</｜｜DSML｜｜parameter> '
         "</｜｜DSML｜｜invoke> "
         "</｜｜DSML｜｜tool_calls>"
     )
@@ -2056,9 +2061,12 @@ def test_mastery_loop_pre_loop_seed_guards_orphan_choice_answer(monkeypatch) -> 
 def test_mastery_loop_extracts_choice_answer_from_chat_text() -> None:
     from cognispheretutor.capabilities.mastery import loop as mastery_loop
 
-    assert mastery_loop._extract_quiz_answer(
-        "the answer for the above question is A, then continue the next class"
-    ) == "A"
+    assert (
+        mastery_loop._extract_quiz_answer(
+            "the answer for the above question is A, then continue the next class"
+        )
+        == "A"
+    )
     assert mastery_loop._extract_quiz_answer("option b is my answer") == "B"
     assert mastery_loop._extract_quiz_answer("answer is true") == "true"
 
@@ -2134,9 +2142,7 @@ def test_mastery_loop_clears_unpresented_pending_after_failed_turn(tmp_path, mon
 
     db_path = tmp_path / "chat_history.sqlite"
     with sqlite3.connect(db_path) as conn:
-        conn.execute(
-            "CREATE TABLE messages (session_id TEXT, role TEXT, created_at REAL)"
-        )
+        conn.execute("CREATE TABLE messages (session_id TEXT, role TEXT, created_at REAL)")
         conn.execute(
             "CREATE TABLE turns (session_id TEXT, status TEXT, error TEXT, created_at REAL)"
         )

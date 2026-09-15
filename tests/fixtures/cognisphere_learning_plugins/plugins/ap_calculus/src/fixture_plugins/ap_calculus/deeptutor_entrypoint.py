@@ -10,8 +10,8 @@ DOMAIN = "ap_calculus"
 
 
 def _export_local() -> dict[str, Any]:
-    from pathlib import Path
     import json
+    from pathlib import Path
 
     manifest = json.loads(
         (Path(__file__).resolve().parents[3] / "plugin_manifest.json").read_text(encoding="utf-8")
@@ -78,11 +78,13 @@ def negotiate_capabilities(request: dict[str, Any] | None = None) -> dict[str, A
 
         return negotiate_for(DOMAIN, request)
     except ImportError:
-        from pathlib import Path
         import json
+        from pathlib import Path
 
         manifest = json.loads(
-            (Path(__file__).resolve().parents[3] / "plugin_manifest.json").read_text(encoding="utf-8")
+            (Path(__file__).resolve().parents[3] / "plugin_manifest.json").read_text(
+                encoding="utf-8"
+            )
         )
         req = request or {}
         required = list(req.get("required_capabilities") or [])

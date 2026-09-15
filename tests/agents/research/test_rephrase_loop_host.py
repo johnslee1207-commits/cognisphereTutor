@@ -43,7 +43,9 @@ class _FakeRegistry:
 
 
 def _make_pipeline(monkeypatch: pytest.MonkeyPatch) -> ResearchPipeline:
-    monkeypatch.setattr("cognispheretutor.agents.research.pipeline.get_llm_config", lambda: _FakeLLM())
+    monkeypatch.setattr(
+        "cognispheretutor.agents.research.pipeline.get_llm_config", lambda: _FakeLLM()
+    )
     monkeypatch.setattr(
         "cognispheretutor.agents.research.pipeline.get_tool_registry", lambda: _FakeRegistry()
     )

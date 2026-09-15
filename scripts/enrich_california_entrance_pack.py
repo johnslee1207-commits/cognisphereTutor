@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-
 PACK_PATH = Path(
     "cognispheretutor/integrations/cognisphere/bundled_packs/"
     "california_electrical_career_bundle.json"
@@ -130,9 +129,7 @@ def lesson_cards() -> list[dict]:
                 "Table questions often hide the relevant denominator.",
                 "If two rules fit, prefer the simpler rule that explains every shown term.",
             ],
-            "quick_check_prompts": [
-                "For 3, 6, 4, 8, 6, 12, what two-track rule is being used?"
-            ],
+            "quick_check_prompts": ["For 3, 6, 4, 8, 6, 12, what two-track rule is being used?"],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -285,7 +282,11 @@ def practice_blueprints() -> list[dict]:
                 "Rotate one focused section per day across math, numerical reasoning, "
                 "reading, mechanical, and spatial skills."
             ),
-            "practice_modes": ["focused lesson-first drill", "mixed-format quick quiz", "error-label retest"],
+            "practice_modes": [
+                "focused lesson-first drill",
+                "mixed-format quick quiz",
+                "error-label retest",
+            ],
             "item_format_mix": [
                 "multiple_choice",
                 "numeric_fill",
@@ -308,7 +309,11 @@ def practice_blueprints() -> list[dict]:
                 "Generate numeric-fill arithmetic and algebra items so the learner "
                 "cannot rely only on elimination."
             ),
-            "practice_modes": ["mental estimate", "numeric fill", "choice comparison after solving"],
+            "practice_modes": [
+                "mental estimate",
+                "numeric fill",
+                "choice comparison after solving",
+            ],
             "generation_rules": [
                 "Ask for the numeric answer first, then optionally show choices.",
                 "Keep arithmetic realistic for aptitude speed practice.",
@@ -323,7 +328,11 @@ def practice_blueprints() -> list[dict]:
                 "Generate short technical passages that require locating evidence, "
                 "handling qualifiers, and rejecting unsupported choices."
             ),
-            "practice_modes": ["passage-only answer", "EXCEPT qualifier drill", "unsupported-choice elimination"],
+            "practice_modes": [
+                "passage-only answer",
+                "EXCEPT qualifier drill",
+                "unsupported-choice elimination",
+            ],
             "generation_rules": [
                 "Use short original passages about workplace instructions, scheduling, safety notices, or tool handling.",
                 "Do not require outside electrical knowledge.",
@@ -338,7 +347,12 @@ def practice_blueprints() -> list[dict]:
                 "Generate visual-thinking drills for levers, gears, pulleys, rotation, "
                 "reflection, and paper folding."
             ),
-            "practice_modes": ["trace one connection", "predict direction", "reverse unfold", "rotation versus mirror"],
+            "practice_modes": [
+                "trace one connection",
+                "predict direction",
+                "reverse unfold",
+                "rotation versus mirror",
+            ],
             "generation_rules": [
                 "Keep diagrams textual or simple ASCII when no image renderer is available.",
                 "Grade the reasoning step, not only the final letter.",
@@ -366,7 +380,9 @@ def scenario_cards() -> list[dict]:
             "title": "Math trap: percent base",
             "summary": "Original multiple-choice item about percent increase base quantity.",
             "response_format": "multiple_choice",
-            "scenario": ["A practice score rises from 24 correct to 30 correct. What is the percent increase?"],
+            "scenario": [
+                "A practice score rises from 24 correct to 30 correct. What is the percent increase?"
+            ],
             "choices": ["A) 6%", "B) 20%", "C) 25%", "D) 30%"],
             "answer": "C",
             "correct_rationale": ["The increase is 6. The base is the original 24. 6/24 = 25%."],
@@ -381,7 +397,9 @@ def scenario_cards() -> list[dict]:
                 "Box A has 12 more fittings than Box B. Together they have 64 fittings. Define x as the number in Box B and write the equation."
             ],
             "expected_answer": "x + (x + 12) = 64",
-            "correct_rationale": ["Box B is x. Box A is x + 12. Together means add them to get 64."],
+            "correct_rationale": [
+                "Box B is x. Box A is x + 12. Together means add them to get 64."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -389,7 +407,9 @@ def scenario_cards() -> list[dict]:
             "title": "Rate reasoning: parts per hour",
             "summary": "Original rate item for numerical computation.",
             "response_format": "numeric_fill",
-            "scenario": ["A trainee labels 45 parts in 15 minutes. At the same rate, how many parts can the trainee label in 1 hour?"],
+            "scenario": [
+                "A trainee labels 45 parts in 15 minutes. At the same rate, how many parts can the trainee label in 1 hour?"
+            ],
             "expected_answer": "180",
             "correct_rationale": ["One hour is four 15-minute blocks. 45 times 4 is 180."],
             "source_ref_ids": SOURCE_REFS,
@@ -402,7 +422,9 @@ def scenario_cards() -> list[dict]:
             "scenario": ["Find the next number: 2, 5, 10, 17, 26, ?"],
             "choices": ["A) 35", "B) 36", "C) 37", "D) 38"],
             "answer": "C",
-            "correct_rationale": ["The differences are 3, 5, 7, 9, so the next difference is 11. 26 + 11 = 37."],
+            "correct_rationale": [
+                "The differences are 3, 5, 7, 9, so the next difference is 11. 26 + 11 = 37."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -413,9 +435,16 @@ def scenario_cards() -> list[dict]:
             "scenario": [
                 "Passage: Submit the completed form only after the supervisor signs the verification line. Unsigned forms will be returned. Question: What must happen before submission?"
             ],
-            "choices": ["A) The applicant pays a fee", "B) The supervisor signs the verification line", "C) The form is copied twice", "D) The applicant calls the office"],
+            "choices": [
+                "A) The applicant pays a fee",
+                "B) The supervisor signs the verification line",
+                "C) The form is copied twice",
+                "D) The applicant calls the office",
+            ],
             "answer": "B",
-            "correct_rationale": ["The controlling words are only after the supervisor signs the verification line."],
+            "correct_rationale": [
+                "The controlling words are only after the supervisor signs the verification line."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -428,7 +457,9 @@ def scenario_cards() -> list[dict]:
             ],
             "choices": ["A) Photo ID", "B) Two pencils", "C) Appointment notice", "D) Calculator"],
             "answer": "D",
-            "correct_rationale": ["The question asks EXCEPT. A calculator is not permitted, not required."],
+            "correct_rationale": [
+                "The question asks EXCEPT. A calculator is not permitted, not required."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -436,9 +467,13 @@ def scenario_cards() -> list[dict]:
             "title": "Mechanical: door hinge leverage",
             "summary": "Original true-false item about pivot distance.",
             "response_format": "true_false",
-            "scenario": ["True or false: Pushing a door near the outer edge usually takes less force than pushing near the hinge."],
+            "scenario": [
+                "True or false: Pushing a door near the outer edge usually takes less force than pushing near the hinge."
+            ],
             "answer": "True",
-            "correct_rationale": ["The outer edge is farther from the pivot, so the same push creates more turning effect."],
+            "correct_rationale": [
+                "The outer edge is farther from the pivot, so the same push creates more turning effect."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -449,9 +484,16 @@ def scenario_cards() -> list[dict]:
             "scenario": [
                 "Two ramps reach the same platform. Ramp A is short and steep. Ramp B is longer and less steep. Which usually requires less pushing force for the same load?"
             ],
-            "choices": ["A) Ramp A", "B) Ramp B", "C) Both always require exactly the same force", "D) Neither because ramps do not affect force"],
+            "choices": [
+                "A) Ramp A",
+                "B) Ramp B",
+                "C) Both always require exactly the same force",
+                "D) Neither because ramps do not affect force",
+            ],
             "answer": "B",
-            "correct_rationale": ["The longer, less steep ramp usually reduces force but increases travel distance."],
+            "correct_rationale": [
+                "The longer, less steep ramp usually reduces force but increases travel distance."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -459,10 +501,19 @@ def scenario_cards() -> list[dict]:
             "title": "Mechanical: five-gear chain",
             "summary": "Original gear-direction item using reversal count.",
             "response_format": "multiple_choice",
-            "scenario": ["Gear A meshes with B, B with C, C with D, and D with E. If A turns clockwise, which direction does E turn?"],
-            "choices": ["A) Clockwise", "B) Counterclockwise", "C) It does not turn", "D) Cannot tell from the connections"],
+            "scenario": [
+                "Gear A meshes with B, B with C, C with D, and D with E. If A turns clockwise, which direction does E turn?"
+            ],
+            "choices": [
+                "A) Clockwise",
+                "B) Counterclockwise",
+                "C) It does not turn",
+                "D) Cannot tell from the connections",
+            ],
             "answer": "A",
-            "correct_rationale": ["There are four gear contacts. Four reversals returns to the same direction as A."],
+            "correct_rationale": [
+                "There are four gear contacts. Four reversals returns to the same direction as A."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -470,9 +521,13 @@ def scenario_cards() -> list[dict]:
             "title": "Spatial: rotated L shape",
             "summary": "Original short-answer item distinguishing rotation from reflection.",
             "response_format": "short_answer",
-            "scenario": ["An L shape has its short foot pointing right. After a 90-degree clockwise rotation, does that foot point down, left, up, or right?"],
+            "scenario": [
+                "An L shape has its short foot pointing right. After a 90-degree clockwise rotation, does that foot point down, left, up, or right?"
+            ],
             "expected_answer": "down",
-            "correct_rationale": ["A right-pointing feature rotated 90 degrees clockwise points down."],
+            "correct_rationale": [
+                "A right-pointing feature rotated 90 degrees clockwise points down."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -484,7 +539,9 @@ def scenario_cards() -> list[dict]:
                 "A square paper is folded left-to-right, then bottom-to-top. One hole is punched near the final folded packet corner away from both fold lines. When unfolded, how many matching holes appear?"
             ],
             "expected_answer": "4",
-            "correct_rationale": ["Two folds create four layers at that position, so the hole mirrors into four positions when unfolded."],
+            "correct_rationale": [
+                "Two folds create four layers at that position, so the hole mirrors into four positions when unfolded."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -495,9 +552,16 @@ def scenario_cards() -> list[dict]:
             "scenario": [
                 "During a timed mixed set, you spend 90 seconds on a spatial item and still cannot choose between two answers. What is the best next action?"
             ],
-            "choices": ["A) Spend as long as needed", "B) Mark it, make the best provisional choice if required, and move on", "C) Stop the test and review notes", "D) Guess without reading the remaining questions"],
+            "choices": [
+                "A) Spend as long as needed",
+                "B) Mark it, make the best provisional choice if required, and move on",
+                "C) Stop the test and review notes",
+                "D) Guess without reading the remaining questions",
+            ],
             "answer": "B",
-            "correct_rationale": ["Pacing protects the total score. Mark, move, and return if time remains."],
+            "correct_rationale": [
+                "Pacing protects the total score. Mark, move, and return if time remains."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -506,9 +570,16 @@ def scenario_cards() -> list[dict]:
             "summary": "Original PEF item about evidence quality.",
             "response_format": "multiple_choice",
             "scenario": ["Which PEF note is strongest?"],
-            "choices": ["A) I am hardworking", "B) I helped sometimes", "C) I completed a 40-hour safety course and can attach the certificate", "D) I like electrical work"],
+            "choices": [
+                "A) I am hardworking",
+                "B) I helped sometimes",
+                "C) I completed a 40-hour safety course and can attach the certificate",
+                "D) I like electrical work",
+            ],
             "answer": "C",
-            "correct_rationale": ["Specific, verifiable evidence is stronger than vague self-description."],
+            "correct_rationale": [
+                "Specific, verifiable evidence is stronger than vague self-description."
+            ],
             "source_ref_ids": ["laett.inside_wireman.2026-01-26", "gan.validation.2026-09-03"],
         },
     ]
@@ -534,7 +605,18 @@ def flashcard_decks() -> list[dict]:
             "id": "cec-flashcards-entrance-reading-qualifiers",
             "title": "Entrance reading qualifier traps",
             "summary": "Recognition cards for passage-based reading questions.",
-            "cards": ["only", "except", "unless", "before", "after", "must", "may", "not permitted", "first", "most likely"],
+            "cards": [
+                "only",
+                "except",
+                "unless",
+                "before",
+                "after",
+                "must",
+                "may",
+                "not permitted",
+                "first",
+                "most likely",
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -635,9 +717,7 @@ def learning_activity_templates() -> list[dict]:
                 "Keep warmups under five minutes.",
                 "Do not block the lesson unless the same error repeats twice.",
             ],
-            "exam_alignment": [
-                "Builds daily retrieval and pacing for aptitude-section readiness."
-            ],
+            "exam_alignment": ["Builds daily retrieval and pacing for aptitude-section readiness."],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -763,9 +843,7 @@ def learning_activity_templates() -> list[dict]:
             "feedback_rule": [
                 "In final-week mode, prioritize repeated high-yield errors and test execution over broad new content."
             ],
-            "exam_alignment": [
-                "Builds near-term readiness for timed aptitude selection."
-            ],
+            "exam_alignment": ["Builds near-term readiness for timed aptitude selection."],
             "source_ref_ids": SOURCE_REFS,
         },
     ]
@@ -1135,7 +1213,9 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Computation: unit rate",
             "summary": "Original numeric-fill item for rate and units.",
             "response_format": "numeric_fill",
-            "scenario": ["A learner completes 18 questions in 12 minutes. At that rate, how many questions per minute?"],
+            "scenario": [
+                "A learner completes 18 questions in 12 minutes. At that rate, how many questions per minute?"
+            ],
             "expected_answer": "1.5",
             "correct_rationale": ["18 divided by 12 is 1.5 questions per minute."],
             "source_ref_ids": SOURCE_REFS,
@@ -1145,10 +1225,14 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Ratio: simplify before scaling",
             "summary": "Original ratio item that rewards cancellation.",
             "response_format": "multiple_choice",
-            "scenario": ["The ratio of correct to incorrect answers is 5:2. If there are 21 answers total, how many are correct?"],
+            "scenario": [
+                "The ratio of correct to incorrect answers is 5:2. If there are 21 answers total, how many are correct?"
+            ],
             "choices": ["A) 10", "B) 12", "C) 15", "D) 18"],
             "answer": "C",
-            "correct_rationale": ["The ratio has 7 total parts. 21/7 = 3 per part. Correct answers are 5 x 3 = 15."],
+            "correct_rationale": [
+                "The ratio has 7 total parts. 21/7 = 3 per part. Correct answers are 5 x 3 = 15."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1156,7 +1240,9 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Algebra: two worker totals",
             "summary": "Original algebra word problem with a defined unknown.",
             "response_format": "numeric_fill",
-            "scenario": ["Worker A prepared twice as many labels as Worker B. Together they prepared 72 labels. How many did Worker B prepare?"],
+            "scenario": [
+                "Worker A prepared twice as many labels as Worker B. Together they prepared 72 labels. How many did Worker B prepare?"
+            ],
             "expected_answer": "24",
             "correct_rationale": ["Let B = x, so A = 2x. Then 3x = 72, so x = 24."],
             "source_ref_ids": SOURCE_REFS,
@@ -1166,10 +1252,14 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Problem solving: combined work rate",
             "summary": "Original rate item for combined production.",
             "response_format": "multiple_choice",
-            "scenario": ["One trainee can sort a bin in 30 minutes. Another can sort the same kind of bin in 60 minutes. Working together at those rates, about how long for one bin?"],
+            "scenario": [
+                "One trainee can sort a bin in 30 minutes. Another can sort the same kind of bin in 60 minutes. Working together at those rates, about how long for one bin?"
+            ],
             "choices": ["A) 20 minutes", "B) 30 minutes", "C) 45 minutes", "D) 90 minutes"],
             "answer": "A",
-            "correct_rationale": ["Rates are 1/30 and 1/60 bin per minute. Together they sort 3/60 = 1/20 bin per minute."],
+            "correct_rationale": [
+                "Rates are 1/30 and 1/60 bin per minute. Together they sort 3/60 = 1/20 bin per minute."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1190,7 +1280,9 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "response_format": "numeric_fill",
             "scenario": ["Find the next number: 4, 6, 9, 13, 18, ?"],
             "expected_answer": "24",
-            "correct_rationale": ["The differences are +2, +3, +4, +5, so next is +6. 18 + 6 = 24."],
+            "correct_rationale": [
+                "The differences are +2, +3, +4, +5, so next is +6. 18 + 6 = 24."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1198,7 +1290,9 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Table reasoning: efficiency",
             "summary": "Original table-comparison item.",
             "response_format": "multiple_choice",
-            "scenario": ["Team A completes 40 tasks using 5 hours. Team B completes 54 tasks using 9 hours. Which team has better tasks-per-hour efficiency?"],
+            "scenario": [
+                "Team A completes 40 tasks using 5 hours. Team B completes 54 tasks using 9 hours. Which team has better tasks-per-hour efficiency?"
+            ],
             "choices": ["A) Team A", "B) Team B", "C) Same", "D) Cannot tell"],
             "answer": "A",
             "correct_rationale": ["Team A: 8 tasks/hour. Team B: 6 tasks/hour."],
@@ -1212,9 +1306,16 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "scenario": [
                 "Passage: The testing notice explains what to bring, what is not allowed in the room, and when to arrive. Applicants who arrive late may need to reschedule. Question: What is the main purpose of the notice?"
             ],
-            "choices": ["A) To teach electrical theory", "B) To explain test-day requirements", "C) To advertise a job", "D) To compare training programs"],
+            "choices": [
+                "A) To teach electrical theory",
+                "B) To explain test-day requirements",
+                "C) To advertise a job",
+                "D) To compare training programs",
+            ],
             "answer": "B",
-            "correct_rationale": ["The passage focuses on what to bring, restrictions, arrival time, and rescheduling."],
+            "correct_rationale": [
+                "The passage focuses on what to bring, restrictions, arrival time, and rescheduling."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1225,9 +1326,16 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "scenario": [
                 "Passage: Applicants may update contact information online until the application deadline. After the deadline, updates must be made by contacting the office. Which inference is best supported?"
             ],
-            "choices": ["A) Online updates are always available", "B) No updates are allowed after the deadline", "C) The update method changes after the deadline", "D) Applicants never need contact information"],
+            "choices": [
+                "A) Online updates are always available",
+                "B) No updates are allowed after the deadline",
+                "C) The update method changes after the deadline",
+                "D) Applicants never need contact information",
+            ],
             "answer": "C",
-            "correct_rationale": ["Before the deadline updates are online; after the deadline they require contacting the office."],
+            "correct_rationale": [
+                "Before the deadline updates are online; after the deadline they require contacting the office."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1235,7 +1343,9 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Reading: not permitted",
             "summary": "Original detail item about a negative condition.",
             "response_format": "multiple_choice",
-            "scenario": ["Passage: Bags must remain outside the testing room. Photo ID and pencils may be brought to the desk. Which item is not permitted at the desk?"],
+            "scenario": [
+                "Passage: Bags must remain outside the testing room. Photo ID and pencils may be brought to the desk. Which item is not permitted at the desk?"
+            ],
             "choices": ["A) Bag", "B) Photo ID", "C) Pencil", "D) Appointment notice"],
             "answer": "A",
             "correct_rationale": ["The passage says bags must remain outside the testing room."],
@@ -1246,9 +1356,13 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Mechanical: wheel radius and turning",
             "summary": "Original mechanical item about radius and distance per turn.",
             "response_format": "true_false",
-            "scenario": ["True or false: If two wheels turn once, the wheel with the larger radius moves a point on its rim through a longer distance."],
+            "scenario": [
+                "True or false: If two wheels turn once, the wheel with the larger radius moves a point on its rim through a longer distance."
+            ],
             "answer": "True",
-            "correct_rationale": ["Circumference grows with radius, so the larger wheel rim travels farther per revolution."],
+            "correct_rationale": [
+                "Circumference grows with radius, so the larger wheel rim travels farther per revolution."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1256,10 +1370,19 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Mechanical: open belt direction",
             "summary": "Original motion-tracing item for belt direction.",
             "response_format": "multiple_choice",
-            "scenario": ["Pulley A is connected to Pulley B by an open belt. If A turns clockwise and the belt does not cross, which way does B turn?"],
-            "choices": ["A) Clockwise", "B) Counterclockwise", "C) It cannot move", "D) It alternates direction every turn"],
+            "scenario": [
+                "Pulley A is connected to Pulley B by an open belt. If A turns clockwise and the belt does not cross, which way does B turn?"
+            ],
+            "choices": [
+                "A) Clockwise",
+                "B) Counterclockwise",
+                "C) It cannot move",
+                "D) It alternates direction every turn",
+            ],
             "answer": "A",
-            "correct_rationale": ["An open belt usually turns the connected pulley in the same direction."],
+            "correct_rationale": [
+                "An open belt usually turns the connected pulley in the same direction."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1267,8 +1390,15 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Mechanical: crossed belt direction",
             "summary": "Original motion-tracing item for crossed belts.",
             "response_format": "multiple_choice",
-            "scenario": ["Pulley A is connected to Pulley B by a crossed belt. If A turns clockwise, which way does B turn?"],
-            "choices": ["A) Clockwise", "B) Counterclockwise", "C) It cannot move", "D) Same direction only if B is larger"],
+            "scenario": [
+                "Pulley A is connected to Pulley B by a crossed belt. If A turns clockwise, which way does B turn?"
+            ],
+            "choices": [
+                "A) Clockwise",
+                "B) Counterclockwise",
+                "C) It cannot move",
+                "D) Same direction only if B is larger",
+            ],
             "answer": "B",
             "correct_rationale": ["A crossed belt reverses the direction between the pulleys."],
             "source_ref_ids": SOURCE_REFS,
@@ -1278,7 +1408,9 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Spatial: clockwise feature tracking",
             "summary": "Original rotation item using feature tracking.",
             "response_format": "multiple_choice",
-            "scenario": ["A triangle has a dot near its top corner. After a 180-degree rotation, where is the dot?"],
+            "scenario": [
+                "A triangle has a dot near its top corner. After a 180-degree rotation, where is the dot?"
+            ],
             "choices": ["A) Top", "B) Bottom", "C) Left", "D) It disappears"],
             "answer": "B",
             "correct_rationale": ["A 180-degree rotation moves the top feature to the bottom."],
@@ -1289,9 +1421,13 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Spatial: reflection trap",
             "summary": "Original item checking mirror versus rotation.",
             "response_format": "true_false",
-            "scenario": ["True or false: A reflected letter F can always be made identical to the original by rotating it on the page."],
+            "scenario": [
+                "True or false: A reflected letter F can always be made identical to the original by rotating it on the page."
+            ],
             "answer": "False",
-            "correct_rationale": ["Reflection reverses handedness; rotating does not undo that mirror reversal."],
+            "correct_rationale": [
+                "Reflection reverses handedness; rotating does not undo that mirror reversal."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1299,10 +1435,14 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Paper folding: hole on fold line",
             "summary": "Original paper-folding item about fold-line placement.",
             "response_format": "multiple_choice",
-            "scenario": ["A paper is folded once vertically. A hole is punched exactly on the fold line. After unfolding, how many holes appear?"],
+            "scenario": [
+                "A paper is folded once vertically. A hole is punched exactly on the fold line. After unfolding, how many holes appear?"
+            ],
             "choices": ["A) 1", "B) 2", "C) 3", "D) 4"],
             "answer": "A",
-            "correct_rationale": ["A punch on the fold line lies on the mirror axis, so it does not duplicate to a separate position."],
+            "correct_rationale": [
+                "A punch on the fold line lies on the mirror axis, so it does not duplicate to a separate position."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1310,8 +1450,15 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "title": "Problem solving: order constraints",
             "summary": "Original constraint-satisfaction item.",
             "response_format": "multiple_choice",
-            "scenario": ["Tasks must be done with Measure before Cut, Label after Cut, and Review last. Which order works?"],
-            "choices": ["A) Cut, Measure, Label, Review", "B) Measure, Cut, Label, Review", "C) Measure, Review, Cut, Label", "D) Label, Measure, Cut, Review"],
+            "scenario": [
+                "Tasks must be done with Measure before Cut, Label after Cut, and Review last. Which order works?"
+            ],
+            "choices": [
+                "A) Cut, Measure, Label, Review",
+                "B) Measure, Cut, Label, Review",
+                "C) Measure, Review, Cut, Label",
+                "D) Label, Measure, Cut, Review",
+            ],
             "answer": "B",
             "correct_rationale": ["Measure is before Cut, Label is after Cut, and Review is last."],
             "source_ref_ids": SOURCE_REFS,
@@ -1322,9 +1469,16 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "summary": "Original metacognitive item for mock review.",
             "response_format": "multiple_choice",
             "scenario": ["After a timed block, which result most needs review first?"],
-            "choices": ["A) Correct with high confidence", "B) Correct with low confidence", "C) Incorrect with high confidence", "D) Skipped intentionally and returned later"],
+            "choices": [
+                "A) Correct with high confidence",
+                "B) Correct with low confidence",
+                "C) Incorrect with high confidence",
+                "D) Skipped intentionally and returned later",
+            ],
             "answer": "C",
-            "correct_rationale": ["Incorrect with high confidence signals a misconception, not just uncertainty."],
+            "correct_rationale": [
+                "Incorrect with high confidence signals a misconception, not just uncertainty."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1333,9 +1487,16 @@ def exam_deepening_scenario_cards() -> list[dict]:
             "summary": "Original document-readiness item.",
             "response_format": "multiple_choice",
             "scenario": ["Which action best protects a PEF submission close to a deadline?"],
-            "choices": ["A) Wait until test day to gather evidence", "B) Keep a dated checklist of required documents and unresolved items", "C) Submit vague claims without support", "D) Ignore official messages after applying"],
+            "choices": [
+                "A) Wait until test day to gather evidence",
+                "B) Keep a dated checklist of required documents and unresolved items",
+                "C) Submit vague claims without support",
+                "D) Ignore official messages after applying",
+            ],
             "answer": "B",
-            "correct_rationale": ["A dated checklist makes missing evidence and deadlines visible."],
+            "correct_rationale": [
+                "A dated checklist makes missing evidence and deadlines visible."
+            ],
             "source_ref_ids": ["laett.inside_wireman.2026-01-26", "gan.validation.2026-09-03"],
         },
     ]
@@ -1379,9 +1540,7 @@ def exam_deepening_readiness_checkpoints() -> list[dict]:
         {
             "id": "cec-checkpoint-entrance-half-mock-readiness",
             "title": "Entrance Exam half-mock readiness checkpoint",
-            "summary": (
-                "Use before moving from focused drills into longer mixed timed practice."
-            ),
+            "summary": ("Use before moving from focused drills into longer mixed timed practice."),
             "checkpoint_prompts": [
                 "Can the learner classify each item section before solving?",
                 "Can the learner complete numeric-fill math without answer choices?",
@@ -1442,7 +1601,9 @@ def exam_expansion_lesson_cards() -> list[dict]:
                 "Detail questions need a phrase; main idea questions need the whole passage purpose.",
                 "Eliminate answers that add outside assumptions.",
             ],
-            "quick_check_prompts": ["What should you identify before reading answer choices in a timed reading item?"],
+            "quick_check_prompts": [
+                "What should you identify before reading answer choices in a timed reading item?"
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1481,7 +1642,9 @@ def exam_expansion_lesson_cards() -> list[dict]:
                 "Slow correct means method works but needs speed.",
                 "Fast correct means maintenance, not heavy review.",
             ],
-            "quick_check_prompts": ["Why should confident wrong answers be reviewed before uncertain wrong answers?"],
+            "quick_check_prompts": [
+                "Why should confident wrong answers be reviewed before uncertain wrong answers?"
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1500,7 +1663,9 @@ def exam_expansion_lesson_cards() -> list[dict]:
                 "Short reset breaths can prevent a cascade of careless errors.",
                 "Final practice should include at least one longer mixed block.",
             ],
-            "quick_check_prompts": ["What is one sign that a miss was caused by stamina rather than missing knowledge?"],
+            "quick_check_prompts": [
+                "What is one sign that a miss was caused by stamina rather than missing knowledge?"
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1531,8 +1696,18 @@ def exam_expansion_practice_blueprints() -> list[dict]:
             "id": "cec-practice-entrance-full-section-mock",
             "title": "Entrance Exam full-section mock rehearsal",
             "summary": "Generate a longer mixed section rehearsal with pacing, confidence marks, and section-level feedback.",
-            "practice_modes": ["timed section mock", "confidence mark", "section breakdown", "repair prescription"],
-            "item_format_mix": ["multiple_choice", "numeric_fill", "short_evidence_answer", "visual_reasoning_prompt"],
+            "practice_modes": [
+                "timed section mock",
+                "confidence mark",
+                "section breakdown",
+                "repair prescription",
+            ],
+            "item_format_mix": [
+                "multiple_choice",
+                "numeric_fill",
+                "short_evidence_answer",
+                "visual_reasoning_prompt",
+            ],
             "generation_rules": [
                 "Use only original items and do not imply official exam replication.",
                 "Balance math/numerical, reading, mechanical, and spatial items.",
@@ -1585,7 +1760,9 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Fraction of total",
             "summary": "Original fraction computation item.",
             "response_format": "multiple_choice",
-            "scenario": ["A box has 48 parts. One fourth are marked for review. How many are marked?"],
+            "scenario": [
+                "A box has 48 parts. One fourth are marked for review. How many are marked?"
+            ],
             "choices": ["A) 8", "B) 10", "C) 12", "D) 16"],
             "answer": "C",
             "correct_rationale": ["One fourth of 48 is 12."],
@@ -1620,7 +1797,9 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "scenario": ["Find the next number: 8, 3, 10, 6, 12, 9, ?"],
             "choices": ["A) 11", "B) 13", "C) 14", "D) 18"],
             "answer": "C",
-            "correct_rationale": ["Odd positions are 8, 10, 12, so next odd-position number is 14."],
+            "correct_rationale": [
+                "Odd positions are 8, 10, 12, so next odd-position number is 14."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1628,8 +1807,15 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Table reasoning: greatest change",
             "summary": "Original table-comparison item.",
             "response_format": "multiple_choice",
-            "scenario": ["Day 1: 12 items, Day 2: 18, Day 3: 21, Day 4: 29. Which day-to-day increase is greatest?"],
-            "choices": ["A) Day 1 to Day 2", "B) Day 2 to Day 3", "C) Day 3 to Day 4", "D) All equal"],
+            "scenario": [
+                "Day 1: 12 items, Day 2: 18, Day 3: 21, Day 4: 29. Which day-to-day increase is greatest?"
+            ],
+            "choices": [
+                "A) Day 1 to Day 2",
+                "B) Day 2 to Day 3",
+                "C) Day 3 to Day 4",
+                "D) All equal",
+            ],
             "answer": "C",
             "correct_rationale": ["Increases are +6, +3, and +8; the greatest is Day 3 to Day 4."],
             "source_ref_ids": SOURCE_REFS,
@@ -1639,8 +1825,15 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Reading detail: ID requirement",
             "summary": "Original reading detail item.",
             "response_format": "multiple_choice",
-            "scenario": ["Passage: Applicants must bring a current photo ID. Expired IDs will not be accepted. Which ID is acceptable?"],
-            "choices": ["A) Expired photo ID", "B) Current photo ID", "C) Library card without photo", "D) No ID if the applicant knows their number"],
+            "scenario": [
+                "Passage: Applicants must bring a current photo ID. Expired IDs will not be accepted. Which ID is acceptable?"
+            ],
+            "choices": [
+                "A) Expired photo ID",
+                "B) Current photo ID",
+                "C) Library card without photo",
+                "D) No ID if the applicant knows their number",
+            ],
             "answer": "B",
             "correct_rationale": ["The passage says current photo ID is required."],
             "source_ref_ids": SOURCE_REFS,
@@ -1650,8 +1843,15 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Reading: main idea versus detail",
             "summary": "Original reading classification item.",
             "response_format": "multiple_choice",
-            "scenario": ["A question asks, 'What is the passage mainly about?' What should you look for?"],
-            "choices": ["A) One isolated number", "B) The overall purpose", "C) The longest word", "D) A choice with trade vocabulary"],
+            "scenario": [
+                "A question asks, 'What is the passage mainly about?' What should you look for?"
+            ],
+            "choices": [
+                "A) One isolated number",
+                "B) The overall purpose",
+                "C) The longest word",
+                "D) A choice with trade vocabulary",
+            ],
             "answer": "B",
             "correct_rationale": ["Mainly about asks for the overall purpose, not one detail."],
             "source_ref_ids": SOURCE_REFS,
@@ -1661,10 +1861,19 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Reading qualifier: unless",
             "summary": "Original qualifier item.",
             "response_format": "multiple_choice",
-            "scenario": ["Passage: Applicants will receive a confirmation email unless their application is incomplete. Who may not receive confirmation?"],
-            "choices": ["A) Applicants with complete applications", "B) Applicants with incomplete applications", "C) Everyone who applies", "D) Only applicants who arrive early"],
+            "scenario": [
+                "Passage: Applicants will receive a confirmation email unless their application is incomplete. Who may not receive confirmation?"
+            ],
+            "choices": [
+                "A) Applicants with complete applications",
+                "B) Applicants with incomplete applications",
+                "C) Everyone who applies",
+                "D) Only applicants who arrive early",
+            ],
             "answer": "B",
-            "correct_rationale": ["Unless marks the exception: incomplete applications may not receive confirmation."],
+            "correct_rationale": [
+                "Unless marks the exception: incomplete applications may not receive confirmation."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1672,10 +1881,19 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Lever: load farther from pivot",
             "summary": "Original lever reasoning item.",
             "response_format": "multiple_choice",
-            "scenario": ["On a lever, the load is moved farther from the pivot while effort is applied at the same point. What usually happens to required effort?"],
-            "choices": ["A) It decreases", "B) It increases", "C) It becomes zero", "D) Distance from pivot never matters"],
+            "scenario": [
+                "On a lever, the load is moved farther from the pivot while effort is applied at the same point. What usually happens to required effort?"
+            ],
+            "choices": [
+                "A) It decreases",
+                "B) It increases",
+                "C) It becomes zero",
+                "D) Distance from pivot never matters",
+            ],
             "answer": "B",
-            "correct_rationale": ["Moving the load farther from the pivot increases its turning effect, so more effort is usually required."],
+            "correct_rationale": [
+                "Moving the load farther from the pivot increases its turning effect, so more effort is usually required."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1683,9 +1901,13 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Gear size and speed",
             "summary": "Original gear-speed intuition item.",
             "response_format": "true_false",
-            "scenario": ["True or false: When a small gear drives a larger gear, the larger gear usually turns more slowly."],
+            "scenario": [
+                "True or false: When a small gear drives a larger gear, the larger gear usually turns more slowly."
+            ],
             "answer": "True",
-            "correct_rationale": ["The larger gear has more teeth/circumference, so it generally rotates more slowly for each turn of the smaller gear."],
+            "correct_rationale": [
+                "The larger gear has more teeth/circumference, so it generally rotates more slowly for each turn of the smaller gear."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1694,9 +1916,16 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "summary": "Original pulley concept item.",
             "response_format": "multiple_choice",
             "scenario": ["A single fixed pulley mainly helps by changing what?"],
-            "choices": ["A) Direction of pull", "B) Weight into zero", "C) Rope into metal", "D) Time into distance"],
+            "choices": [
+                "A) Direction of pull",
+                "B) Weight into zero",
+                "C) Rope into metal",
+                "D) Time into distance",
+            ],
             "answer": "A",
-            "correct_rationale": ["A fixed pulley mainly changes the direction of the pulling force."],
+            "correct_rationale": [
+                "A fixed pulley mainly changes the direction of the pulling force."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1704,9 +1933,13 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Spatial: rotate arrow",
             "summary": "Original rotation item.",
             "response_format": "numeric_fill",
-            "scenario": ["An arrow points up. After two 90-degree clockwise turns, which direction does it point?"],
+            "scenario": [
+                "An arrow points up. After two 90-degree clockwise turns, which direction does it point?"
+            ],
             "expected_answer": "down",
-            "correct_rationale": ["Up rotated 90 degrees clockwise points right; another 90 degrees points down."],
+            "correct_rationale": [
+                "Up rotated 90 degrees clockwise points right; another 90 degrees points down."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1714,10 +1947,14 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Paper folding: one horizontal fold",
             "summary": "Original fold-count item.",
             "response_format": "multiple_choice",
-            "scenario": ["A paper is folded once horizontally. A hole is punched away from the fold line. How many holes after unfolding?"],
+            "scenario": [
+                "A paper is folded once horizontally. A hole is punched away from the fold line. How many holes after unfolding?"
+            ],
             "choices": ["A) 1", "B) 2", "C) 3", "D) 4"],
             "answer": "B",
-            "correct_rationale": ["One fold creates two layers, so the off-fold-line hole appears in two mirrored positions."],
+            "correct_rationale": [
+                "One fold creates two layers, so the off-fold-line hole appears in two mirrored positions."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1725,10 +1962,19 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Section triage: passage item",
             "summary": "Original classification item.",
             "response_format": "multiple_choice",
-            "scenario": ["The item begins with a short workplace notice and asks what must happen first. Which method should you use first?"],
-            "choices": ["A) Gear reversal count", "B) Passage evidence scan", "C) Percent multiplier", "D) Paper unfolding"],
+            "scenario": [
+                "The item begins with a short workplace notice and asks what must happen first. Which method should you use first?"
+            ],
+            "choices": [
+                "A) Gear reversal count",
+                "B) Passage evidence scan",
+                "C) Percent multiplier",
+                "D) Paper unfolding",
+            ],
             "answer": "B",
-            "correct_rationale": ["A workplace notice with must/first language is a reading evidence item."],
+            "correct_rationale": [
+                "A workplace notice with must/first language is a reading evidence item."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1736,8 +1982,15 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Section triage: fold item",
             "summary": "Original classification item for spatial reasoning.",
             "response_format": "multiple_choice",
-            "scenario": ["The item describes folding paper twice and punching one hole. Which method should you use?"],
-            "choices": ["A) Reverse unfolding", "B) Percent increase", "C) Main idea summary", "D) Combined work rate"],
+            "scenario": [
+                "The item describes folding paper twice and punching one hole. Which method should you use?"
+            ],
+            "choices": [
+                "A) Reverse unfolding",
+                "B) Percent increase",
+                "C) Main idea summary",
+                "D) Combined work rate",
+            ],
             "answer": "A",
             "correct_rationale": ["Paper folding should be solved by unfolding in reverse order."],
             "source_ref_ids": SOURCE_REFS,
@@ -1747,10 +2000,19 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Mock review: slow correct",
             "summary": "Original mock-review item.",
             "response_format": "multiple_choice",
-            "scenario": ["You answered a ratio item correctly but needed four minutes. What should the review label be?"],
-            "choices": ["A) Stable maintenance", "B) Speed/pacing repair", "C) Reading qualifier trap", "D) Visual jump"],
+            "scenario": [
+                "You answered a ratio item correctly but needed four minutes. What should the review label be?"
+            ],
+            "choices": [
+                "A) Stable maintenance",
+                "B) Speed/pacing repair",
+                "C) Reading qualifier trap",
+                "D) Visual jump",
+            ],
             "answer": "B",
-            "correct_rationale": ["Correct but too slow means the method works but needs speed or shortcut practice."],
+            "correct_rationale": [
+                "Correct but too slow means the method works but needs speed or shortcut practice."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -1758,10 +2020,19 @@ def exam_expansion_scenario_cards() -> list[dict]:
             "title": "Stamina: careless cascade",
             "summary": "Original stamina-awareness item.",
             "response_format": "multiple_choice",
-            "scenario": ["After 40 minutes, you miss three easy arithmetic items by copying numbers incorrectly. What is the likely training issue?"],
-            "choices": ["A) Stamina or attention reset", "B) Gear reversal", "C) Contractor law", "D) Paper-folding layer count"],
+            "scenario": [
+                "After 40 minutes, you miss three easy arithmetic items by copying numbers incorrectly. What is the likely training issue?"
+            ],
+            "choices": [
+                "A) Stamina or attention reset",
+                "B) Gear reversal",
+                "C) Contractor law",
+                "D) Paper-folding layer count",
+            ],
             "answer": "A",
-            "correct_rationale": ["Easy copying misses after sustained work suggest attention/stamina, not missing arithmetic concept alone."],
+            "correct_rationale": [
+                "Easy copying misses after sustained work suggest attention/stamina, not missing arithmetic concept alone."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
     ]
@@ -2011,7 +2282,12 @@ def exam_learning_methods_activity_templates() -> list[dict]:
             "id": "cec-activity-exam-day-simulation",
             "title": "Exam-day simulation",
             "summary": "A rehearsal that includes pacing, instructions, uncertainty handling, and document readiness.",
-            "activity_modes": ["instructions check", "timed block", "skip rule", "document checklist"],
+            "activity_modes": [
+                "instructions check",
+                "timed block",
+                "skip rule",
+                "document checklist",
+            ],
             "steps": [
                 "Start with one instruction-reading check.",
                 "Run a timed mixed block.",
@@ -2026,7 +2302,9 @@ def exam_learning_methods_activity_templates() -> list[dict]:
             "feedback_rule": [
                 "Do not add new broad content during exam-day simulation; only repair repeated high-risk errors."
             ],
-            "exam_alignment": ["Practices the behavior needed on selection day, not just isolated knowledge."],
+            "exam_alignment": [
+                "Practices the behavior needed on selection day, not just isolated knowledge."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
     ]
@@ -2070,10 +2348,19 @@ def exam_learning_methods_scenario_cards() -> list[dict]:
             "title": "Confidence calibration: high-confidence wrong",
             "summary": "Original review-routing item.",
             "response_format": "multiple_choice",
-            "scenario": ["A learner answers a gear-direction item wrong and marks high confidence. What should Tutor do first?"],
-            "choices": ["A) Skip review because confidence was high", "B) Treat it as a misconception and repair the rule", "C) Move to an unrelated reading passage", "D) Only praise the effort"],
+            "scenario": [
+                "A learner answers a gear-direction item wrong and marks high confidence. What should Tutor do first?"
+            ],
+            "choices": [
+                "A) Skip review because confidence was high",
+                "B) Treat it as a misconception and repair the rule",
+                "C) Move to an unrelated reading passage",
+                "D) Only praise the effort",
+            ],
             "answer": "B",
-            "correct_rationale": ["High-confidence wrong indicates the internal rule is likely wrong."],
+            "correct_rationale": [
+                "High-confidence wrong indicates the internal rule is likely wrong."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -2081,10 +2368,19 @@ def exam_learning_methods_scenario_cards() -> list[dict]:
             "title": "Spaced review: delayed retest",
             "summary": "Original learning-method item about retest timing.",
             "response_format": "multiple_choice",
-            "scenario": ["You fixed a percent-base error today. What is the best evidence that the fix stuck?"],
-            "choices": ["A) Rereading the explanation immediately", "B) Getting one identical item right immediately", "C) Getting a new percent-base item right tomorrow or inside a mixed set", "D) Avoiding percent questions"],
+            "scenario": [
+                "You fixed a percent-base error today. What is the best evidence that the fix stuck?"
+            ],
+            "choices": [
+                "A) Rereading the explanation immediately",
+                "B) Getting one identical item right immediately",
+                "C) Getting a new percent-base item right tomorrow or inside a mixed set",
+                "D) Avoiding percent questions",
+            ],
             "answer": "C",
-            "correct_rationale": ["Delayed or mixed retest shows the method transfers beyond the immediate repair."],
+            "correct_rationale": [
+                "Delayed or mixed retest shows the method transfers beyond the immediate repair."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -2092,8 +2388,15 @@ def exam_learning_methods_scenario_cards() -> list[dict]:
             "title": "Elimination: impossible units",
             "summary": "Original elimination item.",
             "response_format": "multiple_choice",
-            "scenario": ["A question asks for a rate in tasks per hour. Which answer can be eliminated immediately?"],
-            "choices": ["A) 8 tasks/hour", "B) 12 tasks/hour", "C) 3 hours/task", "D) 15 tasks/hour"],
+            "scenario": [
+                "A question asks for a rate in tasks per hour. Which answer can be eliminated immediately?"
+            ],
+            "choices": [
+                "A) 8 tasks/hour",
+                "B) 12 tasks/hour",
+                "C) 3 hours/task",
+                "D) 15 tasks/hour",
+            ],
             "answer": "C",
             "correct_rationale": ["3 hours/task has the reciprocal unit, not tasks per hour."],
             "source_ref_ids": SOURCE_REFS,
@@ -2103,10 +2406,19 @@ def exam_learning_methods_scenario_cards() -> list[dict]:
             "title": "Interleaving: when mixed practice collapses",
             "summary": "Original study-routing item.",
             "response_format": "multiple_choice",
-            "scenario": ["A learner gets 80% in focused math drills but misses most math items in mixed sets. What is the likely issue?"],
-            "choices": ["A) Method recognition or section switching", "B) No math knowledge at all", "C) PEF evidence quality", "D) Contractor licensing law"],
+            "scenario": [
+                "A learner gets 80% in focused math drills but misses most math items in mixed sets. What is the likely issue?"
+            ],
+            "choices": [
+                "A) Method recognition or section switching",
+                "B) No math knowledge at all",
+                "C) PEF evidence quality",
+                "D) Contractor licensing law",
+            ],
             "answer": "A",
-            "correct_rationale": ["Focused success but mixed failure points to recognizing when to use the method."],
+            "correct_rationale": [
+                "Focused success but mixed failure points to recognizing when to use the method."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -2115,9 +2427,16 @@ def exam_learning_methods_scenario_cards() -> list[dict]:
             "summary": "Original metacognitive item.",
             "response_format": "multiple_choice",
             "scenario": ["Which error-journal entry is most useful?"],
-            "choices": ["A) Bad at math", "B) Missed Q4", "C) Percent increase: divided by new value instead of original; retest tomorrow", "D) Need to study everything"],
+            "choices": [
+                "A) Bad at math",
+                "B) Missed Q4",
+                "C) Percent increase: divided by new value instead of original; retest tomorrow",
+                "D) Need to study everything",
+            ],
             "answer": "C",
-            "correct_rationale": ["It names the section, exact error, repair idea, and retest plan."],
+            "correct_rationale": [
+                "It names the section, exact error, repair idea, and retest plan."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -2125,10 +2444,19 @@ def exam_learning_methods_scenario_cards() -> list[dict]:
             "title": "Educated guessing: mark and return",
             "summary": "Original pacing and uncertainty item.",
             "response_format": "multiple_choice",
-            "scenario": ["Two choices remain after elimination, but you are over your time target. What is the best action?"],
-            "choices": ["A) Spend unlimited time", "B) Pick the better-supported choice, mark it, and move on", "C) Erase the answer and quit", "D) Ignore the remaining easy questions"],
+            "scenario": [
+                "Two choices remain after elimination, but you are over your time target. What is the best action?"
+            ],
+            "choices": [
+                "A) Spend unlimited time",
+                "B) Pick the better-supported choice, mark it, and move on",
+                "C) Erase the answer and quit",
+                "D) Ignore the remaining easy questions",
+            ],
             "answer": "B",
-            "correct_rationale": ["This protects pacing while preserving a reasonable chance on the current item."],
+            "correct_rationale": [
+                "This protects pacing while preserving a reasonable chance on the current item."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
         {
@@ -2136,8 +2464,15 @@ def exam_learning_methods_scenario_cards() -> list[dict]:
             "title": "Reading: supported versus plausible",
             "summary": "Original reading evidence item.",
             "response_format": "multiple_choice",
-            "scenario": ["Passage: The notice says applicants should check email daily for scheduling updates. Which answer is supported?"],
-            "choices": ["A) Applicants should check email daily", "B) Applicants must buy tools before testing", "C) All tests are cancelled", "D) Phone calls are the only update method"],
+            "scenario": [
+                "Passage: The notice says applicants should check email daily for scheduling updates. Which answer is supported?"
+            ],
+            "choices": [
+                "A) Applicants should check email daily",
+                "B) Applicants must buy tools before testing",
+                "C) All tests are cancelled",
+                "D) Phone calls are the only update method",
+            ],
             "answer": "A",
             "correct_rationale": ["Only A is directly supported by the passage."],
             "source_ref_ids": SOURCE_REFS,
@@ -2147,10 +2482,19 @@ def exam_learning_methods_scenario_cards() -> list[dict]:
             "title": "Visual method: track one feature",
             "summary": "Original visual-strategy item.",
             "response_format": "multiple_choice",
-            "scenario": ["A shape has one notch. What should you track first when deciding whether an answer is rotated or reflected?"],
-            "choices": ["A) The color of the page", "B) The notch's relative position and feature order", "C) The longest answer choice", "D) Whether the shape looks familiar"],
+            "scenario": [
+                "A shape has one notch. What should you track first when deciding whether an answer is rotated or reflected?"
+            ],
+            "choices": [
+                "A) The color of the page",
+                "B) The notch's relative position and feature order",
+                "C) The longest answer choice",
+                "D) Whether the shape looks familiar",
+            ],
             "answer": "B",
-            "correct_rationale": ["Tracking a distinct feature helps distinguish rotation from reflection."],
+            "correct_rationale": [
+                "Tracking a distinct feature helps distinguish rotation from reflection."
+            ],
             "source_ref_ids": SOURCE_REFS,
         },
     ]
@@ -2231,7 +2575,9 @@ def main() -> None:
         "exam_learning_methods_lesson_cards": append_unique(
             knowledge, "lesson_cards", exam_learning_methods_lesson_cards()
         ),
-        "practice_blueprints": append_unique(knowledge, "practice_blueprints", practice_blueprints()),
+        "practice_blueprints": append_unique(
+            knowledge, "practice_blueprints", practice_blueprints()
+        ),
         "exam_deepening_practice_blueprints": append_unique(
             knowledge, "practice_blueprints", exam_deepening_practice_blueprints()
         ),
@@ -2258,7 +2604,9 @@ def main() -> None:
         "exam_expansion_flashcard_decks": append_unique(
             knowledge, "flashcard_decks", exam_expansion_flashcard_decks()
         ),
-        "readiness_checkpoints": append_unique(knowledge, "readiness_checkpoints", readiness_checkpoints()),
+        "readiness_checkpoints": append_unique(
+            knowledge, "readiness_checkpoints", readiness_checkpoints()
+        ),
         "exam_deepening_readiness_checkpoints": append_unique(
             knowledge, "readiness_checkpoints", exam_deepening_readiness_checkpoints()
         ),

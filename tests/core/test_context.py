@@ -5,12 +5,12 @@ from __future__ import annotations
 from cognispheretutor.core.context import Attachment, UnifiedContext
 from cognispheretutor.core.errors import (
     ConfigurationError,
-    cognisphereTutorError,
     EnvironmentConfigError,
     LLMContextError,
     LLMServiceError,
     ServiceError,
     ValidationError,
+    cognisphereTutorError,
 )
 from cognispheretutor.core.stream import StreamEvent, StreamEventType
 from cognispheretutor.core.trace import (

@@ -232,7 +232,11 @@ async def message_connection(name: str, payload: SubagentMessageRequest):
         raise HTTPException(status_code=404, detail=f"No connected subagent named {name!r}.")
 
     from cognispheretutor.services.subagent import get_backend
-    from cognispheretutor.services.subagent.sessions import get_session, remember_session, session_key
+    from cognispheretutor.services.subagent.sessions import (
+        get_session,
+        remember_session,
+        session_key,
+    )
 
     kind = str(meta.get("agent_kind") or "")
     cwd = str(meta.get("cwd") or "")

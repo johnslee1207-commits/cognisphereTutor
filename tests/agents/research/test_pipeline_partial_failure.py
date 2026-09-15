@@ -14,7 +14,11 @@ from unittest.mock import patch
 
 import pytest
 
-from cognispheretutor.agents.research.pipeline import ResearchedBlock, ResearchPipeline, SubTopicItem
+from cognispheretutor.agents.research.pipeline import (
+    ResearchedBlock,
+    ResearchPipeline,
+    SubTopicItem,
+)
 from cognispheretutor.core.context import UnifiedContext
 from cognispheretutor.core.stream_bus import StreamBus
 
@@ -48,7 +52,9 @@ class _FakeRegistry:
 def _make_pipeline() -> ResearchPipeline:
     with (
         patch("cognispheretutor.agents.research.pipeline.get_llm_config", lambda: _FakeLLM()),
-        patch("cognispheretutor.agents.research.pipeline.get_tool_registry", lambda: _FakeRegistry()),
+        patch(
+            "cognispheretutor.agents.research.pipeline.get_tool_registry", lambda: _FakeRegistry()
+        ),
     ):
         return ResearchPipeline(language="en", runtime_config={"queue": {"max_length": 5}})
 

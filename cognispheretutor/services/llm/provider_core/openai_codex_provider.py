@@ -12,7 +12,11 @@ import httpx
 from loguru import logger
 
 from cognispheretutor.services.llm.openai_http_client import disable_ssl_verify_enabled
-from cognispheretutor.services.llm.provider_core.base import LLMProvider, LLMResponse, ToolCallRequest
+from cognispheretutor.services.llm.provider_core.base import (
+    LLMProvider,
+    LLMResponse,
+    ToolCallRequest,
+)
 from cognispheretutor.services.llm.provider_core.openai_responses import (
     consume_sse,
     convert_messages,

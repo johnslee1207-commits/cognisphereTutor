@@ -10,7 +10,11 @@ from llama_index.core import Settings
 from llama_index.core.base.embeddings.base import BaseEmbedding
 from llama_index.core.bridge.pydantic import PrivateAttr
 
-from cognispheretutor.services.embedding import EmbeddingConfig, get_embedding_client, get_embedding_config
+from cognispheretutor.services.embedding import (
+    EmbeddingConfig,
+    get_embedding_client,
+    get_embedding_config,
+)
 from cognispheretutor.services.embedding.validation import validate_embedding_batch
 
 from .config import chunk_geometry

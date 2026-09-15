@@ -135,7 +135,9 @@ async def test_turn_runtime_replays_events_and_materializes_messages(
             )
             yield StreamEvent(type=StreamEventType.DONE, source="chat")
 
-    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr(
+        "cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace()
+    )
     monkeypatch.setattr(
         "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
@@ -161,6 +163,10 @@ async def test_turn_runtime_replays_events_and_materializes_messages(
     )
     monkeypatch.setattr(
         "cognispheretutor.services.persona.get_persona_service",
+        _fake_persona_service,
+    )
+    monkeypatch.setattr(
+        "cognispheretutor.multi_user.persona_access.get_persona_service",
         _fake_persona_service,
     )
 
@@ -272,7 +278,9 @@ async def test_turn_runtime_persists_error_event_as_visible_message(
                 metadata={"status": "failed"},
             )
 
-    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr(
+        "cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace()
+    )
     monkeypatch.setattr(
         "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
@@ -285,7 +293,13 @@ async def test_turn_runtime_persists_error_event_as_visible_message(
         ),
     )
     monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr(
+        "cognispheretutor.services.persona.get_persona_service", _fake_persona_service
+    )
+    monkeypatch.setattr(
+        "cognispheretutor.multi_user.persona_access.get_persona_service",
+        _fake_persona_service,
+    )
 
     session, turn = await runtime.start_turn(
         {
@@ -344,7 +358,9 @@ async def test_mastery_path_id_persists_across_session_turns(
             )
             yield StreamEvent(type=StreamEventType.DONE, source="chat")
 
-    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr(
+        "cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace()
+    )
     monkeypatch.setattr(
         "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
@@ -354,7 +370,13 @@ async def test_mastery_path_id_persists_across_session_turns(
         lambda: SimpleNamespace(read_l3_concat=lambda: "", emit=_noop_async),
     )
     monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr(
+        "cognispheretutor.services.persona.get_persona_service", _fake_persona_service
+    )
+    monkeypatch.setattr(
+        "cognispheretutor.multi_user.persona_access.get_persona_service",
+        _fake_persona_service,
+    )
 
     session, turn = await runtime.start_turn(
         {
@@ -462,7 +484,9 @@ async def test_turn_runtime_persists_llm_selection_in_turn_snapshot(
         ),
     )
     monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr(
+        "cognispheretutor.services.persona.get_persona_service", _fake_persona_service
+    )
 
     selection = {"profile_id": "p-alt", "model_id": "m-alt"}
     session, turn = await runtime.start_turn(
@@ -529,7 +553,9 @@ async def test_turn_runtime_session_persona_persists_falls_back_and_clears(
             )
             yield StreamEvent(type=StreamEventType.DONE, source="chat")
 
-    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr(
+        "cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace()
+    )
     monkeypatch.setattr(
         "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
@@ -539,7 +565,13 @@ async def test_turn_runtime_session_persona_persists_falls_back_and_clears(
         lambda: SimpleNamespace(read_l3_concat=lambda: "", emit=_noop_async),
     )
     monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr(
+        "cognispheretutor.services.persona.get_persona_service", _fake_persona_service
+    )
+    monkeypatch.setattr(
+        "cognispheretutor.multi_user.persona_access.get_persona_service",
+        _fake_persona_service,
+    )
 
     async def run_turn(session_id, extra):
         session, turn = await runtime.start_turn(
@@ -680,7 +712,9 @@ async def test_turn_runtime_allows_model_switching_within_same_session(
         ),
     )
     monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr(
+        "cognispheretutor.services.persona.get_persona_service", _fake_persona_service
+    )
 
     first_selection = {"profile_id": "p-default", "model_id": "m-default"}
     second_selection = {"profile_id": "p-alt", "model_id": "m-alt"}
@@ -816,7 +850,9 @@ async def test_turn_runtime_bootstraps_question_followup_context_once(
             )
             yield StreamEvent(type=StreamEventType.DONE, source="chat")
 
-    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr(
+        "cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace()
+    )
     monkeypatch.setattr(
         "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
@@ -829,7 +865,9 @@ async def test_turn_runtime_bootstraps_question_followup_context_once(
         ),
     )
     monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr(
+        "cognispheretutor.services.persona.get_persona_service", _fake_persona_service
+    )
 
     session, turn = await runtime.start_turn(
         {
@@ -941,7 +979,9 @@ async def test_turn_runtime_persists_deep_research_session_preference(
             )
             yield StreamEvent(type=StreamEventType.DONE, source="deep_research")
 
-    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr(
+        "cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace()
+    )
     monkeypatch.setattr(
         "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
@@ -954,7 +994,9 @@ async def test_turn_runtime_persists_deep_research_session_preference(
         ),
     )
     monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr(
+        "cognispheretutor.services.persona.get_persona_service", _fake_persona_service
+    )
 
     session, turn = await runtime.start_turn(
         {
@@ -1034,7 +1076,9 @@ async def test_turn_runtime_injects_memory_and_refreshes_after_completion(
         emit_calls.append(event)
         return None
 
-    monkeypatch.setattr("cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace())
+    monkeypatch.setattr(
+        "cognispheretutor.services.llm.config.get_llm_config", lambda: SimpleNamespace()
+    )
     monkeypatch.setattr(
         "cognispheretutor.services.session.context_builder.ContextBuilder", FakeContextBuilder
     )
@@ -1047,7 +1091,9 @@ async def test_turn_runtime_injects_memory_and_refreshes_after_completion(
         ),
     )
     monkeypatch.setattr("cognispheretutor.services.skill.get_skill_service", _fake_skill_service)
-    monkeypatch.setattr("cognispheretutor.services.persona.get_persona_service", _fake_persona_service)
+    monkeypatch.setattr(
+        "cognispheretutor.services.persona.get_persona_service", _fake_persona_service
+    )
 
     _session, turn = await runtime.start_turn(
         {

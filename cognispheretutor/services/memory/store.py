@@ -29,9 +29,7 @@ logger = logging.getLogger(__name__)
 Layer = Literal["L2", "L3"]
 
 _V1_FILES = ("PROFILE.md", "SUMMARY.md")
-_NO_MEMORY = (
-    "(No memory available — interact with cognisphereTutor and update from the Memory page to build one.)"
-)
+_NO_MEMORY = "(No memory available — interact with cognisphereTutor and update from the Memory page to build one.)"
 
 
 @dataclass

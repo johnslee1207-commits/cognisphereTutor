@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import asyncio
+from collections import Counter
 import hashlib
 import json
 import time
-from collections import Counter
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
@@ -107,16 +107,10 @@ def _summarize_learning_workspace(state: dict[str, Any]) -> dict[str, Any]:
     events = [event for event in state.get("learning_events", []) if isinstance(event, dict)]
     event_types = Counter(str(event.get("event_type") or "") for event in events)
     error_types = Counter(
-        str(error)
-        for event in events
-        for error in event.get("error_types", [])
-        if str(error)
+        str(error) for event in events for error in event.get("error_types", []) if str(error)
     )
     evidence_refs = [
-        str(ref)
-        for event in events
-        for ref in event.get("evidence_refs", [])
-        if str(ref)
+        str(ref) for event in events for ref in event.get("evidence_refs", []) if str(ref)
     ]
     scored_events = [event for event in events if isinstance(event.get("score"), (int, float))]
     scores = [float(event["score"]) for event in scored_events]
@@ -127,11 +121,7 @@ def _summarize_learning_workspace(state: dict[str, Any]) -> dict[str, Any]:
         for event in events
         if event.get("unit_id") and (event.get("evidence_refs") or event.get("score") is not None)
     }
-    covered_units.update(
-        str(unit_id)
-        for unit_id, refs in evidence_bundles.items()
-        if refs
-    )
+    covered_units.update(str(unit_id) for unit_id, refs in evidence_bundles.items() if refs)
     stage_counts = {
         "preCheck": sum(event_types[event_type] for event_type in PRE_EVENT_TYPES),
         "postCheck": sum(event_types[event_type] for event_type in POST_EVENT_TYPES),
@@ -206,9 +196,13 @@ def _merge_learning_events(*event_lists: list[dict[str, Any]]) -> list[dict[str,
                 order.append(key)
                 merged[key] = normalized
                 continue
-            if float(normalized.get("created_at") or 0) >= float(merged[key].get("created_at") or 0):
+            if float(normalized.get("created_at") or 0) >= float(
+                merged[key].get("created_at") or 0
+            ):
                 merged[key] = normalized
-    return sorted((merged[key] for key in order), key=lambda item: float(item.get("created_at") or 0))
+    return sorted(
+        (merged[key] for key in order), key=lambda item: float(item.get("created_at") or 0)
+    )
 
 
 async def _call(method: str, path: str, payload: dict[str, Any] | None = None):

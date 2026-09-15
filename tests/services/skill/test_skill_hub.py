@@ -320,7 +320,10 @@ def _browse_client() -> httpx.Client:
                         "keywords": ["tutor", "socratic"],
                         "stats": {"downloads": 8, "stars": 2},
                     },
-                    "owner": {"displayName": "cognisphereTutor", "htmlUrl": "https://cognispheretutor.info"},
+                    "owner": {
+                        "displayName": "cognisphereTutor",
+                        "htmlUrl": "https://cognispheretutor.info",
+                    },
                     "distTags": {"latest": "1.0.0"},
                 },
             )
