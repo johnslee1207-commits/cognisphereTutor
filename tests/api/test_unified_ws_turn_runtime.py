@@ -568,6 +568,10 @@ async def test_turn_runtime_session_persona_persists_falls_back_and_clears(
     monkeypatch.setattr(
         "cognispheretutor.services.persona.get_persona_service", _fake_persona_service
     )
+    monkeypatch.setattr(
+        "cognispheretutor.multi_user.persona_access.get_persona_service",
+        _fake_persona_service,
+    )
 
     async def run_turn(session_id, extra):
         session, turn = await runtime.start_turn(
