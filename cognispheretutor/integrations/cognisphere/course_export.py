@@ -403,8 +403,7 @@ def _render_quiz_question(question: Mapping[str, Any], index: int) -> str:
     answers = _question_answers(question)
     answer_attr = escape("||".join(answers), quote=True)
     rendered_options = "\n".join(
-        _render_quiz_option(option, option_index)
-        for option_index, option in enumerate(options)
+        _render_quiz_option(option, option_index) for option_index, option in enumerate(options)
     )
     analysis = escape(str(question.get("analysis") or question.get("rationale") or ""))
     if not rendered_options:

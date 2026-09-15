@@ -1324,7 +1324,9 @@ class SQLiteSessionStore:
     ) -> list[dict[str, Any]]:
         with self._connect() as conn:
             rows = conn.execute(  # nosemgrep
-                self._SESSION_SUMMARY_SQL.format(where=where_sql),  # nosemgrep: python.sqlalchemy.security.sqlalchemy-execute-raw-query
+                self._SESSION_SUMMARY_SQL.format(
+                    where=where_sql
+                ),  # nosemgrep: python.sqlalchemy.security.sqlalchemy-execute-raw-query
                 (limit, offset),
             ).fetchall()
         sessions = []
@@ -1587,7 +1589,9 @@ class SQLiteSessionStore:
             total_row = conn.execute(count_base + where, tuple(params)).fetchone()  # nosemgrep
             total = int(total_row["cnt"]) if total_row else 0
             rows = conn.execute(  # nosemgrep
-                base + where + " ORDER BY n.created_at DESC LIMIT ? OFFSET ?",  # nosemgrep: python.sqlalchemy.security.sqlalchemy-execute-raw-query
+                base
+                + where
+                + " ORDER BY n.created_at DESC LIMIT ? OFFSET ?",  # nosemgrep: python.sqlalchemy.security.sqlalchemy-execute-raw-query
                 tuple(params) + (limit, offset),
             ).fetchall()
         items = [self._serialize_notebook_entry(r) for r in rows]

@@ -8,7 +8,9 @@ compatible gateways; register bespoke providers by adding new keys here.
 from __future__ import annotations
 
 from cognispheretutor.services.generation_http import GenerationProviderError
-from cognispheretutor.services.imagegen.adapters.chat_completions import ChatCompletionsImagegenAdapter
+from cognispheretutor.services.imagegen.adapters.chat_completions import (
+    ChatCompletionsImagegenAdapter,
+)
 from cognispheretutor.services.imagegen.adapters.openai_compat import OpenAICompatImagegenAdapter
 from cognispheretutor.services.imagegen.base import BaseImagegenAdapter
 

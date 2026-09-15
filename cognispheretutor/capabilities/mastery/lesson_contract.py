@@ -86,8 +86,14 @@ def build_lesson_contract_seed(
 
 def _learner_profile(goal: str) -> dict[str, Any]:
     text = goal.lower()
-    level = "absolute_beginner" if any(signal in text for signal in _BEGINNER_SIGNALS) else "unknown"
-    scope = "systematic_full_path" if any(signal in text for signal in _SYSTEMATIC_SIGNALS) else "current_objective"
+    level = (
+        "absolute_beginner" if any(signal in text for signal in _BEGINNER_SIGNALS) else "unknown"
+    )
+    scope = (
+        "systematic_full_path"
+        if any(signal in text for signal in _SYSTEMATIC_SIGNALS)
+        else "current_objective"
+    )
     return {"level": level, "requested_scope": scope}
 
 
@@ -163,7 +169,9 @@ def _must_teach(next_step: NextStep, modules: list[Any]) -> list[str]:
     if next_step.status == "new":
         items.append("Briefly orient the learner before checking prior knowledge.")
     if modules:
-        items.append("Give a compact path overview only if the learner asked for a full/systematic path.")
+        items.append(
+            "Give a compact path overview only if the learner asked for a full/systematic path."
+        )
     if _visual_aid_required(next_step):
         items.append(
             "Before the mini-lesson, call mastery_visual(template='auto') for this "
@@ -300,9 +308,9 @@ def _check_options(next_step: NextStep) -> list[dict[str, str]]:
                 "purpose": "Fast binary misconception check; grade with mastery_grade.",
             },
             {
-            "mode": "free_response",
-            "purpose": "Optional deep explanation; schedule as required only at mastery checkpoints.",
-        },
+                "mode": "free_response",
+                "purpose": "Optional deep explanation; schedule as required only at mastery checkpoints.",
+            },
         ]
     return [
         {
@@ -382,9 +390,7 @@ def _interaction_policy(next_step: NextStep, learner_profile: dict[str, Any]) ->
     if learner_profile.get("level") == "absolute_beginner":
         policy.append("Assume no prior vocabulary; define unavoidable terms plainly.")
     if next_step.action in {"probe", "assess"}:
-        policy.append(
-            "End with one quick-check question, not another methodology explanation."
-        )
+        policy.append("End with one quick-check question, not another methodology explanation.")
     return policy
 
 
@@ -394,8 +400,10 @@ def _objective_label(next_step: NextStep, domain: str) -> str:
     domain_text = _normalize_label(domain)
     if not name:
         return "the current objective"
-    if _is_overview_objective(next_step) and "cognisphere" in lowered and (
-        not domain_text or domain_text in lowered
+    if (
+        _is_overview_objective(next_step)
+        and "cognisphere" in lowered
+        and (not domain_text or domain_text in lowered)
     ):
         return "the learning path overview"
     return name

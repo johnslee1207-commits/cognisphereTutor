@@ -143,9 +143,7 @@ def test_build_plugin_grounding_seed_includes_course_overview_manifest(
                     "learning_outcomes": [
                         "Connect operational claims to sources and lab evidence."
                     ],
-                    "content_design_rationale": [
-                        "Standard learning comes before Twin practice."
-                    ],
+                    "content_design_rationale": ["Standard learning comes before Twin practice."],
                     "source_policy": "Course structure comes from the materialized plugin pack.",
                     "review_status": "source_backed_draft_review_required",
                 },
@@ -178,7 +176,7 @@ def test_build_plugin_grounding_seed_includes_course_overview_manifest(
                             "remaining_gap": "Add reviewer dashboard.",
                         }
                     ],
-                }
+                },
             }
         ),
         encoding="utf-8",
@@ -237,12 +235,8 @@ def test_build_plugin_grounding_seed_includes_materialized_lesson_cards(
                             "teaching_points": [
                                 "Open-book does not mean slow-book.",
                             ],
-                            "quick_check_prompts": [
-                                "What should happen before calculation?"
-                            ],
-                            "source_ref_ids": [
-                                "ca_dir.electrician_certification_faq.2026-09-03"
-                            ],
+                            "quick_check_prompts": ["What should happen before calculation?"],
+                            "source_ref_ids": ["ca_dir.electrician_certification_faq.2026-09-03"],
                         }
                     ],
                     "cognisphere_provenance_refs": [
@@ -359,9 +353,7 @@ def test_build_plugin_grounding_seed_includes_visual_prompts(
                         {
                             "id": "cec-visual-entrance-one-fold-hole",
                             "title": "One-fold hole punch mirror",
-                            "applies_to_objective_ids": [
-                                "cec-apprentice-spatial"
-                            ],
+                            "applies_to_objective_ids": ["cec-apprentice-spatial"],
                             "visual_template": "paper_one_fold_hole",
                             "visual_mode": "mermaid_storyboard",
                             "prompt": (
@@ -422,12 +414,8 @@ def test_build_plugin_grounding_seed_includes_sequences_and_scenario_cards(
                             "id": "cec-sequence-law-business",
                             "title": "Contractor Law and Business scenario path",
                             "summary": "A scenario-first route for Law and Business sections.",
-                            "checkpoint_prompts": [
-                                "Can the learner spot a public works clue?"
-                            ],
-                            "mastery_evidence": [
-                                "public works recognition scenario"
-                            ],
+                            "checkpoint_prompts": ["Can the learner spot a public works clue?"],
+                            "mastery_evidence": ["public works recognition scenario"],
                         }
                     ],
                     "scenario_cards": [
@@ -437,9 +425,7 @@ def test_build_plugin_grounding_seed_includes_sequences_and_scenario_cards(
                             "scenario": [
                                 "A contractor is working on a public project and the prompt mentions worker classifications, hours, and wage reporting."
                             ],
-                            "choices": [
-                                "A) Certified payroll / prevailing wage compliance"
-                            ],
+                            "choices": ["A) Certified payroll / prevailing wage compliance"],
                             "correct_rationale": [
                                 "Public project context plus worker classifications points to public works payroll."
                             ],
@@ -449,9 +435,7 @@ def test_build_plugin_grounding_seed_includes_sequences_and_scenario_cards(
                         {
                             "id": "cec-flashcards-law-business",
                             "title": "Law and Business scenario cues",
-                            "cards": [
-                                "Certified payroll: public works record/reporting concept."
-                            ],
+                            "cards": ["Certified payroll: public works record/reporting concept."],
                         }
                     ],
                 },

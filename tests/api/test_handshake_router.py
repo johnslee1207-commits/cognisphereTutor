@@ -10,9 +10,7 @@ import pytest
 
 from cognispheretutor.api.routers import cognisphere_learning
 
-FIXTURE_ROOT = (
-    Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
-)
+FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
 PREFIX = "/api/v1/learning/cognisphere"
 
 

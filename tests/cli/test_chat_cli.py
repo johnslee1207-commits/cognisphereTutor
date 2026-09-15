@@ -8,7 +8,7 @@ from typing import Any
 import pytest
 from typer.testing import CliRunner
 
-from cognispheretutor.app import cognisphereTutorApp, TurnRequest
+from cognispheretutor.app import TurnRequest, cognisphereTutorApp
 from cognispheretutor.runtime.bootstrap.builtin_capabilities import BUILTIN_CAPABILITY_CLASSES
 from cognispheretutor_cli.main import app
 
@@ -192,7 +192,9 @@ def test_session_list_command_uses_shared_store(monkeypatch) -> None:
             }
         ]
 
-    monkeypatch.setattr("cognispheretutor.app.facade.cognisphereTutorApp.list_sessions", _list_sessions)
+    monkeypatch.setattr(
+        "cognispheretutor.app.facade.cognisphereTutorApp.list_sessions", _list_sessions
+    )
 
     result = runner.invoke(app, ["session", "list"])
 

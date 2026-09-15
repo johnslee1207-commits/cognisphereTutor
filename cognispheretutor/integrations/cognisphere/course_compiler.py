@@ -99,7 +99,15 @@ def _scenes(
         _interactive_scene(course_id, 3, topic, objective_id, source_refs),
         _quiz_scene(course_id, "diagnose", 4, "Checkpoint", topic, objective_id, source_refs),
         _pbl_scene(course_id, 5, topic, objective_id, source_refs, lab_id),
-        _quiz_scene(course_id, "reflect_evidence", 6, "Evidence reflection", topic, objective_id, source_refs),
+        _quiz_scene(
+            course_id,
+            "reflect_evidence",
+            6,
+            "Evidence reflection",
+            topic,
+            objective_id,
+            source_refs,
+        ),
     ]
 
 

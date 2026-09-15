@@ -29,7 +29,9 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit(f"OpenMAIC root is missing package.json: {openmaic_root}")
 
     if args.build:
-        subprocess.run([_package_manager(openmaic_root), "run", "build"], cwd=openmaic_root, check=True)
+        subprocess.run(
+            [_package_manager(openmaic_root), "run", "build"], cwd=openmaic_root, check=True
+        )
 
     standalone = openmaic_root / ".next" / "standalone"
     if not standalone.exists():

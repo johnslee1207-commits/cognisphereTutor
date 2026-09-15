@@ -611,9 +611,7 @@ def register(app: typer.Typer) -> None:
         include_mvp: bool = typer.Option(
             False, "--include-mvp", help="Also run MVP-2 product flow"
         ),
-        status_only: bool = typer.Option(
-            False, "--status", help="Print mastery status only"
-        ),
+        status_only: bool = typer.Option(False, "--status", help="Print mastery status only"),
         root: Optional[Path] = typer.Option(None, "--root"),
     ) -> None:
         """Offline AWS digital twin Practitioner mastery (CP-04→optional CP-06/12)."""

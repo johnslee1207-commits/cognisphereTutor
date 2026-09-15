@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import types
 from pathlib import Path
+import types
 
 import pytest
 
-FIXTURE_ROOT = (
-    Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
-)
+FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
 SIBLING_LP = Path(r"D:\Projects\CognisphereLearningPlugins")
 
 
@@ -28,9 +26,7 @@ def test_cp_product_ux_status_forwards_to_twin(
         cp_product_ux_status,
     )
 
-    fake_mod = types.ModuleType(
-        "cognisphere_plugins.aws_certification_twin.cp_product_ux"
-    )
+    fake_mod = types.ModuleType("cognisphere_plugins.aws_certification_twin.cp_product_ux")
 
     def _status(**kwargs):  # noqa: ANN001, ARG001
         return {
@@ -123,9 +119,7 @@ def test_live_sibling_cp08_status_when_available(monkeypatch: pytest.MonkeyPatch
     assert status.get("phase_id") == "CP-08" or status.get("roadmap_band") == "CP"
     assert status["renders_ui"] is False
 
-    advert = consume_cp_visualization_advert(
-        "cp_pkg_ec2_vs_lambda", root=SIBLING_LP
-    )
+    advert = consume_cp_visualization_advert("cp_pkg_ec2_vs_lambda", root=SIBLING_LP)
     assert advert.get("ok") is True, advert.get("issues")
     assert advert["renders_ui"] is False
 

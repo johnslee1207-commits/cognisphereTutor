@@ -39,9 +39,7 @@ def _fail_closed(
         "marketplace_ui": False,
         "source": "tutor_local_fallback",
         "sot_docs": SOT_DOCS,
-        "note": (
-            "Install CognisphereLearningPlugins twin pack for MVP-2 product flow"
-        ),
+        "note": ("Install CognisphereLearningPlugins twin pack for MVP-2 product flow"),
     }
 
 

@@ -24,7 +24,9 @@ from cognispheretutor.services.generation_http import (
     join_api_path,
 )
 from cognispheretutor.services.imagegen import generate_image
-from cognispheretutor.services.imagegen.adapters.chat_completions import ChatCompletionsImagegenAdapter
+from cognispheretutor.services.imagegen.adapters.chat_completions import (
+    ChatCompletionsImagegenAdapter,
+)
 from cognispheretutor.services.imagegen.adapters.openai_compat import OpenAICompatImagegenAdapter
 from cognispheretutor.services.imagegen.config import ImagegenConfig
 from cognispheretutor.services.videogen import generate_video, probe_video

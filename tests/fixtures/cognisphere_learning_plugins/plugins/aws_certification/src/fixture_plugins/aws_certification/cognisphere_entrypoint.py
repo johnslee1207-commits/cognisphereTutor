@@ -8,7 +8,11 @@ DOMAIN = "aws_certification"
 
 
 def get_plugin_info() -> dict[str, Any]:
-    return {"host": "cognisphere", "domain": DOMAIN, "capabilities": ["ontology", "deeptutor_export"]}
+    return {
+        "host": "cognisphere",
+        "domain": DOMAIN,
+        "capabilities": ["ontology", "deeptutor_export"],
+    }
 
 
 def validate() -> dict[str, Any]:

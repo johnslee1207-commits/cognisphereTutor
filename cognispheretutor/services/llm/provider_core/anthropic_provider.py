@@ -15,7 +15,11 @@ from typing import Any
 
 import json_repair
 
-from cognispheretutor.services.llm.provider_core.base import LLMProvider, LLMResponse, ToolCallRequest
+from cognispheretutor.services.llm.provider_core.base import (
+    LLMProvider,
+    LLMResponse,
+    ToolCallRequest,
+)
 
 _ALNUM = string.ascii_letters + string.digits
 

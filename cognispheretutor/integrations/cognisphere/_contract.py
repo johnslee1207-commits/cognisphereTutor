@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import json
 from functools import lru_cache
+import json
 from pathlib import Path
 from typing import Any
 
@@ -35,9 +35,7 @@ def load_learning_loop_mapping() -> dict[str, Any]:
 @lru_cache(maxsize=4)
 def load_trusted_context_contract() -> dict[str, Any]:
     contract = load_plugin_contract()
-    name = str(
-        contract.get("trusted_context_contract_manifest") or "trusted_context_contract.json"
-    )
+    name = str(contract.get("trusted_context_contract_manifest") or "trusted_context_contract.json")
     return _load_json(name)
 
 

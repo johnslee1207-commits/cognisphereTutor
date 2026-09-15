@@ -17,7 +17,7 @@ from rich.status import Status
 from rich.table import Table
 from rich.text import Text
 
-from cognispheretutor.app import cognisphereTutorApp, TurnRequest
+from cognispheretutor.app import TurnRequest, cognisphereTutorApp
 
 from ._tool_result import ToolResultBuffer, ToolResultEntry
 

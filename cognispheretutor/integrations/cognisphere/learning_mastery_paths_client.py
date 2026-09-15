@@ -60,10 +60,7 @@ def _read_catalog_fallback(packs_root: Path) -> dict[str, Any]:
                 "tutor_cli": start.get("tutor_cli"),
                 "tutor_api": start.get("tutor_api") or start.get("tutor_paths_api"),
                 "guided_learning_url": start.get("guided_learning_url"),
-                "fail_closed_composition_roles": item.get(
-                    "fail_closed_composition_roles"
-                )
-                or [],
+                "fail_closed_composition_roles": item.get("fail_closed_composition_roles") or [],
             }
         )
     return {
@@ -100,6 +97,8 @@ def list_learning_mastery_paths(
     try:
         from cognisphere_plugin_sdk.learning_mastery_paths import (  # type: ignore[import-not-found]
             describe_learning_entry_points,
+        )
+        from cognisphere_plugin_sdk.learning_mastery_paths import (
             list_learning_mastery_paths as _sdk_list,
         )
 

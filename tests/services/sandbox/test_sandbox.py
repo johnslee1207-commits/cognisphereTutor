@@ -20,7 +20,12 @@ from cognispheretutor.services.sandbox.registry import (
     validate_sandbox_registry,
 )
 from cognispheretutor.services.sandbox.service import SandboxService
-from cognispheretutor.services.sandbox.spec import ExecRequest, ExecResult, IsolationLevel, ResourceLimits
+from cognispheretutor.services.sandbox.spec import (
+    ExecRequest,
+    ExecResult,
+    IsolationLevel,
+    ResourceLimits,
+)
 
 
 def test_sandbox_registry_lists_only_concrete_backends() -> None:

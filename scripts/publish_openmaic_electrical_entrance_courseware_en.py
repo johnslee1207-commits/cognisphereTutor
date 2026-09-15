@@ -267,7 +267,12 @@ MODULES: list[dict[str, Any]] = [
         "questions": [
             q(
                 "A learner misses mostly ratio questions but finishes on time. What should the next plan emphasize?",
-                ["Faster guessing", "Ratio setup practice", "Skipping math", "Mechanical vocabulary only"],
+                [
+                    "Faster guessing",
+                    "Ratio setup practice",
+                    "Skipping math",
+                    "Mechanical vocabulary only",
+                ],
                 1,
                 "The dominant gap is ratio setup, not speed.",
             ),
@@ -304,8 +309,18 @@ MODULES: list[dict[str, Any]] = [
         "gap": "operation order",
         "drill": "15 expressions with one written intermediate line each",
         "questions": [
-            q("What is 7 + 5 x 4?", ["27", "48", "35", "22"], 0, "Multiply first: 5 x 4 = 20; 7 + 20 = 27."),
-            q("What should be done first in 3 x (8 - 2)?", ["3 x 8", "8 - 2", "3 + 8", "2 x 3"], 1, "Parentheses come first."),
+            q(
+                "What is 7 + 5 x 4?",
+                ["27", "48", "35", "22"],
+                0,
+                "Multiply first: 5 x 4 = 20; 7 + 20 = 27.",
+            ),
+            q(
+                "What should be done first in 3 x (8 - 2)?",
+                ["3 x 8", "8 - 2", "3 + 8", "2 x 3"],
+                1,
+                "Parentheses come first.",
+            ),
         ],
     },
     {
@@ -333,8 +348,18 @@ MODULES: list[dict[str, Any]] = [
         "gap": "fraction operation selection",
         "drill": "four sets: add, subtract, multiply, divide, then one mixed set",
         "questions": [
-            q("What is 2/3 + 1/6?", ["3/9", "5/6", "1/2", "2/9"], 1, "2/3 is 4/6, and 4/6 + 1/6 = 5/6."),
-            q("What is 3/4 x 8?", ["6", "24/4", "3/32", "8/3"], 0, "8 is 8/1, so 3 x 8 / 4 = 24/4 = 6."),
+            q(
+                "What is 2/3 + 1/6?",
+                ["3/9", "5/6", "1/2", "2/9"],
+                1,
+                "2/3 is 4/6, and 4/6 + 1/6 = 5/6.",
+            ),
+            q(
+                "What is 3/4 x 8?",
+                ["6", "24/4", "3/32", "8/3"],
+                0,
+                "8 is 8/1, so 3 x 8 / 4 = 24/4 = 6.",
+            ),
         ],
     },
     {
@@ -362,8 +387,18 @@ MODULES: list[dict[str, Any]] = [
         "gap": "percent base identification",
         "drill": "10 percent increase/decrease items with the original value circled",
         "questions": [
-            q("A practice score increases from 24 to 30. What is the percent increase?", ["6%", "20%", "25%", "30%"], 2, "The change is 6, and 6/24 = 25%."),
-            q("What decimal equals 12 percent?", ["12.0", "1.2", "0.12", "0.012"], 2, "12 percent means 12/100 = 0.12."),
+            q(
+                "A practice score increases from 24 to 30. What is the percent increase?",
+                ["6%", "20%", "25%", "30%"],
+                2,
+                "The change is 6, and 6/24 = 25%.",
+            ),
+            q(
+                "What decimal equals 12 percent?",
+                ["12.0", "1.2", "0.12", "0.012"],
+                2,
+                "12 percent means 12/100 = 0.12.",
+            ),
         ],
     },
     {
@@ -391,8 +426,18 @@ MODULES: list[dict[str, Any]] = [
         "gap": "proportion setup",
         "drill": "12 direct proportion items with unit labels on every line",
         "questions": [
-            q("If 4 identical boxes hold 60 parts, how many parts are in 6 boxes?", ["90", "80", "66", "40"], 0, "60/4 = 15 per box; 6 x 15 = 90."),
-            q("In a 3:2 ratio with 30 total bundles, how many are in the second group?", ["10", "12", "15", "18"], 1, "There are 5 total parts; each part is 6; the second group has 2 parts = 12."),
+            q(
+                "If 4 identical boxes hold 60 parts, how many parts are in 6 boxes?",
+                ["90", "80", "66", "40"],
+                0,
+                "60/4 = 15 per box; 6 x 15 = 90.",
+            ),
+            q(
+                "In a 3:2 ratio with 30 total bundles, how many are in the second group?",
+                ["10", "12", "15", "18"],
+                1,
+                "There are 5 total parts; each part is 6; the second group has 2 parts = 12.",
+            ),
         ],
     },
     {
@@ -421,7 +466,12 @@ MODULES: list[dict[str, Any]] = [
         "drill": "inch-foot-yard conversions, then mixed measurement word problems",
         "questions": [
             q("How many inches are in 5 feet?", ["17", "50", "60", "72"], 2, "5 x 12 = 60 inches."),
-            q("Which answer is reasonable for 36 inches converted to feet?", ["1 ft", "2 ft", "3 ft", "12 ft"], 2, "36 / 12 = 3 feet."),
+            q(
+                "Which answer is reasonable for 36 inches converted to feet?",
+                ["1 ft", "2 ft", "3 ft", "12 ft"],
+                2,
+                "36 / 12 = 3 feet.",
+            ),
         ],
     },
     {
@@ -449,8 +499,23 @@ MODULES: list[dict[str, Any]] = [
         "gap": "equation isolation",
         "drill": "20 two-step equations with a substitution check",
         "questions": [
-            q("Solve 2x + 5 = 17.", ["4", "5", "6", "11"], 2, "Subtract 5 to get 2x = 12, then x = 6."),
-            q("What is the best check after solving an equation?", ["Guess again", "Substitute the value back", "Erase the work", "Change the variable"], 1, "Substitution confirms the value satisfies the original equation."),
+            q(
+                "Solve 2x + 5 = 17.",
+                ["4", "5", "6", "11"],
+                2,
+                "Subtract 5 to get 2x = 12, then x = 6.",
+            ),
+            q(
+                "What is the best check after solving an equation?",
+                [
+                    "Guess again",
+                    "Substitute the value back",
+                    "Erase the work",
+                    "Change the variable",
+                ],
+                1,
+                "Substitution confirms the value satisfies the original equation.",
+            ),
         ],
     },
     {
@@ -478,8 +543,23 @@ MODULES: list[dict[str, Any]] = [
         "gap": "formula substitution",
         "drill": "10 formula cards: identify variables, substitute, calculate",
         "questions": [
-            q("If P = 2L + 2W, L = 5, and W = 4, what is P?", ["9", "18", "20", "40"], 1, "2 x 5 + 2 x 4 = 10 + 8 = 18."),
-            q("Why use parentheses when substituting values?", ["To slow down", "To preserve the intended operation", "To remove units", "To make answers longer"], 1, "Parentheses reduce sign and operation-order mistakes."),
+            q(
+                "If P = 2L + 2W, L = 5, and W = 4, what is P?",
+                ["9", "18", "20", "40"],
+                1,
+                "2 x 5 + 2 x 4 = 10 + 8 = 18.",
+            ),
+            q(
+                "Why use parentheses when substituting values?",
+                [
+                    "To slow down",
+                    "To preserve the intended operation",
+                    "To remove units",
+                    "To make answers longer",
+                ],
+                1,
+                "Parentheses reduce sign and operation-order mistakes.",
+            ),
         ],
     },
     {
@@ -507,8 +587,18 @@ MODULES: list[dict[str, Any]] = [
         "gap": "rate from table",
         "drill": "table-to-rule problems with one sentence explaining the pattern",
         "questions": [
-            q("A machine makes 15 parts per hour. How many in 4 hours?", ["19", "45", "60", "75"], 2, "15 x 4 = 60."),
-            q("On a graph, what must you check before reading a point?", ["The title only", "The axis labels and scale", "The color", "The page number"], 1, "Axis labels and scale tell what the numbers mean."),
+            q(
+                "A machine makes 15 parts per hour. How many in 4 hours?",
+                ["19", "45", "60", "75"],
+                2,
+                "15 x 4 = 60.",
+            ),
+            q(
+                "On a graph, what must you check before reading a point?",
+                ["The title only", "The axis labels and scale", "The color", "The page number"],
+                1,
+                "Axis labels and scale tell what the numbers mean.",
+            ),
         ],
     },
     {
@@ -536,8 +626,28 @@ MODULES: list[dict[str, Any]] = [
         "gap": "main idea evidence",
         "drill": "short passages with one main idea sentence and one evidence sentence",
         "questions": [
-            q("What makes a strong main idea answer?", ["It covers the whole passage", "It is the longest option", "It uses a technical word", "It feels familiar"], 0, "The main idea must represent the whole passage."),
-            q("Why can a true detail still be a wrong main idea answer?", ["It is too broad", "It may be too narrow", "It has no letters", "It is always false"], 1, "A detail can be true but not broad enough."),
+            q(
+                "What makes a strong main idea answer?",
+                [
+                    "It covers the whole passage",
+                    "It is the longest option",
+                    "It uses a technical word",
+                    "It feels familiar",
+                ],
+                0,
+                "The main idea must represent the whole passage.",
+            ),
+            q(
+                "Why can a true detail still be a wrong main idea answer?",
+                [
+                    "It is too broad",
+                    "It may be too narrow",
+                    "It has no letters",
+                    "It is always false",
+                ],
+                1,
+                "A detail can be true but not broad enough.",
+            ),
         ],
     },
     {
@@ -565,8 +675,28 @@ MODULES: list[dict[str, Any]] = [
         "gap": "condition and sequence words",
         "drill": "20 sentence-level items focused on before, after, unless, except, and not",
         "questions": [
-            q("In 'Report damage instead of returning the tool,' which action is replaced?", ["Reporting damage", "Returning the tool", "Cleaning the tool", "Inspecting the tool"], 1, "The phrase after instead of is the action being replaced."),
-            q("What should you do first when a question contains EXCEPT?", ["Ignore it", "Circle it and look for the exception", "Pick the first answer", "Skip the passage"], 1, "EXCEPT reverses the usual task."),
+            q(
+                "In 'Report damage instead of returning the tool,' which action is replaced?",
+                [
+                    "Reporting damage",
+                    "Returning the tool",
+                    "Cleaning the tool",
+                    "Inspecting the tool",
+                ],
+                1,
+                "The phrase after instead of is the action being replaced.",
+            ),
+            q(
+                "What should you do first when a question contains EXCEPT?",
+                [
+                    "Ignore it",
+                    "Circle it and look for the exception",
+                    "Pick the first answer",
+                    "Skip the passage",
+                ],
+                1,
+                "EXCEPT reverses the usual task.",
+            ),
         ],
     },
     {
@@ -594,8 +724,23 @@ MODULES: list[dict[str, Any]] = [
         "gap": "lever moment reasoning",
         "drill": "lever sketches with pivot, force, and distance marked",
         "questions": [
-            q("With equal weights on a lever, which side has more turning effect?", ["Closer to the pivot", "Farther from the pivot", "Neither side ever moves", "The lighter color"], 1, "Greater distance from the pivot creates greater turning effect."),
-            q("What should you identify first in a lever problem?", ["The pivot", "The font", "The answer letter", "The page number"], 0, "The pivot controls distances and turning direction."),
+            q(
+                "With equal weights on a lever, which side has more turning effect?",
+                [
+                    "Closer to the pivot",
+                    "Farther from the pivot",
+                    "Neither side ever moves",
+                    "The lighter color",
+                ],
+                1,
+                "Greater distance from the pivot creates greater turning effect.",
+            ),
+            q(
+                "What should you identify first in a lever problem?",
+                ["The pivot", "The font", "The answer letter", "The page number"],
+                0,
+                "The pivot controls distances and turning direction.",
+            ),
         ],
     },
     {
@@ -623,8 +768,23 @@ MODULES: list[dict[str, Any]] = [
         "gap": "pulley force-direction distinction",
         "drill": "fixed vs movable pulley diagrams with support segments counted",
         "questions": [
-            q("What is the most typical role of a fixed pulley?", ["Change pull direction", "Make force zero", "Change material weight", "Remove friction completely"], 0, "A fixed pulley mainly changes direction."),
-            q("What tradeoff often comes with mechanical advantage in a pulley?", ["More rope distance", "No movement", "Less load height", "No setup needed"], 0, "Less force often requires pulling more rope."),
+            q(
+                "What is the most typical role of a fixed pulley?",
+                [
+                    "Change pull direction",
+                    "Make force zero",
+                    "Change material weight",
+                    "Remove friction completely",
+                ],
+                0,
+                "A fixed pulley mainly changes direction.",
+            ),
+            q(
+                "What tradeoff often comes with mechanical advantage in a pulley?",
+                ["More rope distance", "No movement", "Less load height", "No setup needed"],
+                0,
+                "Less force often requires pulling more rope.",
+            ),
         ],
     },
     {
@@ -652,8 +812,18 @@ MODULES: list[dict[str, Any]] = [
         "gap": "gear-chain tracing",
         "drill": "three-gear and four-gear chains with arrows drawn on each gear",
         "questions": [
-            q("If two gears mesh and the left gear turns clockwise, the right gear usually turns:", ["Clockwise", "Counterclockwise", "Upward", "Not at all"], 1, "Meshed adjacent gears rotate in opposite directions."),
-            q("What happens to direction when a third meshed gear is added?", ["It flips again", "It disappears", "It always stops", "It ignores the first gear"], 0, "Each mesh reverses direction."),
+            q(
+                "If two gears mesh and the left gear turns clockwise, the right gear usually turns:",
+                ["Clockwise", "Counterclockwise", "Upward", "Not at all"],
+                1,
+                "Meshed adjacent gears rotate in opposite directions.",
+            ),
+            q(
+                "What happens to direction when a third meshed gear is added?",
+                ["It flips again", "It disappears", "It always stops", "It ignores the first gear"],
+                0,
+                "Each mesh reverses direction.",
+            ),
         ],
     },
     {
@@ -681,8 +851,23 @@ MODULES: list[dict[str, Any]] = [
         "gap": "rotation versus reflection",
         "drill": "shape cards rotated 90, 180, and 270 degrees with one anchor mark",
         "questions": [
-            q("What is the key difference between rotation and reflection?", ["Rotation turns; reflection flips", "They are always identical", "Reflection keeps every side unchanged", "Rotation removes details"], 0, "Rotation turns the object; reflection creates a mirror image."),
-            q("What should you track first in a rotation item?", ["One anchor feature", "The longest answer", "The page color", "The option letter"], 0, "An anchor feature prevents losing orientation."),
+            q(
+                "What is the key difference between rotation and reflection?",
+                [
+                    "Rotation turns; reflection flips",
+                    "They are always identical",
+                    "Reflection keeps every side unchanged",
+                    "Rotation removes details",
+                ],
+                0,
+                "Rotation turns the object; reflection creates a mirror image.",
+            ),
+            q(
+                "What should you track first in a rotation item?",
+                ["One anchor feature", "The longest answer", "The page color", "The option letter"],
+                0,
+                "An anchor feature prevents losing orientation.",
+            ),
         ],
     },
     {
@@ -710,8 +895,23 @@ MODULES: list[dict[str, Any]] = [
         "gap": "folding adjacency",
         "drill": "cube nets with center, adjacent, and opposite faces labeled",
         "questions": [
-            q("In a cube net, can opposite faces share an edge after folding?", ["Yes, always", "No", "Only if they are colored", "Only on paper"], 1, "Opposite faces do not share an edge on the folded cube."),
-            q("What is a useful first step for cube nets?", ["Find the center face", "Guess the prettiest option", "Ignore symbols", "Count answer letters"], 0, "The center face anchors adjacency."),
+            q(
+                "In a cube net, can opposite faces share an edge after folding?",
+                ["Yes, always", "No", "Only if they are colored", "Only on paper"],
+                1,
+                "Opposite faces do not share an edge on the folded cube.",
+            ),
+            q(
+                "What is a useful first step for cube nets?",
+                [
+                    "Find the center face",
+                    "Guess the prettiest option",
+                    "Ignore symbols",
+                    "Count answer letters",
+                ],
+                0,
+                "The center face anchors adjacency.",
+            ),
         ],
     },
     {
@@ -739,8 +939,18 @@ MODULES: list[dict[str, Any]] = [
         "gap": "word-problem translation",
         "drill": "10 word problems with requested quantity, operation, and unit written",
         "questions": [
-            q("A job uses 4 boxes with 25 parts each. What is the total?", ["29", "75", "100", "125"], 2, "4 x 25 = 100."),
-            q("Which phrase usually points to subtraction?", ["In all", "Remaining", "Each", "Per hour"], 1, "Remaining often asks for what is left after subtracting."),
+            q(
+                "A job uses 4 boxes with 25 parts each. What is the total?",
+                ["29", "75", "100", "125"],
+                2,
+                "4 x 25 = 100.",
+            ),
+            q(
+                "Which phrase usually points to subtraction?",
+                ["In all", "Remaining", "Each", "Per hour"],
+                1,
+                "Remaining often asks for what is left after subtracting.",
+            ),
         ],
     },
     {
@@ -768,8 +978,23 @@ MODULES: list[dict[str, Any]] = [
         "gap": "evidence-based application response",
         "drill": "write three STAR-style examples: situation, task, action, result",
         "questions": [
-            q("Which statement is strongest?", ["I am reliable", "I like electricity", "I finished a 10-week evening class with perfect attendance", "I want a job"], 2, "It gives specific, verifiable evidence."),
-            q("What should you avoid in an experience response?", ["Concrete examples", "Honest limits", "Invented claims", "Relevant training"], 2, "Invented claims create trust and safety problems."),
+            q(
+                "Which statement is strongest?",
+                [
+                    "I am reliable",
+                    "I like electricity",
+                    "I finished a 10-week evening class with perfect attendance",
+                    "I want a job",
+                ],
+                2,
+                "It gives specific, verifiable evidence.",
+            ),
+            q(
+                "What should you avoid in an experience response?",
+                ["Concrete examples", "Honest limits", "Invented claims", "Relevant training"],
+                2,
+                "Invented claims create trust and safety problems.",
+            ),
         ],
     },
     {
@@ -797,8 +1022,23 @@ MODULES: list[dict[str, Any]] = [
         "gap": "pacing and recovery",
         "drill": "three 10-question timed sets with skipped-item review",
         "questions": [
-            q("If one question blocks you early in a timed section, what is usually best?", ["Stay forever", "Mark it and return later", "Erase all work", "Quit the section"], 1, "Protecting the whole section matters more than one early item."),
-            q("Why estimate before choosing?", ["To catch impossible answers", "To avoid reading", "To skip units", "To make every answer exact"], 0, "Estimation helps detect scale errors."),
+            q(
+                "If one question blocks you early in a timed section, what is usually best?",
+                ["Stay forever", "Mark it and return later", "Erase all work", "Quit the section"],
+                1,
+                "Protecting the whole section matters more than one early item.",
+            ),
+            q(
+                "Why estimate before choosing?",
+                [
+                    "To catch impossible answers",
+                    "To avoid reading",
+                    "To skip units",
+                    "To make every answer exact",
+                ],
+                0,
+                "Estimation helps detect scale errors.",
+            ),
         ],
     },
     {
@@ -826,8 +1066,23 @@ MODULES: list[dict[str, Any]] = [
         "gap": "final-week planning",
         "drill": "make a seven-day calendar from the top two error labels",
         "questions": [
-            q("What should drive the final-week plan?", ["Random topics", "Top error labels", "Only the easiest items", "A friend's score"], 1, "The plan should respond to diagnosed gaps."),
-            q("What is a good final-day priority?", ["All-night cramming", "Light review and logistics", "Learning every topic from zero", "Skipping sleep"], 1, "The final day should protect readiness and reduce avoidable mistakes."),
+            q(
+                "What should drive the final-week plan?",
+                ["Random topics", "Top error labels", "Only the easiest items", "A friend's score"],
+                1,
+                "The plan should respond to diagnosed gaps.",
+            ),
+            q(
+                "What is a good final-day priority?",
+                [
+                    "All-night cramming",
+                    "Light review and logistics",
+                    "Learning every topic from zero",
+                    "Skipping sleep",
+                ],
+                1,
+                "The final day should protect readiness and reduce avoidable mistakes.",
+            ),
         ],
     },
 ]

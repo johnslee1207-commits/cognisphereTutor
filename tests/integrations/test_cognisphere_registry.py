@@ -35,9 +35,7 @@ from cognispheretutor.integrations.cognisphere.trusted_context_client import (
     validate_trusted_context_package,
 )
 
-FIXTURE_ROOT = (
-    Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
-)
+FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "fixtures" / "cognisphere_learning_plugins"
 
 
 @pytest.fixture
@@ -247,7 +245,9 @@ def test_export_and_import_leetcode_fixture(client: PluginRegistryClient, tmp_pa
     assert receipt["receipt"]["mastery"]
 
 
-def test_export_and_import_ap_calculus_fixture(client: PluginRegistryClient, tmp_path: Path) -> None:
+def test_export_and_import_ap_calculus_fixture(
+    client: PluginRegistryClient, tmp_path: Path
+) -> None:
     receipt = export_and_import(
         "ap_calculus",
         {"persist": True, "cache_dir": tmp_path},
@@ -283,7 +283,9 @@ def test_sandbox_gate_fail_closed(monkeypatch: pytest.MonkeyPatch, tmp_path: Pat
     assert is_sandbox_authorized() is True
 
 
-def test_tutor_session_and_mastery_callbacks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_tutor_session_and_mastery_callbacks(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     monkeypatch.setenv("COGNISPHERE_IMPORT_CACHE_DIR", str(tmp_path))
     event = on_tutor_session_event(
         "sess-1",
@@ -377,9 +379,7 @@ def test_runtime_feedback_updates_learning_service(
     assert pass_bind["status"] == "applied"
     reloaded2 = LearningService(LearningStore(store_root))._store.load(path_id)
     assert reloaded2 is not None
-    assert any(
-        reloaded2.mastery_levels.get(kid, 0) >= 1.0 for kid in pass_bind["updated_kp_ids"]
-    )
+    assert any(reloaded2.mastery_levels.get(kid, 0) >= 1.0 for kid in pass_bind["updated_kp_ids"])
 
 
 def test_trusted_context_offline_import(tmp_path: Path) -> None:
@@ -420,7 +420,9 @@ def test_trusted_context_status_and_live_fetch_fail_closed(
     assert exc.value.code == "trusted_context_kit_unavailable"
 
 
-def test_compose_contexts_local(client: PluginRegistryClient, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_compose_contexts_local(
+    client: PluginRegistryClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
     # Prefer the local compose path so developer machines with the real SDK
     # installed do not divert into live plugin packing (fixture ap_calculus
     # cannot load under the SDK).
@@ -469,6 +471,7 @@ def test_benchmark_unavailable_raises(monkeypatch: pytest.MonkeyPatch) -> None:
         import_benchmark_case("leetcode", {"case_id": "case-x"})
     assert exc.value.code == "benchmark_unavailable"
 
+
 def test_runtime_adapters_manifest_loaded() -> None:
     from cognispheretutor.integrations.cognisphere._contract import load_runtime_adapters
 
@@ -476,7 +479,13 @@ def test_runtime_adapters_manifest_loaded() -> None:
     assert adapters["contract_id"].endswith("runtime_adapters.v1")
     assert "default_domain" not in adapters
     assert "{domain}" in str(adapters.get("module_template") or "")
-    for key in ("socratic_tutor", "code_verification", "mistake_memory", "skill_graph", "benchmark"):
+    for key in (
+        "socratic_tutor",
+        "code_verification",
+        "mistake_memory",
+        "skill_graph",
+        "benchmark",
+    ):
         assert key in adapters["adapters"]
         assert adapters["adapters"][key].get("module_key")
         assert "leetcode" not in str(adapters["adapters"][key].get("module") or "")
@@ -600,17 +609,13 @@ def test_runtime_bridge_with_mock_modules(monkeypatch: pytest.MonkeyPatch, tmp_p
 
     monkeypatch.setattr(bridge, "load_runtime_module", fake_load)
 
-    started = bridge.start_tutor_session(
-        "two-sum", domain="leetcode", hint_level=1, persist=False
-    )
+    started = bridge.start_tutor_session("two-sum", domain="leetcode", hint_level=1, persist=False)
     assert started["ok"] is True
     assert started["domain"] == "leetcode"
     assert started["session"]["hint_level"] == 1
     assert started["callback"]["ok"] is True
 
-    advanced = bridge.advance_tutor_session(
-        started["session"], domain="leetcode", event="advance"
-    )
+    advanced = bridge.advance_tutor_session(started["session"], domain="leetcode", event="advance")
     assert advanced["session"]["current_phase"] == "probe"
 
     verified = bridge.verify_submission(

@@ -299,7 +299,8 @@ async def prepublish_course(course_id: str, request: CoursePrepublishRequest) ->
         scenes = await _upsert_manifest_scenes(adapter, course, manifest)
         classroom_publish = await _publish_openmaic_classroom(adapter, course)
         artifacts = [
-            (await adapter.export(course, format)).__dict__ for format in _unique_formats(request.formats)
+            (await adapter.export(course, format)).__dict__
+            for format in _unique_formats(request.formats)
         ]
     except CognisphereIntegrationError as exc:
         job["status"] = "failed"
@@ -350,7 +351,9 @@ async def export_course(
     )
     adapter = _course_runtime_adapter()
     try:
-        artifact = await adapter.export(CourseRef(course_id=course_id, version=request.version), format)
+        artifact = await adapter.export(
+            CourseRef(course_id=course_id, version=request.version), format
+        )
     except CognisphereIntegrationError as exc:
         job["status"] = "failed"
         job["error"] = exc.to_dict()
@@ -473,7 +476,9 @@ def _course_runtime_adapter() -> CourseRuntimeAdapter:
     key = (
         endpoint.base_url,
         tuple(sorted((str(name), str(value)) for name, value in endpoint.headers.items())),
-        tuple(sorted((str(format), str(route)) for format, route in endpoint.export_routes.items())),
+        tuple(
+            sorted((str(format), str(route)) for format, route in endpoint.export_routes.items())
+        ),
     )
     if key not in _HTTP_ADAPTERS:
         _HTTP_ADAPTERS[key] = create_course_runtime_adapter(

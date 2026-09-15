@@ -116,7 +116,9 @@ def _migrate_secret() -> None:
                 SECRET_FILE.chmod(0o600)
             except OSError:
                 pass
-            logger.info("Migrated auth secret from %s to %s", LEGACY_SECRET_FILE, SECRET_FILE)  # nosemgrep
+            logger.info(
+                "Migrated auth secret from %s to %s", LEGACY_SECRET_FILE, SECRET_FILE
+            )  # nosemgrep
     except Exception as exc:
         logger.warning("Failed to migrate legacy auth secret: %s", exc)  # nosemgrep
 

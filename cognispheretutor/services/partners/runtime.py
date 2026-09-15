@@ -516,7 +516,9 @@ class PartnerRunner:
             seed = str(path.resolve())
         except OSError:
             seed = str(path)
-        return hashlib.sha1(seed.encode("utf-8"), usedforsecurity=False).hexdigest()[:12]  # nosemgrep
+        return hashlib.sha1(seed.encode("utf-8"), usedforsecurity=False).hexdigest()[
+            :12
+        ]  # nosemgrep
 
     def _attachments_from_media(self, media: list[str]) -> tuple[list[Attachment], list[dict]]:
         attachments: list[Attachment] = []

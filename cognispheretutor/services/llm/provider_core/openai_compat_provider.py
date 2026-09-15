@@ -20,7 +20,11 @@ from openai import AsyncOpenAI
 
 from cognispheretutor.services.llm.capabilities import disable_response_format_at_runtime
 from cognispheretutor.services.llm.openai_http_client import openai_client_kwargs
-from cognispheretutor.services.llm.provider_core.base import LLMProvider, LLMResponse, ToolCallRequest
+from cognispheretutor.services.llm.provider_core.base import (
+    LLMProvider,
+    LLMResponse,
+    ToolCallRequest,
+)
 from cognispheretutor.services.llm.provider_core.openai_responses import (
     adapt_chat_kwargs_to_responses,
     consume_sdk_stream,

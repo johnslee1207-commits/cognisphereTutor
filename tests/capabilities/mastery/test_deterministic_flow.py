@@ -4,9 +4,10 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_deterministic_flow_teaches_asks_and_grades_without_llm(tmp_path, monkeypatch) -> None:
+async def test_deterministic_flow_teaches_asks_and_grades_without_llm(
+    tmp_path, monkeypatch
+) -> None:
     import cognispheretutor.capabilities.mastery.deterministic_flow as flow
-    import cognispheretutor.learning.storage as storage_mod
     from cognispheretutor.core.context import UnifiedContext
     from cognispheretutor.core.stream_bus import StreamBus
     from cognispheretutor.learning.models import (
@@ -15,6 +16,7 @@ async def test_deterministic_flow_teaches_asks_and_grades_without_llm(tmp_path, 
         LearningModule,
         LearningProgress,
     )
+    import cognispheretutor.learning.storage as storage_mod
 
     real_store_cls = storage_mod.LearningStore
     store = real_store_cls(tmp_path)
@@ -66,13 +68,11 @@ async def test_deterministic_flow_teaches_asks_and_grades_without_llm(tmp_path, 
     assert updated.qualitative_mastery["kp1"] is True
     assert any(event.type == "content" and "## Test concept" in event.content for event in events)
     assert any(
-        event.type == "tool_result"
-        and (event.metadata.get("tool_metadata") or {}).get("ask_user")
+        event.type == "tool_result" and (event.metadata.get("tool_metadata") or {}).get("ask_user")
         for event in events
     )
     assert any(
-        event.type == "progress"
-        and event.metadata.get("ask_user_resolved") is True
+        event.type == "progress" and event.metadata.get("ask_user_resolved") is True
         for event in events
     )
 
@@ -82,7 +82,6 @@ async def test_explicit_start_point_clears_stale_pending_question(tmp_path, monk
     import time
 
     import cognispheretutor.capabilities.mastery.deterministic_flow as flow
-    import cognispheretutor.learning.storage as storage_mod
     from cognispheretutor.core.context import UnifiedContext
     from cognispheretutor.core.stream_bus import StreamBus
     from cognispheretutor.learning.models import (
@@ -92,6 +91,7 @@ async def test_explicit_start_point_clears_stale_pending_question(tmp_path, monk
         LearningProgress,
         PendingQuestion,
     )
+    import cognispheretutor.learning.storage as storage_mod
 
     real_store_cls = storage_mod.LearningStore
     store = real_store_cls(tmp_path)
@@ -179,7 +179,9 @@ async def test_explicit_start_point_clears_stale_pending_question(tmp_path, monk
         and "## Mathematical reasoning for aptitude testing" in event.content
         for event in events
     )
-    assert not any(event.type == "tool_result" and "Old question?" in event.content for event in events)
+    assert not any(
+        event.type == "tool_result" and "Old question?" in event.content for event in events
+    )
 
 
 @pytest.mark.asyncio
@@ -190,7 +192,6 @@ async def test_correct_answer_previews_next_lesson_without_immediate_next_quiz(
     import time
 
     import cognispheretutor.capabilities.mastery.deterministic_flow as flow
-    import cognispheretutor.learning.storage as storage_mod
     from cognispheretutor.core.context import UnifiedContext
     from cognispheretutor.core.stream_bus import StreamBus
     from cognispheretutor.learning.models import (
@@ -200,6 +201,7 @@ async def test_correct_answer_previews_next_lesson_without_immediate_next_quiz(
         LearningProgress,
         PendingQuestion,
     )
+    import cognispheretutor.learning.storage as storage_mod
 
     real_store_cls = storage_mod.LearningStore
     store = real_store_cls(tmp_path)

@@ -218,12 +218,8 @@ def _string_map(value: Any) -> dict[str, str]:
     if not isinstance(value, Mapping):
         return {}
     return {
-        str(key): str(item)
-        for key, item in value.items()
-        if str(key).strip() and str(item).strip()
+        str(key): str(item) for key, item in value.items() if str(key).strip() and str(item).strip()
     }
-
-
 
 
 def _normalize_base_url(value: Any) -> str:

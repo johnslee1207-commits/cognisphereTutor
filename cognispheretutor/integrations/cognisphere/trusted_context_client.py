@@ -2,16 +2,19 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 import json
 import os
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from cognispheretutor.integrations.cognisphere._contract import load_trusted_context_contract
-from cognispheretutor.integrations.cognisphere.error_codes import CognisphereIntegrationError, format_issue
+from cognispheretutor.integrations.cognisphere.error_codes import (
+    CognisphereIntegrationError,
+    format_issue,
+)
 
 
 def _utc_now() -> str:
@@ -73,7 +76,9 @@ def resolve_trusted_context_cache_dir(
         try:
             from cognispheretutor.services.path_service import get_path_service
 
-            rel = str(contract.get("cache_relative_workspace_path") or "cognisphere_trusted_context")
+            rel = str(
+                contract.get("cache_relative_workspace_path") or "cognisphere_trusted_context"
+            )
             base = get_path_service().get_workspace_dir() / rel
         except Exception:  # noqa: BLE001
             base = Path.cwd() / "data" / "user" / "workspace" / "cognisphere_trusted_context"
@@ -129,11 +134,16 @@ def fetch_trusted_context_package(
     if readiness is not None and readiness.get("blocked"):
         raise CognisphereIntegrationError(
             "production_candidate_blocked",
-            details={"project_id": project_id, "payload_kind": payload_kind, "readiness": readiness},
+            details={
+                "project_id": project_id,
+                "payload_kind": payload_kind,
+                "readiness": readiness,
+            },
         )
 
     if not production_candidate_ready(env=source) and (
-        (source.get(str(contract.get("require_write_api_key_env") or "")) or "").strip() in {"1", "true", "yes"}
+        (source.get(str(contract.get("require_write_api_key_env") or "")) or "").strip()
+        in {"1", "true", "yes"}
     ):
         # Explicit production write gate without candidate readiness.
         raise CognisphereIntegrationError(

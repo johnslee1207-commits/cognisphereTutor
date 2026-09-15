@@ -84,11 +84,15 @@ def plan_openmaic_sidecar(
             reason="no managed OpenMAIC command configured",
         )
 
-    origin = _managed_origin(env) if env.get(_MANAGED_ORIGIN_ENV) else str(
-        bundle.get("origin") if bundle else DEFAULT_MANAGED_OPENMAIC_ORIGIN
+    origin = (
+        _managed_origin(env)
+        if env.get(_MANAGED_ORIGIN_ENV)
+        else str(bundle.get("origin") if bundle else DEFAULT_MANAGED_OPENMAIC_ORIGIN)
     )
-    cwd = _managed_cwd(env, runtime_home) if env.get(_MANAGED_CWD_ENV) else (
-        bundle.get("cwd") if bundle else runtime_home
+    cwd = (
+        _managed_cwd(env, runtime_home)
+        if env.get(_MANAGED_CWD_ENV)
+        else (bundle.get("cwd") if bundle else runtime_home)
     )
     health_path = env.get(_MANAGED_HEALTH_PATH_ENV) or (
         str(bundle.get("health_path")) if bundle else None
@@ -178,9 +182,7 @@ def _bundled_runtime(env: Mapping[str, str], runtime_home: Path) -> dict[str, An
             "command": command,
             "cwd": cwd,
             "origin": _valid_origin(str(manifest.get("origin") or DEFAULT_MANAGED_OPENMAIC_ORIGIN)),
-            "health_path": str(
-                manifest.get("health_path") or DEFAULT_MANAGED_OPENMAIC_HEALTH_PATH
-            ),
+            "health_path": str(manifest.get("health_path") or DEFAULT_MANAGED_OPENMAIC_HEALTH_PATH),
             "export_routes": _string_map(manifest.get("export_routes")),
         }
     return None
@@ -206,9 +208,7 @@ def _string_map(value: Any) -> dict[str, str]:
     if not isinstance(value, Mapping):
         return {}
     return {
-        str(key): str(item)
-        for key, item in value.items()
-        if str(key).strip() and str(item).strip()
+        str(key): str(item) for key, item in value.items() if str(key).strip() and str(item).strip()
     }
 
 

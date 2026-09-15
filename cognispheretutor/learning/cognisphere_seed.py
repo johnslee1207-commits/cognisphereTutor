@@ -183,9 +183,8 @@ def modules_from_knowledge(
     patterns = _as_list(data, "patterns", "problem_patterns")
     skills = _as_list(data, "skills", "procedures", "certification_tracks")
     problems = _as_list(data, "problems", "practice_problems", "assessments")
-    concepts = (
-        _as_list(data, "concepts", "catalog", "ontology_classes")
-        + _nested_list(data, "learning_fixture", "excerpts")
+    concepts = _as_list(data, "concepts", "catalog", "ontology_classes") + _nested_list(
+        data, "learning_fixture", "excerpts"
     )
     objectives = _as_list(
         data,
@@ -194,9 +193,8 @@ def modules_from_knowledge(
         "topics",
         "topic_families",
     )
-    references = (
-        _as_list(data, "theorems", "rules", "principles")
-        + _nested_list(data, "original_knowledge", "units")
+    references = _as_list(data, "theorems", "rules", "principles") + _nested_list(
+        data, "original_knowledge", "units"
     )
     learning_loop = _as_list(data, "learning_loop", "sample_learning_path")
     surface = data.get("learning_surface") if isinstance(data.get("learning_surface"), dict) else {}
@@ -228,11 +226,17 @@ def modules_from_knowledge(
 
     _add_module("patterns", "Patterns", patterns, KnowledgeType.CONCEPT, id_prefix="pat")
     _add_module("skills", "Skills", skills, KnowledgeType.PROCEDURE, id_prefix="sk")
-    _add_module("objectives", "Learning objectives", objectives, KnowledgeType.CONCEPT, id_prefix="obj")
+    _add_module(
+        "objectives", "Learning objectives", objectives, KnowledgeType.CONCEPT, id_prefix="obj"
+    )
     _add_module("concepts", "Concepts", concepts, KnowledgeType.CONCEPT, id_prefix="con")
     _add_module("references", "Reference rules", references, KnowledgeType.CONCEPT, id_prefix="ref")
-    _add_module("problems", "Practice problems", problems, KnowledgeType.PROCEDURE, id_prefix="prob")
-    _add_module("learning-loop", "Learning loop", learning_loop, KnowledgeType.PROCEDURE, id_prefix="loop")
+    _add_module(
+        "problems", "Practice problems", problems, KnowledgeType.PROCEDURE, id_prefix="prob"
+    )
+    _add_module(
+        "learning-loop", "Learning loop", learning_loop, KnowledgeType.PROCEDURE, id_prefix="loop"
+    )
 
     # If the pack was empty, keep a single overview module so the path is visible.
     if len(modules) == 1:
@@ -312,7 +316,11 @@ def seed_payload_from_import_receipt(receipt: dict[str, Any]) -> dict[str, Any]:
                 for k, v in kn.items():
                     if k not in knowledge:
                         knowledge[k] = v
-    summary = receipt.get("knowledge_summary") if isinstance(receipt.get("knowledge_summary"), dict) else {}
+    summary = (
+        receipt.get("knowledge_summary")
+        if isinstance(receipt.get("knowledge_summary"), dict)
+        else {}
+    )
     if not knowledge and isinstance(summary.get("surfaces"), dict):
         for kn in (summary.get("surfaces") or {}).values():
             if isinstance(kn, dict):

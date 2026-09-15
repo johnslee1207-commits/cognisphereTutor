@@ -11,7 +11,7 @@ from typing import Any
 from rich.panel import Panel
 import typer
 
-from cognispheretutor.app import cognisphereTutorApp, TurnRequest
+from cognispheretutor.app import TurnRequest, cognisphereTutorApp
 
 from .common import (
     console,

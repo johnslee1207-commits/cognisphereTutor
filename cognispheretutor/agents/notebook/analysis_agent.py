@@ -7,7 +7,11 @@ from typing import Any, Awaitable, Callable
 
 from cognispheretutor.core.stream import StreamEvent, StreamEventType
 from cognispheretutor.core.trace import build_trace_metadata, derive_trace_metadata, new_call_id
-from cognispheretutor.services.llm import clean_thinking_tags, get_llm_config, get_token_limit_kwargs
+from cognispheretutor.services.llm import (
+    clean_thinking_tags,
+    get_llm_config,
+    get_token_limit_kwargs,
+)
 from cognispheretutor.services.llm import stream as llm_stream
 from cognispheretutor.services.prompt.manager import get_prompt_manager
 from cognispheretutor.utils.json_parser import parse_json_response

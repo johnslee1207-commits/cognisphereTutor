@@ -146,9 +146,7 @@ def test_integrations_settings_include_openmaic_course_runtime(tmp_path: Path) -
 
     assert saved["openmaic_course_runtime_mode"] == "configured"
     assert saved["openmaic_course_runtime_base_url"] == "https://openmaic.example"
-    assert saved["openmaic_course_runtime_auto_candidates"] == [
-        "https://managed.openmaic.example/"
-    ]
+    assert saved["openmaic_course_runtime_auto_candidates"] == ["https://managed.openmaic.example/"]
     assert saved["openmaic_course_runtime_headers"] == {"authorization": "Bearer token"}
     assert saved["openmaic_course_export_routes"] == {
         "pptx": "/api/export/pptx",

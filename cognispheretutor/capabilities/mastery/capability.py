@@ -76,11 +76,7 @@ def _plugin_path_for_legacy_unified_path(path_id: str) -> str:
         return ""
     names = " ".join(
         [module.name for module in progress.modules]
-        + [
-            kp.name
-            for module in progress.modules
-            for kp in module.knowledge_points
-        ]
+        + [kp.name for module in progress.modules for kp in module.knowledge_points]
     ).lower()
     aws_signals = (
         "aws certification",

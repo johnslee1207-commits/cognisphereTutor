@@ -126,7 +126,9 @@ def _install_fake_runtime(
 
     monkeypatch.setattr("cognispheretutor.app.facade.cognisphereTutorApp.start_turn", _start_turn)
     monkeypatch.setattr("cognispheretutor.app.facade.cognisphereTutorApp.stream_turn", _stream_turn)
-    monkeypatch.setattr("cognispheretutor.app.facade.cognisphereTutorApp.submit_user_reply", _submit_user_reply)
+    monkeypatch.setattr(
+        "cognispheretutor.app.facade.cognisphereTutorApp.submit_user_reply", _submit_user_reply
+    )
 
 
 def test_narration_renders_before_tools_and_finish_is_answer(monkeypatch) -> None:

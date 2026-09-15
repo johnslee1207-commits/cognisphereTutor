@@ -621,7 +621,11 @@ async def test_codex_options_tolerate_missing_cache(monkeypatch, tmp_path) -> No
 
 
 def test_registry_partner_is_non_cli_backend() -> None:
-    from cognispheretutor.services.subagent import PARTNER_BACKEND_KIND, get_backend, list_backend_kinds
+    from cognispheretutor.services.subagent import (
+        PARTNER_BACKEND_KIND,
+        get_backend,
+        list_backend_kinds,
+    )
 
     assert PARTNER_BACKEND_KIND in list_backend_kinds()
     backend = get_backend(PARTNER_BACKEND_KIND)

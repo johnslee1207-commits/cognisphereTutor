@@ -155,7 +155,9 @@ class ChannelManager:
         normalized = " ".join(content.split())
         if not normalized:
             return ""
-        return hashlib.sha1(normalized.encode("utf-8"), usedforsecurity=False).hexdigest()  # nosemgrep
+        return hashlib.sha1(
+            normalized.encode("utf-8"), usedforsecurity=False
+        ).hexdigest()  # nosemgrep
 
     def _should_suppress_outbound(self, msg: OutboundMessage) -> bool:
         """Suppress an exact-duplicate reply to the same source message.

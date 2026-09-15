@@ -16,8 +16,8 @@ isolation level it actually provides via :attr:`level`.
 
 from __future__ import annotations
 
-import asyncio
 from abc import ABC, abstractmethod
+import asyncio
 from contextlib import suppress
 import os
 from pathlib import Path

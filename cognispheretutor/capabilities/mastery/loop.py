@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from importlib import resources  # nosemgrep: python.lang.compatibility.python37.python37-compatibility-importlib2
+from importlib import (
+    resources,  # nosemgrep: python.lang.compatibility.python37.python37-compatibility-importlib2
+)
 import json
 import re
 import sqlite3
@@ -254,11 +256,7 @@ def _compact_mastery_map(
         if str(module.get("id") or "") == current_module_id:
             kps = [kp for kp in list(module.get("knowledge_points") or []) if isinstance(kp, dict)]
             current_idx = next(
-                (
-                    idx
-                    for idx, kp in enumerate(kps)
-                    if str(kp.get("id") or "") == current_kp_id
-                ),
+                (idx for idx, kp in enumerate(kps) if str(kp.get("id") or "") == current_kp_id),
                 0,
             )
             start = max(0, current_idx - 1)
@@ -282,10 +280,10 @@ def _deterministic_plugin_grounding(context: UnifiedContext) -> str:
     if not domain:
         return ""
     try:
+        from cognispheretutor.capabilities.mastery.tools import next_objective_for_start_point
         from cognispheretutor.integrations.cognisphere.grounding import (
             build_plugin_grounding_seed,
         )
-        from cognispheretutor.capabilities.mastery.tools import next_objective_for_start_point
         from cognispheretutor.learning.service import LearningService
         from cognispheretutor.learning.storage import LearningStore
 
@@ -553,14 +551,13 @@ def _is_generated_overview_step(step: dict[str, Any]) -> bool:
         "knowledge platform",
         "digital twin course",
     )
-    if any(marker in f"{kp_id} {module_id} {normalized_name}" for marker in formal_overview_markers):
+    if any(
+        marker in f"{kp_id} {module_id} {normalized_name}" for marker in formal_overview_markers
+    ):
         return False
     return kp_id in {"ov-overview"} or (
         module_id.endswith("-overview")
-        and (
-            normalized_name.startswith("cognisphere")
-            or "cognisphere бд" in normalized_name
-        )
+        and (normalized_name.startswith("cognisphere") or "cognisphere бд" in normalized_name)
     )
 
 

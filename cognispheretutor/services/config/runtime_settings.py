@@ -320,9 +320,7 @@ def _string_map(value: Any) -> dict[str, str]:
     if not isinstance(value, dict):
         return {}
     return {
-        _string(key): _string(item)
-        for key, item in value.items()
-        if _string(key) and _string(item)
+        _string(key): _string(item) for key, item in value.items() if _string(key) and _string(item)
     }
 
 
@@ -551,7 +549,9 @@ class RuntimeSettingsService:
             "CORS_ORIGINS": ",".join(system["cors_origins"]),
             "DISABLE_SSL_VERIFY": _bool_env(system["disable_ssl_verify"]),
             "CHAT_ATTACHMENT_DIR": system["chat_attachment_dir"],
-            "COGNISPHERETUTOR_SANDBOX_ALLOW_SUBPROCESS": _bool_env(system["sandbox_allow_subprocess"]),
+            "COGNISPHERETUTOR_SANDBOX_ALLOW_SUBPROCESS": _bool_env(
+                system["sandbox_allow_subprocess"]
+            ),
             "AUTH_ENABLED": _bool_env(auth["enabled"]),
             "AUTH_USERNAME": auth["username"],
             "AUTH_PASSWORD_HASH": auth["password_hash"],

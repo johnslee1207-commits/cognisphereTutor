@@ -262,7 +262,9 @@ def test_create_preserves_known_nondefault_provider(monkeypatch, tmp_path: Path)
     monkeypatch.setattr(knowledge_router_module, "KnowledgeBaseInitializer", _FakeInitializer)
     monkeypatch.setattr(knowledge_router_module, "_kb_base_dir", tmp_path / "knowledge_bases")
 
-    pageindex_config = importlib.import_module("cognispheretutor.services.rag.pipelines.pageindex.config")
+    pageindex_config = importlib.import_module(
+        "cognispheretutor.services.rag.pipelines.pageindex.config"
+    )
     monkeypatch.setattr(pageindex_config, "is_pageindex_configured", lambda: True)
 
     async def _noop_init_task(*_args, **_kwargs):
@@ -710,7 +712,9 @@ def test_reindex_accepts_default_alias(monkeypatch, tmp_path: Path) -> None:
         def hash(self) -> str:
             return "sig"
 
-    embedding_signature = importlib.import_module("cognispheretutor.services.rag.embedding_signature")
+    embedding_signature = importlib.import_module(
+        "cognispheretutor.services.rag.embedding_signature"
+    )
     index_versioning = importlib.import_module("cognispheretutor.services.rag.index_versioning")
     monkeypatch.setattr(
         embedding_signature, "signature_from_embedding_config", lambda: _Signature()
@@ -746,7 +750,9 @@ def test_reindex_error_status_bypasses_existing_match_noop(monkeypatch, tmp_path
         def hash(self) -> str:
             return "sig"
 
-    embedding_signature = importlib.import_module("cognispheretutor.services.rag.embedding_signature")
+    embedding_signature = importlib.import_module(
+        "cognispheretutor.services.rag.embedding_signature"
+    )
     index_versioning = importlib.import_module("cognispheretutor.services.rag.index_versioning")
     monkeypatch.setattr(
         embedding_signature, "signature_from_embedding_config", lambda: _Signature()
@@ -786,7 +792,9 @@ def test_retry_error_status_queues_reindex(monkeypatch, tmp_path: Path) -> None:
         def hash(self) -> str:
             return "sig"
 
-    embedding_signature = importlib.import_module("cognispheretutor.services.rag.embedding_signature")
+    embedding_signature = importlib.import_module(
+        "cognispheretutor.services.rag.embedding_signature"
+    )
     index_versioning = importlib.import_module("cognispheretutor.services.rag.index_versioning")
     monkeypatch.setattr(
         embedding_signature, "signature_from_embedding_config", lambda: _Signature()
@@ -857,7 +865,9 @@ def test_reindex_bypasses_existing_match_when_vectors_are_invalid(
         encoding="utf-8",
     )
 
-    embedding_signature = importlib.import_module("cognispheretutor.services.rag.embedding_signature")
+    embedding_signature = importlib.import_module(
+        "cognispheretutor.services.rag.embedding_signature"
+    )
     monkeypatch.setattr(
         embedding_signature, "signature_from_embedding_config", lambda: _Signature()
     )

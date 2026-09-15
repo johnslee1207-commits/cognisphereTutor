@@ -56,7 +56,9 @@ def test_lesson_contract_guides_absolute_beginner_concept_flow() -> None:
     assert payload["free_response_policy"]["optional_now"] is True
     assert payload["free_response_policy"]["required_now"] is False
     assert any("Do not end the turn" in item for item in payload["interaction_policy"])
-    assert any("teach a substantive mini-lesson before" in item for item in payload["interaction_policy"])
+    assert any(
+        "teach a substantive mini-lesson before" in item for item in payload["interaction_policy"]
+    )
 
 
 def test_lesson_contract_uses_quiz_flow_for_procedure_objective() -> None:
@@ -104,7 +106,9 @@ def test_lesson_contract_teaches_before_quizzing_beginner_probe() -> None:
     assert payload["check_options"][0]["mode"] == "multiple_choice"
     assert payload["required_check"]["mode"] == "quick_check"
     assert payload["free_response_policy"]["optional_now"] is True
-    assert any("do not chain directly into another quiz" in item for item in payload["interaction_policy"])
+    assert any(
+        "do not chain directly into another quiz" in item for item in payload["interaction_policy"]
+    )
 
 
 def test_lesson_contract_masks_materialized_overview_name() -> None:
@@ -228,8 +232,5 @@ def test_lesson_contract_requires_visual_aid_for_mechanical_spatial_objective() 
         "Paste the returned markdown field exactly" in item
         for item in payload["visual_aid"]["rendering_policy"]
     )
-    assert any(
-        "Do not paraphrase" in item
-        for item in payload["visual_aid"]["rendering_policy"]
-    )
+    assert any("Do not paraphrase" in item for item in payload["visual_aid"]["rendering_policy"])
     assert any("mastery_visual" in item for item in payload["must_teach"])

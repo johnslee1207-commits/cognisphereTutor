@@ -219,7 +219,9 @@ class TestIsMentioned:
         ch = _make_channel()
         ch._bot_user_id = 100
         ch._bot_full_name = "cognisphereTutor Bot"
-        assert ch._is_mentioned({"flags": [], "content": "hi @**cognisphereTutor Bot** help"}) is True
+        assert (
+            ch._is_mentioned({"flags": [], "content": "hi @**cognisphereTutor Bot** help"}) is True
+        )
 
     def test_content_fallback_requires_full_name(self):
         ch = _make_channel()
@@ -239,7 +241,10 @@ class TestIsMentioned:
         ch = _make_channel()
         ch._bot_user_id = 100
         ch._bot_full_name = "cognisphereTutor Bot"
-        assert ch._is_mentioned({"flags": [], "content": "hi @**cognisphereTutor Bot|100** help"}) is True
+        assert (
+            ch._is_mentioned({"flags": [], "content": "hi @**cognisphereTutor Bot|100** help"})
+            is True
+        )
 
 
 class TestExtractUploadLinks:
@@ -1254,7 +1259,9 @@ class TestStart:
         ch = _make_channel()
         fake_zulip = SimpleNamespace(Client=MagicMock())
         monkeypatch.setitem(sys.modules, "zulip", fake_zulip)
-        with patch("cognispheretutor.partners.channels.zulip.ZulipChannel._call_with_retry") as mock_retry:
+        with patch(
+            "cognispheretutor.partners.channels.zulip.ZulipChannel._call_with_retry"
+        ) as mock_retry:
             mock_retry.return_value = {"result": "error"}
             await ch.start()
 

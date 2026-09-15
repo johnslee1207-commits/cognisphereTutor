@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any
 from types import SimpleNamespace
+from typing import Any
 
 import pytest
 
@@ -23,9 +23,7 @@ class _FakeStream:
 async def test_emit_attaches_cost_summary_into_metadata() -> None:
     stream = _FakeStream()
     usage = UsageTracker(model="test-model")
-    usage.add_from_response(
-        SimpleNamespace(prompt_tokens=10, completion_tokens=5, total_tokens=15)
-    )
+    usage.add_from_response(SimpleNamespace(prompt_tokens=10, completion_tokens=5, total_tokens=15))
 
     payload: dict[str, Any] = {"response": "hi", "metadata": {"kept": True}}
     await emit_capability_result(stream, payload, source="chat", usage=usage)

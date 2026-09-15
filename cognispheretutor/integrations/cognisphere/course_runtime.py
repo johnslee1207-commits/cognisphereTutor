@@ -587,7 +587,10 @@ class HttpOpenMaicCourseRuntimeAdapter:
             return {
                 "ok": True,
                 "course_id": course.course_id,
-                "classroom_url": str(classroom_url or f"{_openmaic_origin(self.base_url)}/classroom/{course.course_id}"),
+                "classroom_url": str(
+                    classroom_url
+                    or f"{_openmaic_origin(self.base_url)}/classroom/{course.course_id}"
+                ),
                 "response": dict(payload) if isinstance(payload, Mapping) else payload,
                 "storage": "openmaic_classroom_file",
             }
@@ -617,7 +620,9 @@ class HttpOpenMaicCourseRuntimeAdapter:
         return {
             "ok": True,
             "course_id": course.course_id,
-            "classroom_url": str(classroom_url or f"{_openmaic_origin(self.base_url)}/classroom/{course.course_id}"),
+            "classroom_url": str(
+                classroom_url or f"{_openmaic_origin(self.base_url)}/classroom/{course.course_id}"
+            ),
             "response": dict(payload) if isinstance(payload, Mapping) else payload,
             "storage": "openmaic_persistence",
         }
@@ -842,9 +847,7 @@ def _validate_source_gate(
             issues.append(f"gate_failed:G0 Source:{claim_id}")
     for objective in objectives:
         if not _as_str_list(objective.get("source_refs")):
-            issues.append(
-                f"gate_failed:G0 Source:{objective.get('objective_id') or '<unknown>'}"
-            )
+            issues.append(f"gate_failed:G0 Source:{objective.get('objective_id') or '<unknown>'}")
     return issues
 
 
@@ -854,7 +857,9 @@ def _validate_objective_gate(
     contract: Mapping[str, Any],
 ) -> list[str]:
     issues: list[str] = []
-    objective_ids = {str(item.get("objective_id")) for item in objectives if item.get("objective_id")}
+    objective_ids = {
+        str(item.get("objective_id")) for item in objectives if item.get("objective_id")
+    }
     scene_kinds = set(_as_str_list(contract.get("scene_kinds")))
     for lesson in _as_mapping_list(manifest.get("lessons")):
         for scene in _as_mapping_list(lesson.get("scenes")):
@@ -1158,8 +1163,7 @@ def _is_openmaic_storage_unavailable(exc: CognisphereIntegrationError) -> bool:
         "openmaic_persistence_not_configured",
         "openmaic_persistence_dev_token_missing",
     } or (
-        exc.code == "openmaic_http_error"
-        and int(exc.details.get("status_code", 0)) in {404, 503}
+        exc.code == "openmaic_http_error" and int(exc.details.get("status_code", 0)) in {404, 503}
     )
 
 

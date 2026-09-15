@@ -77,6 +77,7 @@ def test_documented_cognispheretutor_subcommands_exist() -> None:
         "book",
         "chat",
         "config",
+        "cognisphere",
         "init",
         "kb",
         "memory",
@@ -106,7 +107,9 @@ def test_documented_cognispheretutor_subcommands_exist() -> None:
 
 def test_deep_research_examples_include_required_config() -> None:
     examples = [
-        command for command in _cognispheretutor_commands() if "cognispheretutor run deep_research" in command
+        command
+        for command in _cognispheretutor_commands()
+        if "cognispheretutor run deep_research" in command
     ]
 
     assert examples, "docs should include at least one deep_research example"

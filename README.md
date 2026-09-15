@@ -168,6 +168,8 @@ python -m pip install -e .
 cognispheretutor init
 ```
 
+Provider auth (`openai-codex` OAuth login; `github-copilot` validates an existing Copilot auth session).
+
 ### 4. 启动
 
 ```powershell

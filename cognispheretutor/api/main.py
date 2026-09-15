@@ -305,8 +305,8 @@ app.mount(
 # Import routers only after runtime settings are initialized.
 # Some router modules load YAML settings at import time.
 from cognispheretutor.api.routers import (
-    agent_config,
     aetherinfra_twin,
+    agent_config,
     attachments,
     auth,
     book,

@@ -41,7 +41,11 @@ from cognispheretutor.core.context import UnifiedContext
 from cognispheretutor.core.stream_bus import StreamBus
 from cognispheretutor.core.trace import build_trace_metadata, merge_trace_metadata, new_call_id
 from cognispheretutor.runtime.registry.tool_registry import get_tool_registry
-from cognispheretutor.services.llm import clean_thinking_tags, get_llm_config, get_token_limit_kwargs
+from cognispheretutor.services.llm import (
+    clean_thinking_tags,
+    get_llm_config,
+    get_token_limit_kwargs,
+)
 from cognispheretutor.services.llm import stream as llm_stream
 
 logger = logging.getLogger(__name__)

@@ -180,9 +180,7 @@ def start_tutor_session(
             details={"hint_level": hint_level},
         )
 
-    mod = load_runtime_module(
-        "socratic_tutor", domain=resolved_domain, root=root, client=client
-    )
+    mod = load_runtime_module("socratic_tutor", domain=resolved_domain, root=root, client=client)
     session = _call(
         mod,
         str(adapter["start"]),
@@ -244,9 +242,7 @@ def advance_tutor_session(
         domain or (session.get("domain") if isinstance(session, dict) else None)
     )
     adapter = _adapter("socratic_tutor")
-    mod = load_runtime_module(
-        "socratic_tutor", domain=resolved_domain, root=root, client=client
-    )
+    mod = load_runtime_module("socratic_tutor", domain=resolved_domain, root=root, client=client)
     call_kwargs = dict(kwargs)
     call_kwargs["event"] = event
     if checkpoint is not None:
@@ -311,9 +307,7 @@ def verify_submission(
     if adapter.get("require_authorized_or_offline") and not offline_simulated and not authorized:
         raise CognisphereIntegrationError("sandbox_unauthorized")
 
-    mod = load_runtime_module(
-        "code_verification", domain=resolved_domain, root=root, client=client
-    )
+    mod = load_runtime_module("code_verification", domain=resolved_domain, root=root, client=client)
     if outcome is not None:
         analysis = _call(mod, str(adapter["analyze"]), outcome, **kwargs)
         verification = {"status": "ok", "analysis": analysis, "outcome": outcome}
@@ -375,9 +369,7 @@ def suggest_tutor_focus(
     """DT-P5: call plugin mistake_memory.suggest_tutor_focus and sync locally."""
     resolved_domain = _require_domain(domain)
     adapter = _adapter("mistake_memory")
-    mod = load_runtime_module(
-        "mistake_memory", domain=resolved_domain, root=root, client=client
-    )
+    mod = load_runtime_module("mistake_memory", domain=resolved_domain, root=root, client=client)
     suggestion = _call(mod, str(adapter["suggest"]), problem_slug=problem_slug)
     if not isinstance(suggestion, dict):
         raise CognisphereIntegrationError(
@@ -420,9 +412,7 @@ def plan_skill_path(
     """DT-P5: plan next learning path via plugin skill_graph_runtime."""
     resolved_domain = _require_domain(domain)
     adapter = _adapter("skill_graph")
-    mod = load_runtime_module(
-        "skill_graph", domain=resolved_domain, root=root, client=client
-    )
+    mod = load_runtime_module("skill_graph", domain=resolved_domain, root=root, client=client)
     plan = _call(mod, str(adapter["plan_path"]), learner_id=learner_id, **kwargs)
     if not isinstance(plan, dict):
         raise CognisphereIntegrationError(
@@ -465,9 +455,7 @@ def run_interview_session(
     resolved_domain = _require_domain(domain)
     adapter = _adapter("benchmark")
     try:
-        mod = load_runtime_module(
-            "benchmark", domain=resolved_domain, root=root, client=client
-        )
+        mod = load_runtime_module("benchmark", domain=resolved_domain, root=root, client=client)
     except CognisphereIntegrationError as exc:
         raise CognisphereIntegrationError(
             "benchmark_unavailable",
@@ -536,9 +524,7 @@ def list_benchmark_cases(
     resolved_domain = _require_domain(domain)
     adapter = _adapter("benchmark")
     try:
-        mod = load_runtime_module(
-            "benchmark", domain=resolved_domain, root=root, client=client
-        )
+        mod = load_runtime_module("benchmark", domain=resolved_domain, root=root, client=client)
         cases = _call(mod, str(adapter["list_cases"]), **kwargs)
     except CognisphereIntegrationError as exc:
         return {

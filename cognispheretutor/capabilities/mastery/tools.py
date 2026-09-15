@@ -249,7 +249,11 @@ def next_objective_for_start_point(
     for review in due_reviews(progress, now=now):
         kp, module_id, _module_name = find_knowledge_point(progress, review.knowledge_point_id)
         module = next((m for m in progress.modules if m.id == module_id), None)
-        if kp is not None and module is not None and _module_matches_start_point(module, normalized):
+        if (
+            kp is not None
+            and module is not None
+            and _module_matches_start_point(module, normalized)
+        ):
             return _step_for_kp(progress, module, kp)
 
     for module in sorted(progress.modules, key=lambda item: item.order):
@@ -337,10 +341,7 @@ def _infer_next_sequence_number(question: str) -> float | None:
 
     first_diffs = [values[i + 1] - values[i] for i in range(len(values) - 1)]
     if len(first_diffs) >= 3:
-        second_diffs = [
-            first_diffs[i + 1] - first_diffs[i]
-            for i in range(len(first_diffs) - 1)
-        ]
+        second_diffs = [first_diffs[i + 1] - first_diffs[i] for i in range(len(first_diffs) - 1)]
         if second_diffs and all(_numbers_close(diff, second_diffs[0]) for diff in second_diffs):
             return values[-1] + first_diffs[-1] + second_diffs[0]
 
@@ -349,8 +350,7 @@ def _infer_next_sequence_number(question: str) -> float | None:
         ratio = (values[2] - values[1]) / denominator
         add = values[1] - values[0] * ratio
         if all(
-            _numbers_close(values[i] * ratio + add, values[i + 1])
-            for i in range(len(values) - 1)
+            _numbers_close(values[i] * ratio + add, values[i + 1]) for i in range(len(values) - 1)
         ):
             return values[-1] * ratio + add
 
@@ -598,9 +598,7 @@ class MasteryVisualTool(BaseTool):
                 )
         if kp is None:
             step = next_objective_for_start_point(progress, _resolve_start_point(kwargs))
-            kp, _module_id, module_name = find_knowledge_point(
-                progress, step.knowledge_point_id
-            )
+            kp, _module_id, module_name = find_knowledge_point(progress, step.knowledge_point_id)
             kp_id = step.knowledge_point_id
         objective_text = " ".join(
             part

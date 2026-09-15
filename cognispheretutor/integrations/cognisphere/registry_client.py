@@ -139,7 +139,10 @@ class PluginRegistryClient:
             [
                 p
                 for p in plugins_dir.iterdir()
-                if p.is_dir() and not p.name.startswith("_") and p.name != "_shared"
+                if p.is_dir()
+                and not p.name.startswith("_")
+                and p.name != "_shared"
+                and not p.name.endswith("_twin")
             ]
         )
         for domain_dir in domain_dirs:
@@ -198,7 +201,9 @@ class PluginRegistryClient:
             details={"domain": domain, "plugins_root": discovery.get("plugins_root")},
         )
 
-    def ensure_import_paths(self, domain: str | None = None, root: str | Path | None = None) -> list[str]:
+    def ensure_import_paths(
+        self, domain: str | None = None, root: str | Path | None = None
+    ) -> list[str]:
         plugins_root = self.resolve_plugins_root(root)
         added: list[str] = []
         candidates = [str(self._contract["sdk_import_root_relative_path"])]
@@ -267,7 +272,9 @@ class PluginRegistryClient:
                 details={"domain": domain, "module": module_name},
             ) from exc
 
-    def load_cognisphere_entrypoint(self, domain: str, root: str | Path | None = None) -> ModuleType:
+    def load_cognisphere_entrypoint(
+        self, domain: str, root: str | Path | None = None
+    ) -> ModuleType:
         record = self.get_plugin(domain, root)
         manifest = (record.get("plugin") or {}).get("manifest") or {}
         module_name = str(manifest.get("cognisphere_entrypoint") or "").strip()
@@ -340,12 +347,17 @@ class PluginRegistryClient:
                 issues.append(format_issue("missing_deeptutor_func", name))
 
         legacy_adapter: dict[str, Any] | None = None
-        handoff_contract: dict[str, Any] = {"ok": False, "issues": ["validate_adapter_not_callable"]}
+        handoff_contract: dict[str, Any] = {
+            "ok": False,
+            "issues": ["validate_adapter_not_callable"],
+        }
         if callable(getattr(mod, "validate_adapter", None)):
             try:
                 raw = mod.validate_adapter()
                 if isinstance(raw, dict):
-                    legacy_adapter = raw.get("legacy_adapter") if "legacy_adapter" in raw else raw.get("legacy")
+                    legacy_adapter = (
+                        raw.get("legacy_adapter") if "legacy_adapter" in raw else raw.get("legacy")
+                    )
                     handoff_contract = (
                         raw.get("handoff_contract")
                         or raw.get("validation")

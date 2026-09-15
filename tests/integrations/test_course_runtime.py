@@ -561,7 +561,9 @@ async def test_http_openmaic_adapter_publishes_persistence_document_to_classroom
                 200,
                 json={
                     "stage": {"id": "california-electrician-ge-foundation", "name": "GE"},
-                    "scenes": [{"id": "scene-load-lab", "stageId": "california-electrician-ge-foundation"}],
+                    "scenes": [
+                        {"id": "scene-load-lab", "stageId": "california-electrician-ge-foundation"}
+                    ],
                 },
             )
         if request.method == "POST" and request.url.path == "/api/classroom":
@@ -605,7 +607,9 @@ async def test_http_openmaic_adapter_publishes_persistence_document_to_classroom
 
 
 @pytest.mark.asyncio
-async def test_http_openmaic_adapter_uses_classroom_file_store_when_persistence_unconfigured() -> None:
+async def test_http_openmaic_adapter_uses_classroom_file_store_when_persistence_unconfigured() -> (
+    None
+):
     calls: list[tuple[str, str, dict | None]] = []
 
     def handler(request: httpx.Request) -> httpx.Response:

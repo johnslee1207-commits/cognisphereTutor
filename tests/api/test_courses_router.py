@@ -88,9 +88,7 @@ def test_course_runtime_status_exposes_contract() -> None:
     assert payload["ok"] is True
     assert "execute_lab" in payload["scene_kinds"]
     assert "pbl" in payload["openmaic_scene_types"]
-    embedded = {
-        course["course_id"]: course for course in payload["embedded_openmaic_courseware"]
-    }
+    embedded = {course["course_id"]: course for course in payload["embedded_openmaic_courseware"]}
     assert embedded["california-electrical-entrance-courseware-v5"]["scene_count"] >= 100
     assert embedded["california-electrical-entrance-courseware-en-v1"]["scene_count"] >= 120
 
@@ -147,9 +145,7 @@ def test_course_runtime_status_uses_auto_discovered_openmaic(monkeypatch) -> Non
     payload = response.json()
     assert payload["runtime"] == "openmaic_http_adapter"
     assert payload["runtime_mode"] == "auto"
-    assert payload["runtime_resolution"]["base_url"] == (
-        "http://127.0.0.1:33100/api/persistence"
-    )
+    assert payload["runtime_resolution"]["base_url"] == ("http://127.0.0.1:33100/api/persistence")
 
 
 def test_plan_course_returns_runnable_manifest() -> None:

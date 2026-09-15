@@ -895,7 +895,9 @@ class KnowledgeBaseManager:
     def get_rag_storage_path(self, name: str | None = None) -> Path:
         """Get active index storage path for a knowledge base."""
         kb_dir = self.get_knowledge_base_path(name)
-        from cognispheretutor.services.rag.embedding_signature import signature_from_embedding_config
+        from cognispheretutor.services.rag.embedding_signature import (
+            signature_from_embedding_config,
+        )
         from cognispheretutor.services.rag.index_versioning import (
             resolve_storage_dir_for_read,
         )
@@ -1191,7 +1193,9 @@ class KnowledgeBaseManager:
                 pass
 
         # Check rag_initialized from provider-owned real output, not metadata alone.
-        from cognispheretutor.services.rag.embedding_signature import signature_from_embedding_config
+        from cognispheretutor.services.rag.embedding_signature import (
+            signature_from_embedding_config,
+        )
         from cognispheretutor.services.rag.index_versioning import (
             find_matching_version,
         )

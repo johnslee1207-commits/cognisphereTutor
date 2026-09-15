@@ -7,8 +7,8 @@ backend cannot silently become the active executor.
 
 from __future__ import annotations
 
-import inspect
 from collections.abc import Mapping
+import inspect
 from typing import Type
 
 from cognispheretutor.services.sandbox.backends import (
@@ -58,9 +58,7 @@ def validate_sandbox_registry(
             continue
         if inspect.isabstract(cls):
             abstract = sorted(getattr(cls, "__abstractmethods__", ()))
-            errors.append(
-                f"{name}: still abstract ({', '.join(abstract) or 'unknown methods'})"
-            )
+            errors.append(f"{name}: still abstract ({', '.join(abstract) or 'unknown methods'})")
     return errors
 
 
